@@ -1,0 +1,18 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      My First Post                 # 标题 
+subtitle:   Hello World, Hello Blog #副标题
+date:       2018-08-06                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 生活
+---
+
+## Hey
+>这是我的第一篇博客。
+
+- 感谢 [qiubaiying.top](http://qiubaiying.top/2017/02/06/快速搭建个人博客/) 的博客教程
+- 感谢 [Huxpro](https://github.com/Huxpro/huxpro.github.io) 开源大神的博客模板
+

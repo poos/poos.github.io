@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shown's blog</title>
+    <description>Learning... Codeing...</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Mon, 06 Aug 2018 19:47:15 +0800</pubDate>
+    <lastBuildDate>Mon, 06 Aug 2018 19:47:15 +0800</lastBuildDate>
+    <generator>Jekyll v3.8.3</generator>
+    
+      <item>
+        <title>My First Post</title>
+        <description>&lt;h2 id=&quot;hey&quot;&gt;Hey&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;这是我的第一篇博客。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;感谢 &lt;a href=&quot;http://qiubaiying.top/2017/02/06/快速搭建个人博客/&quot;&gt;qiubaiying.top&lt;/a&gt; 的博客教程&lt;/li&gt;
+  &lt;li&gt;感谢 &lt;a href=&quot;https://github.com/Huxpro/huxpro.github.io&quot;&gt;Huxpro&lt;/a&gt; 开源大神的博客模板&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Mon, 06 Aug 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/08/06/Begin/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/08/06/Begin/</guid>
+        
+        <category>生活</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

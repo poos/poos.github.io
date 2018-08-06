@@ -1,83 +1,108 @@
-# Hexo Configuration
-## Docs: https://hexo.io/docs/configuration.html
-## Source: https://github.com/hexojs/hexo/
+# Site settings
+title: Shown's blog
+SEOTitle: Welocme to Shown's blog
+header-img: img/post-bg-desk.jpg
+email: bieshixuan@163.com
+description: "Learning... Codeing..."
+keyword: "Shown, ShownBie, poos, iOS, Apple, iPhone"
+url: "https://poos.github.io"          # your host, for absolute URL
+baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
+#github_repo: "https://github.com/qiubaiying/qiubaiying.github.io.git" # you code repository
 
-# Site
-title: Hexo
-subtitle:
-description:
-keywords:
-author: John Doe
-language:
-timezone:
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "Goals determine what you going to be!"
+sidebar-avatar: /img/about-Me.png      # use absolute URL, seeing it's used in both `/` and `/about/`
 
-# URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
-root: /
-permalink: :year/:month/:day/:title/
-permalink_defaults:
 
-# Directory
-source_dir: source
-public_dir: public
-tag_dir: tags
-archive_dir: archives
-category_dir: categories
-code_dir: downloads/code
-i18n_dir: :lang
-skip_render:
 
-# Writing
-new_post_name: :title.md # File name of new posts
-default_layout: post
-titlecase: false # Transform title into titlecase
-external_link: true # Open external links in new tab
-filename_case: 0
-render_drafts: false
-post_asset_folder: false
-relative_link: false
-future: true
-highlight:
-  enable: true
-  line_number: true
-  auto_detect: false
-  tab_replace:
-  
-# Home page setting
-# path: Root path for your blogs index page. (default = '')
-# per_page: Posts displayed per page. (0 = disable pagination)
-# order_by: Posts order. (Order by date descending by default)
-index_generator:
-  path: ''
-  per_page: 10
-  order_by: -date
-  
-# Category & Tag
-default_category: uncategorized
-category_map:
-tag_map:
+# SNS settings
+RSS: false
+# weibo_username:     poos
+#zhihu_username:     poos
+github_username:    poos
+#facebook_username:  poos
+#jianshu_username:   poos
+#twitter_username:   poos
 
-# Date / Time format
-## Hexo uses Moment.js to parse and display date
-## You can customize the date format as defined in
-## http://momentjs.com/docs/#/displaying/format/
-date_format: YYYY-MM-DD
-time_format: HH:mm:ss
 
-# Pagination
-## Set per_page to 0 to disable pagination
-per_page: 10
-pagination_dir: page
 
-# Extensions
-## Plugins: https://hexo.io/plugins/
-## Themes: https://hexo.io/themes/
-theme: landscape
 
-# Deployment
-## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type: git
-  repository: https://github.com/poos/poos.github.io.git
-  branch: master    
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+permalink: pretty
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
+
+
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+gems: [jekyll-paginate]
+
+
+
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM                            # use Github Flavored Markdown !important
+
+
+
+# 评论系统
+# Disqus（https://disqus.com/）
+# disqus_username: qiubaiying
+
+# Gitalk
+#gitalk:
+#  enable: true    #是否开启Gitalk评论
+#  clientID: f2c84e7629bb1446c1a4                            #生成的clientID
+#  clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    #生成的clientSecret
+#  repo: qiubaiying.github.io    #仓库名称
+#  owner: qiubaiying    #github用户名
+#  admin: qiubaiying
+#  distractionFreeMode: true #是否启用类似FB的阴影遮罩
+
+
+# 统计
+
+# Analytics settings
+# Baidu Analytics
+#ba_track_id: b50bf2b12b5338a1845e33832976fd68
+
+# Google Analytics
+ga_track_id: 'UA-90855596-1'            # Format: UA-xxxxxx-xx
+ga_domain: auto               # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
+
+
+
+
+
+# Featured Tags
+featured-tags: true                     # 是否使用首页标签
+featured-condition-size: 1              # 相同标签数量大于这个数，才会出现在首页
+
+
+
+# Progressive Web Apps
+chrome-tab-theme-color: "#000000"
+service-worker: true
+
+
+
+# Friends
+friends: [
+    {
+        title: "Apple",
+        href: "https://apple.com"
+    },{
+        title: "Apple Developer",
+        href: "https://developer.apple.com/"
+    }
+]
