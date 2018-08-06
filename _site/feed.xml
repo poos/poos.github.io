@@ -5,15 +5,15 @@
     <description>Learning... Codeing...</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 06 Aug 2018 19:47:15 +0800</pubDate>
-    <lastBuildDate>Mon, 06 Aug 2018 19:47:15 +0800</lastBuildDate>
+    <pubDate>Mon, 06 Aug 2018 23:45:13 +0800</pubDate>
+    <lastBuildDate>Mon, 06 Aug 2018 23:45:13 +0800</lastBuildDate>
     <generator>Jekyll v3.8.3</generator>
     
       <item>
         <title>My First Post</title>
         <description>&lt;h2 id=&quot;hey&quot;&gt;Hey&lt;/h2&gt;
 &lt;blockquote&gt;
-  &lt;p&gt;这是我的第一篇博客。&lt;/p&gt;
+  &lt;p&gt;这是我的第一篇博客。首先感谢两位先行者为我们带路。&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;ul&gt;
@@ -21,6 +21,54 @@
   &lt;li&gt;感谢 &lt;a href=&quot;https://github.com/Huxpro/huxpro.github.io&quot;&gt;Huxpro&lt;/a&gt; 开源大神的博客模板&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;hr /&gt;
+
+&lt;p&gt;然后大概计划一下这个博客，以后会写一些有质量的文章。可能是下边的某些方面，也可能不限于下边，计划每周写一篇，每篇在千字以上吧。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//笔记截图-工作中和探究中接触到的方面，需要把笔记整理成博客分享给大家。
+
+*****计划整理 new
+
+项目初始化和框架
+
+app上线
+
+零碎的
+navbarItem处理
+
+
+第三方库学习
+https://www.cnblogs.com/machao/p/5526192.html
+SnapKit
+RxCocoa
+Then
+SwifterSwift 扩展狭集合
+EZSwiftExtensions 广集合
+URLNavigator 界面跳转
+SwiftMessages 弹出窗口
+ESTabBarController-swift 
+SwiftLint
+Aspects 运行时
+
+swift运行优化
+
+app瘦身
+
+CTMdeiator 组件化
+URLNavigator 界面跳转
+
+app打点框架
+Aspects 运行时
+
+app网络框架
+
+---
+
+revealapp 界面测试工具
+
+flutter 新的移动端语言
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 </description>
         <pubDate>Mon, 06 Aug 2018 00:00:00 +0800</pubDate>
         <link>http://localhost:4000/2018/08/06/Begin/</link>
