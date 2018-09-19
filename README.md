@@ -1,12 +1,19 @@
-# BY Blog
+# Shown's Blog
 
-> 下面是博客的搭建教程，这个教程修改自 [Hux](https://github.com/Huxpro/huxpro.github.io) 。
 > 
+
 ### [我的博客在这里 &rarr;](https://poos.github.io)
 
-![](/readme-home.png)
+![](readme-home.png)
 
-### 一些写过的轮子和Demo。还有对框架学习的理解。大部分是自己造的，也有Fork其他前辈后修改的，也有只是Fork来学习的，暂时总结到一起了，更多的在我的私人笔记中，回头再整理更新。
+---
+
+### [一些写过的轮子和Demo。还有对框架学习的理解。大部分是自己造的，也有Fork其他前辈后修改的，也有只是Fork来学习的，列表在下边列出，点击链接进入>>>>](https://poos.github.io/about/)
+
+
+![](readme-about.png)
+
+以下所有都可以在链接中查看
 
 #### 资源文件
 
@@ -49,11 +56,13 @@ UITableView-FDTemplateLayoutCell
 拼图小程序（算法）
 mac生成二维码小程序
 
+---
 
 ## 致谢
 
 1. 这个模板是从这里 [Hux](https://github.com/Huxpro/huxpro.github.io) fork 的, 感谢这个作者。 
 2. 感谢 Jekyll、Github Pages 和 Bootstrap!
+3. 感谢 [BY Blog](http://qiubaiying.top/2017/02/06/快速搭建个人博客/) 提供的搭建方案。 
 
 ## License
 
