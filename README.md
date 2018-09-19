@@ -4,14 +4,14 @@
 
 ### [我的博客在这里 &rarr;](https://poos.github.io)
 
-![](readme-home.png)
+![](img/readme-home.png)
 
 ---
 
 ### [一些写过的轮子和Demo。还有对框架学习的理解。大部分是自己造的，也有Fork其他前辈后修改的，也有只是Fork来学习的，列表在下边列出，点击链接进入>>>>](https://poos.github.io/about/)
 
 
-![](readme-about.png)
+![](img/readme-about.png)
 
 以下所有都可以在链接中查看
 
