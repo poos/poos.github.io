@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      使用WebDriverAgent查看界面层级，学习其他app布局                # 标题 
+title:      使用WebDriverAgent学习其他app布局,自动化测试               # 标题 
 subtitle:   通过脚本化启动 WebDriverAgent， 使用ATX自动化测试 ； 自动微信跳一跳等               #副标题
 date:       2018-08-06                 # 时间
 author:     poos                         # 作者
