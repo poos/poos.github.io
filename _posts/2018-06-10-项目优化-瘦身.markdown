@@ -1,3 +1,15 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      项目优化-瘦身                # 标题 
+subtitle:   图片，库，代码，项目设置，多方面优化项目    #副标题
+date:       2018-08-06                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 生活
+---
+
 
 本文主要介绍项目瘦身，代码精简方面的优化，列了一些步骤可以对照修改。
 
