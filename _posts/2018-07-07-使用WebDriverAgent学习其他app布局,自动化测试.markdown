@@ -2,12 +2,25 @@
 layout:     post                       # 使用的布局（不需要改）
 title:      使用WebDriverAgent学习其他app布局,自动化测试               # 标题 
 subtitle:   通过脚本化启动 WebDriverAgent， 使用ATX自动化测试 ； 自动微信跳一跳等               #副标题
-date:       2018-08-06                 # 时间
+date:       2018-07-07                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
-- 生活
+- 工具
+---
+
+--- 
+**9月25更新**
+
+### 使用最新的Xcode10正式版没法正常测试，可能是某些库的问题，但是可以在9.4下添加iOS12支持包即可
+
+[添加iOS支持包](https://www.jianshu.com/p/1a33e36c4b67)
+
+ps: Xcode升级时候先邮件复制一份旧的，然后直接appStore更新，不用慌。
+
+**end**
+
 ---
 
 ### 有太多的文章介绍WebDriverAgent安装配置，本文着重介绍使用command line命令行快速调起
@@ -59,7 +72,7 @@ iproxy 8100 8100
 #### 开始使用WebDriverAgent
 ```
 # 解锁keychain，以便可以正常的签名应用，
-PASSWORD="Nancy"
+PASSWORD="******"
 security unlock-keychain -p $PASSWORD ~/Library/Keychains/login.keychain
  
 # 获取设备的UDID
