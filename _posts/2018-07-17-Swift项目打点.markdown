@@ -111,11 +111,14 @@ base v12    select v22      page v54    180707
 ```
 2. 制定大量枚举/使用plist或者csv来做键值映射，方便管理
 
-- page字典对应页面的enum
-- event 的 enum
-- key 的 enum
+```
+page字典对应页面的enum
+event 的 enum
+key 的 enum
+```
 
 3. 使用链式编程
+
 ```
 class EventManage {
     //事件名
