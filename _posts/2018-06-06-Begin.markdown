@@ -134,10 +134,6 @@ continue...
 
 app上线
 
-零碎的
-navbarItem处理
-
-
 第三方库学习
 https://www.cnblogs.com/machao/p/5526192.html
 SnapKit
@@ -153,11 +149,8 @@ Aspects 运行时
 
 swift运行优化
 
-
 CTMdeiator 组件化
 URLNavigator 界面跳转
-
-
 
 app网络框架
 
@@ -180,7 +173,7 @@ flutter 新的移动端语言
 #### 工具
 [**WebDriverAgent  && 脚本 -> 使用WebDriverAgent学习其他app布局,自动化测试**](https://poos.github.io/2018/07/07/WebDriverAgent/)
 #### 轮子
-[**WebDriverAgent  && 脚本 -> 处理NavItem的点击范围**](https://poos.github.io/2018/07/01/UINavItem)
+[**Swift通过swizzleMethod无痕处理NavItem的点击范围**](https://poos.github.io/2018/07/01/UINavItem)
 
 
 
