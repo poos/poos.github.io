@@ -12,6 +12,13 @@ tags:                                #标签
 ---
 
 
+---
+```
+18年9月更新，因为苹果AppStore的bug导致显示的大小于Itunes Connect显示大小不一致，9月底已经修复。
+```
+---
+
+
 本文主要介绍项目瘦身，代码精简方面的优化，列了一些步骤可以对照修改。
 
 ---
@@ -286,3 +293,31 @@ ag "image" './'
 这个命令的意思是搜索到该目录下以及其子目录下的所有含有"image"的文件。
 使用这个命令就需要在python中执行bash命令。
 
+
+
+### 参考资料
+
+github项目：
+
+```
+ImageOptim
+LSUnusedResources
+SameCodeFinder
+SMCheckProject
+XcodeProjectArrangementTool
+```
+博客：
+
+```
+[iOS Color Misaligned Images优化 - 简书](https://www.jianshu.com/p/38cf9c170141)
+
+[浅谈iOS中的视图优化 - 简书}(https://www.jianshu.com/p/5c968a240e27)
+
+[图片的颜色深度/颜色格式（32bit,24bit,12bit） - 简书](https://www.jianshu.com/p/52440c7a8902)
+
+[UILabel在iOS8下的Color Blended Layers - 简书](https://www.jianshu.com/p/db6602413fa3)
+
+[如何改善图形性能 | 蘑菇味海星](http://ihomway.cc/2017/07/28/ios-grapics-performance/)
+
+[怎么改png图片位深度 小小知识站](http://www.zhishizhan.net/wuhuabamen/43560.html)
+```

@@ -1,7 +1,7 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      My First Post                 # 标题 
-subtitle:   Hello World, Hello Blog #副标题
+title:      新的征程                 # 标题 
+subtitle:   吐故纳新，继往开来 #副标题
 date:       2018-06-06                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
@@ -10,13 +10,164 @@ tags:                                #标签
 - 生活
 ---
 
-## Hey
->这是我的第一篇博客。首先感谢两位先行者为我们带路。
+##  🎉 🎉 🎉在github新开了博客[poos.github.io](https://poos.github.io/ "poos.github.io")，这是我的第一篇博客。
 
-- 感谢 [qiubaiying.top](http://qiubaiying.top/2017/02/06/快速搭建个人博客/) 的博客教程
-- 感谢 [Huxpro](https://github.com/Huxpro/huxpro.github.io) 开源大神的博客模板
+
+### 这里下边的地址看到我的最新的动态
+
+**[poos.github.io](https://poos.github.io)**，有新的博客基本会在这里更新，**旧的博客不会进行搬家了**。
+
+![poos.github.io](https://oscimg.oschina.net/oscnet/2105548aa61c01cc6cf4aece8819255a9c0.jpg "poos.github.io")
+
+**[github/poos](https://github.com/poos)**，有新的项目会在这里更新，会重点维护一些项目。
+
+![github](https://oscimg.oschina.net/oscnet/bebdac20d20629302d224701447dc882074.jpg "github")
+
+**[gitee/poos](https://gitee.com/poos)**，有新的项目会在这里更新，会维护旧的项目。
+
+![gitee](https://oscimg.oschina.net/oscnet/6366aec72093673fc2196f90bc4c277c8c9.jpg "gitee")
+
+
+
+## 推陈
+
+### 之前的博客地址在这里[oschina/bieshixuan](https://my.oschina.net/bieshixuan/blog/2236855)。简单列举一下这个博客的值得纪念的文章，或者说值得提一下，避免大家绕弯路的文章。
+
+按时间顺序记录：
+
+#### 1. [OC代码 经纬度地址转换，火星坐标偏移校正](https://my.oschina.net/bieshixuan/blog/611288)
+
+如果只是记录经纬度，只是想要知道地址，不必要引入第三方SDK的。
+
+附上github项目，支持使用pod导入[https://github.com/poos/SXGps](https://github.com/poos/SXGps)
+
+#### 2. [设置特殊Tabbar样式](https://my.oschina.net/bieshixuan/blog/612490)
+
+原生系统是可以实现的，当然有很多第三方库定制组合了更多功能。
+
+#### 3. [最初的对于MVVM的理解](https://my.oschina.net/bieshixuan/blog/612891)
+
+告别MVC。现在不管是OC还是Swift提供了Reactive的概念，响应式更加清晰简洁。
+
+#### 4. [判断界面是否正在显示](https://my.oschina.net/bieshixuan/blog/614023)
+
+第一篇总结类型的文章，介绍页面显示的判断，开心得到oschina的推荐
+
+#### 5. [关于NSAttributeString](https://my.oschina.net/bieshixuan/blog/617441)
+
+这个博客中的代码是比较老的了。虽然现在写Swift了，但是AttributeString现在在我的项目运用的还是比较多：带V的，带标签的用户；带行高的字符串；大小不一水平居中的字符串...
+
+#### 6. **几个UI方面的探究**
+
+对于列表使用的探究，可惜那时候还基本不用github，否则可以留下一两个Demo~~，虽然现在看肯定写的很渣~~。
+
+##### [a.自定义UIPageControl,勘误](https://my.oschina.net/bieshixuan/blog/621674)
+
+整理网络上的UIPageControl的错误资料，又一次得到oschina的推荐
+
+
+##### [b.tableView下拉选择列表的设计 ](https://my.oschina.net/bieshixuan/blog/634327)
+
+下拉选择的实现，又一次得到oschina的推荐
+
+
+##### [c.collectionView与tableView并用](https://my.oschina.net/bieshixuan/blog/634327)
+
+复杂的选择添加页面，又一次得到oschina的推荐
+
+##### [d.多级选择菜单](https://my.oschina.net/bieshixuan/blog/620149)
+
+多级的选择菜单
+
+#### 7. [pod 更新版本和降级版本,OSX 10.10+,打包pod,全教程 ](https://my.oschina.net/bieshixuan/blog/690509)
+
+来了，cocoapod的使用，发布自己的轮子到pod！！
+
+#### 8. [键盘遮挡处理](https://my.oschina.net/bieshixuan/blog/624678)
+
+先后更新了多次。也总结了一段代码，键盘出现时候遍历子view，找出first响应的view，根据view在屏幕中的位置自动调整所有的View。
+[poos/SXKeyboardViewControl](https://gitee.com/poos/SXKeyboardViewControl)
+
+#### 9. [无限轮播的滚动视图 ](https://my.oschina.net/bieshixuan/blog/789622)
+
+项目地址：[poos/SXCycleView](https://gitee.com/poos/SXCycleView)，项目也是几经修改，现在看来只能算是一种思路启发吧。
+
+#### 10. 关于项目框架的设置理解
+
+a. 16年10月的简单实践 [创建一个规范的项目目录](https://my.oschina.net/bieshixuan/blog/775507)
+
+b. 16年底的在我的首个SwiftDemo上的实践 [poos/SwiftEFarm](https://gitee.com/poos/SwiftEFarm)
+
+c. 一个准备干大事的项目怎么设计
+```
+c. 一个准备干大事的项目怎么设计
+
+## 一个准备干大事的项目应该包含什么：
+
+### fastlane
+1. 项目下载，证书配置
+2. 上传AppStore
+
+### 清晰的分支
+
+- baseProject 基础分支，所有公共资源和项目配置。原则：用tag标记稳定版本；可以用稳定版本开发新功能。
+- *xxxxx* 小模块分支等，基于baseProject开发的模块分支，完成后并入develop。
+- develop 开发分支，完整项目的开发分支。
+- test 测试分支，所有移交测试的版本，测试完成即可并入master。
+- master 主分支，只存放完整项目稳定的版本的分支，tag上线版本。
+
+
+- **说明：如有需要 可以将baseProject扩展为项目主框架（包含所有功能的抽象api）；’xxxxx‘子框架调用api，不关心过程；子框架可以设置单独的临时test分支。**
+
+
+### 规范的项目
+
+#### 1. 文件目录
+1. 文件夹已分类
+2. 使用cocoapod管理三方库
+3. 桥接文件
+
+
+#### 2. 运行测试
+
+1. Scheme建立了test，release
+2. Test 和 UITest
+
+#### 3.  swiftlint 代码检查
+
+[github/swift-style-guide](https://github.com/github/swift-style-guide)
+
+
+### 谨慎的开发和设计
+
+1. 如有需要可以分别创建多个组件项目，实现组件化（分支介绍最后一条分多个repo 处理）
+2. 项目 Theme 设计
+3. Navigator 页面跳转（可选）
+4. 弹窗统一管理 设计
+5. Review控制 设计
+6. 通知统一管理 设计
+7. 通用链接，调用系统分享等与iOS系统对接的设计
+8. 测试环境下的专用配置，例如不上传统计，例如动态修改UI
+
+continue...
+
+#### end
+
+看到这里当45°仰望天花板，呡一口清茶，贪闲一刻~
+
 
 ---
+```
+
+至此也刚刚好总结10条，也算是见证了我成长的过程吧。大家喜欢的话收藏一下。另外**[github/poos](https://github.com/poos)**真的也是干货慢慢哦：[戳这里查看项目介绍](https://poos.github.io/about/)
+
+![github上的项目](https://oscimg.oschina.net/oscnet/2379e817389d08bc09747860940f14c9b75.jpg "github上的项目")
+
+
+---
+
+
+## 纳新
 
 然后大概计划一下这个博客，以后会写一些有质量的文章。可能是下边的某些方面，也可能不限于下边，计划尽量多总结--每周写一篇--，每篇在千字以上吧，重要的是有货。
 
@@ -49,13 +200,11 @@ Aspects 运行时
 
 swift运行优化
 
-app瘦身
 
 CTMdeiator 组件化
 URLNavigator 界面跳转
 
-app打点框架
-Aspects 运行时
+
 
 app网络框架
 
@@ -66,3 +215,27 @@ revealapp 界面测试工具
 flutter 新的移动端语言
 
 ```
+
+
+### 已经归类总结的部分
+#### 设计
+[**app打点框架  & Aspects 运行时 -> Swift项目打点**](https://poos.github.io/2018/07/17/Swift项目打点/)
+#### 基础
+[**Swift理论和基础 -> Swift基础中需要注意的点**](https://poos.github.io/2018/09/09/Swift基础中需要注意的点/)
+#### 优化
+[**图片 & 代码 & 设置-> 项目优化-瘦身**](https://poos.github.io/2018/06/16/项目优化-瘦身/)
+#### 工具
+[**WebDriverAgent  && 脚本 -> 使用WebDriverAgent学习其他app布局,自动化测试**](https://poos.github.io/2018/07/07/使用WebDriverAgent学习其他app布局,自动化测试/)
+#### 轮子
+[**WebDriverAgent  && 脚本 -> 处理NavItem的点击范围**](https://poos.github.io/2018/07/01/处理NavItem的点击范围)
+
+
+
+
+
+
+## 感谢
+>这是我的第一篇博客。首先感谢两位先行者为我们带路。
+
+- 感谢 [qiubaiying.top](http://qiubaiying.top/2017/02/06/快速搭建个人博客/) 的博客教程
+- 感谢 [Huxpro](https://github.com/Huxpro/huxpro.github.io) 开源大神的博客模板

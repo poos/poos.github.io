@@ -192,3 +192,17 @@ EventManage.share.event(.click).page(.home).push()
 
 ~~--懒得传图，从网上找个图片--~~
 ![控制台](http://images.macx.cn/forum/201202/27/1206273lioivz2pvlnkpz3.jpg)
+
+
+### 参考资料：
+
+```
+github项目：
+
+AOPTrack
+SwiftAspects
+```
+
+#### 推荐一下自己写的最新测Demo
+
+[**干货 poos/AspectOrientedProgramming**](https://github.com/poos/SwiftEFarm)
