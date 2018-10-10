@@ -18,7 +18,7 @@ sidebar-avatar: /img/about-Me.png      # use absolute URL, seeing it's used in b
 
 # SNS settings
 RSS: false
-weibo_username:     poos_github_io
+weibo_username:     poos001
 #zhihu_username:     poos
 github_username:    poos
 #facebook_username:  poos
@@ -99,10 +99,14 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "Apple",
-        href: "https://apple.com"
+        title: "github/poos",
+        href: "https://github.com/poos"
     },{
-        title: "Apple Developer",
-        href: "https://developer.apple.com/"
+        title: "gitee/poos",
+        href: "https://gitee.com/poos"
+    },
+    {
+        title: "oschina/bieshixuan",
+        href: "https://my.oschina.net/bieshixuan"
     }
 ]
