@@ -1,0 +1,180 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      Fastlane，App配置和部署的利器                 # 标题 
+subtitle:   fastlane是为iOS和Android应用程序自动执行beta部署和发布的最简单方法。🚀它处理所有繁琐的任务，例如生成屏幕截图，处理代码签名和发布应用程序。 #副标题
+date:       2018-07-24                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 工具
+---
+
+
+
+![fastlane](https://docs.fastlane.tools/img/fastlane_text.png)
+
+
+
+
+列举一下 在自己电脑上常用的功能
+
+- fastlane 在 iOS 下可以很容易的管理证书和 p12文件
+- 很容易修改项目 version，build，截图等需要j提交审核的资源文件
+- xcode command line自动化打包，提交测试
+
+- [CI]在 git 提交到测试分支时候执行 CI，打包上传到 TstFlight。打 tag 时候就会上传审核
+
+[官方文档关于 CI 的介绍](https://docs.fastlane.tools/best-practices/continuous-integration/)
+
+
+
+## 官网文档 ：[fastlane](https://docs.fastlane.tools/)
+
+
+### github 是一个强大的社区 ,[mythkiven/AD_Fastlane](https://github.com/mythkiven/AD_Fastlane)有一个很好的例子，和Demo工程，实现了从零到自动打包上传的详细操作步骤。
+
+### 另外一个文档，包括一些多语言、和 CI等处理。[fastlane 持续集成](https://juejin.im/post/5a7b10bb6fb9a0636263bfd5)
+
+是个人开发一个非常好的教学文档。
+
+
+## 介绍一下自己用到的一些脚本
+
+如果想学习 Ruby 脚本语言可以到这里：**[Ruby 文档](https://www.kancloud.cn/imxieke/ruby-base/107282)**
+
+
+### 在管理员电脑/打包机器上一些有用的脚本
+
+- 注册新的设备
+```
+desc "register device"
+lane :new_devices do
+    register_devices(devices_file: "./devices.txt")
+    match(type: "develop", force_for_new_devices: true)
+end
+
+```
+- 提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用
+```
+lane :beta do
+    build
+    upload_to_testflight(ipa: './build/Zhima_iOS.ipa',
+                         changelog: '增加评论功能',
+                         groups: ['beta'],
+                         demo_account_required: true,
+                         skip_waiting_for_build_processing: true)
+end
+
+lane :release do
+    build
+    upload_to_app_store(ipa: './build/Zhima_iOS.ipa',
+                        force: true,
+                        submit_for_review: false,
+                        automatic_release: false)
+end
+
+lane :release_from_beta do
+    upload_to_app_store(
+                        build_number: get_build_number,
+                        skip_binary_upload: true,
+                        force: true,
+                        submit_for_review: true,
+                        automatic_release: false)
+end
+```
+
+### 在开发者电脑上一些有用的脚本
+- 同步证书
+```    
+lane :setup do
+    match(type: 'development', readonly: true)
+    match(type: 'appstore', readonly: true)
+    match(type: 'adhoc', readonly: true)
+end
+```
+
+- 设置项目的 version number、build number
+```    
+lane :set_version do
+    if UI.interactive?
+        changelog = UI.input "Please enter the new version number: "
+    end
+    increment_version_number(
+                             version_number: "#{changelog}"
+                             )
+end
+
+lane :set_build_number do
+    if UI.interactive?
+        changelog = UI.input "Please enter the new build numbe: "
+    end
+    increment_version_number(
+                             build_number: "#{changelog}"
+                             )
+end
+
+lane :increase_build_number do
+    updateProjectBuildNumber
+end
+
+
+
+# 这是定义在 Fastlane 文件之外的一段脚本，目的是设置当前的build 为日期加版本
+def updateProjectBuildNumber
+    currentTime = Time.new.strftime("%y%m%d")
+    build = get_build_number()
+    
+    if build.include?"#{currentTime}"
+        
+        # => 为当天版本 计算迭代版本号
+        lastStr = build[build.length-1]
+        lastNum = lastStr.to_i
+        
+        if lastNum == 9
+            
+            UI.error " 🚫  error =>  build末位已经是 9 "
+            return
+        end
+        
+        lastNum = lastNum +1
+        build ="#{currentTime}#{lastNum}"
+        
+        else
+        
+        # => 非当天版本 build 号重置
+        build ="#{currentTime}0"
+    end
+    
+    puts("*************| 更新build #{build} |*************")
+    
+    # => 更改项目 build 号
+    increment_build_number(
+                           build_number:"#{build}"
+                           )
+end
+```
+
+- 用模拟器测试、打包ipa
+```    
+lane :tests do
+    run_tests(scheme: "ZhiMa_iOS", devices: ["iPhone 8"])
+end
+
+lane :build do
+    build_app(scheme: 'ZhiMa_iOS',
+              output_directory: './build')
+end
+```
+
+- 运行 swiftlint
+```    
+    desc "run swiftlint"
+    lane :lint do
+        swiftlint( strict: true )
+    end
+    
+```
+
+
+暂时这些功能吧...
