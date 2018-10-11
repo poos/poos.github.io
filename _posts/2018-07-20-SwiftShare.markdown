@@ -14,7 +14,7 @@ tags:                                #标签
 > 当一个页面包含了太多的太杂的内容页面就变得复杂了，把相似的内容抽出来单独管理，让项目更清晰。
 
 
-### 本文讨论不同页面调用分享的设计方案
+## 调用的设计方案
 
 某种意义上，不同页面调用分享也可以理解为继承重载的关系--->而继承重载可以用协议完美解决
 
@@ -115,7 +115,314 @@ extension C: ShareProtocol, ShareProtocol2 {
 
 ```
 
+
 ### 总结
 
 通过这种设计，ShareManager更加彻底的负责所有的分享事宜；VC 只是简单调用，页面结构更简单了。
 
+
+---
+>
+---
+
+## 分享功能实现的框架
+
+
+## 分享框架
+
+分享的具体实现就不必细说了
+
+
+File | Description
+---|---
+Model | 分享模型
+View | 分享视图
+ViewControl | 处理弹出动画; 分流选定后的操作
+Manager | 封装各个SDK分享方法
+
+
+
+>   
+    func present() {
+    let model = ShareModel()
+    ...
+        AppShareViewControl.present(model)
+}
+
+>   
+
+
+
+## Model
+
+> 本文没有使用 Model，故略去
+
+
+## View
+> skip
+
+
+
+## ViewControl
+设置弹出动画,layout位移动画
+```   
+    class AppShareViewControl {
+    /// 弹出分享框
+    static func present(type: ShareType, closure: @escaping (String) -> Void) {
+    
+    ...
+        
+        showAnimation(backView, shareView)
+        buttonsAnimation(buttons: shareView.buttons)
+    }
+    
+    static private func showAnimation(_ backView: UIView, _ alert: UIView) {
+        alert.layer.setValue(375, forKeyPath: "transform.translation.y")
+        UIView.animate(withDuration: 0.3, animations: {
+                       alert.layer.setValue(0, forKeyPath: "transform.translation.y")
+                       backView.alpha = 1
+                       })
+}
+    
+    static private func buttonsAnimation(buttons: [UIView]) {
+        for (index, button) in buttons.enumerated() {
+            button.layer.setValue(375, forKeyPath: "transform.translation.y")
+            button.alpha = 0
+            UIView.animate(withDuration: 0.5,
+                           delay: 0.05 * Double(index) + 0.1,
+                           usingSpringWithDamping: 0.7,
+                           initialSpringVelocity: 0.7,
+                           options: .curveEaseInOut,
+                           animations: {
+                           button.alpha = 1
+                           button.layer.setValue(0, forKeyPath: "transform.translation.y")
+                           })
+    }
+    }
+    
+static private func hideView(view: UIView) {
+    UIView.animate(withDuration: 0.2, animations: {
+                   view.alpha = 0
+                   }, completion: { (_) in
+                   view.removeFromSuperview()
+                   })
+                   }
+}
+```   
+
+分流跳转链接
+```   
+    extension AppShareViewControl {
+    /// 必须使用 model，因为日后如果需要打点信息可以方便添加参数
+    /// 点击了某个按钮
+    static func selected(model: model) {
+        switch model.type {
+        case .moments:
+            ShareManage.shared.shareMoments(title: model.title, thumbImage: model.image, url: model.link)
+        case .wechat:
+        ...
+    }
+}
+}
+```   
+
+## Manager
+
+#### 调用系统分享
+``` 
+    // MARK: - 系统
+    //系统分享传入[String, UIImage, URL]
+    //注意:系统分享qq会调用URL 对应的web更新数据,若没有对应web页（非 H5页）会显示异常
+    func shareSystem(title: String, content: String?, image: UIImage?, link: String) {
+        var items: [Any] = []
+        if title.length > 256 {
+            items.append((title as NSString).substring(to: 255))
+        } else {
+            items.append(title)
+        }
+        var thumbimage = image
+        if image == nil {
+            thumbimage = UIImage.init(named: "AppIconSmall")
+        }
+        if thumbimage!.size.height > 70 {
+            thumbimage = imageCompressSize(image: thumbimage!, size: CGSize.init(width: 70, height: 70))
+        }
+        items.append(thumbimage! as Any)
+        items.append(URL.init(string: link)!)
+        let activity = UIActivityViewController.init(activityItems: items, applicationActivities: nil)
+        UIViewController.currentViewController().presentVC(activity)
+}
+```    
+
+
+#### 调用微信分享(建议优化使用 model)
+``` 
+    // MARK: - 微信
+    var style = 0
+    func registerShare() {
+        WXApi.registerApp(" xxxxxxxxxxx")
+    }
+    /// 分享朋友圈
+    func shareMoments(title: String, thumbImage: UIImage?, url: String) {
+        share(type: 1, title: title, content: nil, image: thumbImage, url: url)
+    }
+    
+    /// 分享图文链接的消息
+    func shareWechat(title: String, content: String?, thumbImage: UIImage?, url: String) {
+        share(type: 0, title: title, content: content, image: thumbImage, url: url)
+    }
+    
+    /// 分享大图的消息
+    func shareWechat(image: UIImage) {
+        share(image: image)
+    }
+    
+    fileprivate func share(type: Int, title: String, content: String?, image: UIImage?, url: String) {
+        if !WXApi.isWXAppInstalled() {
+            let popview = PopupView()
+            popview.popupText(.noWechat)
+            return
+        }
+        
+        let message = WXMediaMessage.init()
+        if title.length > 256 {
+            message.title = (title as NSString).substring(to: 255)
+        } else {
+            message.title = title
+        }
+        if let description = content {
+            if description.length > 512 {
+                message.description = (description as NSString).substring(to: 511)
+            } else {
+                message.description = description
+        }
+}
+    var thumbimage = image
+        if image == nil {
+            thumbimage = UIImage.init(named: "AppIconSmall")
+    }
+        if thumbimage!.size.height > 70 {
+            thumbimage = imageCompressSize(image: thumbimage!, size: CGSize.init(width: 70, height: 70))
+}
+    if let data: Data = imageCompressData(image: thumbimage!, max: 32) {
+        message.thumbData = data
+        }
+        
+        let webpage = WXWebpageObject.init()
+        webpage.webpageUrl = url
+        message.mediaObject = webpage
+        
+        let send = SendMessageToWXReq.init()
+        send.bText = false
+        send.message = message
+        let scene = type == 0 ? WXSceneSession : WXSceneTimeline
+        send.scene = Int32(scene.rawValue)
+        
+        WXApi.send(send)
+    }
+    
+    fileprivate func share(image: UIImage) {
+        if !WXApi.isWXAppInstalled() {
+            let popview = PopupView()
+            popview.popupText(.noWechat)
+            return
+        }
+        
+        let message = WXMediaMessage.init()
+        
+// image最大10M
+    let wxImage = WXImageObject.init()
+    if let data: Data = imageCompressData(image: image, max: 10 * 1024) {
+        wxImage.imageData = data
+        }
+        message.mediaObject = wxImage
+        
+        let send = SendMessageToWXReq.init()
+        send.bText = false
+        send.message = message
+        send.scene = Int32(WXSceneSession.rawValue)
+        
+        WXApi.send(send)
+}
+
+```    
+
+
+#### 压缩图片等方法
+``` 
+    // MARK: - 通用
+    fileprivate func imageCompressSize(image: UIImage, size: CGSize) -> UIImage {
+        let result = image
+        UIGraphicsBeginImageContext(size)
+        result.draw(in: CGRect.init(x: 0, y: 0, width: size.width, height: size.height))
+        UIGraphicsEndImageContext()
+        return result
+    }
+    
+    fileprivate func imageCompressData(image: UIImage, max: Int) -> Data? {
+        var strength: CGFloat = 0.99
+        var data = UIImageJPEGRepresentation(image, strength)
+        if data == nil {
+            return nil
+        }
+        while data!.count > max * 1024 && strength > 0.5 {
+            strength -= 0.02
+            data = UIImageJPEGRepresentation(image, strength)
+        }
+        if strength <= 0.5 {
+            let image = UIImage.init(named: "AppIconSmall")
+            return UIImageJPEGRepresentation(image!, strength)
+        }
+        return data
+}
+```    
+
+#### 分享回调
+
+```   
+    // MARK: - SDK回调
+    extension AppDelegate: WXApiDelegate {
+    
+    @available(iOS, obsoleted: 9.0)
+    func application(_ application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        if let sourceApp = sourceApplication {
+            if sourceApp.contains("tencent.xin") {
+                return WXApi.handleOpen(url as URL?, delegate: self)
+            } else if sourceApp.contains("xxx") {
+                return WKAuth.handleOpen(url as URL?, delegate: WifiService.shared)
+        }
+        }
+        return true
+    }
+    
+    @available(iOS 9.0, *)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
+        let appName: String = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String
+        if appName.contains("tencent.xin") {
+            return WXApi.handleOpen(url, delegate: self)
+        } else if appName.contains("xxx") {
+            return WKAuth.handleOpen(url, delegate: WifiService.shared)
+        }
+        return true
+    }
+    
+    //未使用
+    func onReq(_ req: BaseReq!) {
+        if req .isKind(of: GetMessageFromWXReq.self) {
+            //微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+        } else if req .isKind(of: ShowMessageFromWXReq.self) {
+            //显示微信传过来的内容
+        } else if req .isKind(of: LaunchFromWXReq.self) {
+            //从微信启动App
+    }
+}
+    
+    func onResp(_ resp: BaseResp!) {
+        let popview = PopupView()
+        if resp.errCode == 0 {
+            popview.popupType(.success, .shareSuccess)
+        } else {
+            popview.popupType(.failed, .shareFailed)
+    }
+}
+```
