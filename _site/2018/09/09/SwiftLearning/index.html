@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Learning... Codeing...">
+    <meta name="keywords"  content="Shown, ShownBie, poos, iOS, Apple, iPhone">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Swift基础中需要注意的点 - Welocme to Shown's blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/09/09/SwiftLearning/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Shown's blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-2015.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-2015.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Swift" title="Swift">Swift</a>
+                        
+                        <a class="tag" href="/tags/#语法" title="语法">语法</a>
+                        
+                    </div>
+                    <h1>Swift基础中需要注意的点</h1>
+                    
+                    
+                    <h2 class="subheading">列举了基础点，重点介绍注意点</h2>
+                    
+                    <span class="meta">Posted by poos on September 9, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h2 id="简介">简介</h2>
+
+<h5 id="语言介绍">语言介绍</h5>
+
+<p><a href="https://zh.wikipedia.org/wiki/LLVM">LLVM</a></p>
+
+<p>LLVM是一个自由软件项目，它是一种编译器基础设施，以C++写成。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及“闲置时期”的最优化。它最早以C/C++为实现对象，而目前它已支持包括ActionScript、Ada、D语言、Fortran、GLSL、Haskell、Java字节码、Objective-C、Swift、Python、Ruby、Rust、Scala[1]以及C#[2]等语言。</p>
+
+<ul>
+  <li>
+    <p>LLVM框架系统：</p>
+
+    <p>1) 是一套构架编译器的框架系统，提供编译、连接、运行期间的优化处理，直接生成本地汇编代码，支持各种语言（包括GCC和所有苹果的开发语言）；</p>
+
+    <p>2) 它是一种底层支持软件，可以算得上是系统软件，Swift编译时底层需要通过LLVM来生成本地代码；</p>
+  </li>
+  <li>
+    <ol>
+      <li>Swift语言的一些基本特性：</li>
+    </ol>
+
+    <p>1) 博采众长，吸取了Python、Ruby、OC等各种语言的优点，可以算得上是一门综合性的语言；</p>
+
+    <p>2) 和C++一样是面向对象的编译型语言，由于是编译生成本地代码再执行的，因此速度很快，效率很高，比OC的效率高很多；</p>
+
+    <p>3) 简单灵活，扩展性能好，语法特别简洁，同时支持在类体外为类添加成员或函数；</p>
+
+    <p>4) 和OC享有同样的Cocoa类库；</p>
+
+    <p>5) 强类型：由于支持面向对象所以是类型安全的，可在编译时检查类型异常；</p>
+
+    <p>6) 具有动态特性，比如定义变量的时候可以不用声明类型，可以直接通过赋值的内容判断变量类型，但是一旦初始化后类型就确定了不可再修改；</p>
+
+    <p>7) 支持一些高级特性，比如函数闭包、泛型、多值返回（利用元组来实现）等；</p>
+
+    <p>8) 支持和OC混编（但是代码必须得分文件编写，即不是强耦合的）；</p>
+
+    <p>9) 全面支持Unicode，标示符可以是中文、表情符号等；</p>
+
+    <p>10) ;称为可选符号，一般在同一行中存在多条语句时作为分隔符出现，换行即表示一条语句的结束</p>
+
+    <p>11) 将繁杂众多的集合数据类包装在两个类型中，Array具有List等所有线性边的功能，Dictionary包含Map等功能，使用更简便和容易；</p>
+
+    <p>12) 利用可选变量来解决大规模进行异常处理的问题：Optional可选变量主要应对一个变量可能存在也可能为nil空的情形，通常在很多函数执行的时候可能会发生异常，一般情况下是通过抛出异常给上级函数来处理的方式来解决异常，但是这回大大增加代码的效率和冗余度，但是如果可以通过返回nil值来判断异常就会大大提高问题解决的效率；传统情况下通过返回值判断异常有很多缺陷，比如有些函数返回-1表示异常，有些函数返回0表示异常，而有些函数返回最高位为1表示异常，特别繁多又不方便记忆，但是如果规定成功返回一个有值的量而异常则返回空（即没有值nil），这样就可以统一异常的鉴别方式了；Swift的nil和OC的nil不一样，OC的nil是一个空指针NULL，但是Swift中所有类型的可选值都可以是nil，可选的意思就是要么有值要么没值；</p>
+
+    <p>13) 正因为有可选类型的存在Swift没有异常处理机制，这大大降低了语言的复杂度；</p>
+  </li>
+</ul>
+
+<h2 id="使用">使用</h2>
+
+<h4 id="payground">payground</h4>
+
+<p><a href="https://juejin.im/post/5b1a00e251882513ad322579">Playground 参考博客</a></p>
+
+<p><a href="https://help.apple.com/xcode/mac/10.0/#/dev188e45167">AppleDevelop Playground 开发文档</a></p>
+
+<ul>
+  <li>
+    <p>Playground可以方便调试Swift代码；同时可以调试UIVIewConttoller、UIView、NSViewController的界面；页支持导入三方包，例如Reveal的f库</p>
+  </li>
+  <li>
+    <p>建立Playground的方法，在Xcode菜单下打开file-&gt;new-&gt;Playgroune, 或者用快捷键 commmand + option + shift + N</p>
+  </li>
+</ul>
+
+<h4 id="注释">注释</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code> /* */的功能在Swift中更加强大，支持嵌套注释，
+ 比如/* xxx /* yyy被嵌套的注释 */ zzz */
+</code></pre></div>
+
+<h4 id="初始化以及类型绑定">初始化以及类型绑定</h4>
+
+<ul>
+  <li>
+    <p>动态类型绑定：像Java、C++等都属于静态语言，采用静态类型绑定，即在定义变量时直接指定其类型，数据类型在编译阶段就已经确定，而动态类型绑定是在程序运行时才确定数据的类型，比如在程序运行到为这个变量第一次初始化语句时才确定数据类型；</p>
+  </li>
+  <li>
+    <p>Swift同时具备静态绑定和动态绑定两种特性，在两者之间寻求平衡点；</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var a: Int = 5，定义时直接指定其类型，则在编译阶段就可确定类型
+
+var a = 5，虽然没有直接指定其类型，但是可以通过右边表达式的类型推断出左边的类型，这也是在编译阶段就可确定类型的情况
+
+var a = b &gt; c ? "string" : 3.23
+如果b和c是用户输入的两个整型数值，则编译阶段完全无法判断a最终的类型，这种无法推断的情况就只能在程序运行的时候根据具体情况进行绑定了
+
+</code></pre></div>
+
+<h2 id="数据类型和语法">数据类型和语法</h2>
+
+<h4 id="基本数据类型之-数值类型">基本数据类型之 数值类型</h4>
+
+<ul>
+  <li>一些无视操作系统的整型精度</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Byte == UInt8 // 单字节
+
+SignedByte == Int8 // 带符号单字节
+
+ShortFixed == Int16 // 短整型
+
+Fixed == Int32 // 长整型
+
+</code></pre></div>
+
+<ul>
+  <li>数值转换
+ Swift要求类型绝对安全，窄化转换和自然转换都必须进行显示的强类型转换才行，否则就会报错！</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var x: Byte = 10
+var y: Byte = 20
+ 
+var z: Int32 = x + y // Bad！
+var z: Int32 = Int32(x) + Int32(y) // Good!
+</code></pre></div>
+
+<ul>
+  <li>实质上所有基本类型都属于类（class），这里的类型转换其实是调用该类的构造函数构造出该类的一个新的对象；！同样，窄化转换以及浮点转整型都是截断型转换，会损失精度，使用的时候需要注意！</li>
+  <li>Swift最牛逼的一个地方就是可以检查运行时的数据溢出，当然，编译时的溢出检查就更不用说了，比如var a: Int8 = 250，var a: Int8 = 8 + 125等都会直接在编译阶段报错；</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var aa: Int8 = 8
+var bb: Int8 = 127
+var cc: Int8
+ 
+cc = aa + bb  //error
+</code></pre></div>
+
+<ul>
+  <li>获取类型的极值：可以通过Int32.min、UInt8.max的方式获取每种类型的最大值和最小值，注意！浮点类型没有max和min属性，因为浮点数可以表示任意大小的数，只不过太大或太小的值精度非常非常低而已；</li>
+  <li>各个进制表示，小写字母</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>二进制：0b打头
+
+八进制：0o打头
+
+十六进制：0x打头
+</code></pre></div>
+
+<ul>
+  <li>浮点数不带任何后缀，初始化时想要赋给Float就不能使用类型推断，比如var output: CGFloat = 3.14</li>
+  <li>可读性表示，即表示数值类型常量的时候下划线可以随意加并且可以加任意多个（但是起始和.之后的起始位置不能加_），比如var output = 1_000_000_000</li>
+</ul>
+
+<h4 id="基本数据类型之-bool类型">基本数据类型之 Bool类型</h4>
+
+<p>Bool变量的赋值表达式也不能作为判断条件，Swift规定判断条件处只能使用布尔表达式，诸如==、&gt;等，或者是返回Bool值的函数，但是不可以是复制表达式，即使是Bool类型的复制表达式也不可以！</p>
+
+<h4 id="基本数据类型之-字符类型">基本数据类型之 字符类型</h4>
+
+<ul>
+  <li>
+    <p>Swift中字符类型Character和传统编程语言有很大的不同，由于完全支持Unicode编码Character编程了不定长类型，比如传统ASCII字符编码仍然和ASCII编码值一样，并且长度还是1个字节，但是对于英语系以外的语言，比如中文，一个字符就是2个字节，而对于一些特殊符号，比如笑脸等，一个字符就有4个字节，因此Swfit内部用处理字符串的方式处理Character，并且单个Character不再支持&gt;、&lt;、&gt;=、&lt;=这四个操作符了；</p>
+  </li>
+  <li>
+    <p>由于一个字符可能超过1个字节，因此Swift中不再用’‘来表示一个字符了，而是和字符串一样使用”“来指定一个字符，比如let c: Character = “a”；</p>
+  </li>
+  <li>
+    <p>自动推断的默认类型：当使用自动推断时，比如let c = “a”，由于没指定类型，Swift默认推断为String类型，即字符串类型，因此想要指定该变量为Character类型除非定义常量或变量时直接指定类型，或者右边使用Character进行强行转换或者右边是一个返回Character类型的函数调用；</p>
+  </li>
+  <li>
+    <p>定义Character量的时候右边只能有一个字符，如果超过1个字符就会报错（即使是使用定义字符串的方式来定义字符）；</p>
+  </li>
+  <li>
+    <p>同样对于Swift的Character也有两种两种表现形式，对于可显示的字符可以直接使用其本身来表示，比如字母’a’，而那些不可显示的字符（比如一些控制字符等）可以用编码表示，但是对于任何一个字符都有自己的编码表示，由于是用Unicode进行编码，因此是不定长的，因此也总共有3中编码表示法：</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>单字节编码（主要是ASCII字符集和ASCII扩展字符集），比如"\x26" == "&amp;"
+
+双字节编码（主要是象形文字，希腊文、中文、日文、韩文等），比如"\u03bb" == "λ”
+
+四字节编码（主要是一些表情符号），比如"\U0001f603" == 笑脸符号
+
+！其中x、u、U的大小写不要弄错，x后面必须有两位，u后面必须有4位，U后面必须有8位，全部都是16进制数，不能忽略前导0！！！
+</code></pre></div>
+
+<ul>
+  <li>
+    <p>转义字符：和传统编程语言一样，使用\符号转义，转义在字符表也大体相似；</p>
+  </li>
+  <li>
+    <p>！注意：Swift不允许Character类型以及Character和整型之间的算术运算，通常C语言中会对char进行一些加减运算来得到另一个字符，但这在Swift中不允许，这让代码变得更安全了，同时也更繁琐了！</p>
+  </li>
+</ul>
+
+<h4 id="基本数据类型之-字符串类型">基本数据类型之 字符串类型</h4>
+
+<ul>
+  <li>
+    <p>字符计数：使用全局函数countElements(str)可以返回字符串中字符的个数，即字符串的长度，由于里面的字符都是不定长的，因此技术要比C语言的按照字节技术麻烦很多，要以Character类对象为单位进行计数！</p>
+  </li>
+  <li>
+    <p>字符串直接的比较：支持==、&gt;、&lt;、&gt;=、&lt;=、!=这几个比较符，意义和C语言等的strcmp一样，但是不支持===和!===比较符！但是Character类型不支持比较符号，但支持==和!=比较符号！</p>
+  </li>
+  <li>
+    <p>字符串连接：使用+和+=进行连接，和Java的+表示字符串连接意义相同，但是Swift只支持String类型之间的连接操作，不允许Character和String之间连接和Character之间的连接，如果要在String和Character之间连接需要对Character类型进行强制类型转换才行！</p>
+  </li>
+  <li>
+    <p>字符串在Swift中其实是用集合实现的，字符串中的字符作为有序的元素构成字符串这个集合，因此要遍历其中的字符可以使用for循环迭代；</p>
+  </li>
+  <li>
+    <p>通过String的unicodeScalars属性获取字符串的Unicode编码序列（表示出来是十进制的！）：</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>let strValue = "abcd上下左右"
+ 
+for c in strValue.unicodeScalars
+{
+    print("\(c.value) ")
+} // 97 98 99 100 19978 19979 24038 21491
+
+</code></pre></div>
+
+<ul>
+  <li>查看前后缀：使用String的hasSuffix和hasSuffix成员函数查看字符串是否存在参数中指定的前缀或后缀：</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>let folder = "Swift.docx"
+folder.hasSuffix(".docx")
+</code></pre></div>
+
+<h4 id="基本数据类型之-元组">基本数据类型之 元组</h4>
+
+<h4 id="基本数据类型之-可选类型">基本数据类型之 可选类型</h4>
+
+<ul>
+  <li>第一种在使用可选变量的时候需要加!，虽然麻烦但是到哪儿都可以知道该变量是一个可选类型的，第二种方法虽然简单，但是代码一长可能就很难判断该变量是一个可选类型的，当然如果出现拆包异常就会知道了，但是测试代码的人员刚开始理解代码的时候可能会遇到一些困难；</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var x: Int! = 5
+var x: Int? = 5
+</code></pre></div>
+
+<h4 id="数组">数组</h4>
+
+<ul>
+  <li>
+    <p>和C语言和Java中的数组不一样，功能更加强大，可以进行增删改等操作，效率非常高，是普通数组和List的结合体；</p>
+  </li>
+  <li>
+    <p>但Swift的数组并没有和Python那样，数组元素的类型可以互不相同，也可以根据类型推断数组类型：let arr = [“abc”, “bcd”] // 数组中的类型必须一致！推断出是[String]类型</p>
+  </li>
+  <li>
+    <p>数组类型的未初始化nil，除非是定义为可选类型，比如[Type]?，println才允许使用</p>
+  </li>
+  <li>
+    <p>没有初始化就不会在内存中开辟空间，如果初始化了（即使是创建了一个空的数组），在内存中还是为其开辟空间的，不仅对于数组，对于任何类型的数据来说都是一样的！</p>
+  </li>
+  <li>
+    <p>数组内元素的类型不一致</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 其实使用Cocoa的NSMutableArray来实现的，元素类型为抽象类型NSObject
+var arr = ["abc", 123, 234.323]
+arr = ["df"] // 可以改变数组本身
+println(arr)
+arr.append(23.422) // 可以追加
+println(arr)
+arr[1] = 72.234 // 可以修改数组元素
+println(arr)
+// 可以追加任意数组，由类型推断用Swfit的Array包装了NSMutableArray
+arr += ["xxdlfsd", 234.23, 9299320] 
+println(arr)
+
+ // 由于类型无法推导，所以还是使用NSMutableArray来实现
+var arr_empty = [] 
+</code></pre></div>
+
+<ul>
+  <li>创建固定长度的数组以及规定默认的初始化值：有时需要使用类似C语言那样限制长度的传统数组，这是就需要使用数组类型的构造函数，并制定相关的参数达到上述目的</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 这里必须同时指定数组长度和默认初始化值，少一个都不行！
+var arr = [Int](count: 4, repeatedValue: 2)
+println(arr.count) // 4
+println(arr) // [2, 2, 2, 2]
+</code></pre></div>
+
+<ul>
+  <li>访问数组元素：和C语言一样，通过arrayname[index]的方式访问，其中let定义的常量数组的值不可修改，而var定义的变量数组可以；</li>
+  <li>区间赋值：</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>支持闭区间和半开半闭区间两种：
+
+arr[min...max] = [item1, item2, ...]
+arr[min..&lt;max] = [item1, item2, ...]
+</code></pre></div>
+
+<h4 id="字典">字典</h4>
+<ul>
+  <li>和数组一样，如果使用类型推导定义时各个键值对类型不一致，内部就会用NSMetableDictionary替换！</li>
+  <li>创建空的字典：同样由三种方法，泛型构造器、类型构造器、直接置空（前提是类型得确定）</li>
+  <li>字典的访问和修改，Swift将Dictionary的键值中的值的类型都会自动隐式地提升成可选类型，即虽然定义的时候是[Type: Type]，但是底层是[Type: Type?]，因此在使用字典中的值的时候一定要加上拆包符号才行，比如dic[5]! + 2，否则就会报错，这就是为什么不存在的键值访问时返回nil了：</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+var dic = [1: 2, 3: 5]
+dic[10] = 17 // 对于不在字典中的键值直接添加
+println(dic[10]) // Optional(17)
+
+let a = dic[5] + 2//不允许 dic[5] 要解包
+</code></pre></div>
+
+<ul>
+  <li>修改键值：除了直接赋值，另一种是.updateValue(newValue, forKey:)的方式，修改指定键对应的值同时返回旧的值，如果旧值不存在则返回nil，同样也是返回可选类型</li>
+  <li>将keys和values转换为数组：直接使用强制类型转换即可，let keys = Array(dic.keys)</li>
+  <li>对于值类型的元素直接复制，对于类对象的元素只是复制引用（就是个指针），因此原本和副本的该字段的引用指向同一个类实体，因此如果在副本中通过该引用修改对象的字段，则也会影响到原本；</li>
+</ul>
+
+<h4 id="函数">函数</h4>
+<ul>
+  <li><strong>类型</strong>： 全局函数：和C语言一样，整个文件中都可以全局调用，因此Swift和C++一样并不是完全面向对象的语言；
+ <strong>嵌套函数</strong>：Swift支持在函数中定义函数，函数内部定义的函数就是嵌套函数；
+ <strong>方法</strong>：定义在类、结构体、枚举中的函数，这体现了Swift的面向对象的属性；</li>
+  <li>内部参数名和外部参数名</li>
+  <li>默认参数</li>
+  <li>可变参数 func add(tag: String, varList nums: Int…) -&gt; Int</li>
+  <li>变量参数——Swift的参数默认为常量的：/ 既有var修饰又具有外部参数名 func test(a: Int, var b: Int, var C c: Int)</li>
+  <li>Swift的引用传参——输入输出参数：</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>虽然只有类对象是引用类型的，但是也可以实现值类型数据的引用传参，在C++中引用传参的目的就是输入输出参数，因此Swift中可以用inout将变量设为输入输出参数，这样就实现了引用传参，注意，用inout修饰不用设为var，因为inout的目的就是要在函数中修改参数值：
+
+// 也可以加外部参数名，一般规则就是修饰符都写在外部参数名之前
+func test(a: Int, inout name s: String)
+</code></pre></div>
+
+<ul>
+  <li>输入输出参数  虽然只有类对象是引用类型的，但是也可以实现值类型数据的引用传参，在C++中引用传参的目的就是输入输出参数，因此Swift中可以用inout将变量设为输入输出参数，这样就实现了引用传参，注意，用inout修饰不用设为var，因为inout的目的就是要在函数中修改参数值：</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 也可以加外部参数名，一般规则就是修饰符都写在外部参数名之前
+func test(a: Int, inout name s: String)
+{
+    s = "haha"
+}
+ 
+// let s: String = "xxxx" // 常量不能作为输入输出参数！
+var s: String = "xxxx"
+test(23, name: &amp;s) // &amp;和C++的取引用概念不同，这里仅仅是为了和inout关键字呼应，进表示引用传参的意思
+println(s) // haha
+</code></pre></div>
+
+<ul>
+  <li>函数类型</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 函数类型为(Int, Int) -&gt; Int
+func add(a: Int, b: Int) -&gt; Int
+{
+    return a + b
+}
+ 
+var fun: (Int, Int) -&gt; Int = add
+println(fun(1, 2)) // 3
+
+</code></pre></div>
+<ul>
+  <li>将函数类型作为返回值类型</li>
+  <li>将函数类型作为参数 实现一个函数在内部调用多种类型相同但功能不同的外部函数，而不用通过繁杂的if语句再通过函数名调用这些外部函数了，可以方便的增强多态的能力</li>
+  <li>泛型</li>
+  <li>和C++泛型感念一样，都是运行时建立类型的函数模板，效率会慢很多，定义也是类似的，但不过Swift有泛型约束，这就比C++安全多了，这就避免用户乱定义类型导致泛型混乱的局面：
+```</li>
+</ul>
+
+<p>func isEqual<T: Comparable="">(a: T, b: T) -&gt; Bool // Comparable是Swift协议
+// 只有遵守该可比性协议的类型才能传入，Swift基本类型（不包括集合）都属于该协议范畴
+// 使用泛型而没有协议编译器是会报错的！
+{
+    return a == b
+}</T:></p>
+
+<p>// 这里定义只有具有可比性的两种类型的数据才能传入函数
+println(isEqual(1, 2)) // false
+println(isEqual(“haha”, “haha”)) // true</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+- 函数重载 Swift的函数重载依据不在只有C++的函数签名那么简单了，有多了函数返回值类型，即函数返回值类型也可以作为重载依据，因此Swift重载内容包括了参数类型、参数个数和返回值类型这三项，**重载时函数名必须相同，但函数类型必须不同**，使用的时候一定要注意调用形式，避免歧义；
+
+
+#### 闭包
+- Swift中闭包的概念非常广泛，但是我们这里主要讲解闭包表达式：
+
+</code></pre></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>1) 闭包按照表面意思就是指一段封闭的代码包，而Swift中的闭包则包括之前讲过的函数、方法、内嵌函数，当然最重要的就是闭包表达式了；
+
+2) 闭包表达式：
+
+     i) 即一段用{ }包住的代码，可以实现跟函数一样的功能；
+
+     ii) 闭包表达式的运算结果为一个函数类型，也就是说用{ }包住的一段闭包表达式的值为一个函数；
+
+     iii) 用以实现类似C++的匿名函数的功能（Lambda函数）；
+
+3) 要支持闭包的两个前提条件：支持函数类型（闭包的返回值就是函数类型）可以将函数作为参数和返回值进行传递，还有一个就是必须支持函数嵌套（因为闭包表达式就是一种抽象的函数，可以在任意地方使用，因此必须包括函数内部）； ```
+</code></pre></div>
+
+<ul>
+  <li>闭包表达式形式和函数很像，但是没有一个名字，也就说是匿名的！由于是匿名的，用户就很难通过”函数名“调用的方式来调用闭包了！</li>
+  <li>函数可以返回任何类型数据，但是闭包表达式只能返回函数类型，比如：var add = { (a: Int, b: Int) -&gt; Int in return a + b }</li>
+  <li>Swift的闭包表达式有两个非常强大的特性，其一就是闭包表达式有很多简化的方法，比如sorted(arr_Int, { (a: Int, b: Int) -&gt; Bool in return a &lt; b })可以简化成：sorted(arr_Int, {$0 &lt; $1})</li>
+  <li>其二 尾随闭包 当闭包作为函数的最后一个参数时闭包可以写在函数调用的外面（即函数的最后一个参数是一个函数类型时，而那个函数类型的参数在传参时可以传闭包 sorted(arr_Int) { (a: Int, b: Int) -&gt; Bool in return a &lt; b }</li>
+  <li>闭包的简单应用（最为内嵌函数的应用）：前面其实也都是闭包的应用，记住！包整个闭包表达式看成一个函数名就行了！该函数的参数、内容、返回值都在{}中定义</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>func cal(opr: String) -&gt; (Int, Int) -&gt; Int
+{ // Swift可以根据上下文捕获的信息推断出闭包的参数类型等各种信息
+  // 这里可以通过cal的返回值类型推断出闭包的所有信息
+    
+    switch opr
+    {
+    // 通过返回值可以推断出闭包的参数都是Int型的，因此可以省略类型
+    case "+": return { (a, b) -&gt; Int in return a + b }
+    // 当然也可以省略括号
+    case "-": return { a, b -&gt; Int in return a - b }
+    // 可以通过返回值推断出闭包函数的返回类型为Int，因此返回类型“-&gt; 返回类型”也可以省略
+    case "*": return { a, b in return a * b }
+    // 如果return语句时闭包语句组中的唯一一条语句则可以省略return关键字
+    case "/": return { a, b in a / b } // 必须是唯一的一条语句而不是最后一条语句，这样就不行：in a + b; a - b
+    // 如果以上所有信息均能获得则还能继续简化
+    // 和Shell一样$0表示第一个参数，$1表示第二个参数，一次类推下去
+    // 由于参数类型、返回值都已经推断出，因此可以直接利用$X构造表达式作为语句组
+    // 同样，如果返回语句是唯一的语句则可以不加return，如果是多个语句就得加return
+    case "%": return { $0 % $1 }
+    case "&amp;": return { println("operator &amp;"); return $0 &amp; $1 } // 必须加return，否则报错
+    // 一般用$X就表示已经推断出参数类型了，因此无需再在多此一举地在闭包中声明参数的类型
+    
+    // 注意！闭包中必须出现参数！不管是这里的a、b还是$0、$1，因此这里不能直接写return { 0 }，这回报错的
+    // Swift要求闭包中必须出现参数，因此需要这样写才行
+    default: return { a, b in 0 }
+    }
+}
+</code></pre></div>
+
+<ul>
+  <li><strong>闭包的内存包含自己的数据区！——存放外界捕获值</strong></li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1) 传统语言如C语言等函数的代码段只有操作语句，而函数中使用的数据都有栈区或堆区统一管理，函数代码段本身没有数据区；
+
+2) 但是Swift的闭包彻底颠覆了函数的内存模型，闭包在Swift中成为了一种资源，该资源中可以包含自己的数据，就跟Win32的窗口资源类似，不仅有代码，也有数据！
+
+3) 但是闭包中定义的变量和常量仍然是按照传统方式进行管理的（即存放在统一的栈区和堆区），那么闭包的数据区放的都是什么数据呢？答案是外界捕获值！
+
+4) 这些捕获值定义在闭包的外面，然后在闭包中直接访问这些值，但这里跟C语言的作用域以及static全局作用域的概念完全不同，在内部访问外部作用域更大的数据其实是直接访问这些数据的空间，但是闭包在这里是捕获而不是直接访问这些数据的空间，具体地将就是将捕获的数据拷贝到自己的数据区中称为自己的资源的一部分
+
+func makeIncrementor(forIncrement amount: Int) -&gt; () -&gt; Int
+{
+    var currentCount = 0
+    
+    return {
+        currentCount += amount
+        return currentCount
+    } // 在内存中创建一块闭包资源
+    // 该闭包资源中的cuurentCount并不和外界定义的currentCount共享内存
+    // 而是将其备份到闭包自己的内存数据区中，并且用0去初始化该数据
+    // 将闭包返回到外界则这片闭包资源区就不会被释放（即使过了作用域）
+}
+ 
+let incrementByTen = makeIncrementor(forIncrement: 10) // 创建了一个闭包并返回
+// 接下来使用的都是同一片闭包内存资源
+println(incrementByTen()) // 10
+println(incrementByTen()) // 20
+println(incrementByTen()) // 30
+ 
+let incrementBySix = makeIncrementor(forIncrement: 6) // 又创建了一个闭包资源
+println(incrementBySix()) // 6
+println(incrementBySix()) // 12
+println(incrementBySix()) // 18
+ 
+println(incrementByTen()) // 40，闭包就当一个变量或常量之类的数据使用，其中数据区的内容可以一直保存
+</code></pre></div>
+
+<ul>
+  <li><strong>闭包是引用类型数据！</strong></li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>i) 闭包的返回值前面提到过是函数类型，而这个函数类型的数据类似于Win32中HWND等资源指针（在Swift中叫引用）；
+
+ii) 如果将该引用赋来赋去，则这些引用访问的都是同一片闭包内存空间，比如接着上面的代码往下写：
+
+let incrementByTen2 = incrementByTen
+println(incrementByTen2()) // 50
+只有通过闭包表达式才能创建一片新的闭包内存
+</code></pre></div>
+
+<h4 id="枚举">枚举</h4>
+<ul>
+  <li>字符、字符串、整型、浮点型，但是可以推断的只有Int型。4.0String也可以推断了</li>
+  <li>组合枚举</li>
+</ul>
+
+<h4 id="结构体和类">结构体和类</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1. Swift的类和结构体的异同：
+
+    1) Swift非常重视结构体的作用，并提供了结构体非常强大的面向对象支持；
+
+    2) 结构体和类的共有属性：
+
+        i) 都可以定义数据成员（这是必然的）；
+
+        ii) 都可以定义属性（计算属性和存储属性）；
+
+        iii) 都可以定义附属脚本（下标访问，特别是基本类型中的数组和字典都都是用结构体定义的，并且支持下标访问，Swift的下标访问实质上使用附属脚本定义的）；
+
+        iv) 都可以定义方法；
+
+        v) 都有构造器（注意，Swift中的构造器不等于方法，之后在概念上要作区分）；
+
+        vi) 都支持扩展和协议；
+
+    3) 只有类具备但结构体不具备的更强大的功能：
+
+         i) 支持继承；
+
+         ii) 支持运行时强制类型转换；
+
+         iii) 支持析构；
+
+         iv) 支持ARC引用计数（只有类是引用类型的，结构体是值类型的，因此无法引用，也就提不上引用计数管理了）；
+</code></pre></div>
+
+<ul>
+  <li>可以在类中添加结构体成员，也可以在结构体中添加类成员，这是随意的；</li>
+  <li>和Java一样，没有前向引用声明的概念</li>
+  <li>Swift也是将引用类型的对象都放在堆中管理，因此这点需要程序员记在心里即可，不必使用new之类的操作符来强调这个问题</li>
+  <li>实例化和实例是一个广义上的概念：枚举、函数类型和闭包开辟内存的过程也可以成为实例化，而这些开辟的结果只能称作实例，只有类类型开辟的结果才可以成为对象（当然也可以成为实例）</li>
+</ul>
+
+<h4 id="属性和下标">属性和下标</h4>
+<ul>
+  <li>Swift将结构体、枚举和类中可以通过外部访问的非方法类成员都叫做属性</li>
+  <li>Swift中的属性主要有：存储属性（即OC和C++中的数据成员）、计算属性（用于访问封装后的数据成员的方法（精确地讲应该是一段脚本）、属性观察者（主要是指didSet和willSet脚本，在存储属性被修改前后被调用，用以观察属性变化的过程，非常方便调试）、静态属性（和C++概念一样，即属于类而不属于对象）、索引属性（即为类或结构体定义下标访问，即C++中的operator[]的重载）；</li>
+  <li>存储属性：常量属性和变量属性以及常量结构体、常量类对象（实际上是常引用，Swift只能通过引用访问对象）</li>
+  <li>惰性存储属性——延迟加载：将存储属性声明为lazy就变成了惰性存储属性，它的功能就是延迟加载，即在实例化的时候并不会在内存中加载该存储属性，只有在第一次访问它的时候才会在内存中加载该属性 ！！注意！lazy只能用于var不能用于let，因为let要求定义时必须立即初始化的，如果lazy用于let会直接编译报错！</li>
+  <li>计算属性：计算属性本身不能存储数据，但不过可以通过它间接地访问一些存储属性， 由一个取值访问器getter和一个设置访问器setter组成 。如果只有set 可以直接使用 return在花括号中</li>
+  <li><strong>结构体</strong>中的计算属性和<strong>class</strong>一样，这里再示范一下<strong>枚举</strong>的计算属性</li>
+  <li>属性观察器 是Swift的一种监听机制，只能作用于变量存储属性，可以捕获变量存储属性在改变前后的值，不能作用于let定义的常量属性，也不能作用于lazy定义的惰性存储属性；由于属性观察器不是计算属性，因此不能包含get和set，实际上它提供了两种方法willSet（在修改之前调用，捕获修改的新值）和didSet（在修改之后调用，捕获修改之前的旧值）：</li>
+  <li>计算属性和属性观察者在全局也可以使用（即在类、结构体、枚举外部也可以使用）</li>
+  <li>静态属性：和C++静态属性的概念，即属于类而不属于对象，在Swift中枚举、结构体和类都可以定义静态属性，支持程度不一样</li>
+  <li>索引属性——添加下标访问方式：subscript(索引参数列表) -&gt; 返回值类型 { set和get的可读可写访问 或 直接return的只读访问 }</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+    subscript(index: Int) -&gt; Int { // 普通的一维数组访问，这里设定为只读
+        return grid[index]
+    }
+    
+    subscript(row: Int, col: Int) -&gt; Int { // 可以重载，模拟二维数组访问，这里设定为可读可写下标访问
+        get { // 取值访问器getter
+           return grid[row * cols + col]
+        }
+        set { // 设置访问器setter
+            grid[row * cols + col] = newValue
+        }
+
+</code></pre></div>
+
+<h4 id="方法-方法就是枚举结构体类中定义的函数但是它跟函数在命名方面有很大的不同">方法 方法就是枚举、结构体、类中定义的“函数”，但是它跟函数在命名方面有很大的不同；</h4>
+<ul>
+  <li>Swift建议函数以动词开头，最后一个单词或者倒数第二个单词为介词，第一个以后的参数名Swift建议以介词开头，因为一般方法的参数都是方法作用的对象或作用的介质，因此都以介词打头会非常明了，由于第一个参数作用的介词在函数名中已经体现了，而后面的参数作用的介词在函数名中并不存在，因此Swift强制要求之后的参数必须要有外部参数名</li>
+  <li>Swift默认在结构体和枚举中的方法不能修改属性的！这就体现出来Swift对结构体的定位了，Swift希望结构体的方法不对属性进行修改而仅仅是用来进行输出信息等操作，因此Swift将结构体定位成一种小型的数据包，如果硬要修改就只要把方法定义成变异类型就行了，使用关键字mutating修饰即可。<strong>对于枚举是一样的！</strong></li>
+  <li>不仅可以对存储属性修改，还可以修改self的值（注意，结构体和枚举都是值类型的）</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>enum Test: String
+{
+    case a = "a"
+    case b = "b"
+    case c = "c"
+    
+    mutating func next()
+    {
+        switch self
+        {
+        case .a: self = .b
+        case .b: self = .c
+        case .c: self = .a
+        }
+    }
+}
+ 
+var test = Test.a
+ 
+println(test.rawValue) // a
+test.next()
+println(test.rawValue) // b
+test.next()
+println(test.rawValue) // c
+test.next()
+println(test.rawValue) // a
+</code></pre></div>
+
+<ul>
+  <li>静态方法</li>
+</ul>
+
+<h4 id="构造和析构">构造和析构</h4>
+<h5 id="构造">构造</h5>
+<ul>
+  <li>Swift的构造器统一叫init，之所以不属于方法的范畴是因为其没有返回值,和C++等的构造函数的意义是一样的，都是用来完成初始化任务</li>
+  <li>Swift强行要求构造器的参数<strong>必须有外部参数名</strong>，这是因为Swift构造器可以重载，并且Swift的重载也包括返回值类型，因此有可能构造器会重载很多，为了调用时区分不同的构造器要求都必须加上外部参数名,<strong>同时Swift允许外部参数名重载</strong>，即使两个函数的函数类型完全一样，但是只要两个函数的外部参数名不同也能形成重载</li>
+  <li><strong>直接初始化</strong>就是指在定义存储属性的时候就对其初始化，这里需要强调一下直接初始化和调用构造器之间的先后顺序：Swift会<strong>先调用构造器对相关的属性进行初始化</strong>，接着<strong>再检查直接初始化语句</strong>，如果发现还有构造器没有初始化过的属性就是用直接初始化语句对那些属性进行初始化，而那些已经用构造器初始化过的属性就不再初始化了！</li>
+  <li>构造器可以对let定义的常量属性初始化，并且如果常量属性同时在直接初始化语句中初始化过也在构造器中初始化过也<strong>不会发生冲突</strong>而导致编译出错！原因见上一条</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class Test
+{
+    var a: Int = 9 // 构造器中没初始化过就会执行此句
+    let b: Int = 10 // 构造器初始化过了这句就会被忽略
+    
+    init(b: Int) {
+        self.b = b // 先在构造器中初始化
+    }
+}
+</code></pre></div>
+
+<ul>
+  <li><strong>默认构造器</strong>1) 默认构造器就是指用户不定义任何构造器时Swift会为我们隐式提供的构造器； 2) 对于类，默认构造器只有一个无参的空init，而对于结构体，还多了一个这样的构造器，请看如下： 还有就是可选类型的初始化一定要注意了，类和结构体有一定区别：</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class A {
+    // 只有一个空的无参构造器，因此无法通过用户传参构造
+    // 所以必须直接初始化，否则永远也不能初始化而导致编译错误！
+    var a: Int = 1
+    
+    // init() {} // 默认提供一个这个
+}
+ 
+var aa = A() // OK!
+// var aa2 = A(a: 15) // Bad! 类不提供带参的逐一初始化构造器
+ 
+struct B {
+    var a: Int
+    var b: Int
+//  init() {} // 默认提供
+    
+//    init(a: Int, b: Int) { // 还默认提供一个这个，外部参数名和定义时一样
+//        self.a = a
+//        self.b = b
+//    }
+}
+ 
+// var bb = B() // Bad！由于没有直接初始化语句，所以这种方式将导致成员无法初始化而报错！
+// 但是如果有直接初始化语句就对了！
+ 
+var bb = B(a: 23, b: 32) // OK!
+ 
+class C_Class {
+    var a: Int?
+}
+ 
+var cc = C_Class() // 类可以不初始化可选类型
+ 
+struct C_Struct {
+    var a: Int?
+}
+ 
+// var cc2 = C_Struct() // Bad! 但是结构体必须初始化可选类型
+var cc2 = C_Struct(a: nil) // OK!
+var cc3 = C_Struct(a: 13) // OK!
+</code></pre></div>
+
+<ul>
+  <li>构造器重载 函数类型、外部参数名不同都能重载</li>
+  <li>构造器代理：一个构造器中调用另一个构造器。便利构造器和继承重写构造器</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    1) 和Java和C++一样，为了不重复写代码会在一个构造器中调用另一个构造器；
+
+    2) Swift也支持这个特性，这就是代理构造器，即在一个构造器中调用另一个构造器的代码，但不过调用构造器的语句必须是第一句并且仅且能调用最多一句！否则会报错！并且调用的时候一定要加self.；
+
+    3) 结构体和类的代理构造器略有不同，结构体构造器代理非常随意，直接写就行了，而类对于调用构造器的构造器必须用convenience修饰，因此对于类的代理构造器也称为便利构造器，这里就不掩饰结构体的代理构造器了，因为只需要将class改为struct并把convenience去掉就行了
+
+    4) 由于类具有继承特性（结构体没有），和C++一样，对于子类需要先调用父类构造器来初始化父类的部分，然后在执行自己的初始化语句，因此对于这类的代理就称为纵向代理（也称为向上代理），这样的构造器就是指定构造器，而对于上述的代理构造仅仅就是一个类内部之间的构造器相互代理，因此称为横向代理，构造器称为便利构造器；
+    
+</code></pre></div>
+
+<ul>
+  <li>如果用户自定义了任何一个构造器，则默认构造器就不存在了</li>
+</ul>
+
+<h5 id="析构">析构</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    1) 同样也不属于方法，由于无参无返回值（和C++的情况一样），因此不能重载，因此有且仅有一个，名字限制为deinit，没有参数列表，因此不需要参数的括号；
+
+    2) 也是用于清理工作，虽然Swift的ARC内存管理机制（引用计数）和Java效果一样，可以使程序员完全不用关心对象没有及时析构的问题，但是Swift仍然提供了析构器，仍然用于完成对象的清理工作，虽然实例资源不需要程序员管，但是如关闭文件等操作还是需要程序员来执行的，因此关闭文件等操作可以写在析构器代码中，因此Swift还是非常贴心周到的；
+
+    3) 如果用户不写析构器则Swift会自动定义一个空的默认析构器；
+
+    4) 析构器调用时机和C++的析构函数一样，都是在对象被销毁之前调用；
+</code></pre></div>
+
+<h4 id="可选链和引用计数">可选链和引用计数</h4>
+<ul>
+  <li>可选链 就是为了防止由于属性、变量为nil时抛出异常</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>if let s = a_Class?.b_Class?.c_Class?.retD()?.s {
+    println("访问到了最内层的s = \(s)") // 进入了最内层
+}
+</code></pre></div>
+
+<ul>
+  <li><strong>引用计数原理</strong></li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>和C++以及OC一样，所有的值类型的数据（结构体、基本类型、集合）都是保存在栈上，其添加和销毁都是由编译器自动产生相关的代码（汇编语言中实现过），而只有类的对象时保存在堆中，由于采用了自动化就不用像C++那样由人手动管理这部分内存的开辟和释放，其背后是采用ARC机制在运行时自动管理堆中的内存；
+
+RC：Reference Counter，即引用计数器，Swift会为每个创建的对象分配一个引用计数器，用于动态实时监控当前有多少引用指向该对象
+</code></pre></div>
+
+<ul>
+  <li>强引用、弱引用以及无主引用</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    1) 引用分为三类：强引用、弱引用以及无主引用，其中强弱引用的概念和Shell中的强弱引用概念类似，其实只有强引用才能改变RC的值，后面两种不能改变RC的值但而只能通过引用访问对象的内容；
+
+    2) 其中强引用就是上述以及之前经常碰见过的普通的引用，而弱引用需要用weak关键词修饰，而无主引用需要用unowned关键词来修饰；
+    
+    解决循环引用的方法就是只给循环引用的一方（不是两方，只是一方）套上弱引用（或者接下来要将的无主引用），最后在释放时先释放被弱引用（或无主引用）指向的那个对象再释放另一个对象即可（顺序不能错！）
+    
+    本类中需要持有自己可以使用unowned
+</code></pre></div>
+
+<h4 id="类的继承">类的继承</h4>
+<p><a href="https://blog.csdn.net/Lirx_Tech/article/details/41483195">详情链接</a></p>
+<ul>
+  <li>和Java一样只支持单继承不支持多继承，Swift的多继承是由协议实现的（和Java的接口很像，可以通过遵守多个协议的方式来间接达到多继承的目的）；</li>
+  <li>Swift在限定符的约束下（private、public、protected等），所有成员都可以继承（属性、方法、下标等都可以），但是构造器不能继承，因为继承就是通过调用父类构造器在子类中构造出父类部分实现的，因此构造器不能算作类的属性或者方法等范畴，应该说构造器就是一段逻辑脚本，该脚本规定子类部分和父类部分在内存中加载的步骤和方法；</li>
+  <li>继承链条</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>   i) 大致顺序是：分两遍，第一遍是从子类到父类，第二遍再从父类到子类；
+
+   ii) 第一遍的从子类到父类是指先调用子类构造器，其中子类构造器中调用了父类的构造器，而父类的构造器又调用了爷类的构造器，从而一层一层往上知道最顶层的构造器调用完；
+
+   iii) 到达顶层后，再原路返回执行第二遍检查，而这个第二遍检查的内容就是直接初始化语句了，一直从顶层一层一层往下检查到底层的子类，方式和之前讲过的一，就是忽略已经被构造器初始化过的属性只对那些没有被构造器初始化过属性执行直接初始化语句：
+</code></pre></div>
+
+<h5 id="swift要求并建议的构造器代理规则">Swift要求并建议的构造器代理规则</h5>
+
+<ul>
+  <li>
+    <p>指定构造器和便利构造器的区别：这个区别只在类中有，对于结构体没有这个概念，便利构造器就是用convenience修饰的构造器，除此之外的构造器都是指定构造器；</p>
+  </li>
+  <li>
+    <p>Swift要求并建议的代理规则：前面的继承代码中已经出现了向上代理的概念了，即使用super.init的方式调用父类的构造器；</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>i) 横向代理规则一：便利构造器只能调用同一类中的其它构造器（指定构造器和便利构造器都行），但是不能调用父类构造器（否则就变成纵向代理而不是横向代理了）
+ii) 横向代理规则二：仅有一句
+iii) 向上代理规则一：子类的每个指定构造器必须调用直接父类的指定构造器（必须是父类的指定构造器不能是便利构造器
+iv) 向上代理规则三：在向上代理之前不得访问父类中的属性，因为在Swift的继承就是通过向上代理实现的，在调用父类构造器之前父类的内容在内存中还不存在因此是无法访问父类中的属性的，
+</code></pre></div>
+
+<ul>
+  <li>子类从父类那里自动获取构造器： 如果子类不定义任何构造器则会从父类那里获取构造器（即子类的默认构造器和父类的构造器一样），但是构造器不能继承，因此只能说是获取；</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>获取的规则：
+
+         i) 如果子类不写任何构造器则将获取父类的所有指定构造器；
+
+         ii) 如果子类写了哪怕一个构造器则子类不会获得父类的任何一个构造器；
+
+         iii) 如果获得了一个父类的指定构造器，则父类中所有调用它的便利构造器以及间接调用它的便利构造器都将被子类获得
+</code></pre></div>
+
+<h5 id="重载属性">重载属性</h5>
+<ul>
+  <li>Swift的继承可以在子类中覆盖父类的一些特性，和C++不同的是Swift不仅可以覆盖方法而且可以覆盖属性和下标，必须使用关键字override声明重写的内容，同时重写对象和被重写对象之间的名字、类型必须完全一致；</li>
+</ul>
+
+<h5 id="重写方法-和-重写下标">重写方法 和 重写下标</h5>
+<ul>
+  <li>Swift允许重写对象方法和静态方法，要求重写和被重写的方法的函数签名要完全一致（包括外部变量名），否则就是重载了：</li>
+  <li>！！注意！父类的方法并没有被删除，其实还是被继承下来了，只不过被覆盖了以后无法通过外界调用，而只能在子类的内部使用super关键字调用来完成一定的辅助功能；</li>
+</ul>
+
+<h5 id="继承限制">继承限制：</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    1) 和Java一样使用关键字final来限制继承；
+
+    2) 如果用final修饰类成员（静态/非静态）则该成员不可被重写；
+
+    3) 如果用final修饰整个类，则该类不可被继承；
+
+    4) 不能同时用final修饰类和成员，因为两者逻辑上是冲突的，因为不能继承的类何以重写它的成员！
+
+    5) 在开发商业软件的时候非常有必要使用final进行限制；
+</code></pre></div>
+
+<h4 id="多态">多态</h4>
+<ul>
+  <li>和其它语言多态描述一致，都是用父类指针或引用（这里的父类是指祖先类）指向子类的实例，然后在子类中覆盖父类的方法，利用该父类引用调用相同的方法而产生不同的行为；</li>
+  <li>多态类型转换：和普通的类型转换不一样，普通的类型转换是指一般意义上的强制类型转换，但是强制类型转换不能发生在类型之间，如果使用”类名(转换对象)”则会触发相应类的构造器而不能达到转换类型的效果，因此Swift的类型转换只能发生在可以转换的两个对象之间，对于不能转换的两个对象会在编译阶段或是运行阶段报错；</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    1) 即is和as两个操作符的运用；
+
+    2) 还是强调那句，这两个操作符的使用必须严格遵守之前讲过的规则：必须要让一个父类的引用指向一个其子类的实例，然后再对该引用用is判断是否属于某个具体的子类或用as将其转换成某个具体的子类类型；
+</code></pre></div>
+
+<h4 id="两种不确定类型any和anyobject">两种不确定类型——Any和AnyObject：</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    1) 注意Swift的不确定类型和Java的Object类不一样，它并不是所有类的基类，可以说它们并不是类，而只是一种不确定类型（类似C语言的void类型）；
+
+    2) AnyObject可以接受任何类类型数据，而Any可以接受任意类型的数据（包括AnyObject和基本类型），由于基本类型不是类类型，因此可见这两种不确定类型并不是类类型；
+
+    3) 虽然不是类类型，但是可以使用is和as操作符，比如0 is Int或0 as Double，其实这里的，其实这里的is和as都使用Any进行重载；
+
+    4) 整个数组整体转换（前提是数组中所有元素类型必须一样）：形式是AnyOrAnyObjectArray as [SpecificType]，这样就可以返回一个转换好的[SpecificType]数组了，但是不能使用可选符号?进行保护！
+</code></pre></div>
+
+<h4 id="协议-类结构体和枚举">协议 类、结构体和枚举</h4>
+<p><a href="https://blog.csdn.net/Lirx_Tech/article/details/41724185">参考资料</a></p>
+
+<ul>
+  <li>
+    <p>其实就是Java中的接口，Swift的遵守协议就是Java中的实现接口，如果放在C++中就是纯虚类的概念，即协议就是一种高度抽象的抽象类，里面值规定了方法、属性等内容，但没有提供任何实现，所有遵守该协议的类、结构体或枚举都必须实现协议中规定的内容，只不过C++没有接口而只能通过继承虚基类来实现其中的内容而已；</p>
+  </li>
+  <li>
+    <p>协议是面向接口编程的必不可少的机制，其要求定义与实现分离，在Java和Swift中都可以将协议作为数据类型（就和其它普通的数据类型Int、Array等）暴露给使用者，而使用者不用关心具体的实现细节；</p>
+  </li>
+  <li>
+    <p>协议中可以定义的内容：计算属性（实例/静态）、方法（实例/静态）和下标</p>
+  </li>
+</ul>
+
+<h4 id="泛型">泛型</h4>
+<p><a href="https://blog.csdn.net/Lirx_Tech/article/details/41775797">参考资料</a></p>
+<ul>
+  <li>和C++泛型概念一样，用法和C++也相似，同样也是使用一个类型占位符（代表一个通用类型，也是泛型的参数，用户随意取名，但要求按照标示符命名规则进行，因为其代表一个通用类型，因此和定义其它类型名的规范一样，最好是首字母大写的驼峰命名方式，一般取T）</li>
+  <li>和任何一种语言的泛型一样，都是动态推导类型的，只有当实际传参的时候才会根据参数类型生成相应版本的代码（即运行时动态加载函数代码），因此执行效率较低，但是程序灵活性非常强；</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>func f&lt;T, K&gt;(a: T, b: K) -&gt; K {
+    return b
+}
+ 
+println(f(12, "haha")) // haha
+</code></pre></div>
+
+<ul>
+  <li>
+    <p>泛型模板类以及扩展模板类, 泛型不仅支持函数，同时也<strong>支持结构体和枚举类型</strong>！</p>
+  </li>
+  <li>
+    <p>扩展模板类时不需要重新写泛型参数列表，可以在扩展体中直接使用定义类时的泛型，非常方便</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>struct Stack&lt;T&gt; {
+    var items = [T]()
+    
+    mutating func push(item: T) {
+        items.append(item)
+    }
+    
+    mutating func pop() -&gt; T {
+        return items.removeLast()
+    }
+}
+extension Stack {
+    subscript(index: Int) -&gt; T? {
+        if index &lt; 0 || index + 1 &gt; countElements(items) {
+            return nil
+        }
+        
+        return items[index]
+    }
+}
+</code></pre></div>
+
+<h5 id="泛型约束要求那个类型占位符所代表的泛型遵守某些规矩比如必须要遵守某些协议或者必须由什么类继承而来等">泛型约束：要求那个类型占位符所代表的泛型遵守某些规矩，比如必须要遵守某些协议，或者必须由什么类继承而来等</h5>
+
+<h5 id="关联类型实现泛型协议">关联类型——实现“泛型协议”</h5>
+<ul>
+  <li>Swift不能定义泛型协议（至少语法上不允许像定义泛型类型那样定义泛型协议），但是有时有这方面的需要，比如在一个协议中指定一种泛型，然后协议中规定了很多方法或属性都需要用到该泛型，但一个类遵守该协议时再根据具体需要规定该泛型的具体类型，同时并使用该具体类型来实现协议中规定的方法和属性</li>
+  <li>Swift提供关联类型这种形式来解决以上问题，即可以先用typealias定义一个泛型（即不对该泛型赋值，值定义其名字），然后在规定要实现的属性或方法中使用该泛型，最后是当一个类型遵守该协议时再用typealias对该泛型进行赋值，使其成为某个具体的类型，接着再实现规定的属性和方法时用具体的类型替换该泛型即可：</li>
+</ul>
+
+<h5 id="用where语句对关联类型进行约束">用where语句对关联类型进行约束：</h5>
+<ul>
+  <li>和SQL的where约束类似，该约束发生在指定某个类型遵守某个协议（协议带有关联类型）时使用；</li>
+</ul>
+
+<h3 id="一些特有的关键字">一些特有的关键字</h3>
+
+<p>guard … else { }</p>
+
+<p>@_exported import SwifterSwift</p>
+
+<p>===</p>
+
+<p>inout var</p>
+
+<p>convenience</p>
+
+<p>repeat { //take input from io standard into n } while n &lt;= 10</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/09/09/SwiftShare/" data-toggle="tooltip" data-placement="top" title="Swift多处调用分享的设计方案">
+                        Previous<br>
+                        <span>Swift多处调用分享的设计方案</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: 'b9f52202894099af76ae',
+                    clientSecret: '6772b808e9c731d2f58fe1754947778cbe8833ab',
+                    repo: 'poos.github.io',
+                    owner: 'poos',
+                    admin: ['poos'],
+                    distractionFreeMode: true,
+                    id: window.location.pathname,
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#生活" title="生活" rel="2">
+                                    生活
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#优化" title="优化" rel="2">
+                                    优化
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#工具" title="工具" rel="2">
+                                    工具
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Swift" title="Swift" rel="3">
+                                    Swift
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计" title="设计" rel="2">
+                                    设计
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>LINKS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://github.com/poos">github/poos</a></li>
+                    
+                        <li><a href="https://gitee.com/poos">gitee/poos</a></li>
+                    
+                        <li><a href="https://my.oschina.net/bieshixuan">oschina/bieshixuan</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/poos001">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/poos">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Shown's blog 2018
+                    <br>
+                    Theme on <a href="">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=poos&repo=poos.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-90855596-1';
+    var _gaDomain = 'auto';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

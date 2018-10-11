@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Learning... Codeing...">
+    <meta name="keywords"  content="Shown, ShownBie, poos, iOS, Apple, iPhone">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Swift多处调用分享的设计方案 - Welocme to Shown's blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/09/09/SwiftShare/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Shown's blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-2015.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-2015.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Swift" title="Swift">Swift</a>
+                        
+                        <a class="tag" href="/tags/#设计" title="设计">设计</a>
+                        
+                    </div>
+                    <h1>Swift多处调用分享的设计方案</h1>
+                    
+                    
+                    <h2 class="subheading">使用协议清晰明了的设计分享</h2>
+                    
+                    <span class="meta">Posted by poos on September 9, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>当一个页面包含了太多的太杂的内容页面就变得复杂了，把相似的内容抽出来单独管理，让项目更清晰。</p>
+</blockquote>
+
+<h2 id="调用的设计方案">调用的设计方案</h2>
+
+<p>某种意义上，不同页面调用分享也可以理解为继承重载的关系—&gt;而继承重载可以用协议完美解决</p>
+
+<h4 id="协议-类结构体和枚举">协议 类、结构体和枚举</h4>
+<p><a href="https://blog.csdn.net/Lirx_Tech/article/details/41724185">参考资料</a></p>
+
+<ul>
+  <li>
+    <p>其实就是Java中的接口，Swift的遵守协议就是Java中的实现接口，如果放在C++中就是纯虚类的概念，即协议就是一种高度抽象的抽象类，里面值规定了方法、属性等内容，但没有提供任何实现，所有遵守该协议的类、结构体或枚举都必须实现协议中规定的内容，只不过C++没有接口而只能通过继承虚基类来实现其中的内容而已；</p>
+  </li>
+  <li>
+    <p>协议是面向接口编程的必不可少的机制，其要求定义与实现分离，在Java和Swift中都可以将协议作为数据类型（就和其它普通的数据类型Int、Array等）暴露给使用者，而使用者不用关心具体的实现细节；</p>
+  </li>
+  <li>
+    <p>协议中可以定义的内容：计算属性（实例/静态）、方法（实例/静态）和下标</p>
+  </li>
+</ul>
+
+<h4 id="实现">实现</h4>
+
+<p>这里实例调用分享的几个地方</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>//可能是 VC
+class A {
+    let title = "A"
+    
+    func beginShare() {
+        self.share()//调用协议方法
+    }
+}
+//可能是 View
+class B {
+    let title = "B"
+    
+    func clickAction() {
+        self.share()//调用协议方法
+    }
+}
+
+//可能是 WebView
+class C {
+    
+    func jsShare() {
+        self.share()//调用协议方法
+    }
+    
+    func jsShareMoment() {
+        self.shareMoment()//调用协议方法
+    }
+}
+//可以是任何类
+</code></pre></div>
+
+<p>这里是协议分发管理的 protocol类</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>// 定义统一的协议
+protocol ShareProtocol {
+    var shareTitle: String { get }
+    var shareUrl: String { get }
+    func share()
+}
+protocol ShareProtocol2 {
+    func shareMoment()
+}
+
+extension A: ShareProtocol {
+    var shareTitle: String {
+        return title + " share"
+    }
+    var shareUrl: String {
+        return "https://baseurl/" + title
+    }
+    func share() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+}
+
+extension B: ShareProtocol {
+    var shareTitle: String {
+        return title + " share"
+    }
+    var shareUrl: String {
+        return "https://baseurl/" + title
+    }
+    func share() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+}
+extension C: ShareProtocol, ShareProtocol2 {
+    var shareTitle: String {
+        return title + " share"
+    }
+    var shareUrl: String {
+        return "https://baseurl/" + title
+    }
+    func share() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+    func shareMoment() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+}
+
+</code></pre></div>
+
+<h3 id="总结">总结</h3>
+
+<p>通过这种设计，ShareManager更加彻底的负责所有的分享事宜；VC 只是简单调用，页面结构更简单了。</p>
+
+<hr />
+<blockquote>
+
+  <hr />
+</blockquote>
+
+<h2 id="分享功能实现的框架">分享功能实现的框架</h2>
+
+<h2 id="分享框架">分享框架</h2>
+
+<p>分享的具体实现就不必细说了</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Model</td>
+      <td>分享模型</td>
+    </tr>
+    <tr>
+      <td>View</td>
+      <td>分享视图</td>
+    </tr>
+    <tr>
+      <td>ViewControl</td>
+      <td>处理弹出动画; 分流选定后的操作</td>
+    </tr>
+    <tr>
+      <td>Manager</td>
+      <td>封装各个SDK分享方法</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+
+  <div class="highlighter-rouge"><pre class="highlight"><code>func present() {
+let model = ShareModel()
+...
+    AppShareViewControl.present(model) }
+</code></pre>  </div>
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<h2 id="model">Model</h2>
+
+<blockquote>
+  <p>本文没有使用 Model，故略去</p>
+</blockquote>
+
+<h2 id="view">View</h2>
+<blockquote>
+  <p>skip</p>
+</blockquote>
+
+<h2 id="viewcontrol">ViewControl</h2>
+<p>设置弹出动画,layout位移动画</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    class AppShareViewControl {
+    /// 弹出分享框
+    static func present(type: ShareType, closure: @escaping (String) -&gt; Void) {
+    
+    ...
+        
+        showAnimation(backView, shareView)
+        buttonsAnimation(buttons: shareView.buttons)
+    }
+    
+    static private func showAnimation(_ backView: UIView, _ alert: UIView) {
+        alert.layer.setValue(375, forKeyPath: "transform.translation.y")
+        UIView.animate(withDuration: 0.3, animations: {
+                       alert.layer.setValue(0, forKeyPath: "transform.translation.y")
+                       backView.alpha = 1
+                       })
+}
+    
+    static private func buttonsAnimation(buttons: [UIView]) {
+        for (index, button) in buttons.enumerated() {
+            button.layer.setValue(375, forKeyPath: "transform.translation.y")
+            button.alpha = 0
+            UIView.animate(withDuration: 0.5,
+                           delay: 0.05 * Double(index) + 0.1,
+                           usingSpringWithDamping: 0.7,
+                           initialSpringVelocity: 0.7,
+                           options: .curveEaseInOut,
+                           animations: {
+                           button.alpha = 1
+                           button.layer.setValue(0, forKeyPath: "transform.translation.y")
+                           })
+    }
+    }
+    
+static private func hideView(view: UIView) {
+    UIView.animate(withDuration: 0.2, animations: {
+                   view.alpha = 0
+                   }, completion: { (_) in
+                   view.removeFromSuperview()
+                   })
+                   }
+}
+</code></pre></div>
+
+<p>分流跳转链接</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    extension AppShareViewControl {
+    /// 必须使用 model，因为日后如果需要打点信息可以方便添加参数
+    /// 点击了某个按钮
+    static func selected(model: model) {
+        switch model.type {
+        case .moments:
+            ShareManage.shared.shareMoments(title: model.title, thumbImage: model.image, url: model.link)
+        case .wechat:
+        ...
+    }
+}
+}
+</code></pre></div>
+
+<h2 id="manager">Manager</h2>
+
+<h4 id="调用系统分享">调用系统分享</h4>
+<div class="highlighter-rouge"><pre class="highlight"><code>    // MARK: - 系统
+    //系统分享传入[String, UIImage, URL]
+    //注意:系统分享qq会调用URL 对应的web更新数据,若没有对应web页（非 H5页）会显示异常
+    func shareSystem(title: String, content: String?, image: UIImage?, link: String) {
+        var items: [Any] = []
+        if title.length &gt; 256 {
+            items.append((title as NSString).substring(to: 255))
+        } else {
+            items.append(title)
+        }
+        var thumbimage = image
+        if image == nil {
+            thumbimage = UIImage.init(named: "AppIconSmall")
+        }
+        if thumbimage!.size.height &gt; 70 {
+            thumbimage = imageCompressSize(image: thumbimage!, size: CGSize.init(width: 70, height: 70))
+        }
+        items.append(thumbimage! as Any)
+        items.append(URL.init(string: link)!)
+        let activity = UIActivityViewController.init(activityItems: items, applicationActivities: nil)
+        UIViewController.currentViewController().presentVC(activity)
+}
+</code></pre></div>
+
+<h4 id="调用微信分享建议优化使用-model">调用微信分享(建议优化使用 model)</h4>
+<div class="highlighter-rouge"><pre class="highlight"><code>    // MARK: - 微信
+    var style = 0
+    func registerShare() {
+        WXApi.registerApp(" xxxxxxxxxxx")
+    }
+    /// 分享朋友圈
+    func shareMoments(title: String, thumbImage: UIImage?, url: String) {
+        share(type: 1, title: title, content: nil, image: thumbImage, url: url)
+    }
+    
+    /// 分享图文链接的消息
+    func shareWechat(title: String, content: String?, thumbImage: UIImage?, url: String) {
+        share(type: 0, title: title, content: content, image: thumbImage, url: url)
+    }
+    
+    /// 分享大图的消息
+    func shareWechat(image: UIImage) {
+        share(image: image)
+    }
+    
+    fileprivate func share(type: Int, title: String, content: String?, image: UIImage?, url: String) {
+        if !WXApi.isWXAppInstalled() {
+            let popview = PopupView()
+            popview.popupText(.noWechat)
+            return
+        }
+        
+        let message = WXMediaMessage.init()
+        if title.length &gt; 256 {
+            message.title = (title as NSString).substring(to: 255)
+        } else {
+            message.title = title
+        }
+        if let description = content {
+            if description.length &gt; 512 {
+                message.description = (description as NSString).substring(to: 511)
+            } else {
+                message.description = description
+        }
+}
+    var thumbimage = image
+        if image == nil {
+            thumbimage = UIImage.init(named: "AppIconSmall")
+    }
+        if thumbimage!.size.height &gt; 70 {
+            thumbimage = imageCompressSize(image: thumbimage!, size: CGSize.init(width: 70, height: 70))
+}
+    if let data: Data = imageCompressData(image: thumbimage!, max: 32) {
+        message.thumbData = data
+        }
+        
+        let webpage = WXWebpageObject.init()
+        webpage.webpageUrl = url
+        message.mediaObject = webpage
+        
+        let send = SendMessageToWXReq.init()
+        send.bText = false
+        send.message = message
+        let scene = type == 0 ? WXSceneSession : WXSceneTimeline
+        send.scene = Int32(scene.rawValue)
+        
+        WXApi.send(send)
+    }
+    
+    fileprivate func share(image: UIImage) {
+        if !WXApi.isWXAppInstalled() {
+            let popview = PopupView()
+            popview.popupText(.noWechat)
+            return
+        }
+        
+        let message = WXMediaMessage.init()
+        
+// image最大10M
+    let wxImage = WXImageObject.init()
+    if let data: Data = imageCompressData(image: image, max: 10 * 1024) {
+        wxImage.imageData = data
+        }
+        message.mediaObject = wxImage
+        
+        let send = SendMessageToWXReq.init()
+        send.bText = false
+        send.message = message
+        send.scene = Int32(WXSceneSession.rawValue)
+        
+        WXApi.send(send)
+}
+
+</code></pre></div>
+
+<h4 id="压缩图片等方法">压缩图片等方法</h4>
+<div class="highlighter-rouge"><pre class="highlight"><code>    // MARK: - 通用
+    fileprivate func imageCompressSize(image: UIImage, size: CGSize) -&gt; UIImage {
+        let result = image
+        UIGraphicsBeginImageContext(size)
+        result.draw(in: CGRect.init(x: 0, y: 0, width: size.width, height: size.height))
+        UIGraphicsEndImageContext()
+        return result
+    }
+    
+    fileprivate func imageCompressData(image: UIImage, max: Int) -&gt; Data? {
+        var strength: CGFloat = 0.99
+        var data = UIImageJPEGRepresentation(image, strength)
+        if data == nil {
+            return nil
+        }
+        while data!.count &gt; max * 1024 &amp;&amp; strength &gt; 0.5 {
+            strength -= 0.02
+            data = UIImageJPEGRepresentation(image, strength)
+        }
+        if strength &lt;= 0.5 {
+            let image = UIImage.init(named: "AppIconSmall")
+            return UIImageJPEGRepresentation(image!, strength)
+        }
+        return data
+}
+</code></pre></div>
+
+<h4 id="分享回调">分享回调</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    // MARK: - SDK回调
+    extension AppDelegate: WXApiDelegate {
+    
+    @available(iOS, obsoleted: 9.0)
+    func application(_ application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -&gt; Bool {
+        if let sourceApp = sourceApplication {
+            if sourceApp.contains("tencent.xin") {
+                return WXApi.handleOpen(url as URL?, delegate: self)
+            } else if sourceApp.contains("xxx") {
+                return WKAuth.handleOpen(url as URL?, delegate: WifiService.shared)
+        }
+        }
+        return true
+    }
+    
+    @available(iOS 9.0, *)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -&gt; Bool {
+        let appName: String = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String
+        if appName.contains("tencent.xin") {
+            return WXApi.handleOpen(url, delegate: self)
+        } else if appName.contains("xxx") {
+            return WKAuth.handleOpen(url, delegate: WifiService.shared)
+        }
+        return true
+    }
+    
+    //未使用
+    func onReq(_ req: BaseReq!) {
+        if req .isKind(of: GetMessageFromWXReq.self) {
+            //微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+        } else if req .isKind(of: ShowMessageFromWXReq.self) {
+            //显示微信传过来的内容
+        } else if req .isKind(of: LaunchFromWXReq.self) {
+            //从微信启动App
+    }
+}
+    
+    func onResp(_ resp: BaseResp!) {
+        let popview = PopupView()
+        if resp.errCode == 0 {
+            popview.popupType(.success, .shareSuccess)
+        } else {
+            popview.popupType(.failed, .shareFailed)
+    }
+}
+</code></pre></div>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/07/24/Fastlane/" data-toggle="tooltip" data-placement="top" title="Fastlane，App配置和部署的利器">
+                        Previous<br>
+                        <span>Fastlane，App配置和部署的利器</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/09/09/SwiftLearning/" data-toggle="tooltip" data-placement="top" title="Swift基础中需要注意的点">
+                        Next<br>
+                        <span>Swift基础中需要注意的点</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: 'b9f52202894099af76ae',
+                    clientSecret: '6772b808e9c731d2f58fe1754947778cbe8833ab',
+                    repo: 'poos.github.io',
+                    owner: 'poos',
+                    admin: ['poos'],
+                    distractionFreeMode: true,
+                    id: window.location.pathname,
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#生活" title="生活" rel="2">
+                                    生活
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#优化" title="优化" rel="2">
+                                    优化
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#工具" title="工具" rel="2">
+                                    工具
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Swift" title="Swift" rel="3">
+                                    Swift
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计" title="设计" rel="2">
+                                    设计
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>LINKS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://github.com/poos">github/poos</a></li>
+                    
+                        <li><a href="https://gitee.com/poos">gitee/poos</a></li>
+                    
+                        <li><a href="https://my.oschina.net/bieshixuan">oschina/bieshixuan</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/poos001">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/poos">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Shown's blog 2018
+                    <br>
+                    Theme on <a href="">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=poos&repo=poos.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-90855596-1';
+    var _gaDomain = 'auto';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

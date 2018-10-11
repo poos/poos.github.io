@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Learning... Codeing...">
+    <meta name="keywords"  content="Shown, ShownBie, poos, iOS, Apple, iPhone">
+    <meta name="theme-color" content="#000000">
+    
+    <title>新的征程 - Welocme to Shown's blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/06/06/Begin/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Shown's blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-2015.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-2015.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#生活" title="生活">生活</a>
+                        
+                        <a class="tag" href="/tags/#总结" title="总结">总结</a>
+                        
+                    </div>
+                    <h1>新的征程</h1>
+                    
+                    
+                    <h2 class="subheading">吐故纳新，继往开来</h2>
+                    
+                    <span class="meta">Posted by poos on June 6, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h2 id="在github新开了博客poosgithubio这是我的第一篇博客"> 🎉 🎉 🎉在github新开了博客<a href="https://poos.github.io/" title="poos.github.io">poos.github.io</a>，这是我的第一篇博客。</h2>
+
+<h2 id="推陈">推陈</h2>
+
+<h3 id="之前的博客地址在这里oschinabieshixuan">之前的博客地址在这里<a href="https://my.oschina.net/bieshixuan/blog/2236855">oschina/bieshixuan</a>。</h3>
+
+<p>简单列举一下这个博客的值得纪念的文章，或者说值得提一下，避免大家绕弯路的文章。按时间顺序记录：</p>
+
+<h5 id="1-oc代码-经纬度地址转换火星坐标偏移校正">1. <a href="https://my.oschina.net/bieshixuan/blog/611288">OC代码 经纬度地址转换，火星坐标偏移校正</a></h5>
+
+<p>如果只是记录经纬度，只是想要知道地址，不必要引入第三方SDK的。</p>
+
+<p>附上github项目，支持使用pod导入<a href="https://github.com/poos/SXGps">https://github.com/poos/SXGps</a></p>
+
+<h5 id="2-设置特殊tabbar样式">2. <a href="https://my.oschina.net/bieshixuan/blog/612490">设置特殊Tabbar样式</a></h5>
+
+<p>原生系统是可以实现的，当然有很多第三方库定制组合了更多功能。</p>
+
+<h5 id="3-最初的对于mvvm的理解">3. <a href="https://my.oschina.net/bieshixuan/blog/612891">最初的对于MVVM的理解</a></h5>
+
+<p>告别MVC。现在不管是OC还是Swift提供了Reactive的概念，响应式更加清晰简洁。</p>
+
+<h5 id="4-判断界面是否正在显示">4. <a href="https://my.oschina.net/bieshixuan/blog/614023">判断界面是否正在显示</a></h5>
+
+<p>第一篇总结类型的文章，介绍页面显示的判断，开心得到oschina的推荐</p>
+
+<h5 id="5-关于nsattributestring">5. <a href="https://my.oschina.net/bieshixuan/blog/617441">关于NSAttributeString</a></h5>
+
+<p>这个博客中的代码是比较老的了。虽然现在写Swift了，但是AttributeString现在在我的项目运用的还是比较多：带V的，带标签的用户；带行高的字符串；大小不一水平居中的字符串…</p>
+
+<h5 id="6-几个ui方面的探究">6. <strong>几个UI方面的探究</strong></h5>
+
+<p>对于列表使用的探究，可惜那时候还基本不用github，否则可以留下一两个Demo<del>，虽然现在看肯定写的很渣</del>。</p>
+
+<p><a href="https://my.oschina.net/bieshixuan/blog/621674">a.自定义UIPageControl,勘误</a></p>
+
+<p>整理网络上的UIPageControl的错误资料，又一次得到oschina的推荐</p>
+
+<p><a href="https://my.oschina.net/bieshixuan/blog/634327">b.tableView下拉选择列表的设计 </a></p>
+
+<p>下拉选择的实现，又一次得到oschina的推荐</p>
+
+<p><a href="https://my.oschina.net/bieshixuan/blog/634327">c.collectionView与tableView并用</a></p>
+
+<p>复杂的选择添加页面，又一次得到oschina的推荐</p>
+
+<p><a href="https://my.oschina.net/bieshixuan/blog/620149">d.多级选择菜单</a></p>
+
+<p>多级的选择菜单</p>
+
+<h5 id="7-pod-更新版本和降级版本osx-1010打包pod全教程-">7. <a href="https://my.oschina.net/bieshixuan/blog/690509">pod 更新版本和降级版本,OSX 10.10+,打包pod,全教程 </a></h5>
+
+<p>来了，cocoapod的使用，发布自己的轮子到pod！！</p>
+
+<h5 id="8-键盘遮挡处理">8. <a href="https://my.oschina.net/bieshixuan/blog/624678">键盘遮挡处理</a></h5>
+
+<p>先后更新了多次。也总结了一段代码，键盘出现时候遍历子view，找出first响应的view，根据view在屏幕中的位置自动调整所有的View。
+<a href="https://gitee.com/poos/SXKeyboardViewControl">poos/SXKeyboardViewControl</a></p>
+
+<h5 id="9-无限轮播的滚动视图-">9. <a href="https://my.oschina.net/bieshixuan/blog/789622">无限轮播的滚动视图 </a></h5>
+
+<p>项目地址：<a href="https://gitee.com/poos/SXCycleView">poos/SXCycleView</a>，项目也是几经修改，现在看来只能算是一种思路启发吧。</p>
+
+<h5 id="10-关于项目框架的设置理解">10. 关于项目框架的设置理解</h5>
+
+<p>a. 16年10月的简单实践 <a href="https://my.oschina.net/bieshixuan/blog/775507">创建一个规范的项目目录</a></p>
+
+<p>b. 16年底的在我的首个SwiftDemo上的实践 <a href="https://gitee.com/poos/SwiftEFarm">poos/SwiftEFarm</a></p>
+
+<p>c. 一个准备干大事的项目怎么设计</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>c. 一个准备干大事的项目怎么设计
+
+1. fastlane
+
+2. 清晰的分支
+
+- baseProject 基础分支，所有公共资源和项目配置。原则：用tag标记稳定版本；可以用稳定版本开发新功能。
+- *xxxxx* 小模块分支等，基于baseProject开发的模块分支，完成后并入develop。
+- develop 开发分支，完整项目的开发分支。
+- test 测试分支，所有移交测试的版本，测试完成即可并入master。
+- master 主分支，只存放完整项目稳定的版本的分支，tag上线版本。
+
+- **说明：如有需要 可以将baseProject扩展为项目主框架（包含所有功能的抽象api）；’xxxxx‘子框架调用api，不关心过程；子框架可以设置单独的临时test分支。**
+
+
+3. 规范的项目
+
+a. 文件目录
+b. 运行测试
+c. swiftlint 代码检查   [github/swift-style-guide](https://github.com/github/swift-style-guide)
+
+4. 谨慎的开发和设计
+
+a. 如有需要可以分别创建多个组件项目，实现组件化（分支介绍最后一条分多个repo 处理）
+b. Theme/Navigator/弹窗统一管理/Review控制/通知统一管理 设计/通用链接，调用系统分享等与iOS系统对接的设计/测试环境下的专用配置，例如不上传统计，例如动态修改UI
+
+continue...
+---
+</code></pre></div>
+
+<p>至此也刚刚好总结10条，也算是见证了我成长的过程吧。喜欢的话去<strong><a href="https://github.com/poos">github/poos</a></strong>Star 一下。</p>
+
+<hr />
+
+<h2 id="纳新">纳新</h2>
+
+<p>大概计划一下这个博客，以后会写一些有质量的文章。可能是下边的某些方面，也可能不限于下边，计划尽量多总结–每周写一篇–，每篇在千字以上吧，重要的是有货。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>//笔记截图-工作中和探究中接触到的方面，需要把笔记整理成博客分享给大家。
+
+*****计划整理 new
+
+项目初始化和框架
+
+app上线
+
+第三方库学习
+https://www.cnblogs.com/machao/p/5526192.html
+SnapKit
+RxCocoa
+Then
+SwifterSwift 扩展狭集合
+EZSwiftExtensions 广集合
+URLNavigator 界面跳转
+SwiftMessages 弹出窗口
+ESTabBarController-swift 
+SwiftLint
+Aspects 运行时
+
+swift运行优化
+
+CTMdeiator 组件化
+URLNavigator 界面跳转
+
+app网络框架
+
+---
+
+revealapp 界面测试工具
+
+flutter 新的移动端语言
+
+</code></pre></div>
+
+<h3 id="已经归类总结的部分">已经归类总结的部分</h3>
+<h4 id="设计">设计</h4>
+<p><a href="https://poos.github.io/2018/07/17/SwiftEvent/"><strong>app打点框架  &amp; Aspects 运行时 -&gt; Swift项目打点</strong></a></p>
+<h4 id="基础">基础</h4>
+<p><a href="https://poos.github.io/2018/09/09/SwiftLearning/"><strong>Swift理论和基础 -&gt; Swift基础中需要注意的点</strong></a></p>
+<h4 id="优化">优化</h4>
+<p><a href="https://poos.github.io/2018/06/16/ProjectPackage/"><strong>图片 &amp; 代码 &amp; 设置-&gt; 项目优化-瘦身</strong></a></p>
+<h4 id="工具">工具</h4>
+<p><a href="https://poos.github.io/2018/07/07/WebDriverAgent/"><strong>WebDriverAgent  &amp;&amp; 脚本 -&gt; 使用WebDriverAgent学习其他app布局,自动化测试</strong></a></p>
+<h4 id="轮子">轮子</h4>
+<p><a href="https://poos.github.io/2018/07/01/UINavItem"><strong>Swift通过swizzleMethod无痕处理NavItem的点击范围</strong></a></p>
+
+<hr />
+<hr />
+<hr />
+<hr />
+<hr />
+
+<h3 id="下边的地址能看到我的最新的动态">下边的地址能看到我的最新的动态</h3>
+
+<p><strong><a href="https://poos.github.io">poos.github.io</a></strong>，有新的博客基本会在这里更新，<strong>旧的博客不会进行搬家了</strong>。</p>
+
+<p><img src="https://oscimg.oschina.net/oscnet/2105548aa61c01cc6cf4aece8819255a9c0.jpg" alt="poos.github.io" title="poos.github.io" /></p>
+
+<p><strong><a href="https://github.com/poos">github/poos</a></strong>，有新的项目会在这里更新，会重点维护一些项目。</p>
+
+<p><img src="https://oscimg.oschina.net/oscnet/bebdac20d20629302d224701447dc882074.jpg" alt="github" title="github" /></p>
+
+<p>如果你感兴趣，<a href="https://poos.github.io/about/">戳这里查看项目介绍</a>
+<img src="https://oscimg.oschina.net/oscnet/2379e817389d08bc09747860940f14c9b75.jpg" alt="github上的项目" title="github上的项目" />。</p>
+
+<p><strong><a href="https://gitee.com/poos">gitee/poos</a></strong>，有新的项目会在这里更新，会维护旧的项目。</p>
+
+<h2><img src="https://oscimg.oschina.net/oscnet/6366aec72093673fc2196f90bc4c277c8c9.jpg" alt="gitee" title="gitee" /></h2>
+<hr />
+
+<h2 id="感谢">感谢</h2>
+<blockquote>
+  <p>这是我的第一篇博客。首先感谢两位先行者为我们带路。</p>
+</blockquote>
+
+<ul>
+  <li>感谢 <a href="http://qiubaiying.top/2017/02/06/快速搭建个人博客/">qiubaiying.top</a> 的博客教程</li>
+  <li>感谢 <a href="https://github.com/Huxpro/huxpro.github.io">Huxpro</a> 开源大神的博客模板</li>
+</ul>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/06/07/2016Graduation/" data-toggle="tooltip" data-placement="top" title="胡​适​1​9​3​2​年​演​讲​-大学毕业后的几条路">
+                        Next<br>
+                        <span>胡​适​1​9​3​2​年​演​讲​-大学毕业后的几条路</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: 'b9f52202894099af76ae',
+                    clientSecret: '6772b808e9c731d2f58fe1754947778cbe8833ab',
+                    repo: 'poos.github.io',
+                    owner: 'poos',
+                    admin: ['poos'],
+                    distractionFreeMode: true,
+                    id: window.location.pathname,
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#生活" title="生活" rel="2">
+                                    生活
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#优化" title="优化" rel="2">
+                                    优化
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#工具" title="工具" rel="2">
+                                    工具
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Swift" title="Swift" rel="3">
+                                    Swift
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计" title="设计" rel="2">
+                                    设计
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>LINKS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://github.com/poos">github/poos</a></li>
+                    
+                        <li><a href="https://gitee.com/poos">gitee/poos</a></li>
+                    
+                        <li><a href="https://my.oschina.net/bieshixuan">oschina/bieshixuan</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/poos001">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/poos">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Shown's blog 2018
+                    <br>
+                    Theme on <a href="">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=poos&repo=poos.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-90855596-1';
+    var _gaDomain = 'auto';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

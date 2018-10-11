@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Learning... Codeing...">
+    <meta name="keywords"  content="Shown, ShownBie, poos, iOS, Apple, iPhone">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Fastlane，App配置和部署的利器 - Welocme to Shown's blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/07/24/Fastlane/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Shown's blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-2015.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-2015.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#工具" title="工具">工具</a>
+                        
+                    </div>
+                    <h1>Fastlane，App配置和部署的利器</h1>
+                    
+                    
+                    <h2 class="subheading">fastlane是为iOS和Android应用程序自动执行beta部署和发布的最简单方法。🚀它处理所有繁琐的任务，例如生成屏幕截图，处理代码签名和发布应用程序。</h2>
+                    
+                    <span class="meta">Posted by poos on July 24, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<p><img src="https://docs.fastlane.tools/img/fastlane_text.png" alt="fastlane" /></p>
+
+<p>列举一下 在自己电脑上常用的功能</p>
+
+<ul>
+  <li>fastlane 在 iOS 下可以很容易的管理证书和 p12文件</li>
+  <li>很容易修改项目 version，build，截图等需要j提交审核的资源文件</li>
+  <li>
+    <p>xcode command line自动化打包，提交测试</p>
+  </li>
+  <li>[CI]在 git 提交到测试分支时候执行 CI，打包上传到 TstFlight。打 tag 时候就会上传审核</li>
+</ul>
+
+<p><a href="https://docs.fastlane.tools/best-practices/continuous-integration/">官方文档关于 CI 的介绍</a></p>
+
+<h2 id="官网文档-fastlane">官网文档 ：<a href="https://docs.fastlane.tools/">fastlane</a></h2>
+
+<h3 id="github-是一个强大的社区-mythkivenad_fastlane有一个很好的例子和demo工程实现了从零到自动打包上传的详细操作步骤">github 是一个强大的社区 ,<a href="https://github.com/mythkiven/AD_Fastlane">mythkiven/AD_Fastlane</a>有一个很好的例子，和Demo工程，实现了从零到自动打包上传的详细操作步骤。</h3>
+
+<h3 id="另外一个文档包括一些多语言和-ci等处理fastlane-持续集成是另一个一个非常好的教学文档">另外一个文档，包括一些多语言、和 CI等处理。<a href="https://juejin.im/post/5a7b10bb6fb9a0636263bfd5">fastlane 持续集成</a>，是另一个一个非常好的教学文档。</h3>
+
+<p>还有可以 google到很多非常有用的博客资料。但是据自己实践来看，很多文档你只需要返回去看官方文档就可以解决。</p>
+
+<h2 id="介绍一下自己用到的一些脚本">介绍一下自己用到的一些脚本</h2>
+
+<p>如果想学习 Ruby 脚本语言可以到这里：<strong><a href="https://www.kancloud.cn/imxieke/ruby-base/107282">Ruby 文档</a></strong></p>
+
+<h3 id="在管理员电脑打包机器上一些有用的脚本">在管理员电脑/打包机器上一些有用的脚本</h3>
+
+<ol>
+  <li>注册新的设备</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>desc "register device"
+lane :new_devices do
+    register_devices(devices_file: "./devices.txt")
+    match(type: "develop", force_for_new_devices: true)
+end
+
+</code></pre></div>
+
+<ol>
+  <li>提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lane :beta do
+    build
+    upload_to_testflight(ipa: './build/Zhima_iOS.ipa',
+                         changelog: '增加评论功能',
+                         groups: ['beta'],
+                         demo_account_required: true,
+                         skip_waiting_for_build_processing: true)
+end
+
+lane :release do
+    build
+    upload_to_app_store(ipa: './build/Zhima_iOS.ipa',
+                        force: true,
+                        submit_for_review: false,
+                        automatic_release: false)
+end
+
+lane :release_from_beta do
+    upload_to_app_store(
+                        build_number: get_build_number,
+                        skip_binary_upload: true,
+                        force: true,
+                        submit_for_review: true,
+                        automatic_release: false)
+end
+</code></pre></div>
+
+<h3 id="在开发者电脑上一些有用的脚本">在开发者电脑上一些有用的脚本</h3>
+
+<ol>
+  <li>同步证书</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lane :setup do
+    match(type: 'development', readonly: true)
+    match(type: 'appstore', readonly: true)
+    match(type: 'adhoc', readonly: true)
+end
+</code></pre></div>
+
+<ol>
+  <li>设置项目的 version number、build number</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lane :set_version do
+    if UI.interactive?
+        changelog = UI.input "Please enter the new version number: "
+    end
+    increment_version_number(
+                             version_number: "#{changelog}"
+                             )
+end
+
+lane :set_build_number do
+    if UI.interactive?
+        changelog = UI.input "Please enter the new build numbe: "
+    end
+    increment_version_number(
+                             build_number: "#{changelog}"
+                             )
+end
+
+lane :increase_build_number do
+    updateProjectBuildNumber
+end
+
+
+
+# 这是定义在 Fastlane 文件之外的一段脚本，目的是设置当前的build 为日期加版本
+def updateProjectBuildNumber
+    currentTime = Time.new.strftime("%y%m%d")
+    build = get_build_number()
+    
+    if build.include?"#{currentTime}"
+        
+        # =&gt; 为当天版本 计算迭代版本号
+        lastStr = build[build.length-1]
+        lastNum = lastStr.to_i
+        
+        if lastNum == 9
+            
+            UI.error " 🚫  error =&gt;  build末位已经是 9 "
+            return
+        end
+        
+        lastNum = lastNum +1
+        build ="#{currentTime}#{lastNum}"
+        
+        else
+        
+        # =&gt; 非当天版本 build 号重置
+        build ="#{currentTime}0"
+    end
+    
+    puts("*************| 更新build #{build} |*************")
+    
+    # =&gt; 更改项目 build 号
+    increment_build_number(
+                           build_number:"#{build}"
+                           )
+end
+</code></pre></div>
+
+<ol>
+  <li>用模拟器测试、打包ipa</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lane :tests do
+    run_tests(scheme: "ZhiMa_iOS", devices: ["iPhone 8"])
+end
+
+lane :build do
+    build_app(scheme: 'ZhiMa_iOS',
+              output_directory: './build')
+end
+</code></pre></div>
+
+<ol>
+  <li>运行 swiftlint</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    desc "run swiftlint"
+    lane :lint do
+        swiftlint( strict: true )
+    end
+    
+</code></pre></div>
+
+<p>暂时这些功能吧…</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/07/17/SwiftEvent/" data-toggle="tooltip" data-placement="top" title="Swift中合适的打点方案">
+                        Previous<br>
+                        <span>Swift中合适的打点方案</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/09/09/SwiftShare/" data-toggle="tooltip" data-placement="top" title="Swift多处调用分享的设计方案">
+                        Next<br>
+                        <span>Swift多处调用分享的设计方案</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: 'b9f52202894099af76ae',
+                    clientSecret: '6772b808e9c731d2f58fe1754947778cbe8833ab',
+                    repo: 'poos.github.io',
+                    owner: 'poos',
+                    admin: ['poos'],
+                    distractionFreeMode: true,
+                    id: window.location.pathname,
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#生活" title="生活" rel="2">
+                                    生活
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#优化" title="优化" rel="2">
+                                    优化
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#工具" title="工具" rel="2">
+                                    工具
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Swift" title="Swift" rel="3">
+                                    Swift
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计" title="设计" rel="2">
+                                    设计
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>LINKS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://github.com/poos">github/poos</a></li>
+                    
+                        <li><a href="https://gitee.com/poos">gitee/poos</a></li>
+                    
+                        <li><a href="https://my.oschina.net/bieshixuan">oschina/bieshixuan</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/poos001">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/poos">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Shown's blog 2018
+                    <br>
+                    Theme on <a href="">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=poos&repo=poos.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-90855596-1';
+    var _gaDomain = 'auto';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,2838 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shown's blog</title>
+    <description>Learning... Codeing...</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Thu, 11 Oct 2018 18:50:11 +0800</pubDate>
+    <lastBuildDate>Thu, 11 Oct 2018 18:50:11 +0800</lastBuildDate>
+    <generator>Jekyll v3.8.3</generator>
+    
+      <item>
+        <title>Swift基础中需要注意的点</title>
+        <description>&lt;h2 id=&quot;简介&quot;&gt;简介&lt;/h2&gt;
+
+&lt;h5 id=&quot;语言介绍&quot;&gt;语言介绍&lt;/h5&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/LLVM&quot;&gt;LLVM&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;LLVM是一个自由软件项目，它是一种编译器基础设施，以C++写成。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及“闲置时期”的最优化。它最早以C/C++为实现对象，而目前它已支持包括ActionScript、Ada、D语言、Fortran、GLSL、Haskell、Java字节码、Objective-C、Swift、Python、Ruby、Rust、Scala[1]以及C#[2]等语言。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;LLVM框架系统：&lt;/p&gt;
+
+    &lt;p&gt;1) 是一套构架编译器的框架系统，提供编译、连接、运行期间的优化处理，直接生成本地汇编代码，支持各种语言（包括GCC和所有苹果的开发语言）；&lt;/p&gt;
+
+    &lt;p&gt;2) 它是一种底层支持软件，可以算得上是系统软件，Swift编译时底层需要通过LLVM来生成本地代码；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;ol&gt;
+      &lt;li&gt;Swift语言的一些基本特性：&lt;/li&gt;
+    &lt;/ol&gt;
+
+    &lt;p&gt;1) 博采众长，吸取了Python、Ruby、OC等各种语言的优点，可以算得上是一门综合性的语言；&lt;/p&gt;
+
+    &lt;p&gt;2) 和C++一样是面向对象的编译型语言，由于是编译生成本地代码再执行的，因此速度很快，效率很高，比OC的效率高很多；&lt;/p&gt;
+
+    &lt;p&gt;3) 简单灵活，扩展性能好，语法特别简洁，同时支持在类体外为类添加成员或函数；&lt;/p&gt;
+
+    &lt;p&gt;4) 和OC享有同样的Cocoa类库；&lt;/p&gt;
+
+    &lt;p&gt;5) 强类型：由于支持面向对象所以是类型安全的，可在编译时检查类型异常；&lt;/p&gt;
+
+    &lt;p&gt;6) 具有动态特性，比如定义变量的时候可以不用声明类型，可以直接通过赋值的内容判断变量类型，但是一旦初始化后类型就确定了不可再修改；&lt;/p&gt;
+
+    &lt;p&gt;7) 支持一些高级特性，比如函数闭包、泛型、多值返回（利用元组来实现）等；&lt;/p&gt;
+
+    &lt;p&gt;8) 支持和OC混编（但是代码必须得分文件编写，即不是强耦合的）；&lt;/p&gt;
+
+    &lt;p&gt;9) 全面支持Unicode，标示符可以是中文、表情符号等；&lt;/p&gt;
+
+    &lt;p&gt;10) ;称为可选符号，一般在同一行中存在多条语句时作为分隔符出现，换行即表示一条语句的结束&lt;/p&gt;
+
+    &lt;p&gt;11) 将繁杂众多的集合数据类包装在两个类型中，Array具有List等所有线性边的功能，Dictionary包含Map等功能，使用更简便和容易；&lt;/p&gt;
+
+    &lt;p&gt;12) 利用可选变量来解决大规模进行异常处理的问题：Optional可选变量主要应对一个变量可能存在也可能为nil空的情形，通常在很多函数执行的时候可能会发生异常，一般情况下是通过抛出异常给上级函数来处理的方式来解决异常，但是这回大大增加代码的效率和冗余度，但是如果可以通过返回nil值来判断异常就会大大提高问题解决的效率；传统情况下通过返回值判断异常有很多缺陷，比如有些函数返回-1表示异常，有些函数返回0表示异常，而有些函数返回最高位为1表示异常，特别繁多又不方便记忆，但是如果规定成功返回一个有值的量而异常则返回空（即没有值nil），这样就可以统一异常的鉴别方式了；Swift的nil和OC的nil不一样，OC的nil是一个空指针NULL，但是Swift中所有类型的可选值都可以是nil，可选的意思就是要么有值要么没值；&lt;/p&gt;
+
+    &lt;p&gt;13) 正因为有可选类型的存在Swift没有异常处理机制，这大大降低了语言的复杂度；&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;使用&quot;&gt;使用&lt;/h2&gt;
+
+&lt;h4 id=&quot;payground&quot;&gt;payground&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://juejin.im/post/5b1a00e251882513ad322579&quot;&gt;Playground 参考博客&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://help.apple.com/xcode/mac/10.0/#/dev188e45167&quot;&gt;AppleDevelop Playground 开发文档&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Playground可以方便调试Swift代码；同时可以调试UIVIewConttoller、UIView、NSViewController的界面；页支持导入三方包，例如Reveal的f库&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;建立Playground的方法，在Xcode菜单下打开file-&amp;gt;new-&amp;gt;Playgroune, 或者用快捷键 commmand + option + shift + N&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;注释&quot;&gt;注释&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; /* */的功能在Swift中更加强大，支持嵌套注释，
+ 比如/* xxx /* yyy被嵌套的注释 */ zzz */
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;初始化以及类型绑定&quot;&gt;初始化以及类型绑定&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;动态类型绑定：像Java、C++等都属于静态语言，采用静态类型绑定，即在定义变量时直接指定其类型，数据类型在编译阶段就已经确定，而动态类型绑定是在程序运行时才确定数据的类型，比如在程序运行到为这个变量第一次初始化语句时才确定数据类型；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Swift同时具备静态绑定和动态绑定两种特性，在两者之间寻求平衡点；&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var a: Int = 5，定义时直接指定其类型，则在编译阶段就可确定类型
+
+var a = 5，虽然没有直接指定其类型，但是可以通过右边表达式的类型推断出左边的类型，这也是在编译阶段就可确定类型的情况
+
+var a = b &amp;gt; c ? &quot;string&quot; : 3.23
+如果b和c是用户输入的两个整型数值，则编译阶段完全无法判断a最终的类型，这种无法推断的情况就只能在程序运行的时候根据具体情况进行绑定了
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;数据类型和语法&quot;&gt;数据类型和语法&lt;/h2&gt;
+
+&lt;h4 id=&quot;基本数据类型之-数值类型&quot;&gt;基本数据类型之 数值类型&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一些无视操作系统的整型精度&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Byte == UInt8 // 单字节
+
+SignedByte == Int8 // 带符号单字节
+
+ShortFixed == Int16 // 短整型
+
+Fixed == Int32 // 长整型
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;数值转换
+ Swift要求类型绝对安全，窄化转换和自然转换都必须进行显示的强类型转换才行，否则就会报错！&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var x: Byte = 10
+var y: Byte = 20
+ 
+var z: Int32 = x + y // Bad！
+var z: Int32 = Int32(x) + Int32(y) // Good!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;实质上所有基本类型都属于类（class），这里的类型转换其实是调用该类的构造函数构造出该类的一个新的对象；！同样，窄化转换以及浮点转整型都是截断型转换，会损失精度，使用的时候需要注意！&lt;/li&gt;
+  &lt;li&gt;Swift最牛逼的一个地方就是可以检查运行时的数据溢出，当然，编译时的溢出检查就更不用说了，比如var a: Int8 = 250，var a: Int8 = 8 + 125等都会直接在编译阶段报错；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var aa: Int8 = 8
+var bb: Int8 = 127
+var cc: Int8
+ 
+cc = aa + bb  //error
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;获取类型的极值：可以通过Int32.min、UInt8.max的方式获取每种类型的最大值和最小值，注意！浮点类型没有max和min属性，因为浮点数可以表示任意大小的数，只不过太大或太小的值精度非常非常低而已；&lt;/li&gt;
+  &lt;li&gt;各个进制表示，小写字母&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;二进制：0b打头
+
+八进制：0o打头
+
+十六进制：0x打头
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;浮点数不带任何后缀，初始化时想要赋给Float就不能使用类型推断，比如var output: CGFloat = 3.14&lt;/li&gt;
+  &lt;li&gt;可读性表示，即表示数值类型常量的时候下划线可以随意加并且可以加任意多个（但是起始和.之后的起始位置不能加_），比如var output = 1_000_000_000&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;基本数据类型之-bool类型&quot;&gt;基本数据类型之 Bool类型&lt;/h4&gt;
+
+&lt;p&gt;Bool变量的赋值表达式也不能作为判断条件，Swift规定判断条件处只能使用布尔表达式，诸如==、&amp;gt;等，或者是返回Bool值的函数，但是不可以是复制表达式，即使是Bool类型的复制表达式也不可以！&lt;/p&gt;
+
+&lt;h4 id=&quot;基本数据类型之-字符类型&quot;&gt;基本数据类型之 字符类型&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Swift中字符类型Character和传统编程语言有很大的不同，由于完全支持Unicode编码Character编程了不定长类型，比如传统ASCII字符编码仍然和ASCII编码值一样，并且长度还是1个字节，但是对于英语系以外的语言，比如中文，一个字符就是2个字节，而对于一些特殊符号，比如笑脸等，一个字符就有4个字节，因此Swfit内部用处理字符串的方式处理Character，并且单个Character不再支持&amp;gt;、&amp;lt;、&amp;gt;=、&amp;lt;=这四个操作符了；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;由于一个字符可能超过1个字节，因此Swift中不再用’‘来表示一个字符了，而是和字符串一样使用”“来指定一个字符，比如let c: Character = “a”；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;自动推断的默认类型：当使用自动推断时，比如let c = “a”，由于没指定类型，Swift默认推断为String类型，即字符串类型，因此想要指定该变量为Character类型除非定义常量或变量时直接指定类型，或者右边使用Character进行强行转换或者右边是一个返回Character类型的函数调用；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;定义Character量的时候右边只能有一个字符，如果超过1个字符就会报错（即使是使用定义字符串的方式来定义字符）；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;同样对于Swift的Character也有两种两种表现形式，对于可显示的字符可以直接使用其本身来表示，比如字母’a’，而那些不可显示的字符（比如一些控制字符等）可以用编码表示，但是对于任何一个字符都有自己的编码表示，由于是用Unicode进行编码，因此是不定长的，因此也总共有3中编码表示法：&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;单字节编码（主要是ASCII字符集和ASCII扩展字符集），比如&quot;\x26&quot; == &quot;&amp;amp;&quot;
+
+双字节编码（主要是象形文字，希腊文、中文、日文、韩文等），比如&quot;\u03bb&quot; == &quot;λ”
+
+四字节编码（主要是一些表情符号），比如&quot;\U0001f603&quot; == 笑脸符号
+
+！其中x、u、U的大小写不要弄错，x后面必须有两位，u后面必须有4位，U后面必须有8位，全部都是16进制数，不能忽略前导0！！！
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;转义字符：和传统编程语言一样，使用\符号转义，转义在字符表也大体相似；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;！注意：Swift不允许Character类型以及Character和整型之间的算术运算，通常C语言中会对char进行一些加减运算来得到另一个字符，但这在Swift中不允许，这让代码变得更安全了，同时也更繁琐了！&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;基本数据类型之-字符串类型&quot;&gt;基本数据类型之 字符串类型&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;字符计数：使用全局函数countElements(str)可以返回字符串中字符的个数，即字符串的长度，由于里面的字符都是不定长的，因此技术要比C语言的按照字节技术麻烦很多，要以Character类对象为单位进行计数！&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;字符串直接的比较：支持==、&amp;gt;、&amp;lt;、&amp;gt;=、&amp;lt;=、!=这几个比较符，意义和C语言等的strcmp一样，但是不支持===和!===比较符！但是Character类型不支持比较符号，但支持==和!=比较符号！&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;字符串连接：使用+和+=进行连接，和Java的+表示字符串连接意义相同，但是Swift只支持String类型之间的连接操作，不允许Character和String之间连接和Character之间的连接，如果要在String和Character之间连接需要对Character类型进行强制类型转换才行！&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;字符串在Swift中其实是用集合实现的，字符串中的字符作为有序的元素构成字符串这个集合，因此要遍历其中的字符可以使用for循环迭代；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;通过String的unicodeScalars属性获取字符串的Unicode编码序列（表示出来是十进制的！）：&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let strValue = &quot;abcd上下左右&quot;
+ 
+for c in strValue.unicodeScalars
+{
+    print(&quot;\(c.value) &quot;)
+} // 97 98 99 100 19978 19979 24038 21491
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看前后缀：使用String的hasSuffix和hasSuffix成员函数查看字符串是否存在参数中指定的前缀或后缀：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let folder = &quot;Swift.docx&quot;
+folder.hasSuffix(&quot;.docx&quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;基本数据类型之-元组&quot;&gt;基本数据类型之 元组&lt;/h4&gt;
+
+&lt;h4 id=&quot;基本数据类型之-可选类型&quot;&gt;基本数据类型之 可选类型&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;第一种在使用可选变量的时候需要加!，虽然麻烦但是到哪儿都可以知道该变量是一个可选类型的，第二种方法虽然简单，但是代码一长可能就很难判断该变量是一个可选类型的，当然如果出现拆包异常就会知道了，但是测试代码的人员刚开始理解代码的时候可能会遇到一些困难；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var x: Int! = 5
+var x: Int? = 5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;数组&quot;&gt;数组&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;和C语言和Java中的数组不一样，功能更加强大，可以进行增删改等操作，效率非常高，是普通数组和List的结合体；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;但Swift的数组并没有和Python那样，数组元素的类型可以互不相同，也可以根据类型推断数组类型：let arr = [“abc”, “bcd”] // 数组中的类型必须一致！推断出是[String]类型&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;数组类型的未初始化nil，除非是定义为可选类型，比如[Type]?，println才允许使用&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;没有初始化就不会在内存中开辟空间，如果初始化了（即使是创建了一个空的数组），在内存中还是为其开辟空间的，不仅对于数组，对于任何类型的数据来说都是一样的！&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;数组内元素的类型不一致&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 其实使用Cocoa的NSMutableArray来实现的，元素类型为抽象类型NSObject
+var arr = [&quot;abc&quot;, 123, 234.323]
+arr = [&quot;df&quot;] // 可以改变数组本身
+println(arr)
+arr.append(23.422) // 可以追加
+println(arr)
+arr[1] = 72.234 // 可以修改数组元素
+println(arr)
+// 可以追加任意数组，由类型推断用Swfit的Array包装了NSMutableArray
+arr += [&quot;xxdlfsd&quot;, 234.23, 9299320] 
+println(arr)
+
+ // 由于类型无法推导，所以还是使用NSMutableArray来实现
+var arr_empty = [] 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;创建固定长度的数组以及规定默认的初始化值：有时需要使用类似C语言那样限制长度的传统数组，这是就需要使用数组类型的构造函数，并制定相关的参数达到上述目的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 这里必须同时指定数组长度和默认初始化值，少一个都不行！
+var arr = [Int](count: 4, repeatedValue: 2)
+println(arr.count) // 4
+println(arr) // [2, 2, 2, 2]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;访问数组元素：和C语言一样，通过arrayname[index]的方式访问，其中let定义的常量数组的值不可修改，而var定义的变量数组可以；&lt;/li&gt;
+  &lt;li&gt;区间赋值：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;支持闭区间和半开半闭区间两种：
+
+arr[min...max] = [item1, item2, ...]
+arr[min..&amp;lt;max] = [item1, item2, ...]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;字典&quot;&gt;字典&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;和数组一样，如果使用类型推导定义时各个键值对类型不一致，内部就会用NSMetableDictionary替换！&lt;/li&gt;
+  &lt;li&gt;创建空的字典：同样由三种方法，泛型构造器、类型构造器、直接置空（前提是类型得确定）&lt;/li&gt;
+  &lt;li&gt;字典的访问和修改，Swift将Dictionary的键值中的值的类型都会自动隐式地提升成可选类型，即虽然定义的时候是[Type: Type]，但是底层是[Type: Type?]，因此在使用字典中的值的时候一定要加上拆包符号才行，比如dic[5]! + 2，否则就会报错，这就是为什么不存在的键值访问时返回nil了：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+var dic = [1: 2, 3: 5]
+dic[10] = 17 // 对于不在字典中的键值直接添加
+println(dic[10]) // Optional(17)
+
+let a = dic[5] + 2//不允许 dic[5] 要解包
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;修改键值：除了直接赋值，另一种是.updateValue(newValue, forKey:)的方式，修改指定键对应的值同时返回旧的值，如果旧值不存在则返回nil，同样也是返回可选类型&lt;/li&gt;
+  &lt;li&gt;将keys和values转换为数组：直接使用强制类型转换即可，let keys = Array(dic.keys)&lt;/li&gt;
+  &lt;li&gt;对于值类型的元素直接复制，对于类对象的元素只是复制引用（就是个指针），因此原本和副本的该字段的引用指向同一个类实体，因此如果在副本中通过该引用修改对象的字段，则也会影响到原本；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;函数&quot;&gt;函数&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;类型&lt;/strong&gt;： 全局函数：和C语言一样，整个文件中都可以全局调用，因此Swift和C++一样并不是完全面向对象的语言；
+ &lt;strong&gt;嵌套函数&lt;/strong&gt;：Swift支持在函数中定义函数，函数内部定义的函数就是嵌套函数；
+ &lt;strong&gt;方法&lt;/strong&gt;：定义在类、结构体、枚举中的函数，这体现了Swift的面向对象的属性；&lt;/li&gt;
+  &lt;li&gt;内部参数名和外部参数名&lt;/li&gt;
+  &lt;li&gt;默认参数&lt;/li&gt;
+  &lt;li&gt;可变参数 func add(tag: String, varList nums: Int…) -&amp;gt; Int&lt;/li&gt;
+  &lt;li&gt;变量参数——Swift的参数默认为常量的：/ 既有var修饰又具有外部参数名 func test(a: Int, var b: Int, var C c: Int)&lt;/li&gt;
+  &lt;li&gt;Swift的引用传参——输入输出参数：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;虽然只有类对象是引用类型的，但是也可以实现值类型数据的引用传参，在C++中引用传参的目的就是输入输出参数，因此Swift中可以用inout将变量设为输入输出参数，这样就实现了引用传参，注意，用inout修饰不用设为var，因为inout的目的就是要在函数中修改参数值：
+
+// 也可以加外部参数名，一般规则就是修饰符都写在外部参数名之前
+func test(a: Int, inout name s: String)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;输入输出参数  虽然只有类对象是引用类型的，但是也可以实现值类型数据的引用传参，在C++中引用传参的目的就是输入输出参数，因此Swift中可以用inout将变量设为输入输出参数，这样就实现了引用传参，注意，用inout修饰不用设为var，因为inout的目的就是要在函数中修改参数值：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 也可以加外部参数名，一般规则就是修饰符都写在外部参数名之前
+func test(a: Int, inout name s: String)
+{
+    s = &quot;haha&quot;
+}
+ 
+// let s: String = &quot;xxxx&quot; // 常量不能作为输入输出参数！
+var s: String = &quot;xxxx&quot;
+test(23, name: &amp;amp;s) // &amp;amp;和C++的取引用概念不同，这里仅仅是为了和inout关键字呼应，进表示引用传参的意思
+println(s) // haha
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;函数类型&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 函数类型为(Int, Int) -&amp;gt; Int
+func add(a: Int, b: Int) -&amp;gt; Int
+{
+    return a + b
+}
+ 
+var fun: (Int, Int) -&amp;gt; Int = add
+println(fun(1, 2)) // 3
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;将函数类型作为返回值类型&lt;/li&gt;
+  &lt;li&gt;将函数类型作为参数 实现一个函数在内部调用多种类型相同但功能不同的外部函数，而不用通过繁杂的if语句再通过函数名调用这些外部函数了，可以方便的增强多态的能力&lt;/li&gt;
+  &lt;li&gt;泛型&lt;/li&gt;
+  &lt;li&gt;和C++泛型感念一样，都是运行时建立类型的函数模板，效率会慢很多，定义也是类似的，但不过Swift有泛型约束，这就比C++安全多了，这就避免用户乱定义类型导致泛型混乱的局面：
+```&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;func isEqual&lt;T: Comparable=&quot;&quot;&gt;(a: T, b: T) -&amp;gt; Bool // Comparable是Swift协议
+// 只有遵守该可比性协议的类型才能传入，Swift基本类型（不包括集合）都属于该协议范畴
+// 使用泛型而没有协议编译器是会报错的！
+{
+    return a == b
+}&lt;/T:&gt;&lt;/p&gt;
+
+&lt;p&gt;// 这里定义只有具有可比性的两种类型的数据才能传入函数
+println(isEqual(1, 2)) // false
+println(isEqual(“haha”, “haha”)) // true&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+- 函数重载 Swift的函数重载依据不在只有C++的函数签名那么简单了，有多了函数返回值类型，即函数返回值类型也可以作为重载依据，因此Swift重载内容包括了参数类型、参数个数和返回值类型这三项，**重载时函数名必须相同，但函数类型必须不同**，使用的时候一定要注意调用形式，避免歧义；
+
+
+#### 闭包
+- Swift中闭包的概念非常广泛，但是我们这里主要讲解闭包表达式：
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) 闭包按照表面意思就是指一段封闭的代码包，而Swift中的闭包则包括之前讲过的函数、方法、内嵌函数，当然最重要的就是闭包表达式了；
+
+2) 闭包表达式：
+
+     i) 即一段用{ }包住的代码，可以实现跟函数一样的功能；
+
+     ii) 闭包表达式的运算结果为一个函数类型，也就是说用{ }包住的一段闭包表达式的值为一个函数；
+
+     iii) 用以实现类似C++的匿名函数的功能（Lambda函数）；
+
+3) 要支持闭包的两个前提条件：支持函数类型（闭包的返回值就是函数类型）可以将函数作为参数和返回值进行传递，还有一个就是必须支持函数嵌套（因为闭包表达式就是一种抽象的函数，可以在任意地方使用，因此必须包括函数内部）； ```
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;闭包表达式形式和函数很像，但是没有一个名字，也就说是匿名的！由于是匿名的，用户就很难通过”函数名“调用的方式来调用闭包了！&lt;/li&gt;
+  &lt;li&gt;函数可以返回任何类型数据，但是闭包表达式只能返回函数类型，比如：var add = { (a: Int, b: Int) -&amp;gt; Int in return a + b }&lt;/li&gt;
+  &lt;li&gt;Swift的闭包表达式有两个非常强大的特性，其一就是闭包表达式有很多简化的方法，比如sorted(arr_Int, { (a: Int, b: Int) -&amp;gt; Bool in return a &amp;lt; b })可以简化成：sorted(arr_Int, {$0 &amp;lt; $1})&lt;/li&gt;
+  &lt;li&gt;其二 尾随闭包 当闭包作为函数的最后一个参数时闭包可以写在函数调用的外面（即函数的最后一个参数是一个函数类型时，而那个函数类型的参数在传参时可以传闭包 sorted(arr_Int) { (a: Int, b: Int) -&amp;gt; Bool in return a &amp;lt; b }&lt;/li&gt;
+  &lt;li&gt;闭包的简单应用（最为内嵌函数的应用）：前面其实也都是闭包的应用，记住！包整个闭包表达式看成一个函数名就行了！该函数的参数、内容、返回值都在{}中定义&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func cal(opr: String) -&amp;gt; (Int, Int) -&amp;gt; Int
+{ // Swift可以根据上下文捕获的信息推断出闭包的参数类型等各种信息
+  // 这里可以通过cal的返回值类型推断出闭包的所有信息
+    
+    switch opr
+    {
+    // 通过返回值可以推断出闭包的参数都是Int型的，因此可以省略类型
+    case &quot;+&quot;: return { (a, b) -&amp;gt; Int in return a + b }
+    // 当然也可以省略括号
+    case &quot;-&quot;: return { a, b -&amp;gt; Int in return a - b }
+    // 可以通过返回值推断出闭包函数的返回类型为Int，因此返回类型“-&amp;gt; 返回类型”也可以省略
+    case &quot;*&quot;: return { a, b in return a * b }
+    // 如果return语句时闭包语句组中的唯一一条语句则可以省略return关键字
+    case &quot;/&quot;: return { a, b in a / b } // 必须是唯一的一条语句而不是最后一条语句，这样就不行：in a + b; a - b
+    // 如果以上所有信息均能获得则还能继续简化
+    // 和Shell一样$0表示第一个参数，$1表示第二个参数，一次类推下去
+    // 由于参数类型、返回值都已经推断出，因此可以直接利用$X构造表达式作为语句组
+    // 同样，如果返回语句是唯一的语句则可以不加return，如果是多个语句就得加return
+    case &quot;%&quot;: return { $0 % $1 }
+    case &quot;&amp;amp;&quot;: return { println(&quot;operator &amp;amp;&quot;); return $0 &amp;amp; $1 } // 必须加return，否则报错
+    // 一般用$X就表示已经推断出参数类型了，因此无需再在多此一举地在闭包中声明参数的类型
+    
+    // 注意！闭包中必须出现参数！不管是这里的a、b还是$0、$1，因此这里不能直接写return { 0 }，这回报错的
+    // Swift要求闭包中必须出现参数，因此需要这样写才行
+    default: return { a, b in 0 }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;闭包的内存包含自己的数据区！——存放外界捕获值&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) 传统语言如C语言等函数的代码段只有操作语句，而函数中使用的数据都有栈区或堆区统一管理，函数代码段本身没有数据区；
+
+2) 但是Swift的闭包彻底颠覆了函数的内存模型，闭包在Swift中成为了一种资源，该资源中可以包含自己的数据，就跟Win32的窗口资源类似，不仅有代码，也有数据！
+
+3) 但是闭包中定义的变量和常量仍然是按照传统方式进行管理的（即存放在统一的栈区和堆区），那么闭包的数据区放的都是什么数据呢？答案是外界捕获值！
+
+4) 这些捕获值定义在闭包的外面，然后在闭包中直接访问这些值，但这里跟C语言的作用域以及static全局作用域的概念完全不同，在内部访问外部作用域更大的数据其实是直接访问这些数据的空间，但是闭包在这里是捕获而不是直接访问这些数据的空间，具体地将就是将捕获的数据拷贝到自己的数据区中称为自己的资源的一部分
+
+func makeIncrementor(forIncrement amount: Int) -&amp;gt; () -&amp;gt; Int
+{
+    var currentCount = 0
+    
+    return {
+        currentCount += amount
+        return currentCount
+    } // 在内存中创建一块闭包资源
+    // 该闭包资源中的cuurentCount并不和外界定义的currentCount共享内存
+    // 而是将其备份到闭包自己的内存数据区中，并且用0去初始化该数据
+    // 将闭包返回到外界则这片闭包资源区就不会被释放（即使过了作用域）
+}
+ 
+let incrementByTen = makeIncrementor(forIncrement: 10) // 创建了一个闭包并返回
+// 接下来使用的都是同一片闭包内存资源
+println(incrementByTen()) // 10
+println(incrementByTen()) // 20
+println(incrementByTen()) // 30
+ 
+let incrementBySix = makeIncrementor(forIncrement: 6) // 又创建了一个闭包资源
+println(incrementBySix()) // 6
+println(incrementBySix()) // 12
+println(incrementBySix()) // 18
+ 
+println(incrementByTen()) // 40，闭包就当一个变量或常量之类的数据使用，其中数据区的内容可以一直保存
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;闭包是引用类型数据！&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;i) 闭包的返回值前面提到过是函数类型，而这个函数类型的数据类似于Win32中HWND等资源指针（在Swift中叫引用）；
+
+ii) 如果将该引用赋来赋去，则这些引用访问的都是同一片闭包内存空间，比如接着上面的代码往下写：
+
+let incrementByTen2 = incrementByTen
+println(incrementByTen2()) // 50
+只有通过闭包表达式才能创建一片新的闭包内存
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;枚举&quot;&gt;枚举&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;字符、字符串、整型、浮点型，但是可以推断的只有Int型。4.0String也可以推断了&lt;/li&gt;
+  &lt;li&gt;组合枚举&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;结构体和类&quot;&gt;结构体和类&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. Swift的类和结构体的异同：
+
+    1) Swift非常重视结构体的作用，并提供了结构体非常强大的面向对象支持；
+
+    2) 结构体和类的共有属性：
+
+        i) 都可以定义数据成员（这是必然的）；
+
+        ii) 都可以定义属性（计算属性和存储属性）；
+
+        iii) 都可以定义附属脚本（下标访问，特别是基本类型中的数组和字典都都是用结构体定义的，并且支持下标访问，Swift的下标访问实质上使用附属脚本定义的）；
+
+        iv) 都可以定义方法；
+
+        v) 都有构造器（注意，Swift中的构造器不等于方法，之后在概念上要作区分）；
+
+        vi) 都支持扩展和协议；
+
+    3) 只有类具备但结构体不具备的更强大的功能：
+
+         i) 支持继承；
+
+         ii) 支持运行时强制类型转换；
+
+         iii) 支持析构；
+
+         iv) 支持ARC引用计数（只有类是引用类型的，结构体是值类型的，因此无法引用，也就提不上引用计数管理了）；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;可以在类中添加结构体成员，也可以在结构体中添加类成员，这是随意的；&lt;/li&gt;
+  &lt;li&gt;和Java一样，没有前向引用声明的概念&lt;/li&gt;
+  &lt;li&gt;Swift也是将引用类型的对象都放在堆中管理，因此这点需要程序员记在心里即可，不必使用new之类的操作符来强调这个问题&lt;/li&gt;
+  &lt;li&gt;实例化和实例是一个广义上的概念：枚举、函数类型和闭包开辟内存的过程也可以成为实例化，而这些开辟的结果只能称作实例，只有类类型开辟的结果才可以成为对象（当然也可以成为实例）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;属性和下标&quot;&gt;属性和下标&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Swift将结构体、枚举和类中可以通过外部访问的非方法类成员都叫做属性&lt;/li&gt;
+  &lt;li&gt;Swift中的属性主要有：存储属性（即OC和C++中的数据成员）、计算属性（用于访问封装后的数据成员的方法（精确地讲应该是一段脚本）、属性观察者（主要是指didSet和willSet脚本，在存储属性被修改前后被调用，用以观察属性变化的过程，非常方便调试）、静态属性（和C++概念一样，即属于类而不属于对象）、索引属性（即为类或结构体定义下标访问，即C++中的operator[]的重载）；&lt;/li&gt;
+  &lt;li&gt;存储属性：常量属性和变量属性以及常量结构体、常量类对象（实际上是常引用，Swift只能通过引用访问对象）&lt;/li&gt;
+  &lt;li&gt;惰性存储属性——延迟加载：将存储属性声明为lazy就变成了惰性存储属性，它的功能就是延迟加载，即在实例化的时候并不会在内存中加载该存储属性，只有在第一次访问它的时候才会在内存中加载该属性 ！！注意！lazy只能用于var不能用于let，因为let要求定义时必须立即初始化的，如果lazy用于let会直接编译报错！&lt;/li&gt;
+  &lt;li&gt;计算属性：计算属性本身不能存储数据，但不过可以通过它间接地访问一些存储属性， 由一个取值访问器getter和一个设置访问器setter组成 。如果只有set 可以直接使用 return在花括号中&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;结构体&lt;/strong&gt;中的计算属性和&lt;strong&gt;class&lt;/strong&gt;一样，这里再示范一下&lt;strong&gt;枚举&lt;/strong&gt;的计算属性&lt;/li&gt;
+  &lt;li&gt;属性观察器 是Swift的一种监听机制，只能作用于变量存储属性，可以捕获变量存储属性在改变前后的值，不能作用于let定义的常量属性，也不能作用于lazy定义的惰性存储属性；由于属性观察器不是计算属性，因此不能包含get和set，实际上它提供了两种方法willSet（在修改之前调用，捕获修改的新值）和didSet（在修改之后调用，捕获修改之前的旧值）：&lt;/li&gt;
+  &lt;li&gt;计算属性和属性观察者在全局也可以使用（即在类、结构体、枚举外部也可以使用）&lt;/li&gt;
+  &lt;li&gt;静态属性：和C++静态属性的概念，即属于类而不属于对象，在Swift中枚举、结构体和类都可以定义静态属性，支持程度不一样&lt;/li&gt;
+  &lt;li&gt;索引属性——添加下标访问方式：subscript(索引参数列表) -&amp;gt; 返回值类型 { set和get的可读可写访问 或 直接return的只读访问 }&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+    subscript(index: Int) -&amp;gt; Int { // 普通的一维数组访问，这里设定为只读
+        return grid[index]
+    }
+    
+    subscript(row: Int, col: Int) -&amp;gt; Int { // 可以重载，模拟二维数组访问，这里设定为可读可写下标访问
+        get { // 取值访问器getter
+           return grid[row * cols + col]
+        }
+        set { // 设置访问器setter
+            grid[row * cols + col] = newValue
+        }
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;方法-方法就是枚举结构体类中定义的函数但是它跟函数在命名方面有很大的不同&quot;&gt;方法 方法就是枚举、结构体、类中定义的“函数”，但是它跟函数在命名方面有很大的不同；&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Swift建议函数以动词开头，最后一个单词或者倒数第二个单词为介词，第一个以后的参数名Swift建议以介词开头，因为一般方法的参数都是方法作用的对象或作用的介质，因此都以介词打头会非常明了，由于第一个参数作用的介词在函数名中已经体现了，而后面的参数作用的介词在函数名中并不存在，因此Swift强制要求之后的参数必须要有外部参数名&lt;/li&gt;
+  &lt;li&gt;Swift默认在结构体和枚举中的方法不能修改属性的！这就体现出来Swift对结构体的定位了，Swift希望结构体的方法不对属性进行修改而仅仅是用来进行输出信息等操作，因此Swift将结构体定位成一种小型的数据包，如果硬要修改就只要把方法定义成变异类型就行了，使用关键字mutating修饰即可。&lt;strong&gt;对于枚举是一样的！&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;不仅可以对存储属性修改，还可以修改self的值（注意，结构体和枚举都是值类型的）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;enum Test: String
+{
+    case a = &quot;a&quot;
+    case b = &quot;b&quot;
+    case c = &quot;c&quot;
+    
+    mutating func next()
+    {
+        switch self
+        {
+        case .a: self = .b
+        case .b: self = .c
+        case .c: self = .a
+        }
+    }
+}
+ 
+var test = Test.a
+ 
+println(test.rawValue) // a
+test.next()
+println(test.rawValue) // b
+test.next()
+println(test.rawValue) // c
+test.next()
+println(test.rawValue) // a
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;静态方法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;构造和析构&quot;&gt;构造和析构&lt;/h4&gt;
+&lt;h5 id=&quot;构造&quot;&gt;构造&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;Swift的构造器统一叫init，之所以不属于方法的范畴是因为其没有返回值,和C++等的构造函数的意义是一样的，都是用来完成初始化任务&lt;/li&gt;
+  &lt;li&gt;Swift强行要求构造器的参数&lt;strong&gt;必须有外部参数名&lt;/strong&gt;，这是因为Swift构造器可以重载，并且Swift的重载也包括返回值类型，因此有可能构造器会重载很多，为了调用时区分不同的构造器要求都必须加上外部参数名,&lt;strong&gt;同时Swift允许外部参数名重载&lt;/strong&gt;，即使两个函数的函数类型完全一样，但是只要两个函数的外部参数名不同也能形成重载&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;直接初始化&lt;/strong&gt;就是指在定义存储属性的时候就对其初始化，这里需要强调一下直接初始化和调用构造器之间的先后顺序：Swift会&lt;strong&gt;先调用构造器对相关的属性进行初始化&lt;/strong&gt;，接着&lt;strong&gt;再检查直接初始化语句&lt;/strong&gt;，如果发现还有构造器没有初始化过的属性就是用直接初始化语句对那些属性进行初始化，而那些已经用构造器初始化过的属性就不再初始化了！&lt;/li&gt;
+  &lt;li&gt;构造器可以对let定义的常量属性初始化，并且如果常量属性同时在直接初始化语句中初始化过也在构造器中初始化过也&lt;strong&gt;不会发生冲突&lt;/strong&gt;而导致编译出错！原因见上一条&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Test
+{
+    var a: Int = 9 // 构造器中没初始化过就会执行此句
+    let b: Int = 10 // 构造器初始化过了这句就会被忽略
+    
+    init(b: Int) {
+        self.b = b // 先在构造器中初始化
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;默认构造器&lt;/strong&gt;1) 默认构造器就是指用户不定义任何构造器时Swift会为我们隐式提供的构造器； 2) 对于类，默认构造器只有一个无参的空init，而对于结构体，还多了一个这样的构造器，请看如下： 还有就是可选类型的初始化一定要注意了，类和结构体有一定区别：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A {
+    // 只有一个空的无参构造器，因此无法通过用户传参构造
+    // 所以必须直接初始化，否则永远也不能初始化而导致编译错误！
+    var a: Int = 1
+    
+    // init() {} // 默认提供一个这个
+}
+ 
+var aa = A() // OK!
+// var aa2 = A(a: 15) // Bad! 类不提供带参的逐一初始化构造器
+ 
+struct B {
+    var a: Int
+    var b: Int
+//  init() {} // 默认提供
+    
+//    init(a: Int, b: Int) { // 还默认提供一个这个，外部参数名和定义时一样
+//        self.a = a
+//        self.b = b
+//    }
+}
+ 
+// var bb = B() // Bad！由于没有直接初始化语句，所以这种方式将导致成员无法初始化而报错！
+// 但是如果有直接初始化语句就对了！
+ 
+var bb = B(a: 23, b: 32) // OK!
+ 
+class C_Class {
+    var a: Int?
+}
+ 
+var cc = C_Class() // 类可以不初始化可选类型
+ 
+struct C_Struct {
+    var a: Int?
+}
+ 
+// var cc2 = C_Struct() // Bad! 但是结构体必须初始化可选类型
+var cc2 = C_Struct(a: nil) // OK!
+var cc3 = C_Struct(a: 13) // OK!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;构造器重载 函数类型、外部参数名不同都能重载&lt;/li&gt;
+  &lt;li&gt;构造器代理：一个构造器中调用另一个构造器。便利构造器和继承重写构造器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1) 和Java和C++一样，为了不重复写代码会在一个构造器中调用另一个构造器；
+
+    2) Swift也支持这个特性，这就是代理构造器，即在一个构造器中调用另一个构造器的代码，但不过调用构造器的语句必须是第一句并且仅且能调用最多一句！否则会报错！并且调用的时候一定要加self.；
+
+    3) 结构体和类的代理构造器略有不同，结构体构造器代理非常随意，直接写就行了，而类对于调用构造器的构造器必须用convenience修饰，因此对于类的代理构造器也称为便利构造器，这里就不掩饰结构体的代理构造器了，因为只需要将class改为struct并把convenience去掉就行了
+
+    4) 由于类具有继承特性（结构体没有），和C++一样，对于子类需要先调用父类构造器来初始化父类的部分，然后在执行自己的初始化语句，因此对于这类的代理就称为纵向代理（也称为向上代理），这样的构造器就是指定构造器，而对于上述的代理构造仅仅就是一个类内部之间的构造器相互代理，因此称为横向代理，构造器称为便利构造器；
+    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果用户自定义了任何一个构造器，则默认构造器就不存在了&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;析构&quot;&gt;析构&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1) 同样也不属于方法，由于无参无返回值（和C++的情况一样），因此不能重载，因此有且仅有一个，名字限制为deinit，没有参数列表，因此不需要参数的括号；
+
+    2) 也是用于清理工作，虽然Swift的ARC内存管理机制（引用计数）和Java效果一样，可以使程序员完全不用关心对象没有及时析构的问题，但是Swift仍然提供了析构器，仍然用于完成对象的清理工作，虽然实例资源不需要程序员管，但是如关闭文件等操作还是需要程序员来执行的，因此关闭文件等操作可以写在析构器代码中，因此Swift还是非常贴心周到的；
+
+    3) 如果用户不写析构器则Swift会自动定义一个空的默认析构器；
+
+    4) 析构器调用时机和C++的析构函数一样，都是在对象被销毁之前调用；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;可选链和引用计数&quot;&gt;可选链和引用计数&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;可选链 就是为了防止由于属性、变量为nil时抛出异常&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if let s = a_Class?.b_Class?.c_Class?.retD()?.s {
+    println(&quot;访问到了最内层的s = \(s)&quot;) // 进入了最内层
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;引用计数原理&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;和C++以及OC一样，所有的值类型的数据（结构体、基本类型、集合）都是保存在栈上，其添加和销毁都是由编译器自动产生相关的代码（汇编语言中实现过），而只有类的对象时保存在堆中，由于采用了自动化就不用像C++那样由人手动管理这部分内存的开辟和释放，其背后是采用ARC机制在运行时自动管理堆中的内存；
+
+RC：Reference Counter，即引用计数器，Swift会为每个创建的对象分配一个引用计数器，用于动态实时监控当前有多少引用指向该对象
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;强引用、弱引用以及无主引用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1) 引用分为三类：强引用、弱引用以及无主引用，其中强弱引用的概念和Shell中的强弱引用概念类似，其实只有强引用才能改变RC的值，后面两种不能改变RC的值但而只能通过引用访问对象的内容；
+
+    2) 其中强引用就是上述以及之前经常碰见过的普通的引用，而弱引用需要用weak关键词修饰，而无主引用需要用unowned关键词来修饰；
+    
+    解决循环引用的方法就是只给循环引用的一方（不是两方，只是一方）套上弱引用（或者接下来要将的无主引用），最后在释放时先释放被弱引用（或无主引用）指向的那个对象再释放另一个对象即可（顺序不能错！）
+    
+    本类中需要持有自己可以使用unowned
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;类的继承&quot;&gt;类的继承&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/Lirx_Tech/article/details/41483195&quot;&gt;详情链接&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;和Java一样只支持单继承不支持多继承，Swift的多继承是由协议实现的（和Java的接口很像，可以通过遵守多个协议的方式来间接达到多继承的目的）；&lt;/li&gt;
+  &lt;li&gt;Swift在限定符的约束下（private、public、protected等），所有成员都可以继承（属性、方法、下标等都可以），但是构造器不能继承，因为继承就是通过调用父类构造器在子类中构造出父类部分实现的，因此构造器不能算作类的属性或者方法等范畴，应该说构造器就是一段逻辑脚本，该脚本规定子类部分和父类部分在内存中加载的步骤和方法；&lt;/li&gt;
+  &lt;li&gt;继承链条&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   i) 大致顺序是：分两遍，第一遍是从子类到父类，第二遍再从父类到子类；
+
+   ii) 第一遍的从子类到父类是指先调用子类构造器，其中子类构造器中调用了父类的构造器，而父类的构造器又调用了爷类的构造器，从而一层一层往上知道最顶层的构造器调用完；
+
+   iii) 到达顶层后，再原路返回执行第二遍检查，而这个第二遍检查的内容就是直接初始化语句了，一直从顶层一层一层往下检查到底层的子类，方式和之前讲过的一，就是忽略已经被构造器初始化过的属性只对那些没有被构造器初始化过属性执行直接初始化语句：
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;swift要求并建议的构造器代理规则&quot;&gt;Swift要求并建议的构造器代理规则&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;指定构造器和便利构造器的区别：这个区别只在类中有，对于结构体没有这个概念，便利构造器就是用convenience修饰的构造器，除此之外的构造器都是指定构造器；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Swift要求并建议的代理规则：前面的继承代码中已经出现了向上代理的概念了，即使用super.init的方式调用父类的构造器；&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;i) 横向代理规则一：便利构造器只能调用同一类中的其它构造器（指定构造器和便利构造器都行），但是不能调用父类构造器（否则就变成纵向代理而不是横向代理了）
+ii) 横向代理规则二：仅有一句
+iii) 向上代理规则一：子类的每个指定构造器必须调用直接父类的指定构造器（必须是父类的指定构造器不能是便利构造器
+iv) 向上代理规则三：在向上代理之前不得访问父类中的属性，因为在Swift的继承就是通过向上代理实现的，在调用父类构造器之前父类的内容在内存中还不存在因此是无法访问父类中的属性的，
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;子类从父类那里自动获取构造器： 如果子类不定义任何构造器则会从父类那里获取构造器（即子类的默认构造器和父类的构造器一样），但是构造器不能继承，因此只能说是获取；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;获取的规则：
+
+         i) 如果子类不写任何构造器则将获取父类的所有指定构造器；
+
+         ii) 如果子类写了哪怕一个构造器则子类不会获得父类的任何一个构造器；
+
+         iii) 如果获得了一个父类的指定构造器，则父类中所有调用它的便利构造器以及间接调用它的便利构造器都将被子类获得
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;重载属性&quot;&gt;重载属性&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;Swift的继承可以在子类中覆盖父类的一些特性，和C++不同的是Swift不仅可以覆盖方法而且可以覆盖属性和下标，必须使用关键字override声明重写的内容，同时重写对象和被重写对象之间的名字、类型必须完全一致；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;重写方法-和-重写下标&quot;&gt;重写方法 和 重写下标&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;Swift允许重写对象方法和静态方法，要求重写和被重写的方法的函数签名要完全一致（包括外部变量名），否则就是重载了：&lt;/li&gt;
+  &lt;li&gt;！！注意！父类的方法并没有被删除，其实还是被继承下来了，只不过被覆盖了以后无法通过外界调用，而只能在子类的内部使用super关键字调用来完成一定的辅助功能；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;继承限制&quot;&gt;继承限制：&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1) 和Java一样使用关键字final来限制继承；
+
+    2) 如果用final修饰类成员（静态/非静态）则该成员不可被重写；
+
+    3) 如果用final修饰整个类，则该类不可被继承；
+
+    4) 不能同时用final修饰类和成员，因为两者逻辑上是冲突的，因为不能继承的类何以重写它的成员！
+
+    5) 在开发商业软件的时候非常有必要使用final进行限制；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;多态&quot;&gt;多态&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;和其它语言多态描述一致，都是用父类指针或引用（这里的父类是指祖先类）指向子类的实例，然后在子类中覆盖父类的方法，利用该父类引用调用相同的方法而产生不同的行为；&lt;/li&gt;
+  &lt;li&gt;多态类型转换：和普通的类型转换不一样，普通的类型转换是指一般意义上的强制类型转换，但是强制类型转换不能发生在类型之间，如果使用”类名(转换对象)”则会触发相应类的构造器而不能达到转换类型的效果，因此Swift的类型转换只能发生在可以转换的两个对象之间，对于不能转换的两个对象会在编译阶段或是运行阶段报错；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1) 即is和as两个操作符的运用；
+
+    2) 还是强调那句，这两个操作符的使用必须严格遵守之前讲过的规则：必须要让一个父类的引用指向一个其子类的实例，然后再对该引用用is判断是否属于某个具体的子类或用as将其转换成某个具体的子类类型；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;两种不确定类型any和anyobject&quot;&gt;两种不确定类型——Any和AnyObject：&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1) 注意Swift的不确定类型和Java的Object类不一样，它并不是所有类的基类，可以说它们并不是类，而只是一种不确定类型（类似C语言的void类型）；
+
+    2) AnyObject可以接受任何类类型数据，而Any可以接受任意类型的数据（包括AnyObject和基本类型），由于基本类型不是类类型，因此可见这两种不确定类型并不是类类型；
+
+    3) 虽然不是类类型，但是可以使用is和as操作符，比如0 is Int或0 as Double，其实这里的，其实这里的is和as都使用Any进行重载；
+
+    4) 整个数组整体转换（前提是数组中所有元素类型必须一样）：形式是AnyOrAnyObjectArray as [SpecificType]，这样就可以返回一个转换好的[SpecificType]数组了，但是不能使用可选符号?进行保护！
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;协议-类结构体和枚举&quot;&gt;协议 类、结构体和枚举&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/Lirx_Tech/article/details/41724185&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;其实就是Java中的接口，Swift的遵守协议就是Java中的实现接口，如果放在C++中就是纯虚类的概念，即协议就是一种高度抽象的抽象类，里面值规定了方法、属性等内容，但没有提供任何实现，所有遵守该协议的类、结构体或枚举都必须实现协议中规定的内容，只不过C++没有接口而只能通过继承虚基类来实现其中的内容而已；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;协议是面向接口编程的必不可少的机制，其要求定义与实现分离，在Java和Swift中都可以将协议作为数据类型（就和其它普通的数据类型Int、Array等）暴露给使用者，而使用者不用关心具体的实现细节；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;协议中可以定义的内容：计算属性（实例/静态）、方法（实例/静态）和下标&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;泛型&quot;&gt;泛型&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/Lirx_Tech/article/details/41775797&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;和C++泛型概念一样，用法和C++也相似，同样也是使用一个类型占位符（代表一个通用类型，也是泛型的参数，用户随意取名，但要求按照标示符命名规则进行，因为其代表一个通用类型，因此和定义其它类型名的规范一样，最好是首字母大写的驼峰命名方式，一般取T）&lt;/li&gt;
+  &lt;li&gt;和任何一种语言的泛型一样，都是动态推导类型的，只有当实际传参的时候才会根据参数类型生成相应版本的代码（即运行时动态加载函数代码），因此执行效率较低，但是程序灵活性非常强；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func f&amp;lt;T, K&amp;gt;(a: T, b: K) -&amp;gt; K {
+    return b
+}
+ 
+println(f(12, &quot;haha&quot;)) // haha
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;泛型模板类以及扩展模板类, 泛型不仅支持函数，同时也&lt;strong&gt;支持结构体和枚举类型&lt;/strong&gt;！&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;扩展模板类时不需要重新写泛型参数列表，可以在扩展体中直接使用定义类时的泛型，非常方便&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;struct Stack&amp;lt;T&amp;gt; {
+    var items = [T]()
+    
+    mutating func push(item: T) {
+        items.append(item)
+    }
+    
+    mutating func pop() -&amp;gt; T {
+        return items.removeLast()
+    }
+}
+extension Stack {
+    subscript(index: Int) -&amp;gt; T? {
+        if index &amp;lt; 0 || index + 1 &amp;gt; countElements(items) {
+            return nil
+        }
+        
+        return items[index]
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;泛型约束要求那个类型占位符所代表的泛型遵守某些规矩比如必须要遵守某些协议或者必须由什么类继承而来等&quot;&gt;泛型约束：要求那个类型占位符所代表的泛型遵守某些规矩，比如必须要遵守某些协议，或者必须由什么类继承而来等&lt;/h5&gt;
+
+&lt;h5 id=&quot;关联类型实现泛型协议&quot;&gt;关联类型——实现“泛型协议”&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;Swift不能定义泛型协议（至少语法上不允许像定义泛型类型那样定义泛型协议），但是有时有这方面的需要，比如在一个协议中指定一种泛型，然后协议中规定了很多方法或属性都需要用到该泛型，但一个类遵守该协议时再根据具体需要规定该泛型的具体类型，同时并使用该具体类型来实现协议中规定的方法和属性&lt;/li&gt;
+  &lt;li&gt;Swift提供关联类型这种形式来解决以上问题，即可以先用typealias定义一个泛型（即不对该泛型赋值，值定义其名字），然后在规定要实现的属性或方法中使用该泛型，最后是当一个类型遵守该协议时再用typealias对该泛型进行赋值，使其成为某个具体的类型，接着再实现规定的属性和方法时用具体的类型替换该泛型即可：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;用where语句对关联类型进行约束&quot;&gt;用where语句对关联类型进行约束：&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;和SQL的where约束类似，该约束发生在指定某个类型遵守某个协议（协议带有关联类型）时使用；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;一些特有的关键字&quot;&gt;一些特有的关键字&lt;/h3&gt;
+
+&lt;p&gt;guard … else { }&lt;/p&gt;
+
+&lt;p&gt;@_exported import SwifterSwift&lt;/p&gt;
+
+&lt;p&gt;===&lt;/p&gt;
+
+&lt;p&gt;inout var&lt;/p&gt;
+
+&lt;p&gt;convenience&lt;/p&gt;
+
+&lt;p&gt;repeat { //take input from io standard into n } while n &amp;lt;= 10&lt;/p&gt;
+</description>
+        <pubDate>Sun, 09 Sep 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/09/09/SwiftLearning/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/09/09/SwiftLearning/</guid>
+        
+        <category>Swift</category>
+        
+        <category>语法</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Swift多处调用分享的设计方案</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;当一个页面包含了太多的太杂的内容页面就变得复杂了，把相似的内容抽出来单独管理，让项目更清晰。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;调用的设计方案&quot;&gt;调用的设计方案&lt;/h2&gt;
+
+&lt;p&gt;某种意义上，不同页面调用分享也可以理解为继承重载的关系—&amp;gt;而继承重载可以用协议完美解决&lt;/p&gt;
+
+&lt;h4 id=&quot;协议-类结构体和枚举&quot;&gt;协议 类、结构体和枚举&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/Lirx_Tech/article/details/41724185&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;其实就是Java中的接口，Swift的遵守协议就是Java中的实现接口，如果放在C++中就是纯虚类的概念，即协议就是一种高度抽象的抽象类，里面值规定了方法、属性等内容，但没有提供任何实现，所有遵守该协议的类、结构体或枚举都必须实现协议中规定的内容，只不过C++没有接口而只能通过继承虚基类来实现其中的内容而已；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;协议是面向接口编程的必不可少的机制，其要求定义与实现分离，在Java和Swift中都可以将协议作为数据类型（就和其它普通的数据类型Int、Array等）暴露给使用者，而使用者不用关心具体的实现细节；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;协议中可以定义的内容：计算属性（实例/静态）、方法（实例/静态）和下标&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;实现&quot;&gt;实现&lt;/h4&gt;
+
+&lt;p&gt;这里实例调用分享的几个地方&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//可能是 VC
+class A {
+    let title = &quot;A&quot;
+    
+    func beginShare() {
+        self.share()//调用协议方法
+    }
+}
+//可能是 View
+class B {
+    let title = &quot;B&quot;
+    
+    func clickAction() {
+        self.share()//调用协议方法
+    }
+}
+
+//可能是 WebView
+class C {
+    
+    func jsShare() {
+        self.share()//调用协议方法
+    }
+    
+    func jsShareMoment() {
+        self.shareMoment()//调用协议方法
+    }
+}
+//可以是任何类
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;这里是协议分发管理的 protocol类&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 定义统一的协议
+protocol ShareProtocol {
+    var shareTitle: String { get }
+    var shareUrl: String { get }
+    func share()
+}
+protocol ShareProtocol2 {
+    func shareMoment()
+}
+
+extension A: ShareProtocol {
+    var shareTitle: String {
+        return title + &quot; share&quot;
+    }
+    var shareUrl: String {
+        return &quot;https://baseurl/&quot; + title
+    }
+    func share() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+}
+
+extension B: ShareProtocol {
+    var shareTitle: String {
+        return title + &quot; share&quot;
+    }
+    var shareUrl: String {
+        return &quot;https://baseurl/&quot; + title
+    }
+    func share() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+}
+extension C: ShareProtocol, ShareProtocol2 {
+    var shareTitle: String {
+        return title + &quot; share&quot;
+    }
+    var shareUrl: String {
+        return &quot;https://baseurl/&quot; + title
+    }
+    func share() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+    func shareMoment() {
+        Share(title: shareTitle, url: shareUrl)
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;总结&quot;&gt;总结&lt;/h3&gt;
+
+&lt;p&gt;通过这种设计，ShareManager更加彻底的负责所有的分享事宜；VC 只是简单调用，页面结构更简单了。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;blockquote&gt;
+
+  &lt;hr /&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;分享功能实现的框架&quot;&gt;分享功能实现的框架&lt;/h2&gt;
+
+&lt;h2 id=&quot;分享框架&quot;&gt;分享框架&lt;/h2&gt;
+
+&lt;p&gt;分享的具体实现就不必细说了&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;File&lt;/th&gt;
+      &lt;th&gt;Description&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Model&lt;/td&gt;
+      &lt;td&gt;分享模型&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;View&lt;/td&gt;
+      &lt;td&gt;分享视图&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ViewControl&lt;/td&gt;
+      &lt;td&gt;处理弹出动画; 分流选定后的操作&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Manager&lt;/td&gt;
+      &lt;td&gt;封装各个SDK分享方法&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;blockquote&gt;
+
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func present() {
+let model = ShareModel()
+...
+    AppShareViewControl.present(model) }
+&lt;/code&gt;&lt;/pre&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;model&quot;&gt;Model&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;本文没有使用 Model，故略去&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;view&quot;&gt;View&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;skip&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;viewcontrol&quot;&gt;ViewControl&lt;/h2&gt;
+&lt;p&gt;设置弹出动画,layout位移动画&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    class AppShareViewControl {
+    /// 弹出分享框
+    static func present(type: ShareType, closure: @escaping (String) -&amp;gt; Void) {
+    
+    ...
+        
+        showAnimation(backView, shareView)
+        buttonsAnimation(buttons: shareView.buttons)
+    }
+    
+    static private func showAnimation(_ backView: UIView, _ alert: UIView) {
+        alert.layer.setValue(375, forKeyPath: &quot;transform.translation.y&quot;)
+        UIView.animate(withDuration: 0.3, animations: {
+                       alert.layer.setValue(0, forKeyPath: &quot;transform.translation.y&quot;)
+                       backView.alpha = 1
+                       })
+}
+    
+    static private func buttonsAnimation(buttons: [UIView]) {
+        for (index, button) in buttons.enumerated() {
+            button.layer.setValue(375, forKeyPath: &quot;transform.translation.y&quot;)
+            button.alpha = 0
+            UIView.animate(withDuration: 0.5,
+                           delay: 0.05 * Double(index) + 0.1,
+                           usingSpringWithDamping: 0.7,
+                           initialSpringVelocity: 0.7,
+                           options: .curveEaseInOut,
+                           animations: {
+                           button.alpha = 1
+                           button.layer.setValue(0, forKeyPath: &quot;transform.translation.y&quot;)
+                           })
+    }
+    }
+    
+static private func hideView(view: UIView) {
+    UIView.animate(withDuration: 0.2, animations: {
+                   view.alpha = 0
+                   }, completion: { (_) in
+                   view.removeFromSuperview()
+                   })
+                   }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;分流跳转链接&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    extension AppShareViewControl {
+    /// 必须使用 model，因为日后如果需要打点信息可以方便添加参数
+    /// 点击了某个按钮
+    static func selected(model: model) {
+        switch model.type {
+        case .moments:
+            ShareManage.shared.shareMoments(title: model.title, thumbImage: model.image, url: model.link)
+        case .wechat:
+        ...
+    }
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;manager&quot;&gt;Manager&lt;/h2&gt;
+
+&lt;h4 id=&quot;调用系统分享&quot;&gt;调用系统分享&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // MARK: - 系统
+    //系统分享传入[String, UIImage, URL]
+    //注意:系统分享qq会调用URL 对应的web更新数据,若没有对应web页（非 H5页）会显示异常
+    func shareSystem(title: String, content: String?, image: UIImage?, link: String) {
+        var items: [Any] = []
+        if title.length &amp;gt; 256 {
+            items.append((title as NSString).substring(to: 255))
+        } else {
+            items.append(title)
+        }
+        var thumbimage = image
+        if image == nil {
+            thumbimage = UIImage.init(named: &quot;AppIconSmall&quot;)
+        }
+        if thumbimage!.size.height &amp;gt; 70 {
+            thumbimage = imageCompressSize(image: thumbimage!, size: CGSize.init(width: 70, height: 70))
+        }
+        items.append(thumbimage! as Any)
+        items.append(URL.init(string: link)!)
+        let activity = UIActivityViewController.init(activityItems: items, applicationActivities: nil)
+        UIViewController.currentViewController().presentVC(activity)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;调用微信分享建议优化使用-model&quot;&gt;调用微信分享(建议优化使用 model)&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // MARK: - 微信
+    var style = 0
+    func registerShare() {
+        WXApi.registerApp(&quot; xxxxxxxxxxx&quot;)
+    }
+    /// 分享朋友圈
+    func shareMoments(title: String, thumbImage: UIImage?, url: String) {
+        share(type: 1, title: title, content: nil, image: thumbImage, url: url)
+    }
+    
+    /// 分享图文链接的消息
+    func shareWechat(title: String, content: String?, thumbImage: UIImage?, url: String) {
+        share(type: 0, title: title, content: content, image: thumbImage, url: url)
+    }
+    
+    /// 分享大图的消息
+    func shareWechat(image: UIImage) {
+        share(image: image)
+    }
+    
+    fileprivate func share(type: Int, title: String, content: String?, image: UIImage?, url: String) {
+        if !WXApi.isWXAppInstalled() {
+            let popview = PopupView()
+            popview.popupText(.noWechat)
+            return
+        }
+        
+        let message = WXMediaMessage.init()
+        if title.length &amp;gt; 256 {
+            message.title = (title as NSString).substring(to: 255)
+        } else {
+            message.title = title
+        }
+        if let description = content {
+            if description.length &amp;gt; 512 {
+                message.description = (description as NSString).substring(to: 511)
+            } else {
+                message.description = description
+        }
+}
+    var thumbimage = image
+        if image == nil {
+            thumbimage = UIImage.init(named: &quot;AppIconSmall&quot;)
+    }
+        if thumbimage!.size.height &amp;gt; 70 {
+            thumbimage = imageCompressSize(image: thumbimage!, size: CGSize.init(width: 70, height: 70))
+}
+    if let data: Data = imageCompressData(image: thumbimage!, max: 32) {
+        message.thumbData = data
+        }
+        
+        let webpage = WXWebpageObject.init()
+        webpage.webpageUrl = url
+        message.mediaObject = webpage
+        
+        let send = SendMessageToWXReq.init()
+        send.bText = false
+        send.message = message
+        let scene = type == 0 ? WXSceneSession : WXSceneTimeline
+        send.scene = Int32(scene.rawValue)
+        
+        WXApi.send(send)
+    }
+    
+    fileprivate func share(image: UIImage) {
+        if !WXApi.isWXAppInstalled() {
+            let popview = PopupView()
+            popview.popupText(.noWechat)
+            return
+        }
+        
+        let message = WXMediaMessage.init()
+        
+// image最大10M
+    let wxImage = WXImageObject.init()
+    if let data: Data = imageCompressData(image: image, max: 10 * 1024) {
+        wxImage.imageData = data
+        }
+        message.mediaObject = wxImage
+        
+        let send = SendMessageToWXReq.init()
+        send.bText = false
+        send.message = message
+        send.scene = Int32(WXSceneSession.rawValue)
+        
+        WXApi.send(send)
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;压缩图片等方法&quot;&gt;压缩图片等方法&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // MARK: - 通用
+    fileprivate func imageCompressSize(image: UIImage, size: CGSize) -&amp;gt; UIImage {
+        let result = image
+        UIGraphicsBeginImageContext(size)
+        result.draw(in: CGRect.init(x: 0, y: 0, width: size.width, height: size.height))
+        UIGraphicsEndImageContext()
+        return result
+    }
+    
+    fileprivate func imageCompressData(image: UIImage, max: Int) -&amp;gt; Data? {
+        var strength: CGFloat = 0.99
+        var data = UIImageJPEGRepresentation(image, strength)
+        if data == nil {
+            return nil
+        }
+        while data!.count &amp;gt; max * 1024 &amp;amp;&amp;amp; strength &amp;gt; 0.5 {
+            strength -= 0.02
+            data = UIImageJPEGRepresentation(image, strength)
+        }
+        if strength &amp;lt;= 0.5 {
+            let image = UIImage.init(named: &quot;AppIconSmall&quot;)
+            return UIImageJPEGRepresentation(image!, strength)
+        }
+        return data
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;分享回调&quot;&gt;分享回调&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // MARK: - SDK回调
+    extension AppDelegate: WXApiDelegate {
+    
+    @available(iOS, obsoleted: 9.0)
+    func application(_ application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -&amp;gt; Bool {
+        if let sourceApp = sourceApplication {
+            if sourceApp.contains(&quot;tencent.xin&quot;) {
+                return WXApi.handleOpen(url as URL?, delegate: self)
+            } else if sourceApp.contains(&quot;xxx&quot;) {
+                return WKAuth.handleOpen(url as URL?, delegate: WifiService.shared)
+        }
+        }
+        return true
+    }
+    
+    @available(iOS 9.0, *)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -&amp;gt; Bool {
+        let appName: String = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String
+        if appName.contains(&quot;tencent.xin&quot;) {
+            return WXApi.handleOpen(url, delegate: self)
+        } else if appName.contains(&quot;xxx&quot;) {
+            return WKAuth.handleOpen(url, delegate: WifiService.shared)
+        }
+        return true
+    }
+    
+    //未使用
+    func onReq(_ req: BaseReq!) {
+        if req .isKind(of: GetMessageFromWXReq.self) {
+            //微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+        } else if req .isKind(of: ShowMessageFromWXReq.self) {
+            //显示微信传过来的内容
+        } else if req .isKind(of: LaunchFromWXReq.self) {
+            //从微信启动App
+    }
+}
+    
+    func onResp(_ resp: BaseResp!) {
+        let popview = PopupView()
+        if resp.errCode == 0 {
+            popview.popupType(.success, .shareSuccess)
+        } else {
+            popview.popupType(.failed, .shareFailed)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        <pubDate>Sun, 09 Sep 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/09/09/SwiftShare/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/09/09/SwiftShare/</guid>
+        
+        <category>Swift</category>
+        
+        <category>设计</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Fastlane，App配置和部署的利器</title>
+        <description>&lt;p&gt;&lt;img src=&quot;https://docs.fastlane.tools/img/fastlane_text.png&quot; alt=&quot;fastlane&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;列举一下 在自己电脑上常用的功能&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;fastlane 在 iOS 下可以很容易的管理证书和 p12文件&lt;/li&gt;
+  &lt;li&gt;很容易修改项目 version，build，截图等需要j提交审核的资源文件&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;xcode command line自动化打包，提交测试&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;[CI]在 git 提交到测试分支时候执行 CI，打包上传到 TstFlight。打 tag 时候就会上传审核&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.fastlane.tools/best-practices/continuous-integration/&quot;&gt;官方文档关于 CI 的介绍&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;官网文档-fastlane&quot;&gt;官网文档 ：&lt;a href=&quot;https://docs.fastlane.tools/&quot;&gt;fastlane&lt;/a&gt;&lt;/h2&gt;
+
+&lt;h3 id=&quot;github-是一个强大的社区-mythkivenad_fastlane有一个很好的例子和demo工程实现了从零到自动打包上传的详细操作步骤&quot;&gt;github 是一个强大的社区 ,&lt;a href=&quot;https://github.com/mythkiven/AD_Fastlane&quot;&gt;mythkiven/AD_Fastlane&lt;/a&gt;有一个很好的例子，和Demo工程，实现了从零到自动打包上传的详细操作步骤。&lt;/h3&gt;
+
+&lt;h3 id=&quot;另外一个文档包括一些多语言和-ci等处理fastlane-持续集成是另一个一个非常好的教学文档&quot;&gt;另外一个文档，包括一些多语言、和 CI等处理。&lt;a href=&quot;https://juejin.im/post/5a7b10bb6fb9a0636263bfd5&quot;&gt;fastlane 持续集成&lt;/a&gt;，是另一个一个非常好的教学文档。&lt;/h3&gt;
+
+&lt;p&gt;还有可以 google到很多非常有用的博客资料。但是据自己实践来看，很多文档你只需要返回去看官方文档就可以解决。&lt;/p&gt;
+
+&lt;h2 id=&quot;介绍一下自己用到的一些脚本&quot;&gt;介绍一下自己用到的一些脚本&lt;/h2&gt;
+
+&lt;p&gt;如果想学习 Ruby 脚本语言可以到这里：&lt;strong&gt;&lt;a href=&quot;https://www.kancloud.cn/imxieke/ruby-base/107282&quot;&gt;Ruby 文档&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;在管理员电脑打包机器上一些有用的脚本&quot;&gt;在管理员电脑/打包机器上一些有用的脚本&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;注册新的设备&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;desc &quot;register device&quot;
+lane :new_devices do
+    register_devices(devices_file: &quot;./devices.txt&quot;)
+    match(type: &quot;develop&quot;, force_for_new_devices: true)
+end
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lane :beta do
+    build
+    upload_to_testflight(ipa: './build/Zhima_iOS.ipa',
+                         changelog: '增加评论功能',
+                         groups: ['beta'],
+                         demo_account_required: true,
+                         skip_waiting_for_build_processing: true)
+end
+
+lane :release do
+    build
+    upload_to_app_store(ipa: './build/Zhima_iOS.ipa',
+                        force: true,
+                        submit_for_review: false,
+                        automatic_release: false)
+end
+
+lane :release_from_beta do
+    upload_to_app_store(
+                        build_number: get_build_number,
+                        skip_binary_upload: true,
+                        force: true,
+                        submit_for_review: true,
+                        automatic_release: false)
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;在开发者电脑上一些有用的脚本&quot;&gt;在开发者电脑上一些有用的脚本&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;同步证书&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lane :setup do
+    match(type: 'development', readonly: true)
+    match(type: 'appstore', readonly: true)
+    match(type: 'adhoc', readonly: true)
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;设置项目的 version number、build number&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lane :set_version do
+    if UI.interactive?
+        changelog = UI.input &quot;Please enter the new version number: &quot;
+    end
+    increment_version_number(
+                             version_number: &quot;#{changelog}&quot;
+                             )
+end
+
+lane :set_build_number do
+    if UI.interactive?
+        changelog = UI.input &quot;Please enter the new build numbe: &quot;
+    end
+    increment_version_number(
+                             build_number: &quot;#{changelog}&quot;
+                             )
+end
+
+lane :increase_build_number do
+    updateProjectBuildNumber
+end
+
+
+
+# 这是定义在 Fastlane 文件之外的一段脚本，目的是设置当前的build 为日期加版本
+def updateProjectBuildNumber
+    currentTime = Time.new.strftime(&quot;%y%m%d&quot;)
+    build = get_build_number()
+    
+    if build.include?&quot;#{currentTime}&quot;
+        
+        # =&amp;gt; 为当天版本 计算迭代版本号
+        lastStr = build[build.length-1]
+        lastNum = lastStr.to_i
+        
+        if lastNum == 9
+            
+            UI.error &quot; 🚫  error =&amp;gt;  build末位已经是 9 &quot;
+            return
+        end
+        
+        lastNum = lastNum +1
+        build =&quot;#{currentTime}#{lastNum}&quot;
+        
+        else
+        
+        # =&amp;gt; 非当天版本 build 号重置
+        build =&quot;#{currentTime}0&quot;
+    end
+    
+    puts(&quot;*************| 更新build #{build} |*************&quot;)
+    
+    # =&amp;gt; 更改项目 build 号
+    increment_build_number(
+                           build_number:&quot;#{build}&quot;
+                           )
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;用模拟器测试、打包ipa&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lane :tests do
+    run_tests(scheme: &quot;ZhiMa_iOS&quot;, devices: [&quot;iPhone 8&quot;])
+end
+
+lane :build do
+    build_app(scheme: 'ZhiMa_iOS',
+              output_directory: './build')
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;运行 swiftlint&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    desc &quot;run swiftlint&quot;
+    lane :lint do
+        swiftlint( strict: true )
+    end
+    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;暂时这些功能吧…&lt;/p&gt;
+</description>
+        <pubDate>Tue, 24 Jul 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/07/24/Fastlane/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/07/24/Fastlane/</guid>
+        
+        <category>工具</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Swift中合适的打点方案</title>
+        <description>&lt;h2 id=&quot;swift打点方案&quot;&gt;Swift打点方案&lt;/h2&gt;
+
+&lt;p&gt;首先介绍一下打点的业务需求：点可能是展示、控制、服务器返回结果&lt;/p&gt;
+
+&lt;p&gt;基础计数点、入屏点击、页面时长、鱼骨模型（1点进，多点出）&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;结合网上各个文档，总结一下Swift可用的打点方案。总结测试打点的方法&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;如果想直接看本文实现方式可以跳过三大类介绍&lt;/p&gt;
+
+&lt;h3 id=&quot;三大类的方案简介&quot;&gt;三大类的方案简介&lt;/h3&gt;
+
+&lt;h4 id=&quot;方案一动态hook打点&quot;&gt;方案一：动态hook打点&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.jianshu.com/p/2c93446d86bd&quot;&gt;Aspects源码解析&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在OC可以使用Aspects动态的Get到在某个函数或者方法执行前后点，所以可以方便的使用这个运行时特性做一些打点操作&lt;/p&gt;
+
+&lt;p&gt;使用这个特性，你可以生成一个类似与下边的表，甚至通过服务端配置可以&lt;strong&gt;随时调整打点&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ViewController,click,buttonAction,trackName,trackkeys
+ViewController,click,buttonActionNext:,trackName,trackkeys
+TableViewController,tableSelect,tableView:didSelectRowAtIndexPath:,,
+ViewController,lifeCycle,viewDidLoad,,
+TableViewController,lifeCycle,viewDidLoad,,
+ViewController,lifeCycle,viewWillLayoutSubviews,,
+ViewController,other,buttonActionNext2:,,
+,,,,
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;那么在Swift下是否好用呢&lt;/strong&gt;，我尝试写了一个demo在&lt;a href=&quot;https://github.com/poos/SwiftEFarm&quot;&gt;&lt;strong&gt;干货 poos/AspectOrientedProgramming&lt;/strong&gt;&lt;/a&gt;。完全是不侵入业务的，甚至移除了TrackManager这个文件夹原项目仍然可以很好运行&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Demo中对常用的buttonClick，tableSelect，lifeCycle做了监听，在相应的地方会触发打印&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Demo中使用cvs来配置打点的类，方法名，参数等&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;使用的结果呢&lt;/strong&gt;： 它在Demo中可以完美的检测和打点…..&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;然而…&lt;/strong&gt;：将它运行到Swift项目中，你就会发现问题：我的大部分函数和方法不是 &lt;strong&gt;@objc&lt;/strong&gt; 的，大部分的swift方法并没有OC的运行时，而且 &lt;strong&gt;在Swift4.0之后不能简单的@objc标志类&lt;/strong&gt; 的动态性&lt;/p&gt;
+
+&lt;p&gt;这就是说你所有监控的方法都要开放给Objective-C，Swift新版把这个口堵了&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;方案一优劣简介&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- oc下的动态埋点方案，使用csv文件标志要打的的类和方法，动态hook方法打点
+动态埋点，运行时，在方法执行前后插入打点方法
+- oc下可解决部分打点，其他打点可以通过开放类，传入上下文，造专属的打点方法
+
+
+然而
+- 4.0之后不能简单的@objc标志类（Swift下致命缺陷）
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;方案二重写所有常用的模块赋予组件值并且打点&quot;&gt;方案二：重写所有常用的模块，赋予组件值并且打点&lt;/h4&gt;
+
+&lt;p&gt;正如字面的意思，所有的UI控件和以及常用的Contrl操作均封装，这样在加载控件或者执行操作时候会自动打点&lt;/p&gt;
+
+&lt;p&gt;这个就没有去写demo了。不过可以用脚分析一下优劣&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;方案二优劣简介&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;不论oc和swift都可以使用，组件还可以做其他事情，例如数据即控件
+
+打点会繁而具体，大量冗余数据打点
+现有工程改造困难
+基础组件拖开发进度
+其他点可能需要处理
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&quot;方案三手动打点&quot;&gt;方案三：手动打点&lt;/h4&gt;
+
+&lt;p&gt;既然前两条路都堵死了，那么只能手动去打点了，不过手动打点仍然还是有很多地方优化：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;一些模块封装打点：生命周期，入屏点击这些可以单独分离出模块&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;一些属于操作的点可以整合&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;可以使用链式的方案减少打点的痛苦😄&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;方案三优劣简介&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;相当准确，点点命中要害
+
+但是每个地方都要写
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;手动打点的优化&quot;&gt;手动打点的优化&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;标记版本号来对应打点代码，日期对应本地的类名&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;base v12    select v22      page v54    180707
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol&gt;
+  &lt;li&gt;制定大量枚举/使用plist或者csv来做键值映射，方便管理&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;page字典对应页面的enum
+event 的 enum
+key 的 enum
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;使用链式编程&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class EventManage {
+    //事件名
+    enum EventId: String {
+        case tapAction
+        ...
+    }
+    
+    ...
+    
+    //参数
+    private var parameters: [ParamKey: String] = [:]
+    
+    ...
+
+    //方便调用的方法
+    func event(_ event: EventId) -&amp;gt; UmengManager {
+        parameters[.event] = event.rawValue
+        addTrackerId(event)
+        return self
+    }
+
+    ...
+    
+    func page(_ page: PageEnum) -&amp;gt; UmengManager {
+        parameters[.page] = page.rawValue
+        addTrackerId(event)
+        return self
+    }
+    
+    ...
+    
+    func push() {
+        NSlog(...)
+        
+        push...//提交的代码
+        
+        parameters.removeAll()
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;使用了上边的框架之后，在打点时候就可以方便的打点了&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;EventManage.share.event(.click).page(.home).push()
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;特殊打点创建单独的类管理&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;入屏点击使用一个类来管理，新创建类创建一个新实例就好&lt;/p&gt;
+
+&lt;p&gt;上拉下拉等同上&lt;/p&gt;
+
+&lt;p&gt;一些业务相关需要传入page的，维护一个正在显示的page参数即可&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;打点嘛，重要的是管理和分配&lt;/strong&gt;，通过这一系列的手段就可以确保打点无误了&lt;/p&gt;
+
+&lt;h3 id=&quot;检查已经打的点&quot;&gt;检查已经打的点&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;众里寻她千百度，蓦然回首，那人却在灯火阑珊处&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当你苦苦寻找如何直接实时显示打点，让测试方便测试的时候，有没有发现这个东西
+&lt;strong&gt;Console&lt;/strong&gt;或者叫&lt;strong&gt;控制台&lt;/strong&gt;，这是mac自带的一个程序，通过&lt;strong&gt;NSLog&lt;/strong&gt;即可将Xcode的输出显示到终端，啰嗦一句，print是不可以的，猜测也是跟OC运行时的关系吧&lt;/p&gt;
+
+&lt;p&gt;&lt;del&gt;–懒得传图，从网上找个图片–&lt;/del&gt;
+&lt;img src=&quot;http://images.macx.cn/forum/201202/27/1206273lioivz2pvlnkpz3.jpg&quot; alt=&quot;控制台&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;参考资料&quot;&gt;参考资料：&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;github项目：
+
+AOPTrack
+SwiftAspects
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;推荐一下自己写的最新测demo&quot;&gt;推荐一下自己写的最新测Demo&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/poos/SwiftEFarm&quot;&gt;&lt;strong&gt;干货 poos/AspectOrientedProgramming&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Tue, 17 Jul 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/07/17/SwiftEvent/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/07/17/SwiftEvent/</guid>
+        
+        <category>Swift</category>
+        
+        <category>设计</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>使用WebDriverAgent学习其他app布局,自动化测试</title>
+        <description>&lt;hr /&gt;
+&lt;p&gt;&lt;strong&gt;9月25更新&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;使用最新的xcode10正式版没法正常测试可能是某些库的问题但是可以在94下添加ios12支持包即可&quot;&gt;使用最新的Xcode10正式版没法正常测试，可能是某些库的问题，但是可以在9.4下添加iOS12支持包即可&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.jianshu.com/p/1a33e36c4b67&quot;&gt;添加iOS支持包&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ps: Xcode升级时候先邮件复制一份旧的，然后直接appStore更新，不用慌。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;end&lt;/strong&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;有太多的文章介绍webdriveragent安装配置本文着重介绍使用command-line命令行快速调起&quot;&gt;有太多的文章介绍WebDriverAgent安装配置，本文着重介绍使用command line命令行快速调起&lt;/h3&gt;
+
+&lt;h4 id=&quot;webdriveragent下载地址&quot;&gt;&lt;a href=&quot;https://github.com/facebook/WebDriverAgent&quot;&gt;WebDriverAgent下载地址&lt;/a&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/PRIMEFJT/article/details/78947480&quot;&gt;配置博客地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;安装简介&quot;&gt;安装简介&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;如果你电脑上没有安装Homebrew，使用下面的命令安装：
+
+/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot; 
+
+
+如果没有安装carthage，使用下面的命令安装：
+brew install carthage
+
+然后按照Python环境。
+brew install python
+
+
+安装Node环境，命令如下：
+brew install node
+
+
+下载WebDriverAgent
+git clone https://github.com/facebook/WebDriverAgent
+
+
+下载完毕后，进入到 WebDriverAgent 目录，执行如下脚本。安装相关工具
+cd ./WebDriverAgent/
+//执行脚本
+./Scripts/bootstrap.sh
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;有些国产的iPhone机器通过手机的IP和端口还不能访问，此时需要将手机的端口转发到Mac上。
+
+$ brew install libimobiledevice
+
+iproxy 8100 8100
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;开始使用webdriveragent&quot;&gt;开始使用WebDriverAgent&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 解锁keychain，以便可以正常的签名应用，
+PASSWORD=&quot;******&quot;
+security unlock-keychain -p $PASSWORD ~/Library/Keychains/login.keychain
+ 
+# 获取设备的UDID
+UDID=$(idevice_id -l | head -n1)
+ 
+# 运行测试
+xcodebuild -project ~/WebDriverAgent-master/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination &quot;id=e6a545a6a7490d06e3f5eb32e6f3a6d843ac2d08&quot; test
+
+xcodebuild -project ~/WebDriverAgent-master/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination &quot;id=278c6390c9e6b372fd4b4bdd737022e2c6ff9dcd&quot; test
+
+# 手机IP的端口映射到本地
+iproxy 8100 8100
+
+# 端口占用取消
+ps -ax|grep -i &quot;iproxy&quot;|grep -v grep|awk '{print &quot;kill -9 &quot; $1}'|sh
+
+# 打开safari
+open -a Safari http://localhost:8100/inspector
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h5 id=&quot;通过atxautomatorx进行界面测试&quot;&gt;通过ATX(AutomatorX)进行界面测试&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ATX安装和使用
+
+ATX(AutomatorX的简称）的安装比较简单，主要有两个命令。
+
+pip install --pre --upgrade atx
+pip install opencv_python
+
+
+
+
+ATX的编写都在 python 实现，例如：
+
+import atx
+d = atx.connect('http://localhost:8100', platform='ios') 
+print d.status()
+
+＃命令行执行
+python test.py
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h5 id=&quot;通过wechat_jump_game自动微信跳一跳&quot;&gt;通过wechat_jump_game自动微信跳一跳&lt;/h5&gt;
+
+&lt;p&gt;就不放链接了，我基本上用&lt;strong&gt;开始使用WebDriverAgent&lt;/strong&gt;这一模块快速开始界面查看&lt;/p&gt;
+</description>
+        <pubDate>Sat, 07 Jul 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/07/07/WebDriverAgent/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/07/07/WebDriverAgent/</guid>
+        
+        <category>工具</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>通过swizzleMethod无痕处理NavItem的点击范围</title>
+        <description>&lt;p&gt;在iOS 11 以下可以通过添加space的方式实现，但是iOS 11 之后引入了safe area这个方式仍然受限于safe area。
+iOS 11以后需要调整layoutMargins值。&lt;/p&gt;
+
+&lt;h2 id=&quot;本文通过区分版本遍历navview调整相应的视图且使用swizzlemethod无痕注入&quot;&gt;本文通过区分版本，遍历navview调整相应的视图，且使用swizzleMethod无痕注入&lt;/h2&gt;
+
+&lt;p&gt;封装: 使用了swizzleMethod在多个地方无痕设置&lt;/p&gt;
+
+&lt;p&gt;参考代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+
+#### 唯一需要注意的地方就是在iOS 11以下使用”hideRightNavigationBar“需要hideButtons，原因上边已经写出了
+
+import Foundation
+import UIKit
+
+extension NSObject {
+    static func swizzleMethod(_ cls: AnyClass, originalSelector: Selector, swizzleSelector: Selector){
+        
+        let originalMethod = class_getInstanceMethod(cls, originalSelector)!
+        let swizzledMethod = class_getInstanceMethod(cls, swizzleSelector)!
+        let didAddMethod = class_addMethod(cls,
+                                           originalSelector,
+                                           method_getImplementation(swizzledMethod),
+                                           method_getTypeEncoding(swizzledMethod))
+        if didAddMethod {
+            class_replaceMethod(cls,
+                                swizzleSelector,
+                                method_getImplementation(originalMethod),
+                                method_getTypeEncoding(originalMethod))
+        } else {
+            method_exchangeImplementations(originalMethod,
+                                           swizzledMethod)
+        }
+    }
+}
+
+
+extension UIApplication {
+    private static let classSwizzedMethod: Void = {
+        UINavigationController.sx_initialize
+        if #available(iOS 11.0, *) {
+            UINavigationBar.sx_initialize
+        }
+    }()
+    
+    open override var next: UIResponder? {
+        UIApplication.classSwizzedMethod
+        return super.next
+    }
+}
+//swiftlint:disable identifier_name
+public var sx_defultFixSpace: CGFloat = 0
+public var sx_disableFixSpace: Bool = false
+
+extension UINavigationController {
+    
+    private struct AssociatedKeys {
+        static var tempDisableFixSpace = &quot;tempDisableFixSpace&quot;
+        static var tempBehavor = &quot;tempBehavor&quot;
+    }
+    
+    static let sx_initialize: Void = {
+        DispatchQueue.once(UUID().uuidString) {
+            
+            swizzleMethod(UINavigationController.self,
+                          originalSelector: #selector(UINavigationController.viewDidLoad),
+                          swizzleSelector: #selector(UINavigationController.sx_viewDidLoad))
+            
+            swizzleMethod(UINavigationController.self,
+                          originalSelector: #selector(UINavigationController.viewWillAppear(_:)),
+                          swizzleSelector: #selector(UINavigationController.sx_viewWillAppear(_:)))
+            
+            swizzleMethod(UINavigationController.self,
+                          originalSelector: #selector(UINavigationController.viewWillDisappear(_:)),
+                          swizzleSelector: #selector(UINavigationController.sx_viewWillDisappear(_:)))
+            
+        }
+    }()
+    
+    private var tempDisableFixSpace: Bool {
+        get {
+            return objc_getAssociatedObject(self, &amp;amp;AssociatedKeys.tempDisableFixSpace) as? Bool ?? false
+        }
+        set {
+            objc_setAssociatedObject(self, &amp;amp;AssociatedKeys.tempDisableFixSpace, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    @available(iOS 11.0, *)
+    private var tempBehavor: UIScrollViewContentInsetAdjustmentBehavior {
+        get {
+            return objc_getAssociatedObject(self, &amp;amp;AssociatedKeys.tempBehavor) as? UIScrollViewContentInsetAdjustmentBehavior ?? .automatic
+        }
+        set {
+            objc_setAssociatedObject(self, &amp;amp;AssociatedKeys.tempBehavor, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    @objc private func sx_viewDidLoad() {
+        disableFixSpace(true, with: true)
+        sx_viewDidLoad()
+    }
+    
+    @objc private func sx_viewWillAppear(_ animated: Bool) {
+        disableFixSpace(true, with: false)
+        sx_viewWillAppear(animated)
+    }
+    
+    @objc private func sx_viewWillDisappear(_ animated: Bool) {
+        disableFixSpace(false, with: true)
+        sx_viewWillDisappear(animated)
+    }
+    
+    private func disableFixSpace(_ disable: Bool, with temp: Bool) {
+        if type(of: self) == UIImagePickerController.self {
+            if disable == true {
+                if temp { tempDisableFixSpace = sx_disableFixSpace }
+                sx_disableFixSpace = true
+                if #available(iOS 11.0, *) {
+                    tempBehavor = UIScrollView.appearance().contentInsetAdjustmentBehavior
+                    UIScrollView.appearance().contentInsetAdjustmentBehavior = .automatic
+                }
+            } else {
+                sx_disableFixSpace = tempDisableFixSpace
+                if #available(iOS 11.0, *) {
+                    UIScrollView.appearance().contentInsetAdjustmentBehavior = tempBehavor
+                }
+            }
+        }
+    }
+}
+
+@available(iOS 11.0, *)
+extension UINavigationBar {
+    
+    static let sx_initialize: Void = {
+        DispatchQueue.once(UUID().uuidString) {
+            swizzleMethod(UINavigationBar.self,
+                          originalSelector: #selector(UINavigationBar.layoutSubviews),
+                          swizzleSelector: #selector(UINavigationBar.sx_layoutSubviews))
+            
+        }
+    }()
+    
+    @objc func sx_layoutSubviews() {
+        sx_layoutSubviews()
+        
+        if sx_disableFixSpace == false {
+            layoutMargins = .zero
+            let space = sx_defultFixSpace
+            for view in subviews {
+                if NSStringFromClass(view.classForCoder).contains(&quot;ContentView&quot;) {
+                    view.layoutMargins = UIEdgeInsetsMake(0, space, 0, space)
+                }
+            }
+        }
+    }
+}
+
+extension UINavigationItem {
+    
+    private enum BarButtonItem: String {
+        case left = &quot;_leftBarButtonItem&quot;
+        case right = &quot;_rightBarButtonItem&quot;
+    }
+    
+    open override func setValue(_ value: Any?, forKey key: String) {
+        
+        if #available(iOS 11.0, *) {
+            super.setValue(value, forKey: key)
+        } else {
+            if sx_disableFixSpace == false &amp;amp;&amp;amp; (key == BarButtonItem.left.rawValue || key == BarButtonItem.right.rawValue) {
+                guard let item = value as? UIBarButtonItem else {
+                    super.setValue(value, forKey: key)
+                    return
+                }
+                let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+                space.width = sx_defultFixSpace - 16
+                
+                if key == BarButtonItem.left.rawValue {
+                    leftBarButtonItems = [space, item]
+                } else {
+                    rightBarButtonItems = [space, item]
+                }
+            } else {
+                super.setValue(value, forKey: key)
+            }
+        }
+    }
+}
+
+extension DispatchQueue {
+    static var `default`: DispatchQueue { return DispatchQueue.global(qos: .`default`) }
+    static var userInteractive: DispatchQueue { return DispatchQueue.global(qos: .userInteractive) }
+    static var userInitiated: DispatchQueue { return DispatchQueue.global(qos: .userInitiated) }
+    static var utility: DispatchQueue { return DispatchQueue.global(qos: .utility) }
+    static var background: DispatchQueue { return DispatchQueue.global(qos: .background) }
+    
+    func after(_ delay: TimeInterval, execute closure: @escaping () -&amp;gt; Void) {
+        asyncAfter(deadline: .now() + delay, execute: closure)
+    }
+    
+    private static var _onceTracker = [String]()
+    public class func once(_ token: String, block:()-&amp;gt;Void) {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        if _onceTracker.contains(token) {
+            return
+        }
+        _onceTracker.append(token)
+        block()
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        <pubDate>Sun, 01 Jul 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/07/01/UINavItem/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/07/01/UINavItem/</guid>
+        
+        <category>Code</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>项目优化-瘦身</title>
+        <description>&lt;hr /&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;18年9月更新，因为苹果AppStore的bug导致显示的大小于Itunes Connect显示大小不一致，9月底已经修复。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;本文主要介绍项目瘦身，代码精简方面的优化，列了一些步骤可以对照修改。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;总结了以下优化大概可以归为以下几类：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;图片等资源文件优化（无用/重复/压缩/矢量图_有待证实/存服务器等）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;第三方库的优化，(oc下可避免use_frameworks！）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;代码方面的优化&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;xcode设置和支持bitcode&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;以下正文，不推荐的方式标题等级会小一些&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;1-图片处理&quot;&gt;1. 图片处理&lt;/h2&gt;
+
+&lt;h3 id=&quot;11-查找没用到的图片支持swift和oc&quot;&gt;1.1 查找没用到的图片支持Swift和OC&lt;/h3&gt;
+&lt;p&gt;https://github.com/tinymind/LSUnusedResources/&lt;/p&gt;
+
+&lt;h3 id=&quot;12-查找md5一样的文件图片去重复&quot;&gt;1.2 查找MD5一样的文件（图片去重复）&lt;/h3&gt;
+&lt;p&gt;https://linux.cn/article-6127-1.html&lt;/p&gt;
+
+&lt;p&gt;https://github.com/adrianlopezroche/fdupes&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;isntall from  http://macappstore.org/fdupes/
+    cd xx
+    fdupes -Sr ./
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;13-大图转换格式&quot;&gt;1.3 大图转换格式&lt;/h4&gt;
+
+&lt;p&gt;对于超过10KB的大图，不管是webp格式还是jpg格式都比png小很多，png转换webp的工具可以采用：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 安装
+brew install webp
+# 转换 webp
+cwebp -q 75 bts-home-nocity@3x.png -o bts-home-nocity@3x.webp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;14-图片简单压缩&quot;&gt;1.4 图片简单压缩。&lt;/h3&gt;
+&lt;p&gt;正常压缩图片即可。满足使用。&lt;/p&gt;
+
+&lt;p&gt;无损压缩，去除图片data的无用部分，待证实对iOS是否有效？（打包过程中 Xcode会把之前处理过的逆转回来？）&lt;/p&gt;
+
+&lt;p&gt;https://github.com/ImageOptim/ImageOptim&lt;/p&gt;
+
+&lt;h3 id=&quot;15-assets文件正确使用&quot;&gt;1.5 assets文件正确使用&lt;/h3&gt;
+&lt;p&gt;https://www.jianshu.com/p/867d9fa85770&lt;/p&gt;
+
+&lt;h3 id=&quot;16-非必须图片从服务器下载&quot;&gt;1.6 非必须图片从服务器下载&lt;/h3&gt;
+&lt;p&gt;如上&lt;/p&gt;
+
+&lt;h2 id=&quot;2-第三方库&quot;&gt;2. 第三方库&lt;/h2&gt;
+
+&lt;h3 id=&quot;21-三方库的选择&quot;&gt;2.1 三方库的选择&lt;/h3&gt;
+&lt;p&gt;检查三方库的大小，权衡是否使用，例如使用Realm性能提升，但是打包大小会多7M左右&lt;/p&gt;
+
+&lt;p&gt;OC下还可以鉴别使用use_frameworks!&lt;/p&gt;
+
+&lt;h4 id=&quot;22-三方库直接拉入项目使用三方库的部分内容&quot;&gt;2.2 三方库直接拉入项目，使用三方库的部分内容&lt;/h4&gt;
+&lt;p&gt;不使用cocoapod等三方管理，少了三方的配置文件，但是牺牲了管理代码方遍性&lt;/p&gt;
+
+&lt;p&gt;拆分三方库的代码，仅使用部分，谨慎&lt;/p&gt;
+
+&lt;h2 id=&quot;3代码去重复和删除&quot;&gt;3代码去重复和删除&lt;/h2&gt;
+&lt;h3 id=&quot;31推荐appcode分析重复未使用的代码&quot;&gt;3.1推荐AppCode分析重复/未使用的代码&lt;/h3&gt;
+&lt;p&gt;https://www.jetbrains.com/objc/download/
+下载地址&lt;/p&gt;
+
+&lt;h4 id=&quot;32静态代码分析工具pmd下的cpd分析重复代码&quot;&gt;3.2静态代码分析工具PMD下的CPD，分析重复代码&lt;/h4&gt;
+
+&lt;p&gt;https://github.com/pmd/pmd&lt;/p&gt;
+
+&lt;p&gt;https://www.jianshu.com/p/721ca80fdcc7&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//安装PMD
+
+$ cd $HOME
+$ curl -OL https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.4.0/pmd-bin-6.4.0.zip
+$ unzip pmd-bin-6.4.0.zip
+
+//这里要求安装jre，参看下边
+$ alias pmd=&quot;$HOME/pmd-bin-6.4.0/bin/run.sh pmd&quot;
+$ pmd -d /usr/src -R java-basic -f text
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//安装Jre，修改环境变量
+//No Java runtime present, requesting install.
+//安装完还提示这个错误，可以
+
+vim .bash_profile 
+添加：  
+export JAVA_HOME=&quot;/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home&quot;
+ 
+export PATH=${JAVA_HOME}/bin:$PATH
+保存，并关闭
+然后  source .bash_profile
+
+java -version
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;开始检查&lt;/p&gt;
+
+&lt;p&gt;pmd文档链接如下&lt;/p&gt;
+
+&lt;p&gt;https://pmd.github.io/pmd-6.4.0/pmd_userdocs_cpd.html#options&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+ cd pmd-bin-6.4.0/bin/
+ 
+ ./run.sh cpd --minimum-tokens 100 --files /Users/bieshixuan/iOS/ZhiMa_iOS --language swift --format xml
+// 可以导command K清除之后保存
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;—–ka&lt;/p&gt;
+&lt;h4 id=&quot;pmd-cpd-files命令报错可以手动替换上边的内容&quot;&gt;pmd cpd –files…命令报错，可以手动替换上边的内容&lt;/h4&gt;
+&lt;p&gt;安装好 PMD 后, 就可以在 Xcode 中添加 Run Script 脚本了:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Running CPD
+//如果错误，可以注释这一行，手动替换
+pmd cpd --files ${EXECUTABLE_NAME} --minimum-tokens 50 --language swift --encoding UTF-8 --format net.sourceforge.pmd.cpd.XMLRenderer &amp;gt; cpd-output.xml --failOnViolation true
+# Running script
+php ./cpd_script.php -cpd-xml cpd-output.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;需要的 cpd_script.php 文件如下, 需要放到工程根目录&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;?php
+foreach (simplexml_load_file('cpd-output.xml')-&amp;gt;duplication as $duplication) {
+    $files = $duplication-&amp;gt;xpath('file');
+    foreach ($files as $file) {
+        echo $file['path'].':'.$file['line'].':1: warning: '.$duplication['lines'].' copy-pasted lines from: '
+            .implode(', ', array_map(function ($otherFile) { return $otherFile['path'].':'.$otherFile['line']; },
+            array_filter($files, function ($f) use (&amp;amp;$file) { return $f != $file; }))).PHP_EOL;
+    }
+}
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;还有更多静态代码分析工具查看http://hao.jobbole.com/static_code_analysis_tool_list_opensource/&lt;/p&gt;
+
+&lt;h4 id=&quot;oc下可以检查没有使用的import&quot;&gt;OC下可以检查没有使用的import&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OC下发现没有使用的import
+
+https://github.com/dblock/fui
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;有一个现成的工具，就是fui，非常好用，以前可以直接添加插件使用，但是现在大家都知道，xcode不能使用第三方的插件了：gem install fui。但是就这一句都经常会出现问题，比如
+
+sudo gem install -n /usr/local/bin fui
+运行完成后会直接在终端展示出很多没用的代码，有的是import了但是没有使用的，也有目录下有但是工程中没有添加到也没有用到的，最好还是全局搜索一下再删除。
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;33-文件之间相似度&quot;&gt;3.3 文件之间相似度&lt;/h4&gt;
+&lt;p&gt;如果很相似可以权衡是否合并继承&lt;/p&gt;
+
+&lt;p&gt;https://github.com/startry/SameCodeFinder&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//越小相似度越高
+python SameCodeFinder.py ProjectPath .swift --detail
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;34-检查代码其他方面&quot;&gt;3.4 检查代码其他方面&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;已经下线的陈旧代码，AB试验已经下线的代码&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;通过转H5、Hybrid或者RN实现的Native功能，可以定期清理&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;一些非核心Hybrid或者RN模块，可以考虑不要打包进入APP，通过动态下发的方式获取&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;代码的重构，UI组件、业务逻辑的重用等等&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;结合项目的混淆，缩短类名方法名长度来减少大小&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;使用包含所有内容的Model，将多个file代码整合到一个file中，同时也会加快编译速度&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;4-xcode设置和bitcode&quot;&gt;4. Xcode设置和bitcode&lt;/h2&gt;
+
+&lt;h3 id=&quot;41-xcode使用新版xcode可以跳过&quot;&gt;4.1 Xcode（使用新版xcode可以跳过）&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Build Settings-&amp;gt;Optimization Level
+有几个编译优化选项，release版应该选择Fastest, Smalllest，这个选项会开启那些不增加代码大小的全部优化，并让可执行文件尽可能小。
+2.去除符号信息
+Strip Linked Product / Deployment Postprocessing / Symbols Hidden by Default
+在release版本应该设为yes，可以去除不必要的调试符号。
+Symbols Hidden by Default会把所有符号都定义成”private extern”，详细信息见官方文档。
+
+这些选项目前都是Xcode里release的默认选项，但旧版XCode生成的项目可能不是，可以检查一下。其他优化还可以参考官方文档—CodeFootprint.pdf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;42-bitcode-可以减小打包的大小&quot;&gt;4.2 bitcode 可以减小打包的大小&lt;/h3&gt;
+&lt;p&gt;默认Xcode是true的，如果因为第三方库的原因改为了false，可以向库支持者寻求帮助，而且开启之后可以线上现在dSYM文件不用本地保存了&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;以下是优化点的参考资料&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;Damonwong的对yep优化分析&lt;/p&gt;
+
+&lt;p&gt;https://www.jianshu.com/p/df52554be812&lt;/p&gt;
+
+&lt;p&gt;iOS可执行文件瘦身方法&lt;/p&gt;
+
+&lt;p&gt;http://blog.cnbang.net/tech/2544/&lt;/p&gt;
+
+&lt;p&gt;总结下在iOS瘦身上的一些方向和优化点&lt;/p&gt;
+
+&lt;p&gt;https://www.ctolib.com/topics-65758.html&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;END ，以下是不推荐的&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;h4 id=&quot;通过遍历本地的图片名查找在文件中是否使用了图片名&quot;&gt;通过遍历本地的图片名，查找在文件中是否使用了图片名&lt;/h4&gt;
+&lt;h5 id=&quot;shell命令-不能查找assets中的json名字&quot;&gt;shell命令, 不能查找assets中的json名字&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;通过终端 执行 shell 命令
+
+a. 第一步建立.sh 文件  如 unusedImage.sh
+
+#!/bin/sh  
+PROJ=`find . -name '*.swift' -name '*.xib' -o -name '*.[mh]'`  
+  
+for png in `find . -name '*.png'`  
+do  
+    name=`basename $png` 
+    if ! grep -qhs &quot;$name&quot; &quot;$PROJ&quot;; then  
+        echo &quot;$png is not referenced&quot;  
+    fi  
+done 
+
+
+b. 进入你要查找的工程目录下执行 这段 shell 脚本
+
+sh unusedImage.sh   
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;搜索文件搜索某个字符串在子文件夹是否使用了&quot;&gt;搜索文件，搜索某个字符串在子文件夹是否使用了&lt;/h5&gt;
+&lt;p&gt;搜索文件的方式可以使用grep,ack都是不错的工具，但是有一种更快，更好的搜索文件内容的方式:The Silver Searcher，The Silver Searcher使用起来更方便，更快，更简单,项目地址：https://github.com/ggreer/the_silver_searcher。 直接安装The Silver Searcher的命令:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install the_silver_searcher
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;使用ag命令就可以进行文本搜索:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ag &quot;image&quot; './'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这个命令的意思是搜索到该目录下以及其子目录下的所有含有”image”的文件。
+使用这个命令就需要在python中执行bash命令。&lt;/p&gt;
+
+&lt;h3 id=&quot;参考资料&quot;&gt;参考资料&lt;/h3&gt;
+
+&lt;p&gt;github项目：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ImageOptim
+LSUnusedResources
+SameCodeFinder
+SMCheckProject
+XcodeProjectArrangementTool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;博客：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[iOS Color Misaligned Images优化 - 简书](https://www.jianshu.com/p/38cf9c170141)
+
+[浅谈iOS中的视图优化 - 简书}(https://www.jianshu.com/p/5c968a240e27)
+
+[图片的颜色深度/颜色格式（32bit,24bit,12bit） - 简书](https://www.jianshu.com/p/52440c7a8902)
+
+[UILabel在iOS8下的Color Blended Layers - 简书](https://www.jianshu.com/p/db6602413fa3)
+
+[如何改善图形性能 | 蘑菇味海星](http://ihomway.cc/2017/07/28/ios-grapics-performance/)
+
+[怎么改png图片位深度 小小知识站](http://www.zhishizhan.net/wuhuabamen/43560.html)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        <pubDate>Sat, 16 Jun 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/06/16/ProjectPackage/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/06/16/ProjectPackage/</guid>
+        
+        <category>优化</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>2017总结-iOS编码规范</title>
+        <description>&lt;h4 id=&quot;补充的&quot;&gt;补充的&lt;/h4&gt;
+
+&lt;h2 id=&quot;在2017年时候总结的编码规范&quot;&gt;在2017年时候总结的编码规范&lt;/h2&gt;
+
+&lt;p&gt;一个项目主代码只允许一种编码风格&lt;/p&gt;
+
+&lt;h3 id=&quot;命名规范&quot;&gt;命名规范&lt;/h3&gt;
+
+&lt;h5 id=&quot;类命名&quot;&gt;类命名&lt;/h5&gt;
+&lt;p&gt;首字母大写，之后每个单词首字母都大写
+使用能够反映类功能的名词短语
+文件和类同名
+举例：BaseClient、ImageStore&lt;/p&gt;
+
+&lt;h5 id=&quot;特殊类命名&quot;&gt;特殊类命名&lt;/h5&gt;
+&lt;p&gt;如果是视图控制器的子类应添加后缀“ViewController”或者“Controller”;视图的子类应添加后缀“View”;…
+举例：SettingsViewController、NavigationView&lt;/p&gt;
+
+&lt;h5 id=&quot;分类类别命名&quot;&gt;分类（类别）命名&lt;/h5&gt;
+&lt;p&gt;与类命名相同，此外需添加要扩展的类名和“+”
+举例：NSString+URLEncoding&lt;/p&gt;
+
+&lt;h5 id=&quot;协议委托命名&quot;&gt;协议（委托）命名&lt;/h5&gt;
+&lt;p&gt;与类命名相同，此外需添加“Delegate”后缀
+举例：ReplyViewDelegate&lt;/p&gt;
+
+&lt;h5 id=&quot;方法命名&quot;&gt;方法命名&lt;/h5&gt;
+&lt;p&gt;首字母小写，之后每个单词首字母都大写
+方法名使用动词短语
+举例：- (void)setPostValue:(int)value&lt;/p&gt;
+
+&lt;h5 id=&quot;方法参数命名&quot;&gt;方法参数命名&lt;/h5&gt;
+&lt;p&gt;首字母小写，之后每个单词首字母都大写
+具有足够的说明性
+不需要添加类型前缀(dicUserInfo)
+举例：- (void)sendUserInfo:(NSDictionary *)userInfo&lt;/p&gt;
+
+&lt;h4 id=&quot;变量命名&quot;&gt;变量命名&lt;/h4&gt;
+&lt;p&gt;首字母小写，之后每个单词首字母都大写
+具有足够的说明性
+成员变量添加“_”前缀&lt;/p&gt;
+
+&lt;h5 id=&quot;常量命名&quot;&gt;常量命名&lt;/h5&gt;
+&lt;p&gt;常量（预定义，局部常量等）使用小写k开头的驼峰法
+举例：kInvalidHandle , kWritePerm&lt;/p&gt;
+
+&lt;h5 id=&quot;枚举类型命名&quot;&gt;枚举类型命名&lt;/h5&gt;
+&lt;p&gt;首字母大写，之后每个单词首字母都大写，最后加“s”
+枚举变量使用枚举类型去掉“s”作为前缀，每个单词首字母大写，中间不允许加下划线
+举例：
+typedef enum UIControlEvents{
+UIControlEventTouchDown,
+UIControlEventTouchUpInside
+}UIControlEvents;&lt;/p&gt;
+
+&lt;h4 id=&quot;图片命名&quot;&gt;图片命名&lt;/h4&gt;
+&lt;p&gt;使用英文，首字母小写，之后每个单词首字母都大写
+添加模块名作为前缀，避免冲突
+图片应该与类文件一样，按模块分组放置&lt;/p&gt;
+
+&lt;h4 id=&quot;分组命名&quot;&gt;分组命名&lt;/h4&gt;
+&lt;p&gt;分组要跟实际的文件夹一致(右键finder找得到)
+使用英文，首字母大写，之后每个单词首字母都大写
+每个分组使用模块的名字
+分离共用分组
+分离第三方分组
+分离宏
+分离资源文件&lt;/p&gt;
+
+&lt;h3 id=&quot;书写规范&quot;&gt;书写规范&lt;/h3&gt;
+
+&lt;h5 id=&quot;注释&quot;&gt;注释&lt;/h5&gt;
+&lt;p&gt;if 判断后要加括号
+文件都包含文件头，要说明文件名、作者、创建时间、变更记录
+.h的方法重要方法属性要添加注释
+变量命名规范,不能自注释要添加注释
+public接口的每个方法都应该添加关于函数，参数，返回值以及副作用的注释
+当if语句的判断条件复杂时，需要用注释说明判断内容
+接口类的头文件每个方法前都应该注明方法的作用和接口传参类型参数&lt;/p&gt;
+
+&lt;h5 id=&quot;方法&quot;&gt;方法&lt;/h5&gt;
+&lt;p&gt;初始化方法传参推荐采用initWithXxx, 并添加注释, 提示option
+私有的变量在.m文件创建分类然后声明, 不要在.h文件开放过多属性
+代码相同的注意封装, 避免相同的代码段在多个地方出现&lt;/p&gt;
+
+&lt;p&gt;留一个空格在-或+和返回类型之间，但参数列表里的参数之间不要留间隔，每个冒号之前都必须有对该参数的说明词，如：
+举例：- (void)doSomethingWithString:(NSString *)string number:(int)num
+如果参数过多，推荐每个参数各占一行。使用多行的情况下，在参数前加冒号用于对齐，如：
+举例： -(void)doSomethingWith:(GTMFoo *)theFoo
+rect:(NSRect)theRect
+interval:(float)theInterval&lt;/p&gt;
+
+&lt;h3 id=&quot;其他规范&quot;&gt;其他规范&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;每次上传代码必须处理警告,每次上线前要通过analyzing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;特别注意&quot;&gt;特别注意&lt;/h3&gt;
+&lt;p&gt;登录用户的信息要有一个类专门管理
+项目共用组件如分享,时间选择,播放器,提示框弹出等应组件化处理,命名规则”项目名Kit”
+所有的textfield和textview要创建父类并继承,方便处理允许输入表情等,统一父类管理
+可以使用字典代替model但是关键点要判空
+控件布局使用相对坐标从上到下, 关键距离使用宏或者类静态变量
+使用数组取某个值要判断数组count(例如data[2]要判断datasouth.count&amp;gt;2)
+避免使用用通知, 确需要使用要写清楚注释,调用类并且应考虑接受之后是否注销通知
+禁止滥用各个UI控件的accessibility属性
+点击按钮之后需要切换按钮图片，当这两张图片没有关联时（关联:正常按钮图片和选中效果图片; 不关联:保存按钮图片和上传按钮图片），不应该设置为UIControlSelected
+禁止使用xx.alpha = 0/1来代替view的hidden
+view的视图创建和赋值要分两个方法&lt;/p&gt;
+
+&lt;h4 id=&quot;代码风格&quot;&gt;代码风格&lt;/h4&gt;
+&lt;p&gt;代码缩进和换行
+操作符前后都要加空格
+语句嵌套层次不得超过3层
+代理必须试用#pragma mark标记&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;逻辑处理和ui(例如弹框提醒)不要写到一个方法中&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;不要让一个类耦合太多的东西, 分离用户, 公告组件, 执行MVC 
+每个实现文件建议在500行以内，不能超过1000行，超过之后应考虑通过抽象类对代码进行重构, 以及及时删除或注释掉无用的代码&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;项目性能优化&quot;&gt;项目性能优化&lt;/h4&gt;
+&lt;p&gt;状态栏,tabbar,navBar的样式及是否显示在viewWillAppear调用, 耗时操作考虑在viewDidAppear调用
+tableView不需要reload全部的话尽量reload一组或者一行
+tableView如果高度不同要注意保存高度
+UITableViewCell里面的network client都要委托出来
+合理使用单例类, 例如 共享用户保存信息, 单例相机优化性能等…&lt;/p&gt;
+</description>
+        <pubDate>Fri, 08 Jun 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/06/08/2017CodeStyle/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/06/08/2017CodeStyle/</guid>
+        
+        <category>优化</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>胡​适​1​9​3​2​年​演​讲​-大学毕业后的几条路</title>
+        <description>&lt;h4 id=&quot;补充的&quot;&gt;补充的&lt;/h4&gt;
+
+&lt;p&gt;这一两个星期里，各地的大学都有毕业的班次，都有很多的毕业生离开学校去开始他们的成人事业。&lt;/p&gt;
+
+&lt;p&gt;学生的生活是一种享有特殊优待的生活，不妨幼稚一点，不妨吵吵闹闹，社会都能纵容他们，不肯严格地要他们负行为的责任。现在他们要撑起自己的肩膀来挑他们自己的担子了。在这个国难最紧急的年头，他们的担子真不轻!我们祝他们的成功，同时也不忍不依据自己的经验，赠他们几句送行的赠言——虽未必是救命毫毛，也许做个防身的锦囊罢!&lt;/p&gt;
+
+&lt;p&gt;你们毕业之后，可走的路不出这几条：绝少数的人还可以在国内或国外的研究院继续做学术研究；少数的人可以寻着相当的职业；此外还有做官，办党，革命三条路；再有就是在家享福或者失业亲居了。&lt;/p&gt;
+
+&lt;p&gt;走其余几条路的人，都不能没有堕落的危险。堕落的方式很多，总括起来，约有这两大类：&lt;/p&gt;
+
+&lt;p&gt;第一是容易抛弃学生时代求知识的欲望。你们到了实际社会里，往往学非所用，往往所学全无用处，往往可以完全用不着学问，而一样可以胡乱混饭吃，混官做。在这种环境里即使向来抱有求知识学问的人，也不免心灰意懒，把求知的欲望渐渐冷淡下去。况且学问是要有相当的设备的：书籍，实验室，师友的切磋指导，闲暇的工夫，都不是一个平常要糊口养家的人能容易办到的。没有做学问的环境，又谁能怪我们抛弃学问呢?&lt;/p&gt;
+
+&lt;p&gt;第二是容易抛弃学生时代理想的人生的追求。少年人初次和冷酷的社会接触，容易感觉理想与事实相去太远，容易发生悲观和失望。多年怀抱的人生理想，改造的热诚，奋斗的勇气，到此时候，好像全不是那么一回事了。渺小的个人在那强烈的社会炉火里，往往经不起长时期的烤炼就熔化了，一点高尚的理想不久就幻灭了。抱着改造社会的梦想而来，往往是弃甲抛兵而走，或者做了恶势的俘虏。你在那牢狱里，回想那少年气壮时代的种种理想主义，好像都成了自误误人的迷梦!从此以后，你就甘心放弃理想人生的追求，甘心做现在社会的顺民了。要防御这两方面的堕落，一面要保持我们求知识的欲望，一面要保持我们对人生的追求。&lt;/p&gt;
+
+&lt;p&gt;有什么好方子呢?依我个人的观察和经验，有三种防身的药方是值得一试的。&lt;/p&gt;
+
+&lt;p&gt;第一个方子只有一句话：“总得时时寻一两个值得研究的问题!”&lt;/p&gt;
+
+&lt;p&gt;问题是知识学问的老祖宗：古往今来一切知识的产生与积聚，都是因为要解答问题——要解答实用上的困难和理论上的疑难。所谓“为知识而求知识”，其实也只是一种好奇心追求某种问题的解答，不过因为那种问题的性质不必是直接应用的，人们就觉得这是无所谓的求知识了。&lt;/p&gt;
+
+&lt;p&gt;我们出学校之后，离开了做学问的环境，如果没有一两个值得解答的问题在脑子里盘旋，就很难保持求学问的热心。可是，如果你有了一个真有趣的问题逗你去想它，天天引诱你去解决它，天天对你挑衅你无可奈何它——这时候，你就会同恋爱一个女子发了疯一样，坐也坐不下，睡也睡不安，没工夫也得偷出工夫去陪她，没钱也得缩衣节食去巴结她。没有书，你自会变卖家私去买书；没有仪器，你自会典押衣物去置办仪器；没有师友，你自会不远千里去寻师访友。你只要有疑难问题来逼你时时用脑子，你自然会保持发展你对学问的兴趣，即使在最贫乏的知识中，你也会慢慢地，聚起一个小图书馆来，或者设置起一所小试验室来。所以我说，第一要寻问题。脑子里没有问题之日，就是你知识生活寿终正寝之时!古人说，“待文王而兴者，凡民也。若夫豪杰之士，虽无文王犹兴。”试想伽利略和牛顿有多少藏书?有多少仪器?他们不过是有问题而已。有了问题而后他们自会造出仪器来解决他们的问题。没有问题的人们，关在图书馆里也不会用书，锁在试验室里也不会有什么发现。&lt;/p&gt;
+
+&lt;p&gt;第二个方子也只有一句话：“总得多发展一点非职业的兴趣。”&lt;/p&gt;
+
+&lt;p&gt;离开学校之后，大家总是寻个吃饭的职业。可是你寻得的职业未必就是你所学的，未必是你所心喜的，或者是你所学的而和你性情不相近的。在这种情况之下，工作往往成了苦工，就感觉不到兴趣了。为糊口而做那种非“性之所近而力之所能勉”的工作，就很难保持求知的兴趣的生活的理想主义。最好的救济方法只有多多发展职业以外的正当兴趣与活动。&lt;/p&gt;
+
+&lt;p&gt;一个人应该有他的职业，也应该有他非职业的玩艺儿，可以叫作业余活动。往往他的业余活动比他的职业还更重要，因为一个人成就怎样，往往靠他怎样利用他的闲暇时间。他用他的闲暇来打麻将，他就成了个赌徒；你用你的闲暇来做社会服务，你也许成个社会改革者；或者你用你的闲暇去研究历史，你也许成个史学家。你的闲暇往往定你的终身。英国19世纪的两个哲人，弥儿终身做东印度公司的秘书，然而他的业余工作使他在哲学上、经济学上、政治思想史上都占一个很高的位置；斯宾塞是一个测量工程师，然而他的业余工作使他成为前世纪晚期世界思想界的一个重镇。古来成大学问的人，几乎没有一个不善用他的闲暇时间的。职业不容易适合我们的性情，我们要想生活不苦痛不堕落，只有多方发展。&lt;/p&gt;
+
+&lt;p&gt;有了这种心爱的玩艺儿，你就做六个钟头抹桌子工作也不会感觉烦闷了。因为你知道，抹了六个钟头的桌子之后，你可以回家做你的化学研究，或画完你的大幅山水，或写你的小说戏曲，或继续你的历史考据，或做你的社会改革事业。你有了这种称心如意的活动，生活就不枯寂了，精神也就不会烦闷了。&lt;/p&gt;
+
+&lt;p&gt;第三个方子也只有一句话：“你得有一点信心。”&lt;/p&gt;
+
+&lt;p&gt;我们生当这个不幸的时代，眼中所见，耳中所闻，无非是叫我们悲观失望的。特别是在这个年头毕业的你们，眼见自己的国家民族沉沦到这步田地，眼看世界只是强权的世界，望极天边好像看不见一线的光明——在这个年头不发狂自杀，已算是万幸了，怎么还能够保持一点内心的镇定和理想的信任呢?我要对你们说：这时候正是我们要培养我们的信心的时候!只要我们有信心，我们还有救。&lt;/p&gt;
+
+&lt;p&gt;古人说：“信心可以移山。”又说：“只要功夫深，生铁磨成绣花针。”你不信吗?当拿破仑的军队征服普鲁士，占据柏林的时候，有一位教授叫作费希特的，天天在讲堂劝他的国人要有信心，要信仰他们的民族是有世界的特殊使命的，是必定要复兴的。费希特死的时候，谁也不能预料德意志统一帝国何时可以实现，然而不满５０年，新的统一的德意志帝国居然实现了。&lt;/p&gt;
+
+&lt;p&gt;一个国家的强弱盛衰，都不是偶然的，都不能逃出因果的铁律的。我们今日所受的苦痛和耻辱，都只是过去种种恶因种下的恶果。我们要收获将来的善果，必须努力种现在新因。一粒一粒地种，必有满仓满屋的收，这是我们今日应有的信心。我们要深信：今日的失败，都由于过去的不努力。我们要深信：今日的努力，必定有将来的大收成。&lt;/p&gt;
+
+&lt;p&gt;佛典里有一句话：“福不唐捐。”唐捐就是白白地丢了。我们也应该说：“功不唐捐!”没有一点努力是会白白地丢了的。在我们看不见想不到的时候，在我们看不见的方向，你瞧!你下的种子早已生根发叶开花结果了!你不信吗?法国被普鲁士打败之后，割了两省地，赔了５０万万法郎的赔款。这时候有一位刻苦的科学家巴斯德终日埋头在他的化学试验室里做他的化学试验和微菌学研究。他是一个最爱国的人，然而他深信只有科学可以救国。他用一生的精力证明了三个科学问题： (1)每一种发酵作用都是由于一种微菌的发展；(2)每一种传染病都是一种微菌在生物体内的发展；(3)传染病的微菌，在特殊的培养之下可以减轻毒力，使他们从病菌变成防病的药苗。&lt;/p&gt;
+
+&lt;p&gt;这三个问题在表面上似乎都和救国大事业没有多大关系。然而从第一个问题的证明，巴斯德定出做醋酿酒的新法，使全国的酒醋业每年减除极大的损失。从第二个问题的证明，巴斯德教全国的蚕丝业怎样选种防病，教全国的畜牧农家怎样防止牛羊瘟疫，又教全世界怎样注重消毒以减少外科手术的死亡率。从第三个问题的证明，巴斯德发明了牲畜的脾热瘟的疗治药苗，每年替法国农家减除了２０００万法郎的大损失；又发明了疯狗咬毒的治疗法，救济了无数的生命。所以英国的科学家赫胥黎在皇家学会里称颂巴斯德的功绩道：“法国给了德国５０万万法郎的赔款，巴斯德先生一个人研究科学的成就足够还清这一笔赔款了。”巴斯德对于科学有绝大的信心，所以他在国家蒙奇辱大难的时候，终不肯抛弃他的显微镜与试验室。他绝不想他在显微镜底下能偿还５０万万法郎的赔款，然而在他看不见想不到的时候，他已收获了科学救国的奇迹。&lt;/p&gt;
+
+&lt;p&gt;朋友们，在你最悲观失望的时候，那正是你必须鼓起坚强的信心的时候。你要深信：天下没有白费的努力。成功不必在我，而功力必不唐捐。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 07 Jun 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/06/07/2016Graduation/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/06/07/2016Graduation/</guid>
+        
+        <category>生活</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>新的征程</title>
+        <description>&lt;h2 id=&quot;在github新开了博客poosgithubio这是我的第一篇博客&quot;&gt; 🎉 🎉 🎉在github新开了博客&lt;a href=&quot;https://poos.github.io/&quot; title=&quot;poos.github.io&quot;&gt;poos.github.io&lt;/a&gt;，这是我的第一篇博客。&lt;/h2&gt;
+
+&lt;h2 id=&quot;推陈&quot;&gt;推陈&lt;/h2&gt;
+
+&lt;h3 id=&quot;之前的博客地址在这里oschinabieshixuan&quot;&gt;之前的博客地址在这里&lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/2236855&quot;&gt;oschina/bieshixuan&lt;/a&gt;。&lt;/h3&gt;
+
+&lt;p&gt;简单列举一下这个博客的值得纪念的文章，或者说值得提一下，避免大家绕弯路的文章。按时间顺序记录：&lt;/p&gt;
+
+&lt;h5 id=&quot;1-oc代码-经纬度地址转换火星坐标偏移校正&quot;&gt;1. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/611288&quot;&gt;OC代码 经纬度地址转换，火星坐标偏移校正&lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;如果只是记录经纬度，只是想要知道地址，不必要引入第三方SDK的。&lt;/p&gt;
+
+&lt;p&gt;附上github项目，支持使用pod导入&lt;a href=&quot;https://github.com/poos/SXGps&quot;&gt;https://github.com/poos/SXGps&lt;/a&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;2-设置特殊tabbar样式&quot;&gt;2. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/612490&quot;&gt;设置特殊Tabbar样式&lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;原生系统是可以实现的，当然有很多第三方库定制组合了更多功能。&lt;/p&gt;
+
+&lt;h5 id=&quot;3-最初的对于mvvm的理解&quot;&gt;3. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/612891&quot;&gt;最初的对于MVVM的理解&lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;告别MVC。现在不管是OC还是Swift提供了Reactive的概念，响应式更加清晰简洁。&lt;/p&gt;
+
+&lt;h5 id=&quot;4-判断界面是否正在显示&quot;&gt;4. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/614023&quot;&gt;判断界面是否正在显示&lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;第一篇总结类型的文章，介绍页面显示的判断，开心得到oschina的推荐&lt;/p&gt;
+
+&lt;h5 id=&quot;5-关于nsattributestring&quot;&gt;5. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/617441&quot;&gt;关于NSAttributeString&lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;这个博客中的代码是比较老的了。虽然现在写Swift了，但是AttributeString现在在我的项目运用的还是比较多：带V的，带标签的用户；带行高的字符串；大小不一水平居中的字符串…&lt;/p&gt;
+
+&lt;h5 id=&quot;6-几个ui方面的探究&quot;&gt;6. &lt;strong&gt;几个UI方面的探究&lt;/strong&gt;&lt;/h5&gt;
+
+&lt;p&gt;对于列表使用的探究，可惜那时候还基本不用github，否则可以留下一两个Demo&lt;del&gt;，虽然现在看肯定写的很渣&lt;/del&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/621674&quot;&gt;a.自定义UIPageControl,勘误&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;整理网络上的UIPageControl的错误资料，又一次得到oschina的推荐&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/634327&quot;&gt;b.tableView下拉选择列表的设计 &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;下拉选择的实现，又一次得到oschina的推荐&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/634327&quot;&gt;c.collectionView与tableView并用&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;复杂的选择添加页面，又一次得到oschina的推荐&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/620149&quot;&gt;d.多级选择菜单&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;多级的选择菜单&lt;/p&gt;
+
+&lt;h5 id=&quot;7-pod-更新版本和降级版本osx-1010打包pod全教程-&quot;&gt;7. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/690509&quot;&gt;pod 更新版本和降级版本,OSX 10.10+,打包pod,全教程 &lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;来了，cocoapod的使用，发布自己的轮子到pod！！&lt;/p&gt;
+
+&lt;h5 id=&quot;8-键盘遮挡处理&quot;&gt;8. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/624678&quot;&gt;键盘遮挡处理&lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;先后更新了多次。也总结了一段代码，键盘出现时候遍历子view，找出first响应的view，根据view在屏幕中的位置自动调整所有的View。
+&lt;a href=&quot;https://gitee.com/poos/SXKeyboardViewControl&quot;&gt;poos/SXKeyboardViewControl&lt;/a&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;9-无限轮播的滚动视图-&quot;&gt;9. &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/789622&quot;&gt;无限轮播的滚动视图 &lt;/a&gt;&lt;/h5&gt;
+
+&lt;p&gt;项目地址：&lt;a href=&quot;https://gitee.com/poos/SXCycleView&quot;&gt;poos/SXCycleView&lt;/a&gt;，项目也是几经修改，现在看来只能算是一种思路启发吧。&lt;/p&gt;
+
+&lt;h5 id=&quot;10-关于项目框架的设置理解&quot;&gt;10. 关于项目框架的设置理解&lt;/h5&gt;
+
+&lt;p&gt;a. 16年10月的简单实践 &lt;a href=&quot;https://my.oschina.net/bieshixuan/blog/775507&quot;&gt;创建一个规范的项目目录&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;b. 16年底的在我的首个SwiftDemo上的实践 &lt;a href=&quot;https://gitee.com/poos/SwiftEFarm&quot;&gt;poos/SwiftEFarm&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;c. 一个准备干大事的项目怎么设计&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;c. 一个准备干大事的项目怎么设计
+
+1. fastlane
+
+2. 清晰的分支
+
+- baseProject 基础分支，所有公共资源和项目配置。原则：用tag标记稳定版本；可以用稳定版本开发新功能。
+- *xxxxx* 小模块分支等，基于baseProject开发的模块分支，完成后并入develop。
+- develop 开发分支，完整项目的开发分支。
+- test 测试分支，所有移交测试的版本，测试完成即可并入master。
+- master 主分支，只存放完整项目稳定的版本的分支，tag上线版本。
+
+- **说明：如有需要 可以将baseProject扩展为项目主框架（包含所有功能的抽象api）；’xxxxx‘子框架调用api，不关心过程；子框架可以设置单独的临时test分支。**
+
+
+3. 规范的项目
+
+a. 文件目录
+b. 运行测试
+c. swiftlint 代码检查   [github/swift-style-guide](https://github.com/github/swift-style-guide)
+
+4. 谨慎的开发和设计
+
+a. 如有需要可以分别创建多个组件项目，实现组件化（分支介绍最后一条分多个repo 处理）
+b. Theme/Navigator/弹窗统一管理/Review控制/通知统一管理 设计/通用链接，调用系统分享等与iOS系统对接的设计/测试环境下的专用配置，例如不上传统计，例如动态修改UI
+
+continue...
+---
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;至此也刚刚好总结10条，也算是见证了我成长的过程吧。喜欢的话去&lt;strong&gt;&lt;a href=&quot;https://github.com/poos&quot;&gt;github/poos&lt;/a&gt;&lt;/strong&gt;Star 一下。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;纳新&quot;&gt;纳新&lt;/h2&gt;
+
+&lt;p&gt;大概计划一下这个博客，以后会写一些有质量的文章。可能是下边的某些方面，也可能不限于下边，计划尽量多总结–每周写一篇–，每篇在千字以上吧，重要的是有货。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//笔记截图-工作中和探究中接触到的方面，需要把笔记整理成博客分享给大家。
+
+*****计划整理 new
+
+项目初始化和框架
+
+app上线
+
+第三方库学习
+https://www.cnblogs.com/machao/p/5526192.html
+SnapKit
+RxCocoa
+Then
+SwifterSwift 扩展狭集合
+EZSwiftExtensions 广集合
+URLNavigator 界面跳转
+SwiftMessages 弹出窗口
+ESTabBarController-swift 
+SwiftLint
+Aspects 运行时
+
+swift运行优化
+
+CTMdeiator 组件化
+URLNavigator 界面跳转
+
+app网络框架
+
+---
+
+revealapp 界面测试工具
+
+flutter 新的移动端语言
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;已经归类总结的部分&quot;&gt;已经归类总结的部分&lt;/h3&gt;
+&lt;h4 id=&quot;设计&quot;&gt;设计&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://poos.github.io/2018/07/17/SwiftEvent/&quot;&gt;&lt;strong&gt;app打点框架  &amp;amp; Aspects 运行时 -&amp;gt; Swift项目打点&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;基础&quot;&gt;基础&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://poos.github.io/2018/09/09/SwiftLearning/&quot;&gt;&lt;strong&gt;Swift理论和基础 -&amp;gt; Swift基础中需要注意的点&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;优化&quot;&gt;优化&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://poos.github.io/2018/06/16/ProjectPackage/&quot;&gt;&lt;strong&gt;图片 &amp;amp; 代码 &amp;amp; 设置-&amp;gt; 项目优化-瘦身&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;工具&quot;&gt;工具&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://poos.github.io/2018/07/07/WebDriverAgent/&quot;&gt;&lt;strong&gt;WebDriverAgent  &amp;amp;&amp;amp; 脚本 -&amp;gt; 使用WebDriverAgent学习其他app布局,自动化测试&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;轮子&quot;&gt;轮子&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://poos.github.io/2018/07/01/UINavItem&quot;&gt;&lt;strong&gt;Swift通过swizzleMethod无痕处理NavItem的点击范围&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;下边的地址能看到我的最新的动态&quot;&gt;下边的地址能看到我的最新的动态&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://poos.github.io&quot;&gt;poos.github.io&lt;/a&gt;&lt;/strong&gt;，有新的博客基本会在这里更新，&lt;strong&gt;旧的博客不会进行搬家了&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://oscimg.oschina.net/oscnet/2105548aa61c01cc6cf4aece8819255a9c0.jpg&quot; alt=&quot;poos.github.io&quot; title=&quot;poos.github.io&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/poos&quot;&gt;github/poos&lt;/a&gt;&lt;/strong&gt;，有新的项目会在这里更新，会重点维护一些项目。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://oscimg.oschina.net/oscnet/bebdac20d20629302d224701447dc882074.jpg&quot; alt=&quot;github&quot; title=&quot;github&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果你感兴趣，&lt;a href=&quot;https://poos.github.io/about/&quot;&gt;戳这里查看项目介绍&lt;/a&gt;
+&lt;img src=&quot;https://oscimg.oschina.net/oscnet/2379e817389d08bc09747860940f14c9b75.jpg&quot; alt=&quot;github上的项目&quot; title=&quot;github上的项目&quot; /&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://gitee.com/poos&quot;&gt;gitee/poos&lt;/a&gt;&lt;/strong&gt;，有新的项目会在这里更新，会维护旧的项目。&lt;/p&gt;
+
+&lt;h2&gt;&lt;img src=&quot;https://oscimg.oschina.net/oscnet/6366aec72093673fc2196f90bc4c277c8c9.jpg&quot; alt=&quot;gitee&quot; title=&quot;gitee&quot; /&gt;&lt;/h2&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;感谢&quot;&gt;感谢&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;这是我的第一篇博客。首先感谢两位先行者为我们带路。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;感谢 &lt;a href=&quot;http://qiubaiying.top/2017/02/06/快速搭建个人博客/&quot;&gt;qiubaiying.top&lt;/a&gt; 的博客教程&lt;/li&gt;
+  &lt;li&gt;感谢 &lt;a href=&quot;https://github.com/Huxpro/huxpro.github.io&quot;&gt;Huxpro&lt;/a&gt; 开源大神的博客模板&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 06 Jun 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/06/06/Begin/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/06/06/Begin/</guid>
+        
+        <category>生活</category>
+        
+        <category>总结</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
