@@ -34,9 +34,9 @@ tags:                                #标签
 
 ### github 是一个强大的社区 ,[mythkiven/AD_Fastlane](https://github.com/mythkiven/AD_Fastlane)有一个很好的例子，和Demo工程，实现了从零到自动打包上传的详细操作步骤。
 
-### 另外一个文档，包括一些多语言、和 CI等处理。[fastlane 持续集成](https://juejin.im/post/5a7b10bb6fb9a0636263bfd5)
+### 另外一个文档，包括一些多语言、和 CI等处理。[fastlane 持续集成](https://juejin.im/post/5a7b10bb6fb9a0636263bfd5)，是另一个一个非常好的教学文档。
 
-是个人开发一个非常好的教学文档。
+还有可以 google到很多非常有用的博客资料。但是据自己实践来看，很多文档你只需要返回去看官方文档就可以解决。
 
 
 ## 介绍一下自己用到的一些脚本
@@ -47,6 +47,7 @@ tags:                                #标签
 ### 在管理员电脑/打包机器上一些有用的脚本
 
 - 注册新的设备
+
 ```
 desc "register device"
 lane :new_devices do
@@ -55,7 +56,9 @@ lane :new_devices do
 end
 
 ```
+
 - 提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用
+
 ```
 lane :beta do
     build
@@ -86,6 +89,7 @@ end
 
 ### 在开发者电脑上一些有用的脚本
 - 同步证书
+
 ```    
 lane :setup do
     match(type: 'development', readonly: true)
@@ -95,6 +99,7 @@ end
 ```
 
 - 设置项目的 version number、build number
+
 ```    
 lane :set_version do
     if UI.interactive?
@@ -156,6 +161,7 @@ end
 ```
 
 - 用模拟器测试、打包ipa
+
 ```    
 lane :tests do
     run_tests(scheme: "ZhiMa_iOS", devices: ["iPhone 8"])
@@ -168,6 +174,7 @@ end
 ```
 
 - 运行 swiftlint
+
 ```    
     desc "run swiftlint"
     lane :lint do
