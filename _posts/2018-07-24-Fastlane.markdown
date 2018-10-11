@@ -46,7 +46,7 @@ tags:                                #标签
 
 ### 在管理员电脑/打包机器上一些有用的脚本
 
-- 注册新的设备
+1. 注册新的设备
 
 ```
 desc "register device"
@@ -57,7 +57,7 @@ end
 
 ```
 
-- 提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用
+2. 提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用
 
 ```
 lane :beta do
@@ -88,7 +88,8 @@ end
 ```
 
 ### 在开发者电脑上一些有用的脚本
-- 同步证书
+
+1. 同步证书
 
 ```    
 lane :setup do
@@ -98,7 +99,7 @@ lane :setup do
 end
 ```
 
-- 设置项目的 version number、build number
+2. 设置项目的 version number、build number
 
 ```    
 lane :set_version do
@@ -160,7 +161,7 @@ def updateProjectBuildNumber
 end
 ```
 
-- 用模拟器测试、打包ipa
+3. 用模拟器测试、打包ipa
 
 ```    
 lane :tests do
@@ -173,7 +174,7 @@ lane :build do
 end
 ```
 
-- 运行 swiftlint
+4. 运行 swiftlint
 
 ```    
     desc "run swiftlint"
