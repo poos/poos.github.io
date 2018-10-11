@@ -8,6 +8,7 @@ header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
 - 生活
+- 总结
 ---
 
 ##  🎉 🎉 🎉在github新开了博客[poos.github.io](https://poos.github.io/ "poos.github.io")，这是我的第一篇博客。
