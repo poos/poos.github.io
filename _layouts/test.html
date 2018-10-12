@@ -1,75 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
     
-    <head>
-        <meta charset="utf-8">
-            <meta name="description" content="{{ site.description }}">
-                <meta name="keywords"  content="{{ site.keyword }}">
-                    <meta name="theme-color" content="{{ site.chrome-tab-theme-color }}">
-                        
-                        <!-- Bootstrap Core CSS -->
-                        <link rel="stylesheet" href="{{ "/css/bootstrap.min.css" | prepend: site.baseurl }}">
-                            
+{% include head.html %}
 
-                                <script></script>
-    </head>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
     
-    <!-- hack iOS CSS :active style -->
-    <body ontouchstart="">
-
-<!-- Image to hack wechat -->
-<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
-
-<!-- Post Header -->
-<style type="text/css">
-    header.intro-header{
-        position: relative;
-        background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')
-    }
-
-    {% if page.header-mask %}
-    header.intro-header .header-mask{
-        width: 100;
-        height: 100;
-        background: rgba(0,0,0, {{ page.header-mask }});
-    }
-    {% endif %}
-</style>
-<header class="intro-header" >
-    <div class="header-mask"></div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h2>{{ page.title }}</h2>
-                    <h4>{{ page.description }}</h4>
-                </div>
-            </div>
-        </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="{{ site.baseurl }}/">Home</a>
+                </li>
+            </ul>
     </div>
-</header>
 
 <!-- Post Content -->
 <article>
     <div class="container">
         <div class="row">
-
-    <!-- Post Container -->
-            <div class="
+            
+            <!-- Post Container -->
+            <div class="post-container
                 col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-				{{ content }}
-
-                <hr style="visibility: hidden;">
-
-
+                col-md-10 col-md-offset-1 ">
+                
+                <h2 class="subheading">{{ page.title }}</h2>
+                <h4 class="subheading">{{ page.description }}</h4>
+                
+                {{ content }}
+              
+            </div>
         </div>
     </div>
 </article>
 
-    </body>
+</body>
     
 </html>
