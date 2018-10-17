@@ -1,0 +1,83 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      Swift组件化方案t探究和实践                 # 标题 
+subtitle:   介绍几大组件化方案，使用Target-Action 设计的的CTMdeiator拆分工程              #副标题
+date:       2018-10-10                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- Swift
+- 语法
+---
+
+
+### iOS 组件化的探究
+
+
+为了更好的进行项目管理、测试和开发，工程会有了组件化的需求。那么如何使组件化之间解耦、如何方便的调用、如何在现有工程改造组件化。这就到了如何开展组件化的讨论中了。
+
+本文的背景是项目已经上线一年时间。现有的工程依赖比较复杂，代码划分不明确，且编译时间较长。那么本项目需求的组件化方案就有x以下要求：
+
+1. 可持续的拆分组件
+2. 解耦，在子工程可以编译子功能
+3. 调用方便
+4. 结构清晰，易于推广
+5. 尽可能轻量
+6. 侵入性小
+7. 易于扩展功能，例如统计等
+
+
+
+
+#### 介绍一下常见的组件化方案的原理
+
+摘自[halfrost/Halfrost-Field/blob](https://github.com/halfrost/Halfrost-Field/blob/master/contents/iOS/iOSRouter/iOS_Router.md)
+
+1. URLRoute注册方案的优缺点
+
+首先URLRoute也许是借鉴前端Router和系统App内跳转的方式想出来的方法。它通过URL来请求资源。不管是H5，RN，Weex，iOS界面或者组件请求资源的方式就都统一了。URL里面也会带上参数，这样调用什么界面或者组件都可以。所以这种方式是最容易，也是最先可以想到的。
+
+URLRoute的优点很多，最大的优点就是服务器可以动态的控制页面跳转，可以统一处理页面出问题之后的错误处理，可以统一三端，iOS，Android，H5 / RN / Weex 的请求方式。
+
+但是这种方式也需要看不同公司的需求。如果公司里面已经完成了服务器端动态下发的脚手架工具，前端也完成了Native端如果出现错误了，可以随时替换相同业务界面的需求，那么这个时候可能选择URLRoute的几率会更大。
+
+但是如果公司里面H5没有做相关出现问题后能替换的界面，H5开发人员觉得这是给他们增添负担。如果公司也没有完成服务器动态下发路由规则的那套系统，那么公司可能就不会采用URLRoute的方式。因为URLRoute带来的少量动态性，公司是可以用JSPatch来做到。线上出现bug了，可以立即用JSPatch修掉，而不采用URLRoute去做。
+
+所以选择URLRoute这种方案，也要看公司的发展情况和人员分配，技术选型方面。
+
+URLRoute方案也是存在一些缺点的，首先URL的map规则是需要注册的，它们会在load方法里面写。写在load方法里面是会影响App启动速度的。
+
+其次是大量的硬编码。URL链接里面关于组件和页面的名字都是硬编码，参数也都是硬编码。而且每个URL参数字段都必须要一个文档进行维护，这个对于业务开发人员也是一个负担。而且URL短连接散落在整个App四处，维护起来实在有点麻烦，虽然蘑菇街想到了用宏统一管理这些链接，但是还是解决不了硬编码的问题。
+
+真正一个好的路由是在无形当中服务整个App的，是一个无感知的过程，从这一点来说，略有点缺失。
+
+最后一个缺点是，对于传递NSObject的参数，URL是不够友好的，它最多是传递一个字典。=
+
+**URLRoute注册，组件通过向 Manager中心注册，通过 url 形式调用其他组件**
+
+2. Protocol-Class注册方案的优缺点
+
+Protocol-Class方案的优点，这个方案没有硬编码。
+
+Protocol-Class方案也是存在一些缺点的，每个Protocol都要向ModuleManager进行注册。
+
+这种方案ModuleEntry是同时需要依赖ModuleManager和组件里面的页面或者组件两者的。当然ModuleEntry也是会依赖ModuleEntryProtocol的，但是这个依赖是可以去掉的，比如用Runtime的方法NSProtocolFromString，加上硬编码是可以去掉对Protocol的依赖的。但是考虑到硬编码的方式对出现bug，后期维护都是不友好的，所以对Protocol的依赖还是不要去除。
+
+最后一个缺点是组件方法的调用是分散在各处的，没有统一的入口，也就没法做组件不存在时或者出现错误时的统一处理。
+
+**Protocol-Class注册，组件通过向 Manager中心注册已经遵守协议，其他组件即可调自己**
+
+3. Target-Action方案的优缺点
+
+Target-Action方案的优点，充分的利用Runtime的特性，无需注册这一步。Target-Action方案只有存在组件依赖Mediator这一层依赖关系。在Mediator中维护针对Mediator的Category，每个category对应一个Target，Categroy中的方法对应Action场景。Target-Action方案也统一了所有组件间调用入口。
+
+Target-Action方案也能有一定的安全保证，它对url中进行Native前缀进行验证。
+
+Target-Action方案的缺点，Target_Action在Category中将常规参数打包成字典，在Target处再把字典拆包成常规参数，这就造成了一部分的硬编码。
+
+**Target-Action，依靠 runtime 的 taget 调用 action，传入字典类型的param**
+
+### 通过三大方案的对比，我选择了轻量级的Target-Action方案。
+
+简单研究之后，我写下了这个Demo [poos/testCTMdeiator](https://github.com/poos/BlogDemo/tree/master/testCTMdeiator)
