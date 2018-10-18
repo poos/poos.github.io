@@ -136,3 +136,11 @@ Demo实现了 **主工程调用组件**，**组件调用主公程**。实现了�
 ### end
 
 通过这些优化项目会清晰，可控很多，在开发间隙慢慢迭代实施中...
+
+
+## 一些好的资料
+
+- [casatwy/CTMediator](https://github.com/casatwy/CTMediator)
+- [组件化方案调研](https://juejin.im/post/5a7dcc025188254e5c6c6120)
+- [iOS 组件化方案-路由设计分析](https://halfrost.com/ios_router/)
+- [devxoul/URLNavigator](https://github.com/devxoul/URLNavigator)
