@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      Swift组件化方案t探究和实践                 # 标题 
+title:      Swift组件化方案t探究和实践                 # 标题
 subtitle:   介绍几大组件化方案，使用Target-Action 设计的的CTMdeiator拆分工程              #副标题
 date:       2018-10-10                 # 时间
 author:     poos                         # 作者
@@ -34,7 +34,7 @@ tags:                                #标签
 
 摘自[halfrost/Halfrost-Field/blob](https://github.com/halfrost/Halfrost-Field/blob/master/contents/iOS/iOSRouter/iOS_Router.md)
 
-1. URLRoute注册方案的优缺点
+##### 1. URLRoute注册方案的优缺点
 
 首先URLRoute也许是借鉴前端Router和系统App内跳转的方式想出来的方法。它通过URL来请求资源。不管是H5，RN，Weex，iOS界面或者组件请求资源的方式就都统一了。URL里面也会带上参数，这样调用什么界面或者组件都可以。所以这种方式是最容易，也是最先可以想到的。
 
@@ -56,7 +56,7 @@ URLRoute方案也是存在一些缺点的，首先URL的map规则是需要注册
 
 **URLRoute注册，组件通过向 Manager中心注册，通过 url 形式调用其他组件**
 
-2. Protocol-Class注册方案的优缺点
+##### 2. Protocol-Class注册方案的优缺点
 
 Protocol-Class方案的优点，这个方案没有硬编码。
 
@@ -68,7 +68,7 @@ Protocol-Class方案也是存在一些缺点的，每个Protocol都要向ModuleM
 
 **Protocol-Class注册，组件通过向 Manager中心注册已经遵守协议，其他组件即可调自己**
 
-3. Target-Action方案的优缺点
+##### 3. Target-Action方案的优缺点
 
 Target-Action方案的优点，充分的利用Runtime的特性，无需注册这一步。Target-Action方案只有存在组件依赖Mediator这一层依赖关系。在Mediator中维护针对Mediator的Category，每个category对应一个Target，Categroy中的方法对应Action场景。Target-Action方案也统一了所有组件间调用入口。
 
@@ -80,4 +80,59 @@ Target-Action方案的缺点，Target_Action在Category中将常规参数打包�
 
 ### 通过三大方案的对比，我选择了轻量级的Target-Action方案。
 
-简单研究之后，我写下了这个Demo [poos/testCTMdeiator](https://github.com/poos/BlogDemo/tree/master/testCTMdeiator)
+**简单研究之后，我写下了这个Demo [poos/testCTMdeiator](https://github.com/poos/BlogDemo/tree/master/testCTMdeiator)**
+
+Demo实现了 **主工程调用组件**，**组件调用主公程**。实现了组件代码 **插入即可运行** ，**移除之后主公程可运行其他业务**。
+
+### 开展组件化工作
+
+先列个提纲，一步一实施。
+
+#### 1. 收纳整理主公程
+
+- 分类；
+
+- 公用组件；
+
+- 公用 UI及样式；
+
+- 公用第三方；
+
+- 项目基本目录修改（添加不同环境的 Scheme）；
+
+#### 2. 建立和约定分支，暂时在分支上实施组件化（未开辟新 repo）
+
+- baseProject 基础分支，所有公共资源和项目配置。原则：用tag标记稳定版本；可以用稳定版本开发新功能。
+
+- xxxxx 小模块分支等，基于baseProject开发的模块分支，完成后并入develop。
+
+- develop 开发分支，完整项目的开发分支。
+
+- test 测试分支，所有移交测试的版本，测试完成即可并入master。
+
+- master 主分支，只存放完整项目稳定的版本的分支，tag上线版本。
+
+
+### continue...
+
+基本上到上述第二步之后就可以很好的进行项目组件管理了，下一步对一些值得优化的公共组件进行优化。
+
+
+- 项目 Theme 设计
+
+- Navigator 页面跳转（可选）
+
+- 弹窗统一管理 设计
+
+- Review控制 设计
+
+- 通知统一管理 设计
+
+- 通用链接，调用系统分享等与iOS系统对接的设计
+
+- 测试环境下的专用配置，例如不上传统计，例如动态修改UI
+
+
+### end
+
+通过这些优化项目会清晰，可控很多，在开发间隙慢慢迭代实施中...
