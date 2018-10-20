@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      Swift组件化方案t探究和实践                 # 标题
+title:      Swift组件化方案探究和实践                 # 标题
 subtitle:   介绍几大组件化方案，使用Target-Action 设计的的CTMdeiator拆分工程              #副标题
 date:       2018-10-10                 # 时间
 author:     poos                         # 作者

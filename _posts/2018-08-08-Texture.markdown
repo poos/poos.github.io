@@ -1,0 +1,22 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      Swift多处调用分享的设计方案                 # 标题
+subtitle:   使用协议清晰明了的设计分享              #副标题
+date:       2018-08-08                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 优化
+---
+
+
+![fastlane](https://raw.githubusercontent.com/texturegroup/texture/master/docs/static/images/logo.png)
+
+写在文章前的话：有问题就去查文档和issues，错不了的
+
+
+### [一份中文文档](http://texturegroup.org/docs/getting-started.html
+
+
+  to be continue...
