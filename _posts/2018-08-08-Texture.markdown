@@ -1,7 +1,7 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      Swift多处调用分享的设计方案                 # 标题
-subtitle:   使用协议清晰明了的设计分享              #副标题
+title:      Texture(ASDK)的理解和使用                # 标题
+subtitle:   主要是使用方面：包含详细的使用方法，UI 类（ASTableCellNode，ASScollNode），布局（FlexBox布局），优化（ASImageNode，对接本地Kingfisher图片下载）等              #副标题
 date:       2018-08-08                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
@@ -11,12 +11,276 @@ tags:                                #标签
 ---
 
 
-![fastlane](https://raw.githubusercontent.com/texturegroup/texture/master/docs/static/images/logo.png)
+![fastlane](https://raw.githubusercontent.com/texturegroup/≈/master/docs/static/images/logo.png)
 
 写在文章前的话：有问题就去查文档和issues，错不了的
 
 
-### [一份中文文档](http://texturegroup.org/docs/getting-started.html
+### [一份中文文档](http://texturegroup.org/docs/getting-started.html)
 
 
-  to be continue...
+
+## 源码分析
+
+> An ASDisplayNode is an abstraction over UIView and CALayer that allows you to perform calculations about a view hierarchy off the main thread, and could do rendering off the main thread as well.
+
+原理大概就是重新实现大部分的 UI 控件，使用ASDisplayNode充分利用后台线程来完成复杂的布局和渲染，而通常UIKit的创建、布局计算和渲染绘制都集中在主线程。
+
+ [简书：ASDK源码剖析](https://www.jianshu.com/p/276df9732a70)
+
+ [https://blog.csdn.net/yangyangzhang1990/article/details/52452707](https://blog.csdn.net/yangyangzhang1990/article/details/52452707)
+
+ [使用 ASDK 性能调优 - 提升 iOS 界面的渲染性能](https://draveness.me/asdk-rendering)
+
+ 以上三篇文章可以读到 UIView 是如何渲染显示的，而 Texture 又是如何设计替代方案的。goole 上可以很容易搜索到更多内容，也可以查看官方 [gtihub](https://github.com/TextureGroup/Texture).
+
+## 使用
+
+### ASTableNode 使用
+
+正常像 tableview 使用即可，值得注意的是 ASTableNode 提供了一个 返回 ASCellNodeBlock 的代理方法，可以确保线程安全。
+
+[文档](http://texturegroup.org/docs/containers-astablenode.html)
+
+> It is recommended that you use the node block version of these methods so that your table node will be able to prepare and display all of its cells concurrently. This means that all subnode initialization methods can be run in the background. Make sure to keep 'em thread safe.
+
+使用实力如下：
+
+普通
+
+```
+func tableNode(_ tableNode: ASTableNode, nodeForRowAt indexPath: IndexPath) -> ASCellNode {
+    let model = Models.get(indexPath.row)
+    return NewFriendsView.followCell(model: model)
+}
+```
+
+使用Block
+
+```
+func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
+
+    func returnCellNode() -> ASCellNode {
+        let model = Models.get(indexPath.row)
+        return NewFriendsView.followCell(model: model)
+    }
+
+    // this may be executed on a background thread - it is important to make sure it is thread safe
+    let cellNodeBlock = { () -> ASCellNode in
+        let cellNode = returnCellNode()
+        return cellNode
+    }
+
+    return cellNodeBlock
+}
+```
+
+### ASCellNode 使用
+
+[文档](http://texturegroup.org/docs/cell-node.html )
+
+- 使用
+
+```
+-init – Thread safe initialization.
+-layoutSpecThatFits: – Return a layout spec that defines the layout of your cell.
+-didLoad – Called on the main thread. Good place to add gesture recognizers, etc.
+-layout – Also called on the main thread. Layout is complete after the call to super which means you can do any extra tweaking you need to do.
+```
+
+主要生命周期是上边四个函数，值得注意的是 -layoutSpecThatFits: 会返回布局方案。Texture 使用 FlexBox 布局，先简单提一句，下边会详细介绍。
+
+- neverShowPlaceholders
+> Using this option does not eliminate all of the performance advantages of Texture. Normally, a cell has been preloading and is almost done when it reaches the screen, so the blocking time is very short. Even if the rangeTuningParameters are set to 0 this option outperforms UIKit. While the main thread is waiting, subnode display executes concurrently.
+
+当渲染未结束时候不显示Placeholder，解决部分情况下闪烁问题。
+
+### 布局
+
+Texture 的布局灵感来自CSS Flexbox，通过 Layout Specs（布局样式）和 Layout Elements（布局元素）实现布局。
+
+[文档](http://texturegroup.org/docs/layout2-quickstart.html)
+
+网上也有大量资料就不再赘述了。
+
+- Specs
+
+大概有一下布局样式，具体可以查看文档：
+```
+ASWrapperLayoutSpec
+ASStackLayoutSpec
+ASInsetLayoutSpec
+ASOverlayLayoutSpec
+ASBackgroundLayoutSpec
+ASCenterLayoutSpec
+ASRatioLayoutSpec
+ASRelativeLayoutSpec
+ASAbsoluteLayoutSpec
+ASCornerLayoutSpec
+```
+
+提一下常用的：
+
+**ASStackLayoutSpec**，安照横向或者竖向排列元素
+
+**ASBackgroundLayoutSpec**，设置背景图片
+
+**ASInsetLayoutSpec**，用来约束背景元素上下左右的距离
+
+- Elements
+
+常用的 UI 类都可找到对应的 Node，button、image、text 等就不一一列举了。
+
+提一下 ASNetworkImageNode ，可以从网络下载图片的 image node。下一个目录会详细介绍
+
+- 布局的细微调整，Element Properties 和 API Sizing
+
+[Element Properties](http://texturegroup.org/docs/layout2-layout-element-properties.html)
+
+[API Sizing](http://texturegroup.org/docs/layout2-api-sizing.html)
+
+
+同样提一下常用的：
+
+**style.flexShrink** / **style.flexGrow** ，text node 等 大小可变的如果超出或者不足父 spaces 的情况下进行缩小和增长
+
+**hitTestSlop** ，扩大点击范围
+
+**style.spacingAfter** / **style.spacingBefore** ，元素排列时候的前后间距
+
+**style.preferredSize**，大小
+
+**.style.flexBasis = ASDimensionMake("40%")**，还有按照父 spaces 的比例布局的
+
+
+### NetworkImageNode 闪烁 和 缓存
+ASNetworkImageNode 使用的是 Texture 自己的图片缓存系统，所以就有和项目默认的图片缓存对接的问题。
+
+ASNetworkImageNode 每次从网络加载（即使从缓存加载）都会先显示默认占位图，然后才显示下载的图片，所以在 reload table 会闪烁
+
+- 对接项目缓存
+
+对接缓存需要实现 ASImageCacheProtocol 中的几个代理方法即可：
+
+**downloadImage(...) -> Any?**
+
+**cancelImageDownload**
+
+**cachedImage**
+
+示例例一个对接 Kingfisher 的代码
+
+```
+import Kingfisher
+
+extension ASNetworkImageNode {
+    static func imageNode() -> ASNetworkImageNode {
+        return ASNetworkImageNode(cache: ASImageManager.shared, downloader: ASImageManager.shared)
+    }
+}
+
+class ASImageManager: NSObject, ASImageDownloaderProtocol, ASImageCacheProtocol {
+
+    static let shared = ASImageManager()
+    private override init() {}
+
+    func downloadImage(with url: URL, callbackQueue: DispatchQueue, downloadProgress: ASImageDownloaderProgress?, completion: @escaping ASImageDownloaderCompletion) -> Any? {
+
+        ImageDownloader.default.downloadTimeout = 30.0
+        var operation: RetrieveImageDownloadTask?
+        operation = ImageDownloader.default.downloadImage(with: url, progressBlock: { (received, expected) in
+            if downloadProgress != nil {
+                callbackQueue.async(execute: {
+                    let progress = expected == 0 ? 0 : received / expected
+                    downloadProgress?(CGFloat(progress))
+                })
+            }
+        }, completionHandler: { (image, error, _, data) in
+            if image != nil {
+                callbackQueue.async(execute: { completion(image, error, nil, nil) })
+                ImageCache.default.store(image!, original: data, forKey: url.cacheKey, toDisk: true)
+            } else {
+                callbackQueue.async(execute: { completion(nil, nil, operation, nil) })
+            }
+        })
+        return operation
+    }
+
+    func cancelImageDownload(forIdentifier downloadIdentifier: Any) {
+        if let task = downloadIdentifier as? RetrieveImageDownloadTask {
+            task.cancel()
+        }
+    }
+
+    func cachedImage(with url: URL, callbackQueue: DispatchQueue, completion: @escaping ASImageCacherCompletion) {
+        ImageCache.default.retrieveImage(forKey: url.cacheKey, options: nil) { (img, _) in
+            callbackQueue.async { completion(img) }
+        }
+    }
+}
+```
+
+- 图片 reload 闪烁
+
+原理是 使用两个 node（ASNetworkImageNode 和 ASImageNode），无缓存即使用 ASNetworkImageNod 加载网络图片，有缓存即使用 ASImageNode 直接显示。
+
+
+```
+import AsyncDisplayKit
+
+// MARK: - ASNetworkImageNode 以解决reload闪烁问题
+class NetworkImageNode: ASDisplayNode {
+    private var networkImageNode = ASNetworkImageNode.imageNode()
+    private var imageNode = ASImageNode()
+
+    var defaultImage: UIImage? {
+        didSet {
+            networkImageNode.defaultImage = defaultImage
+            imageNode.image = defaultImage
+        }
+    }
+
+    override var cornerRadius: CGFloat {
+        didSet {
+            networkImageNode.cornerRadius = cornerRadius
+            imageNode.cornerRadius = cornerRadius
+        }
+    }
+
+    var url: URL? {
+        didSet {
+            if let url = url {
+                if ImageCache.default.imageCachedType(forKey: url.cacheKey).cached {
+                    ImageCache.default.retrieveImage(forKey: url.cacheKey, options: nil, completionHandler: { (image, _) in
+                        if let image = image {
+                            self.imageNode.image = image
+                        }
+                    })
+                } else {
+                    self.networkImageNode.url = url
+                }
+            }
+        }
+    }
+
+    override init() {
+        super.init()
+        addSubnode(networkImageNode)
+        addSubnode(imageNode)
+    }
+
+    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
+        let url = networkImageNode.url?.absoluteString ?? ""
+        return ASInsetLayoutSpec(insets: .zero, child: url.count > 0 ? networkImageNode : imageNode)
+    }
+
+    func addTarget(_ target: Any?, action: Selector, forControlEvents controlEvents: ASControlNodeEvent) {
+        networkImageNode.addTarget(target, action: action, forControlEvents: controlEvents)
+        imageNode.addTarget(target, action: action, forControlEvents: controlEvents)
+    }
+}
+```
+
+## 总结
+
+学习和使用还是很快的，原理理解就要多看多实践才能理解透彻，尚未消化，所有原理方面简单列举一下。使用上就是多看 **文档**， **github**， 问题解决会比较快。

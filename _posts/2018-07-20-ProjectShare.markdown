@@ -1,8 +1,8 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      Swift多处调用分享的设计方案                 # 标题 
+title:      Swift项目多处调用分享的设计方案                 # 标题 
 subtitle:   使用协议清晰明了的设计分享              #副标题
-date:       2018-09-09                 # 时间
+date:       2018-07-20                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
@@ -35,7 +35,7 @@ tags:                                #标签
 //可能是 VC
 class A {
     let title = "A"
-    
+
     func beginShare() {
         self.share()//调用协议方法
     }
@@ -43,7 +43,7 @@ class A {
 //可能是 View
 class B {
     let title = "B"
-    
+
     func clickAction() {
         self.share()//调用协议方法
     }
@@ -51,11 +51,11 @@ class B {
 
 //可能是 WebView
 class C {
-    
+
     func jsShare() {
         self.share()//调用协议方法
     }
-    
+
     func jsShareMoment() {
         self.shareMoment()//调用协议方法
     }
@@ -169,13 +169,13 @@ Manager | 封装各个SDK分享方法
     class AppShareViewControl {
     /// 弹出分享框
     static func present(type: ShareType, closure: @escaping (String) -> Void) {
-    
+
     ...
-        
+
         showAnimation(backView, shareView)
         buttonsAnimation(buttons: shareView.buttons)
     }
-    
+
     static private func showAnimation(_ backView: UIView, _ alert: UIView) {
         alert.layer.setValue(375, forKeyPath: "transform.translation.y")
         UIView.animate(withDuration: 0.3, animations: {
@@ -183,7 +183,7 @@ Manager | 封装各个SDK分享方法
                        backView.alpha = 1
                        })
 }
-    
+
     static private func buttonsAnimation(buttons: [UIView]) {
         for (index, button) in buttons.enumerated() {
             button.layer.setValue(375, forKeyPath: "transform.translation.y")
@@ -199,7 +199,7 @@ Manager | 封装各个SDK分享方法
                            })
     }
     }
-    
+
 static private func hideView(view: UIView) {
     UIView.animate(withDuration: 0.2, animations: {
                    view.alpha = 0
@@ -229,7 +229,7 @@ static private func hideView(view: UIView) {
 ## Manager
 
 #### 调用系统分享
-``` 
+```
     // MARK: - 系统
     //系统分享传入[String, UIImage, URL]
     //注意:系统分享qq会调用URL 对应的web更新数据,若没有对应web页（非 H5页）会显示异常
@@ -256,7 +256,7 @@ static private func hideView(view: UIView) {
 
 
 #### 调用微信分享(建议优化使用 model)
-``` 
+```
     // MARK: - 微信
     var style = 0
     func registerShare() {
@@ -266,24 +266,24 @@ static private func hideView(view: UIView) {
     func shareMoments(title: String, thumbImage: UIImage?, url: String) {
         share(type: 1, title: title, content: nil, image: thumbImage, url: url)
     }
-    
+
     /// 分享图文链接的消息
     func shareWechat(title: String, content: String?, thumbImage: UIImage?, url: String) {
         share(type: 0, title: title, content: content, image: thumbImage, url: url)
     }
-    
+
     /// 分享大图的消息
     func shareWechat(image: UIImage) {
         share(image: image)
     }
-    
+
     fileprivate func share(type: Int, title: String, content: String?, image: UIImage?, url: String) {
         if !WXApi.isWXAppInstalled() {
             let popview = PopupView()
             popview.popupText(.noWechat)
             return
         }
-        
+
         let message = WXMediaMessage.init()
         if title.length > 256 {
             message.title = (title as NSString).substring(to: 255)
@@ -307,41 +307,41 @@ static private func hideView(view: UIView) {
     if let data: Data = imageCompressData(image: thumbimage!, max: 32) {
         message.thumbData = data
         }
-        
+
         let webpage = WXWebpageObject.init()
         webpage.webpageUrl = url
         message.mediaObject = webpage
-        
+
         let send = SendMessageToWXReq.init()
         send.bText = false
         send.message = message
         let scene = type == 0 ? WXSceneSession : WXSceneTimeline
         send.scene = Int32(scene.rawValue)
-        
+
         WXApi.send(send)
     }
-    
+
     fileprivate func share(image: UIImage) {
         if !WXApi.isWXAppInstalled() {
             let popview = PopupView()
             popview.popupText(.noWechat)
             return
         }
-        
+
         let message = WXMediaMessage.init()
-        
+
 // image最大10M
     let wxImage = WXImageObject.init()
     if let data: Data = imageCompressData(image: image, max: 10 * 1024) {
         wxImage.imageData = data
         }
         message.mediaObject = wxImage
-        
+
         let send = SendMessageToWXReq.init()
         send.bText = false
         send.message = message
         send.scene = Int32(WXSceneSession.rawValue)
-        
+
         WXApi.send(send)
 }
 
@@ -349,7 +349,7 @@ static private func hideView(view: UIView) {
 
 
 #### 压缩图片等方法
-``` 
+```
     // MARK: - 通用
     fileprivate func imageCompressSize(image: UIImage, size: CGSize) -> UIImage {
         let result = image
@@ -358,7 +358,7 @@ static private func hideView(view: UIView) {
         UIGraphicsEndImageContext()
         return result
     }
-    
+
     fileprivate func imageCompressData(image: UIImage, max: Int) -> Data? {
         var strength: CGFloat = 0.99
         var data = UIImageJPEGRepresentation(image, strength)
@@ -382,7 +382,7 @@ static private func hideView(view: UIView) {
 ```   
     // MARK: - SDK回调
     extension AppDelegate: WXApiDelegate {
-    
+
     @available(iOS, obsoleted: 9.0)
     func application(_ application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         if let sourceApp = sourceApplication {
@@ -394,7 +394,7 @@ static private func hideView(view: UIView) {
         }
         return true
     }
-    
+
     @available(iOS 9.0, *)
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
         let appName: String = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String
@@ -405,7 +405,7 @@ static private func hideView(view: UIView) {
         }
         return true
     }
-    
+
     //未使用
     func onReq(_ req: BaseReq!) {
         if req .isKind(of: GetMessageFromWXReq.self) {
@@ -416,7 +416,7 @@ static private func hideView(view: UIView) {
             //从微信启动App
     }
 }
-    
+
     func onResp(_ resp: BaseResp!) {
         let popview = PopupView()
         if resp.errCode == 0 {

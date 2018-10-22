@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      Fastlane，App配置和部署的利器                 # 标题 
+title:      Fastlane，App配置和部署的利器                 # 标题
 subtitle:   fastlane是为iOS和Android应用程序自动执行beta部署和发布的最简单方法。🚀它处理所有繁琐的任务，例如生成屏幕截图，处理代码签名和发布应用程序。 #副标题
 date:       2018-07-24                 # 时间
 author:     poos                         # 作者
@@ -15,7 +15,7 @@ tags:                                #标签
 ![fastlane](https://docs.fastlane.tools/img/fastlane_text.png)
 
 
-
+写在文章前的话：有问题就去查文档和issues，错不了的
 
 列举一下 在自己电脑上常用的功能
 
@@ -26,6 +26,8 @@ tags:                                #标签
 - [CI]在 git 提交到测试分支时候执行 CI，打包上传到 TstFlight。打 tag 时候就会上传审核
 
 [官方文档关于 CI 的介绍](https://docs.fastlane.tools/best-practices/continuous-integration/)
+
+
 
 
 
@@ -130,30 +132,30 @@ end
 def updateProjectBuildNumber
     currentTime = Time.new.strftime("%y%m%d")
     build = get_build_number()
-    
+
     if build.include?"#{currentTime}"
-        
+
         # => 为当天版本 计算迭代版本号
         lastStr = build[build.length-1]
         lastNum = lastStr.to_i
-        
+
         if lastNum == 9
-            
+
             UI.error " 🚫  error =>  build末位已经是 9 "
             return
         end
-        
+
         lastNum = lastNum +1
         build ="#{currentTime}#{lastNum}"
-        
+
         else
-        
+
         # => 非当天版本 build 号重置
         build ="#{currentTime}0"
     end
-    
+
     puts("*************| 更新build #{build} |*************")
-    
+
     # => 更改项目 build 号
     increment_build_number(
                            build_number:"#{build}"
@@ -181,7 +183,7 @@ end
     lane :lint do
         swiftlint( strict: true )
     end
-    
+
 ```
 
 
