@@ -10,6 +10,9 @@ tags:                                #标签
 - 优化
 ---
 
+**10.22 更新 ASScrollNode 使用**
+
+---
 
 ![fastlane](https://raw.githubusercontent.com/texturegroup/≈/master/docs/static/images/logo.png)
 
@@ -127,11 +130,51 @@ ASCornerLayoutSpec
 
 **ASInsetLayoutSpec**，用来约束背景元素上下左右的距离
 
-- Elements
+- Elements （**10.22更新**）
 
 常用的 UI 类都可找到对应的 Node，button、image、text 等就不一一列举了。
 
 提一下 ASNetworkImageNode ，可以从网络下载图片的 image node。下一个目录会详细介绍
+
+**自定义 node**
+```
+let node = ASDisplayNode { () -> UIView in
+	let view = SomeView()
+	return view
+}
+```
+
+**ASScollNode**
+
+注意可以持有 scollContent 防止子 node 提前释放
+>    var scollContent: ASStackLayoutSpec
+
+```
+
+// init 时候的一些参数示例
+
+    let scoll = ASScrollNode().then { (node) in
+        node.automaticallyManagesContentSize = true
+        node.automaticallyManagesSubnodes = true
+        node.autoresizesSubviews = true
+        node.scrollableDirections = .right
+//        node.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        node.backgroundColor = UIColor.white
+        node.view.showsHorizontalScrollIndicator = false
+    }
+
+
+    // layout时候与其他控件的不同点
+
+    scoll.layoutSpecBlock = { [weak self] _, _ in
+        guard let `self` = self else { return ASLayoutSpec() }
+
+        return self.layoutScoll()
+    }
+
+
+```
+
 
 - 布局的细微调整，Element Properties 和 API Sizing
 
