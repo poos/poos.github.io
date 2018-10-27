@@ -1,13 +1,12 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      新的征程                 # 标题 
+title:      新的征程                 # 标题
 subtitle:   吐故纳新，继往开来 #副标题
 date:       2018-06-06                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
-- 生活
 - 总结
 ---
 
@@ -144,7 +143,7 @@ SwifterSwift 扩展狭集合
 EZSwiftExtensions 广集合
 URLNavigator 界面跳转
 SwiftMessages 弹出窗口
-ESTabBarController-swift 
+ESTabBarController-swift
 SwiftLint
 Aspects 运行时
 

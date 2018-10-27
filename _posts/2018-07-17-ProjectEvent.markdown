@@ -1,13 +1,12 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      Swift项目中合适的打点方案                 # 标题 
+title:      Swift项目中合适的打点方案                 # 标题
 subtitle:   动态hook打点？重写控件？手动打点？      #副标题
 date:       2018-07-17                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
-- Swift
 - 设计
 ---
 

@@ -1,0 +1,2 @@
+test/app/* filter=lfs diff=lfs merge=lfs -text
+test/app/test.ipa filter=lfs diff=lfs merge=lfs -text

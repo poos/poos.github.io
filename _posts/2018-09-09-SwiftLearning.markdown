@@ -1,13 +1,12 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      Swift基础中需要注意的点                 # 标题 
+title:      Swift基础中需要注意的点                 # 标题
 subtitle:   列举了基础点，重点介绍注意点              #副标题
 date:       2018-09-09                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
-- Swift
 - 语法
 ---
 
@@ -27,8 +26,8 @@ LLVM是一个自由软件项目，它是一种编译器基础设施，以C++写�
     1) 是一套构架编译器的框架系统，提供编译、连接、运行期间的优化处理，直接生成本地汇编代码，支持各种语言（包括GCC和所有苹果的开发语言）；
 
     2) 它是一种底层支持软件，可以算得上是系统软件，Swift编译时底层需要通过LLVM来生成本地代码；
-    
-    
+
+
 - 2. Swift语言的一些基本特性：
 
 
@@ -121,7 +120,7 @@ Fixed == Int32 // 长整型
 ```
 var x: Byte = 10
 var y: Byte = 20
- 
+
 var z: Int32 = x + y // Bad！
 var z: Int32 = Int32(x) + Int32(y) // Good!
 ```
@@ -133,7 +132,7 @@ var z: Int32 = Int32(x) + Int32(y) // Good!
 var aa: Int8 = 8
 var bb: Int8 = 127
 var cc: Int8
- 
+
 cc = aa + bb  //error
 ```
 
@@ -196,7 +195,7 @@ Bool变量的赋值表达式也不能作为判断条件，Swift规定判断条�
 
 ```
 let strValue = "abcd上下左右"
- 
+
 for c in strValue.unicodeScalars
 {
     print("\(c.value) ")
@@ -234,7 +233,7 @@ var x: Int? = 5
 
 - 数组内元素的类型不一致
 
-``` 
+```
 // 其实使用Cocoa的NSMutableArray来实现的，元素类型为抽象类型NSObject
 var arr = ["abc", 123, 234.323]
 arr = ["df"] // 可以改变数组本身
@@ -244,11 +243,11 @@ println(arr)
 arr[1] = 72.234 // 可以修改数组元素
 println(arr)
 // 可以追加任意数组，由类型推断用Swfit的Array包装了NSMutableArray
-arr += ["xxdlfsd", 234.23, 9299320] 
+arr += ["xxdlfsd", 234.23, 9299320]
 println(arr)
 
  // 由于类型无法推导，所以还是使用NSMutableArray来实现
-var arr_empty = [] 
+var arr_empty = []
 ```
 
 - 创建固定长度的数组以及规定默认的初始化值：有时需要使用类似C语言那样限制长度的传统数组，这是就需要使用数组类型的构造函数，并制定相关的参数达到上述目的
@@ -313,7 +312,7 @@ func test(a: Int, inout name s: String)
 {
     s = "haha"
 }
- 
+
 // let s: String = "xxxx" // 常量不能作为输入输出参数！
 var s: String = "xxxx"
 test(23, name: &s) // &和C++的取引用概念不同，这里仅仅是为了和inout关键字呼应，进表示引用传参的意思
@@ -328,7 +327,7 @@ func add(a: Int, b: Int) -> Int
 {
     return a + b
 }
- 
+
 var fun: (Int, Int) -> Int = add
 println(fun(1, 2)) // 3
 
@@ -345,7 +344,7 @@ func isEqual<T: Comparable>(a: T, b: T) -> Bool // Comparable是Swift协议
 {
     return a == b
 }
- 
+
 // 这里定义只有具有可比性的两种类型的数据才能传入函数
 println(isEqual(1, 2)) // false
 println(isEqual("haha", "haha")) // true
@@ -382,7 +381,7 @@ println(isEqual("haha", "haha")) // true
 func cal(opr: String) -> (Int, Int) -> Int
 { // Swift可以根据上下文捕获的信息推断出闭包的参数类型等各种信息
   // 这里可以通过cal的返回值类型推断出闭包的所有信息
-    
+
     switch opr
     {
     // 通过返回值可以推断出闭包的参数都是Int型的，因此可以省略类型
@@ -400,7 +399,7 @@ func cal(opr: String) -> (Int, Int) -> Int
     case "%": return { $0 % $1 }
     case "&": return { println("operator &"); return $0 & $1 } // 必须加return，否则报错
     // 一般用$X就表示已经推断出参数类型了，因此无需再在多此一举地在闭包中声明参数的类型
-    
+
     // 注意！闭包中必须出现参数！不管是这里的a、b还是$0、$1，因此这里不能直接写return { 0 }，这回报错的
     // Swift要求闭包中必须出现参数，因此需要这样写才行
     default: return { a, b in 0 }
@@ -422,7 +421,7 @@ func cal(opr: String) -> (Int, Int) -> Int
 func makeIncrementor(forIncrement amount: Int) -> () -> Int
 {
     var currentCount = 0
-    
+
     return {
         currentCount += amount
         return currentCount
@@ -431,18 +430,18 @@ func makeIncrementor(forIncrement amount: Int) -> () -> Int
     // 而是将其备份到闭包自己的内存数据区中，并且用0去初始化该数据
     // 将闭包返回到外界则这片闭包资源区就不会被释放（即使过了作用域）
 }
- 
+
 let incrementByTen = makeIncrementor(forIncrement: 10) // 创建了一个闭包并返回
 // 接下来使用的都是同一片闭包内存资源
 println(incrementByTen()) // 10
 println(incrementByTen()) // 20
 println(incrementByTen()) // 30
- 
+
 let incrementBySix = makeIncrementor(forIncrement: 6) // 又创建了一个闭包资源
 println(incrementBySix()) // 6
 println(incrementBySix()) // 12
 println(incrementBySix()) // 18
- 
+
 println(incrementByTen()) // 40，闭包就当一个变量或常量之类的数据使用，其中数据区的内容可以一直保存
 ```
 
@@ -516,7 +515,7 @@ println(incrementByTen2()) // 50
     subscript(index: Int) -> Int { // 普通的一维数组访问，这里设定为只读
         return grid[index]
     }
-    
+
     subscript(row: Int, col: Int) -> Int { // 可以重载，模拟二维数组访问，这里设定为可读可写下标访问
         get { // 取值访问器getter
            return grid[row * cols + col]
@@ -538,7 +537,7 @@ enum Test: String
     case a = "a"
     case b = "b"
     case c = "c"
-    
+
     mutating func next()
     {
         switch self
@@ -549,9 +548,9 @@ enum Test: String
         }
     }
 }
- 
+
 var test = Test.a
- 
+
 println(test.rawValue) // a
 test.next()
 println(test.rawValue) // b
@@ -575,7 +574,7 @@ class Test
 {
     var a: Int = 9 // 构造器中没初始化过就会执行此句
     let b: Int = 10 // 构造器初始化过了这句就会被忽略
-    
+
     init(b: Int) {
         self.b = b // 先在构造器中初始化
     }
@@ -589,39 +588,39 @@ class A {
     // 只有一个空的无参构造器，因此无法通过用户传参构造
     // 所以必须直接初始化，否则永远也不能初始化而导致编译错误！
     var a: Int = 1
-    
+
     // init() {} // 默认提供一个这个
 }
- 
+
 var aa = A() // OK!
 // var aa2 = A(a: 15) // Bad! 类不提供带参的逐一初始化构造器
- 
+
 struct B {
     var a: Int
     var b: Int
 //  init() {} // 默认提供
-    
+
 //    init(a: Int, b: Int) { // 还默认提供一个这个，外部参数名和定义时一样
 //        self.a = a
 //        self.b = b
 //    }
 }
- 
+
 // var bb = B() // Bad！由于没有直接初始化语句，所以这种方式将导致成员无法初始化而报错！
 // 但是如果有直接初始化语句就对了！
- 
+
 var bb = B(a: 23, b: 32) // OK!
- 
+
 class C_Class {
     var a: Int?
 }
- 
+
 var cc = C_Class() // 类可以不初始化可选类型
- 
+
 struct C_Struct {
     var a: Int?
 }
- 
+
 // var cc2 = C_Struct() // Bad! 但是结构体必须初始化可选类型
 var cc2 = C_Struct(a: nil) // OK!
 var cc3 = C_Struct(a: 13) // OK!
@@ -638,7 +637,7 @@ var cc3 = C_Struct(a: 13) // OK!
     3) 结构体和类的代理构造器略有不同，结构体构造器代理非常随意，直接写就行了，而类对于调用构造器的构造器必须用convenience修饰，因此对于类的代理构造器也称为便利构造器，这里就不掩饰结构体的代理构造器了，因为只需要将class改为struct并把convenience去掉就行了
 
     4) 由于类具有继承特性（结构体没有），和C++一样，对于子类需要先调用父类构造器来初始化父类的部分，然后在执行自己的初始化语句，因此对于这类的代理就称为纵向代理（也称为向上代理），这样的构造器就是指定构造器，而对于上述的代理构造仅仅就是一个类内部之间的构造器相互代理，因此称为横向代理，构造器称为便利构造器；
-    
+
 ```
 
 - 如果用户自定义了任何一个构造器，则默认构造器就不存在了
@@ -678,9 +677,9 @@ RC：Reference Counter，即引用计数器，Swift会为每个创建的对象�
     1) 引用分为三类：强引用、弱引用以及无主引用，其中强弱引用的概念和Shell中的强弱引用概念类似，其实只有强引用才能改变RC的值，后面两种不能改变RC的值但而只能通过引用访问对象的内容；
 
     2) 其中强引用就是上述以及之前经常碰见过的普通的引用，而弱引用需要用weak关键词修饰，而无主引用需要用unowned关键词来修饰；
-    
+
     解决循环引用的方法就是只给循环引用的一方（不是两方，只是一方）套上弱引用（或者接下来要将的无主引用），最后在释放时先释放被弱引用（或无主引用）指向的那个对象再释放另一个对象即可（顺序不能错！）
-    
+
     本类中需要持有自己可以使用unowned
 ```
 
@@ -704,7 +703,7 @@ RC：Reference Counter，即引用计数器，Swift会为每个创建的对象�
 
 - Swift要求并建议的代理规则：前面的继承代码中已经出现了向上代理的概念了，即使用super.init的方式调用父类的构造器；
 
-``` 
+```
 i) 横向代理规则一：便利构造器只能调用同一类中的其它构造器（指定构造器和便利构造器都行），但是不能调用父类构造器（否则就变成纵向代理而不是横向代理了）
 ii) 横向代理规则二：仅有一句
 iii) 向上代理规则一：子类的每个指定构造器必须调用直接父类的指定构造器（必须是父类的指定构造器不能是便利构造器
@@ -785,7 +784,7 @@ iv) 向上代理规则三：在向上代理之前不得访问父类中的属性�
 func f<T, K>(a: T, b: K) -> K {
     return b
 }
- 
+
 println(f(12, "haha")) // haha
 ```
 
@@ -796,11 +795,11 @@ println(f(12, "haha")) // haha
 ```
 struct Stack<T> {
     var items = [T]()
-    
+
     mutating func push(item: T) {
         items.append(item)
     }
-    
+
     mutating func pop() -> T {
         return items.removeLast()
     }
@@ -810,7 +809,7 @@ extension Stack {
         if index < 0 || index + 1 > countElements(items) {
             return nil
         }
-        
+
         return items[index]
     }
 }
@@ -831,7 +830,7 @@ guard ... else { }
 
 @_exported import SwifterSwift
 
-=== 
+===
 
 inout var
 
