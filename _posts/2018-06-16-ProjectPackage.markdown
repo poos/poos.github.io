@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      项目优化-瘦身                # 标题 
+title:      项目优化-瘦身                # 标题
 subtitle:   图片，库，代码，项目设置，多方面优化项目    #副标题
 date:       2018-06-16                 # 时间
 author:     poos                         # 作者
@@ -120,10 +120,10 @@ $ pmd -d /usr/src -R java-basic -f text
 //No Java runtime present, requesting install.
 //安装完还提示这个错误，可以
 
-vim .bash_profile 
+vim .bash_profile
 添加：  
 export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
- 
+
 export PATH=${JAVA_HOME}/bin:$PATH
 保存，并关闭
 然后  source .bash_profile
@@ -136,10 +136,10 @@ java -version
 pmd文档链接如下
 
 https://pmd.github.io/pmd-6.4.0/pmd_userdocs_cpd.html#options
-``` 
+```
 
  cd pmd-bin-6.4.0/bin/
- 
+
  ./run.sh cpd --minimum-tokens 100 --files /Users/bieshixuan/iOS/ZhiMa_iOS --language swift --format xml
 // 可以导command K清除之后保存
 ```
@@ -250,7 +250,7 @@ https://www.ctolib.com/topics-65758.html
 
 ---
 
-END ，以下是不推荐的
+END ，以下是一些其他地方可能用到的
 
 ---
 ---
@@ -263,14 +263,14 @@ a. 第一步建立.sh 文件  如 unusedImage.sh
 
 #!/bin/sh  
 PROJ=`find . -name '*.swift' -name '*.xib' -o -name '*.[mh]'`  
-  
+
 for png in `find . -name '*.png'`  
 do  
-    name=`basename $png` 
+    name=`basename $png`
     if ! grep -qhs "$name" "$PROJ"; then  
         echo "$png is not referenced"  
     fi  
-done 
+done
 
 
 b. 进入你要查找的工程目录下执行 这段 shell 脚本
@@ -307,10 +307,10 @@ XcodeProjectArrangementTool
 ```
 博客：
 
-```
+
 [iOS Color Misaligned Images优化 - 简书](https://www.jianshu.com/p/38cf9c170141)
 
-[浅谈iOS中的视图优化 - 简书}(https://www.jianshu.com/p/5c968a240e27)
+[浅谈iOS中的视图优化 - 简书](https://www.jianshu.com/p/5c968a240e27)
 
 [图片的颜色深度/颜色格式（32bit,24bit,12bit） - 简书](https://www.jianshu.com/p/52440c7a8902)
 
@@ -319,4 +319,3 @@ XcodeProjectArrangementTool
 [如何改善图形性能 | 蘑菇味海星](http://ihomway.cc/2017/07/28/ios-grapics-performance/)
 
 [怎么改png图片位深度 小小知识站](http://www.zhishizhan.net/wuhuabamen/43560.html)
-```
