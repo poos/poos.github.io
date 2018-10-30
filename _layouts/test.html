@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 {% include head.html %}
 
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="">
-    
+
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="container">
             <ul class="nav navbar-nav navbar-right">
@@ -19,22 +19,22 @@
 <article>
     <div class="container">
         <div class="row">
-            
+
             <!-- Post Container -->
             <div class="post-container
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1 ">
-                
+
                 <h2 class="subheading">{{ page.title }}</h2>
                 <h4 class="subheading">{{ page.description }}</h4>
-                
+
                 {{ content }}
-              
+
             </div>
         </div>
     </div>
 </article>
 
 </body>
-    
+
 </html>

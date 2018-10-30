@@ -9,6 +9,14 @@
     padding-right: 5%;
   }
 }
+.corner-icon{
+  text-align:center;
+  width:100px;
+  height:100px;
+  border-radius:16px;
+  border-image:16px;
+  /* border:16px solid transparent; */
+}
 .sidebar-container {
   color: #bfbfbf;
   font-size: 14px;
