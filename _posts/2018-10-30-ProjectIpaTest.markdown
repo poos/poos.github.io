@@ -265,7 +265,7 @@ http:shown.local:4000/test
 我在 nav 的 遍历博客中添加了博客 title 的判断，如果是 'test' 就不会出现在博客目录中
 
 ```
-{% if page.title != 'test') %}
+if page.title != 'test'
 ```
 现在我有两个页面，一个测试 scheme 码的测试页面，一个是 ipa 的下载页面
 
