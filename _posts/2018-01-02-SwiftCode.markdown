@@ -7,8 +7,7 @@ author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
-- 优化
-- 语法
+- Code
 ---
 
 
@@ -18,7 +17,7 @@ tags:                                #标签
 
 #### 处理循环引用
 
-<!-- 
+<!--
 如下的代码发生了循环引用：
 
 

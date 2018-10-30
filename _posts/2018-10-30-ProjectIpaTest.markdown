@@ -49,7 +49,7 @@ http://xx.local:4000/test/app
 
 iOS 的 ipa 可以通过链接（ex：itms-services://?action=download-manifest&url=https://xxx/xx.plist）去请求 itunes 安装app（没有静态网页直接请求这个链接，或者生成二维码在相机扫码即可下载 ipa）。
 
-plist 文件格式如下： 有两个对象一个存储 iap 和图片，另一个对象存储 app identifier 和 版本信息，plist 代码稍后在下边列出。
+plist 文件格式如下： 有两个对象一个存储 ipa 和图片，另一个对象存储 app identifier 和 版本信息，plist 代码稍后在下边列出。
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -100,7 +100,9 @@ plist 文件格式如下： 有两个对象一个存储 iap 和图片，另一�
 
 ### github 发布ipa
 
-**如果不能正常打开，检查下边几项**
+主要是借助 有 ssh 证书的 github 网站来存储 manifest.plsit 文件
+
+**可能遇到以下问题**
 
 1. plist 文件： ipa 是否是下载地址；bundle identifier 是否正确
 
@@ -121,54 +123,22 @@ plist 文件格式如下： 有两个对象一个存储 iap 和图片，另一�
 [1ilI/TestMyipa_Resource](https://github.com/1ilI/TestMyipa_Resource)
 
 
-### github 上传ipa超过100M
+### github 上传ipa
 
-注意是要获取下载ipa的地址
+如果你要用 github 存储 ipa 文件，那么这真的不明智 ~~操蛋~~，**不使用Github存储 ipa 跳过本章**...
 
-**不建议使用 github 存储 ipa** ，访问速度很慢
+**1. 不建议使用 github 存储 ipa ，访问速度很慢**
 
-[关于Github的上传文件超限问题解决](https://blog.csdn.net/qq_35559420/article/details/81783787)
 
-**局域网搭建好了，去除 git LFs**
+**2. 关于 github 单个文件超过100M**
 
-删除 .gitattributes, 添加忽略*.ipa，删除 app.ipa, push
+添加 git LFs ： [关于Github的上传文件超限问题解决](https://blog.csdn.net/qq_35559420/article/details/81783787)
 
-如果 push 不成功，可能是本地有多个 commint ，其中有 app.ipa 的修改，不需要后退合并 commint 即可，需要先 push 那些分支在删除
+后悔了，移除 git LFs ：
 
-**ps：全局git 忽略文件**
+a. 删除 .gitattributes, 添加忽略*.ipa，删除 app.ipa, push
 
-[使用Git如何优雅的忽略掉一些不必的文件](https://www.cnblogs.com/zuopeng/p/4305367.html)
-
-第一步要找到一个 .gitignore_global 的配置文件,在~/ 目录下使用ls -all就能找这个文件,然后vi .gitignore_global打开它,把下面的代码添加进去,然后wq退项目.
-
-```
-# Xcode
-#
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
-#
-# Pods/
-```
+b. 如果 push 不成功，可能是本地有多个 commint ，其中有 app.ipa 的修改，不需要后退合并 commint 即可，需要先 push 那些分支在删除
 
 ###  打包 ipa 的 N 种方式
 
@@ -178,11 +148,11 @@ DerivedData
 
 2. 将 build 的.app 转换为 ipa
 
-抛却 zip，手动打包等方式。如果完整打包就使用 **xcodebuild -exportArchive**，这也是 Xcode8 之后御用的方式；
+抛却 zip，手动打包等方式。如果完整打包就使用 **xcodebuild -exportArchive**，这也是 Xcode8 之后御用的方式；如果只是需要将 .app 导出为 .ipa 可以使用 Xrun
 
-#### 如果只是需要将 .app 导出为 .ipa 可以使用 Xrun
+#### Xrun
 
-**使用Xrun将 build 直接转换为 ipa，因为打包块，直接把平时运行的 build 导出 ipa 了**
+**使用Xrun将 build 直接转换为 ipa，因为打包快，直接把平时运行的 build 导出 ipa 了**
 
 Xcode 8 以上即不包含 PackageApplication 包，添加方法，注意 **sudo**
 ```
@@ -228,9 +198,9 @@ xcrun -sdk iphoneos PackageApplication -v ~/xx/xx.app -o ~/xx/xx.ipa
 itms-services://?action=download-manifest&url=https://xxx/xx.plist
 ```
 
-**直接生成二维码，相机扫码访问**
+**1. 直接生成二维码，相机扫码访问**
 
-**在静态网页中添加 <a> 链接访问**
+**2. 在静态网页中添加 a 链接访问**
 
 #### jekyll 静态博客发布到局域网
 
@@ -276,6 +246,44 @@ if page.title != 'test'
 ```
 https://raw.githubusercontent.com/poos/poos.github.io/master/test/xx.json
 ```
+
+##### 别忘了在博客中屏蔽 .ipa
+
+[使用Git如何优雅的忽略掉一些不必的文件](https://www.cnblogs.com/zuopeng/p/4305367.html)
+
+**ps：全局git 忽略文件**
+
+第一步要找到一个 .gitignore_global 的配置文件,在~/ 目录下使用ls -all就能找这个文件,然后vi .gitignore_global打开它,把下面的代码添加进去,然后wq退项目.
+
+```
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+
+# CocoaPods
+#
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
+#
+# Pods/
+```
+
 
 
 ### 结语
