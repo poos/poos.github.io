@@ -79,7 +79,7 @@ Target-Action方案的缺点，Target_Action在Category中将常规参数打包�
 
 ### 通过三大方案的对比，我选择了轻量级的Target-Action方案。
 
-**简单研究之后，我写下了这个Demo [poos/testCTMdeiator](https://github.com/poos/BlogDemo/tree/master/testCTMdeiator)**
+**简单研究之后，我写下了这个Demo [poos/BlogDemo/tree/master/testCTMdeiator](https://github.com/poos/BlogDemo)**
 
 Demo实现了 **主工程调用组件**，**组件调用主公程**。实现了组件代码 **插入即可运行** ，**移除之后主公程可运行其他业务**。
 

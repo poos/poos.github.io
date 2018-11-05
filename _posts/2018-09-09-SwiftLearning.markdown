@@ -837,3 +837,5 @@ inout var
 convenience
 
 repeat { //take input from io standard into n } while n <= 10
+
+@discardableResult
