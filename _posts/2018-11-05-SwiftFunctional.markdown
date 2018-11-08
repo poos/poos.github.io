@@ -10,6 +10,8 @@ tags:                                #标签
 - 语法
 ---
 
+**[本文所有代码 Demo 地址](https://github.com/poos/BlogDemo)**
+
 Swift 是一门有着合适的语言特性来适配函数式编程方法的优秀语言。函数在 Swift 中是一等公民，意味着我们可以将函数作为各种变量，参数，返回值等使用，这种特性使得 Swift 可以完美的支持函数式编程思想。
 
 ## 什么是函数式
@@ -228,3 +230,10 @@ Swift 下的很多高阶函数都是，例如 Map，Fliter，Reduce等。
 本文只是仿照跟书中对 Core Image 的封装，简单的实践和体验一下。区别于分类，直接用 函数式 思想封装组合，以后在使用 NSMutableAttributeString 又有了一个新的选择。更进一步，如果用于 APP 的 Theme 模块，函数组合无论是直接使用，还是动态切换都可以十分方便，这个方案都可以完美的支持。
 
 函数式提供了区别于面向对象的面向函数编程，这个新大陆有无限可能，记着 **函数是一等公民** 就好。
+
+
+#### 资料：
+
+[Haskell 纯函数式编程语言](https://baike.baidu.com/item/Haskell/1152799?fr=aladdin)
+
+[ep1-functions](https://www.pointfree.co/episodes/ep1-functions)

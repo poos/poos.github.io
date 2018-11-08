@@ -32,83 +32,31 @@ tags:                                #标签
 
 ```
 //可能是 VC
-class A {
-    let title = "A"
-
-    func beginShare() {
-        self.share()//调用协议方法
-    }
-}
 //可能是 View
-class B {
-    let title = "B"
-
-    func clickAction() {
-        self.share()//调用协议方法
-    }
-}
-
 //可能是 WebView
-class C {
-
-    func jsShare() {
-        self.share()//调用协议方法
+//可以是 任何类
+class A {
+    func xx {
+        share()//调用协议方法
     }
-
+    func jsShare() {
+        share()//调用协议方法
+    }
     func jsShareMoment() {
-        self.shareMoment()//调用协议方法
+        shareMoment()//调用协议方法
     }
 }
-//可以是任何类
 ```
 
-这里是协议分发管理的 protocol类
+这里是协议分发管理的 protocol类, 在这里实现分享的方法
 ```
 // 定义统一的协议
-protocol ShareProtocol {
-    var shareTitle: String { get }
-    var shareUrl: String { get }
-    func share()
-}
-protocol ShareProtocol2 {
-    func shareMoment()
-}
-
-extension A: ShareProtocol {
-    var shareTitle: String {
-        return title + " share"
-    }
-    var shareUrl: String {
-        return "https://baseurl/" + title
-    }
+extension A: ShareProtocol, ShareProtocol2 {
     func share() {
-        Share(title: shareTitle, url: shareUrl)
-    }
-}
-
-extension B: ShareProtocol {
-    var shareTitle: String {
-        return title + " share"
-    }
-    var shareUrl: String {
-        return "https://baseurl/" + title
-    }
-    func share() {
-        Share(title: shareTitle, url: shareUrl)
-    }
-}
-extension C: ShareProtocol, ShareProtocol2 {
-    var shareTitle: String {
-        return title + " share"
-    }
-    var shareUrl: String {
-        return "https://baseurl/" + title
-    }
-    func share() {
-        Share(title: shareTitle, url: shareUrl)
+        //...
     }
     func shareMoment() {
-        Share(title: shareTitle, url: shareUrl)
+        //...
     }
 }
 
@@ -154,7 +102,7 @@ Manager | 封装各个SDK分享方法
 
 ## Model
 
-> 本文没有使用 Model，故略去
+> 略去
 
 
 ## View
@@ -163,25 +111,12 @@ Manager | 封装各个SDK分享方法
 
 
 ## ViewControl
-设置弹出动画,layout位移动画
+
+view 的一些动画，大部分简单的动画就不再介绍。
+
+**设置按顺序弹出动画,layout位移动画**
 ```   
-    class AppShareViewControl {
-    /// 弹出分享框
-    static func present(type: ShareType, closure: @escaping (String) -> Void) {
 
-    ...
-
-        showAnimation(backView, shareView)
-        buttonsAnimation(buttons: shareView.buttons)
-    }
-
-    static private func showAnimation(_ backView: UIView, _ alert: UIView) {
-        alert.layer.setValue(375, forKeyPath: "transform.translation.y")
-        UIView.animate(withDuration: 0.3, animations: {
-                       alert.layer.setValue(0, forKeyPath: "transform.translation.y")
-                       backView.alpha = 1
-                       })
-}
 
     static private func buttonsAnimation(buttons: [UIView]) {
         for (index, button) in buttons.enumerated() {
@@ -197,32 +132,7 @@ Manager | 封装各个SDK分享方法
                            button.layer.setValue(0, forKeyPath: "transform.translation.y")
                            })
     }
-    }
 
-static private func hideView(view: UIView) {
-    UIView.animate(withDuration: 0.2, animations: {
-                   view.alpha = 0
-                   }, completion: { (_) in
-                   view.removeFromSuperview()
-                   })
-                   }
-}
-```   
-
-分流跳转链接
-```   
-    extension AppShareViewControl {
-    /// 必须使用 model，因为日后如果需要打点信息可以方便添加参数
-    /// 点击了某个按钮
-    static func selected(model: model) {
-        switch model.type {
-        case .moments:
-            ShareManage.shared.shareMoments(title: model.title, thumbImage: model.image, url: model.link)
-        case .wechat:
-        ...
-    }
-}
-}
 ```   
 
 ## Manager
@@ -256,25 +166,6 @@ static private func hideView(view: UIView) {
 
 #### 调用微信分享(建议优化使用 model)
 ```
-    // MARK: - 微信
-    var style = 0
-    func registerShare() {
-        WXApi.registerApp(" xxxxxxxxxxx")
-    }
-    /// 分享朋友圈
-    func shareMoments(title: String, thumbImage: UIImage?, url: String) {
-        share(type: 1, title: title, content: nil, image: thumbImage, url: url)
-    }
-
-    /// 分享图文链接的消息
-    func shareWechat(title: String, content: String?, thumbImage: UIImage?, url: String) {
-        share(type: 0, title: title, content: content, image: thumbImage, url: url)
-    }
-
-    /// 分享大图的消息
-    func shareWechat(image: UIImage) {
-        share(image: image)
-    }
 
     fileprivate func share(type: Int, title: String, content: String?, image: UIImage?, url: String) {
         if !WXApi.isWXAppInstalled() {
@@ -294,17 +185,17 @@ static private func hideView(view: UIView) {
                 message.description = (description as NSString).substring(to: 511)
             } else {
                 message.description = description
+            }
         }
-}
-    var thumbimage = image
+        var thumbimage = image
         if image == nil {
             thumbimage = UIImage.init(named: "AppIconSmall")
-    }
+        }
         if thumbimage!.size.height > 70 {
             thumbimage = imageCompressSize(image: thumbimage!, size: CGSize.init(width: 70, height: 70))
-}
-    if let data: Data = imageCompressData(image: thumbimage!, max: 32) {
-        message.thumbData = data
+        }
+        if let data: Data = imageCompressData(image: thumbimage!, max: 32) {
+            message.thumbData = data
         }
 
         let webpage = WXWebpageObject.init()
@@ -329,9 +220,9 @@ static private func hideView(view: UIView) {
 
         let message = WXMediaMessage.init()
 
-// image最大10M
-    let wxImage = WXImageObject.init()
-    if let data: Data = imageCompressData(image: image, max: 10 * 1024) {
+        // image最大10M
+        let wxImage = WXImageObject.init()
+        if let data: Data = imageCompressData(image: image, max: 10 * 1024) {
         wxImage.imageData = data
         }
         message.mediaObject = wxImage
@@ -364,16 +255,17 @@ static private func hideView(view: UIView) {
         if data == nil {
             return nil
         }
-        while data!.count > max * 1024 && strength > 0.5 {
-            strength -= 0.02
+        while data!.count > max * 1024 {
+            if strength < 0.4 {
+                let image = UIImage.init(named: "AppIconSmall")
+                data = UIImageJPEGRepresentation(image!, strength)
+                break
+            }
+            strength -= 0.1
             data = UIImageJPEGRepresentation(image, strength)
         }
-        if strength <= 0.5 {
-            let image = UIImage.init(named: "AppIconSmall")
-            return UIImageJPEGRepresentation(image!, strength)
-        }
         return data
-}
+    }
 ```    
 
 #### 分享回调
