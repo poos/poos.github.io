@@ -16,7 +16,7 @@ tags:                                #标签
 
 在开发中经常会碰到跟 H5 页面联调的情况，这种情况下所有的操作并不能在我们的 IDE 中检测到，那么如何调试呢，本章会详细介绍。Get 到了本文的技能之后，React 调试会更加方便，会更加一针见血的调试到问题所在。
 
-![img](https://upload-images.jianshu.io/upload_images/2363263-987d629bddd33ed8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp)
+![img](https://upload-images.jianshu.io/upload_images/2363263-9b5f0e4ce311e25b.jpg)
 
 这是一个入门的教程：[Safari 真机调试js](https://www.jianshu.com/p/ed4b1bfb57dc)
 
