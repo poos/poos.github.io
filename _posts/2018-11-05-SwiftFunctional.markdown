@@ -121,7 +121,6 @@ func color(_ color: UIColor) -> MutableAttributeFunc {
 
 func alignment(_ align: NSTextAlignment) -> MutableAttributeFunc {
     return { attString in
-        print("🖲 is nil = \(attString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) == nil))")
         let paragraphStyle = attString.attribute(.paragraphStyle, at: 0, effectiveRange: nil) ?? NSMutableParagraphStyle()
         (paragraphStyle as! NSMutableParagraphStyle).alignment = align
         attString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attString.length))
@@ -141,7 +140,7 @@ let title = color(.black)(font(.boldSystemFont(ofSize: 14))(attS))
 
 ```
 
-显然有太多的括号，太多的嵌套，已经影响阅读代码和书写代码程度了
+显然有太多的括号，太多的嵌套，已经严重影响阅读和书写代码了
 
 **创建一个复合函数**
 

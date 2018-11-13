@@ -10,6 +10,7 @@ tags:                                #标签
 - 工具
 ---
 
+**[本文所有 资源 地址](https://github.com/poos/testIpa)**
 
 **目前可以在局域网和 github 访问下载 ipa，可以从日常 build 导出ipa（未加密，应只在公司网使用）**
 
@@ -32,9 +33,9 @@ tags:                                #标签
 
 4. **导出 ipa 方式选择：xcrun + PackageApplication（在日常 build 中导出ipa）；脚本打包 achieve，导出出 ipa**
 
-```
-xcrun -sdk iphoneos PackageApplication -v ~/xx/xx.app -o ~/xx/xx.ipa
-```
+
+> xcrun -sdk iphoneos PackageApplication -v ~/xx/xx.app -o ~/xx/xx.ipa
+
 
 5. **在局域网网页发布：使用 xxx.loacl:4000/ 网址；个人借用了博客 jekyll 新建了个发布静态网页**
 
@@ -150,14 +151,18 @@ b. 如果 push 不成功，可能是本地有多个 commint ，其中有 app.ipa
 
 抛却 zip，手动打包等方式。如果完整打包就使用 **xcodebuild -exportArchive**，这也是 Xcode8 之后御用的方式；如果只是需要将 .app 导出为 .ipa 可以使用 Xrun
 
-#### Xrun
+#### Xcrun
 
 **使用Xrun将 build 直接转换为 ipa，因为打包快，直接把平时运行的 build 导出 ipa 了**
 
 Xcode 8 以上即不包含 PackageApplication 包，添加方法，注意 **sudo**
+
+因为是在 XCode 包中添加的，如果升级 Xcode 可能失效，**重新安装一下即可**
+
+[PackageApplication](https://github.com/poos/testIpa)
 ```
 # 下载
-https://download.csdn.net/download/nb_token/10363097
+链接如上
 
 添加PackageApplication
 

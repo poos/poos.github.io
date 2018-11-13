@@ -241,10 +241,24 @@ view 的一些动画，大部分简单的动画就不再介绍。
 #### 压缩图片等方法
 ```
     // MARK: - 通用
-    fileprivate func imageCompressSize(image: UIImage, size: CGSize) -> UIImage {
-        let result = image
-        UIGraphicsBeginImageContext(size)
-        result.draw(in: CGRect.init(x: 0, y: 0, width: size.width, height: size.height))
+    fileprivate func imageCompressSize(image: UIImage, size length: CGFloat) -> UIImage {
+        guard image.size.width > length || image.size.height > length else { return image }
+        let rect: CGRect
+        if image.size.width < image.size.height {
+            let calc = (image.size.height - image.size.width) / 2
+            rect = CGRect.init(x: calc, y: 0, width: image.size.width, height: image.size.width)
+        } else {
+            let calc = (image.size.width - image.size.height) / 2
+            rect = CGRect.init(x: calc, y: 0, width: image.size.height, height: image.size.height)
+        }
+        guard let cgImage = image.cgImage,
+            let newCgImage = cgImage.cropping(to: rect) else { return image }
+        let newImage = UIImage.init(cgImage: newCgImage)
+
+        var result = newImage
+        UIGraphicsBeginImageContext(CGSize.init(width: length, height: length))
+        result.draw(in: CGRect.init(x: 0, y: 0, width: length, height: length))
+        result = UIGraphicsGetImageFromCurrentImageContext() ?? image
         UIGraphicsEndImageContext()
         return result
     }
