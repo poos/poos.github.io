@@ -130,9 +130,6 @@ continue...
 
 *****计划整理 new
 
-项目初始化和框架
-
-app上线
 
 第三方库学习
 https://www.cnblogs.com/machao/p/5526192.html

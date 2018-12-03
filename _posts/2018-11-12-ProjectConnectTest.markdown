@@ -143,7 +143,7 @@ kCFNetworkProxiesHTTPSPort: proxyPort
 
 经过多方寻找，我找到了国际友人写的这个：[Debugging iOS Simulator network calls (for free)](https://up.smartrecruiters.com/debugging-ios-simulator-network-calls-for-free-b8e02a0c9bed)，简直就是蓦然回首，灯火阑珊，没想到远在大陆彼岸的友人会有跟我相同的想法。还比我更早一步，nb.
 
-将上边的代码替换到下边即可
+将上边的代码替换到下边即可, 原理是直接找了 key 对应的字符串的值，而进行设置
 
 ```
 let proxyHost = "192.168.1.226"
