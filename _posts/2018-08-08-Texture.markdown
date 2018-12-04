@@ -10,6 +10,17 @@ tags:                                #标签
 - 优化
 ---
 
+使用 Texture 有几大好处：
+
+1. 滑动性能快速提升
+
+2. 布局更简单了，而且支持横屏
+
+3. 点击处理更方便了，例如 Texture 的 TextNode 即支持点击；而且支持 hitTest 扩大点击范围
+
+4. 更多优化参数满足需求，例如 多层压缩为一层，不需要相应事件可以降级为 layer，自带 networkImage（待续）
+
+
 **10.22 更新 ASScrollNode 使用**
 
 ---
@@ -327,3 +338,15 @@ class NetworkImageNode: ASDisplayNode {
 ## 总结
 
 学习和使用还是很快的，原理理解就要多看多实践才能理解透彻，尚未消化，所有原理方面简单列举一下。使用上就是多看 **文档**， **github**， 问题解决会比较快。
+
+这些资料可能帮到你：
+
+[AsyncDisplayKit 初窥](https://www.jianshu.com/p/fde96c5bc43f)
+
+[贝聊科技-AsyncDisplayKit近一年的使用体会及疑难点](http://www.cocoachina.com/ios/20170809/20182.html)
+
+[AsyncDisplayKit官方文档翻译](https://awhisper.github.io/2016/05/04/AsyncDisplayKit官方文档翻译/)
+
+[AsyncDispalyKit reloadData刷新列表闪屏问题分析及解决方案](https://blog.csdn.net/qq_19957803/article/details/77749379)
+
+[ASNetworkImageNode can NOT load animatedData sometime #2871](https://github.com/facebookarchive/AsyncDisplayKit/issues/2871)

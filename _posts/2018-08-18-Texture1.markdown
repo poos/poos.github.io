@@ -1,0 +1,221 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      Texture(ASDK)自定义 Node 和 优化 Tab 框架                # 标题
+subtitle:   自定义 ASDisplayNode ；拆分复杂的 Node 为简单的 Node 组件 等            #副标题
+date:       2018-08-08                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 优化
+---
+
+> 经常使用的 ASCellNode 如果比较复杂（普通 cell 也是一样），那么就会包含很多控件，如果不加以拆分，就回造成单个 cell 代码量过大，平行 cell 之间重复代码过多
+
+
+### 关于 ASDisplayNode 的官方介绍
+
+像 UIKit 中的 View 一样，Texture 中的 ASDisplayNode 同样可以自定义：ASDisplayNode 的所有接口如下：
+
+[ASDisplayNode Class Reference](http://texturegroup.org/appledocs.html)
+
+但是通常我们只需要关心下面几个方法
+
+```
+//重写初始化方法以传入需要的参数
+init() {
+}
+
+
+//主线程调用，在 didLoad 做一些事件绑定的操作
+override func didLoad() {
+    super.didLoad()
+}
+
+//后台线程调用，做布局的最后调整
+override func layout() {
+    super.layout()
+}
+
+
+//后台线程调用，实现布局
+override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
+    return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: moreButton)
+}
+```
+
+### 直接讲一个复杂的例子
+
+微信朋友圈发布动态时候会根据发送图片的个数进行不同的排列
+
+#### 例子：九宫格图片展示器
+
+话不多说，来代码中继续讨论：
+
+**需求** ：类似微信中的图片显示器，**1图按照当前尺寸，多图安装9宫格排列**
+
+**分析** ：一种更加方案化的解决方式是使用 CollectionView；通过不同的 type 使用不同的 size 即可。
+
+##### 创建类型
+
+可以通过枚举方便的确定类型
+
+```
+private enum PicturesStyle {
+    case larage
+    case small
+
+    init(_ count: Int) {
+        if count == 1 {
+            self = .larage
+        } else {
+            self = .small
+        }
+    }
+}
+```
+
+##### 创建9宫格单个 Cell
+
+单个 cell 创建比较简单，传入图片 url 和 需要在 collection 中显示的方格的自身宽带
+
+```
+private class CollectionCellNode: ASCellNode {
+    let imageNode = NetworkImageNode().then { (node) in
+        node.defaultImage = UIImage.init(named: "cardPlaceholder")
+    }
+    let width: CGFloat
+
+    init(_ path: String, width: CGFloat) {
+        self.width = width
+        super.init()
+        automaticallyManagesSubnodes = true
+
+        imageNode.url = URL.init(string: path)
+        imageNode.isLayerBacked = true
+    }
+
+    override func layout() {
+        super.layout()
+        imageNode.layer.borderWidth = 0.5
+        imageNode.layer.borderColor = UIColor.hex("ececec").cgColor
+    }
+
+    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
+        imageNode.style.preferredSize = CGSize.init(width: self.width, height: self.width)
+        return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: imageNode)
+    }
+}
+```
+
+##### 创建图片展示器
+
+这个视图虽然是个复杂的视图，但是分析优化即可。
+
+如果是单个图就直接返回图片；如果是多个图片就返回 collectionView，并且设置大小为 contentSize 即可完整显示。
+
+```
+class PicturesView: ASDisplayNode {
+
+    let imagePaths: [String]
+    let picStyle: PicturesStyle
+    let width: CGFloat
+
+    lazy var layout = CollectionLayout().then { (layout) in
+        layout.minimumInteritemSpacing = 2
+        layout.minimumLineSpacing = 2
+    }
+
+    var collection: ASCollectionNode!
+    lazy var imageNode: ASCollectionNode = NetworkImageNode().then { (node) in
+        node.defaultImage = UIImage.init(named: "cardPlaceholder")
+    }
+
+    init(_ images: [String]) {
+
+        imagePaths = images
+        picStyle = PicturesStyle.init(images.count)
+
+        switch picStyle {
+        case .larage:
+            imageNode.url = URL.init(string: images[0]!)
+        case .small:
+            collection = ASCollectionNode.init(collectionViewLayout: layout)
+            width = (AppDefaults.screenW - 40 - 5) / 3
+        }
+
+        super.init()
+        automaticallyManagesSubnodes = true
+        view.isUserInteractionEnabled = false
+    }
+
+    override func didLoad() {
+        super.didLoad()
+        collection.delegate = self
+        collection.dataSource = self
+        collection.autoresizesSubviews = true
+    }
+
+    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
+       guard picStyle == .small else {
+           return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: imageNode)
+       }
+        var size = CGSize.init(width: AppDefaults.screenW, height: 0)
+        switch picStyle {
+        case .larage:
+            size.height = width
+        case .small:
+            let line = Int((imagePaths.count - 1) / 3 + 1)
+            size.height = width * CGFloat(line) + 2 * CGFloat(line - 1)
+        }
+        collection.style.preferredSize = size
+        return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: collection)
+    }
+}
+
+//下面是代理部分
+
+extension PicturesView: ASCollectionDelegate, ASCollectionDataSource {
+
+    func collectionNode(_ collectionNode: ASCollectionNode, constrainedSizeForItemAt indexPath: IndexPath) -> ASSizeRange {
+        let size = CGSize.init(width: width, height: width)
+        return ASSizeRange.init(min: CGSize.zero, max: size)
+    }
+
+    func collectionNode(_ collectionNode: ASCollectionNode, numberOfItemsInSection section: Int) -> Int {
+        return imagePaths.count
+    }
+
+    func collectionNode(_ collectionNode: ASCollectionNode, nodeBlockForItemAt indexPath: IndexPath) -> ASCellNodeBlock {
+
+        let path = imagePaths[indexPath.row]
+        let cellNodeBlock = { () -> ASCellNode in
+            let cellNode = CollectionCellNode.init(path, width: self.width)
+            cellNode.neverShowPlaceholders = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                cellNode.neverShowPlaceholders = false
+            })
+            return cellNode
+        }
+        return cellNodeBlock
+    }
+
+    func collectionNode(_ collectionNode: ASCollectionNode, didSelectItemAt indexPath: IndexPath) {
+        tapClose(indexPath.row)
+    }
+}
+```
+插播一下，如何需要更新 UI 布局，可以生成一个类，继承UICollectionViewFlowLayout，重写下边的方法即可
+```
+// UICollectionView calls these four methods to determine the layout information.
+// Implement -layoutAttributesForElementsInRect: to return layout attributes for for supplementary or decoration views, or to perform layout in an as-needed-on-screen fashion.
+// Additionally, all layout subclasses should implement -layoutAttributesForItemAtIndexPath: to return layout attributes instances on demand for specific index paths.
+// If the layout supports any supplementary or decoration view types, it should also implement the respective atIndexPath: methods for those types.
+- (nullable NSArray<__kindof UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect; // return an array layout attributes instances for all the views in the given rect
+```
+
+### 总结
+
+到这里一个复杂的 View 封装完成了，基本上还是不错了。之所以选择这个例子，也是因为 collection 的特性比较支持九宫格。另外，如果不使用 collection ,强行布局，相信会写很多代码。而且，在 Texture 下，这种布局就更加不适合了。
+
+除此之外想提一点是，组件应当最小化的拆分，本文是跟 Texture 相关的，所以就不展开详细阐述了。
