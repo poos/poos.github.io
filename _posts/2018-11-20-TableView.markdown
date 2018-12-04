@@ -14,7 +14,7 @@ tags:                                #标签
 
 1. UIView 优化：图片优化？层优化？圆角优化？背景和透明度优化？
 2. 自动布局：是选择 Frame 布局优先性能，auto layout 牺牲性能，如何权衡。有没有二者兼备的解决方案。
-3. 数据优化：需要限制行数，需要调整图片？
+3. 数据优化：字体颜色大小，需要限制行数，需要调整图片？
 4. 事件处理：cell 中的多个事件如何处理：点赞，关注，评论，分享，跳转个人页，跳转问题页，跳转回答页等
 3. 状态处理：TableView 存在多个状态：冷启动，顶部推荐，正常显示，中间插入广告？如何同步，如何准确的，有条理的显示
 4. cell 更新：已经加载的 cell 数据如何更新：点赞数，关注关系等
@@ -24,7 +24,7 @@ tags:                                #标签
 
 此部分优化有一定作用，但是质的提升是在第二部分 **使用 Texture（ASDK）**
 
-1. 当 table 滑动卡顿时候，我最先检测了 **各个 UI 控件** 在 模拟器的层显示, 通过对这些检测优化了一些性能
+- 当 table 滑动卡顿时候，我最先检测了 **各个 UI 控件** 在 模拟器的层显示, 通过对这些检测优化了一些性能
 
 ```
 Color Blended Layers
@@ -37,13 +37,17 @@ Color Offscreen-Rendered
 
 ```
 
-2. **减少视图层级**
+- **减少视图层级**
 
 简言之：将所有的视图都放在 content 上。
 
 可想而知会造成代码结构混乱和不容易维护
 
-3. 透明和圆角
+- **避免无用的 view，减少视图数量**
+
+例如 **用户名称** 和 **v 标志** 和 **v 之后的描述**，完全可以用一个 label 的 attribute String 显示
+
+- 透明和圆角
 
 **透明确实可以提高性能**
 
@@ -70,194 +74,70 @@ Color Offscreen-Rendered
 神器在手，如果使用
 [Texture(ASDK)的理解和使用 、主要是使用方面：包含详细的使用方法，UI 类（ASTableCellNode，ASScollNode），布局（FlexBox布局），优化（ASImageNode，对接本地Kingfisher图片下载）等 ](https://poos.github.io/2018/08/08/Texture/)
 
-
 [Texture(ASDK)自定义 Node 和 优化 Tab 框架 、自定义 ASDisplayNode ；拆分复杂的 Node 为简单的 Node 组件 等 ](https://poos.github.io/2018/08/18/Texture1/)
 
 
+上边两篇文章是实践中总结的 Texture 使用和优化。最终效果大家可以在 芝麻问答 app 中查看。
+
+#### 关于定义组件
+
+关于拆分组件和公用组件：**最小的组件，拆到不能拆为止**： 不是一个 View 包括几个 按钮，最小的组件可能是一个定义的按钮。例如 项目中的点赞，关注按钮等
+
+**从小到大的管理是方便，易于控制的。**
+
+**组件提供通用方法，然后使用方实现（传入 model 的）便利方法是不错的选择**
+
+
+### table 元数据优化
+
+很多人喜欢在 cell 赋值 model 时候进行大量的操作。但是这是极其占用资源的，纵使使用了 Texture 之后，在预加载时候仍然会进行大量的性能消耗。**要知道如果阻塞6毫秒，就会造成主线程 runloop 没法拿到新的页面数据而产生卡顿**。
+
+不幸项目就严重存在这个问题：
+
+1. 传入 model 之后进行大量的判断，更新 cell UI，且随迭代更加复杂
+2. 部分 label 限制高度在 label 赋值之后去调用 label 的分类方法更新限制行高
 
 
 
-但是通常我们只需要关心下面几个方法
+#### 解决：最好的方式是在 model 层处理
 
-```
-//重写初始化方法以传入需要的参数
-init() {
-}
+上一章提到的 **用户名 + V + 描述** 的属性字符串，这就是个典型的例子，不要在 cell 赋值时候进行大量的计算操作。而正确的方式是使用 model 中间层。
 
+**原则：Model 中间层将原始数据生成需要显示的数据**
 
-//主线程调用，在 didLoad 做一些事件绑定的操作
-override func didLoad() {
-    super.didLoad()
-}
+例如 NSAttributeString
+例如 已经限度高度的 NSAttributeString
+例如 Url
+例如 type
 
-//后台线程调用，做布局的最后调整
-override func layout() {
-    super.layout()
-}
+**原则：在拿到服务端数据的时候进行加工生成**
 
+这样就将所有工作前置化，而在显示时候只是到对应的内存地址拿对应的数据，性能会提示几个等级。
 
-//后台线程调用，实现布局
-override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-    return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: moreButton)
-}
-```
+#### Swift 函数式处理 attrinuteString 字符串属性字符串
 
-#### 例子：九宫格图片展示器
-
-话不多说，来代码中继续讨论：
-
-**需求** ：类似微信中的图片显示器，**1图按照当前尺寸，多图安装9宫格排列**
-
-**分析** ：一种更加方案化的解决方式是使用 CollectionView；通过不同的 type 使用不同的 size 即可。
-
-##### 创建类型
-
-可以通过枚举方便的确定类型
-
-```
-private enum PicturesStyle {
-    case larage
-    case small
-
-    init(_ count: Int) {
-        if count == 1 {
-            self = .larage
-        } else {
-            self = .small
-        }
-    }
-}
-```
-
-##### 创建9宫格单个 Cell
-
-单个 cell 创建比较简单，传入图片 url 和 需要在 collection 中显示的方格的自身宽带
+在 swift 下可以使用函数式方便的组合处理
+[Swift 函数式编程（1）  《函数式 Swift》书籍学习，函数式编程介绍，实现，应用； NSMutableAttributeString 封装函数式  ](https://poos.github.io/2018/11/05/SwiftFunctional/)
 
 ```
-private class CollectionCellNode: ASCellNode {
-    let imageNode = NetworkImageNode().then { (node) in
-        node.defaultImage = UIImage.init(named: "cardPlaceholder")
-    }
-    let width: CGFloat
+// 组合函数
+let titleOne = font(.systemFont(ofSize: 13)) >>> color(.red)
 
-    init(_ path: String, width: CGFloat) {
-        self.width = width
-        super.init()
-        automaticallyManagesSubnodes = true
+let titleTwo = titleOne >>> color(.black)
 
-        imageNode.url = URL.init(string: path)
-        imageNode.isLayerBacked = true
-    }
+let contentOne = font(.systemFont(ofSize: 11)) >>> color(.red) >>>  alignment(.center) >>> color(.blue)
 
-    override func layout() {
-        super.layout()
-        imageNode.layer.borderWidth = 0.5
-        imageNode.layer.borderColor = UIColor.hex("ececec").cgColor
-    }
+...
 
-    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        imageNode.style.preferredSize = CGSize.init(width: self.width, height: self.width)
-        return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: imageNode)
-    }
-}
-```
+// 函数使用
+let attS = NSMutableAttributedString.init(string: "title content")
 
-##### 创建图片展示器
-
-这个视图虽然是个复杂的视图，但是分析优化即可。
-
-如果是单个图就直接返回图片；如果是多个图片就返回 collectionView，并且设置大小为 contentSize 即可完整显示。
+label.attributedText = titleOne(attS)
 
 ```
-class PicturesView: ASDisplayNode {
-
-    let imagePaths: [String]
-    let picStyle: PicturesStyle
-    let width: CGFloat
-
-    lazy var layout = CollectionLayout()
-
-    var collection: ASCollectionNode!
-    lazy var imageNode: ASCollectionNode = NetworkImageNode().then { (node) in
-        node.defaultImage = UIImage.init(named: "cardPlaceholder")
-    }
-
-    init(_ images: [String]) {
-
-        imagePaths = images
-        picStyle = PicturesStyle.init(images.count)
-
-        switch picStyle {
-        case .larage:
-            imageNode.url = URL.init(string: images[0]!)
-        case .small:
-            collection = ASCollectionNode.init(collectionViewLayout: layout)
-            width = (AppDefaults.screenW - 40 - 5) / 3
-        }
-
-        super.init()
-        automaticallyManagesSubnodes = true
-        view.isUserInteractionEnabled = false
-    }
-
-    override func didLoad() {
-        super.didLoad()
-        collection.delegate = self
-        collection.dataSource = self
-        collection.autoresizesSubviews = true
-    }
-
-    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-       guard picStyle == .small else {
-           return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: imageNode)
-       }
-        var size = CGSize.init(width: AppDefaults.screenW, height: 0)
-        switch picStyle {
-        case .larage:
-            size.height = width
-        case .small:
-            let line = Int((imagePaths.count - 1) / 3 + 1)
-            size.height = width * CGFloat(line) + 2 * CGFloat(line - 1)
-        }
-        collection.style.preferredSize = size
-        return ASInsetLayoutSpec.init(insets: UIEdgeInsets.init(space: 0), child: collection)
-    }
-}
 
 
-
-extension PicturesView: ASCollectionDelegate, ASCollectionDataSource {
-
-    func collectionNode(_ collectionNode: ASCollectionNode, constrainedSizeForItemAt indexPath: IndexPath) -> ASSizeRange {
-        let size = CGSize.init(width: width, height: width)
-        return ASSizeRange.init(min: CGSize.zero, max: size)
-    }
-
-    func collectionNode(_ collectionNode: ASCollectionNode, numberOfItemsInSection section: Int) -> Int {
-        return imagePaths.count
-    }
-
-    func collectionNode(_ collectionNode: ASCollectionNode, nodeBlockForItemAt indexPath: IndexPath) -> ASCellNodeBlock {
-
-        let path = imagePaths[indexPath.row]
-        let cellNodeBlock = { () -> ASCellNode in
-            let cellNode = CollectionCellNode.init(path, width: self.width)
-            cellNode.neverShowPlaceholders = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                cellNode.neverShowPlaceholders = false
-            })
-            return cellNode
-        }
-        return cellNodeBlock
-    }
-
-    func collectionNode(_ collectionNode: ASCollectionNode, didSelectItemAt indexPath: IndexPath) {
-        tapClose(indexPath.row)
-    }
-}
-```
-
-### 问题2： cell 中的事件如何处理
+### table 事件处理
 
 在我们的产品 芝麻问答 中的实践和研究（有兴趣可以下载查看一下 **芝麻问答的 关注页Feed流** ），确立了原则用以保证代码质量：
 
@@ -273,9 +153,8 @@ extension PicturesView: ASCollectionDelegate, ASCollectionDataSource {
 
 **3. 抽象父类** ，通过抽象父类，解决一些方法的调用，避免重复的代码和错误。
 
-**4. 组件最小化** ，最小的组件不是一个 View 包括几个 按钮，最小的组件可能是一个定义的按钮。例如 项目中的点赞，关注按钮等
 
-### 问题3： table 中有多个状态，如何设计
+###  table 中有多个状态，如何设计
 
 **背景** ：
 
@@ -296,7 +175,7 @@ extension PicturesView: ASCollectionDelegate, ASCollectionDataSource {
 
 对应于分析的步骤：
 
-1. UI 状态在加载前中后有不同的显示，定义一个加载状态枚举，这样在 vc 中根据状态进行处理
+- UI 状态在加载前中后有不同的显示，定义一个加载状态枚举，这样在 vc 中根据状态进行处理
 
 ```
 enum FollowTabViewModelLoadState {
@@ -321,7 +200,7 @@ enum FollowTabViewModelLoadType {
 
 **可以使用一个单独的中间层类来 输入类型， 输出 UI** , 也是为了方便测试
 
-2. 创建 sectionData 类
+- 创建 sectionData 类
 
 像创建数据模型一样，对各个 section 创建类型，通过 section 区分当前组的数据类型
 
@@ -341,7 +220,7 @@ struct SectionData {
 通过这种方式，可以保证数据的准确，可测试
 
 
-### 4. 已经加载的 cell 数据如何更新
+### 已经加载的 cell 数据如何更新
 
 数据更新同步碰到的问题比较多，实现的方案也比较多，简单列了几种
 
@@ -413,3 +292,16 @@ struct SectionData {
 对比所有方案，最终选择的是 A 方案，这个方案能够准确的更新最新的数据，同时避免较大的系统开销（一个关注，引起所有相关 table reload，和 VM 相关计算）。
 
 同时， **使用的 RxSwift 进行消息通知** ，在一些数据绑定上更加方便了一些。
+
+### 文末总结
+
+**优化层级和控件，提前预处理数据，使用 Texture，设置好的框架，选取好的方案更新数据**， 这就是我在关注 feed 流所做的优化。
+
+文末在放一下相关的链接，方便大家了解查看：
+
+[Texture(ASDK)的理解和使用 、主要是使用方面：包含详细的使用方法，UI 类（ASTableCellNode，ASScollNode），布局（FlexBox布局），优化（ASImageNode，对接本地Kingfisher图片下载）等 ](https://poos.github.io/2018/08/08/Texture/)
+
+[Texture(ASDK)自定义 Node 和 优化 Tab 框架 、自定义 ASDisplayNode ；拆分复杂的 Node 为简单的 Node 组件 等 ](https://poos.github.io/2018/08/18/Texture1/)
+
+
+[Swift 函数式编程（1）  《函数式 Swift》书籍学习，函数式编程介绍，实现，应用； NSMutableAttributeString 封装函数式  ](https://poos.github.io/2018/11/05/SwiftFunctional/)

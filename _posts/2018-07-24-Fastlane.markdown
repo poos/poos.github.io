@@ -48,7 +48,7 @@ tags:                                #标签
 
 ### 在管理员电脑/打包机器上一些有用的脚本
 
-1. 注册新的设备
+- 注册新的设备
 
 ```
 desc "register device"
@@ -59,7 +59,7 @@ end
 
 ```
 
-2. 提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用
+- 提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用
 
 ```
 lane :beta do
@@ -91,7 +91,7 @@ end
 
 ### 在开发者电脑上一些有用的脚本
 
-1. 同步证书
+- 同步证书
 
 ```    
 lane :setup do
@@ -101,7 +101,7 @@ lane :setup do
 end
 ```
 
-2. 设置项目的 version number、build number
+- 设置项目的 version number、build number
 
 ```    
 lane :set_version do
@@ -163,20 +163,20 @@ def updateProjectBuildNumber
 end
 ```
 
-3. 用模拟器测试、打包ipa
+- 用模拟器测试、打包ipa
 
 ```    
 lane :tests do
-    run_tests(scheme: "ZhiMa_iOS", devices: ["iPhone 8"])
+    run_tests(scheme: "Project", devices: ["iPhone 8"])
 end
 
 lane :build do
-    build_app(scheme: 'ZhiMa_iOS',
+    build_app(scheme: 'Project',
               output_directory: './build')
 end
 ```
 
-4. 运行 swiftlint
+- 运行 swiftlint
 
 ```    
     desc "run swiftlint"

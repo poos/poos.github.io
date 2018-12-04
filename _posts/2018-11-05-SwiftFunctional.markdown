@@ -1,7 +1,7 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
 title:      Swift 函数式编程（1）              # 标题
-subtitle:   《函数式 Swift》书籍学习，函数式编程介绍，实现，应用           #副标题
+subtitle:   《函数式 Swift》书籍学习，函数式编程介绍，实现，应用； NSMutableAttributeString 封装函数式           #副标题
 date:       2018-11-05                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
