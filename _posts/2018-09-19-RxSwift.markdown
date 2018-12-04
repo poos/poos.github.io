@@ -1,0 +1,189 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      RxSwift（响应式编程） 使用和项目优化                 # 标题
+subtitle:   使用，MVVM，ReactorKit，内存泄露检查等            #副标题
+date:       2018-09-19                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: false                         # 是否归档
+tags:                                #标签
+- 设计
+---
+
+本文从下边的文档中摘抄，供大家了解和查询使用。
+
+ RX 上传手之后需要多查文档才能发现好的用法，另外多看看 Rx 下的设计模式和框架会有很大益处
+
+### 介绍
+
+跟其他 Reactive 框架一样，RxSwift 将各个事件以事件流的方式依次输出。通过绑定事件流即可。
+
+#### [中文文档 ：RxSwift: ReactiveX for Swift](https://beeth0ven.github.io/RxSwift-Chinese-Documentation/)
+
+
+### 核心
+Observable - 产生事件
+Observer - 响应事件
+Operator - 创建变化组合事件
+Disposable - 管理绑定（订阅）的生命周期
+Schedulers - 线程队列调配
+
+```
+
+// Observable<String>
+let text = usernameOutlet.rx.text.orEmpty.asObservable()
+
+// Observable<Bool>
+let passwordValid = text
+    // Operator
+    .map { $0.characters.count >= minimalUsernameLength }
+
+// Observer<Bool>
+let observer = passwordValidOutlet.rx.isHidden
+
+// Disposable
+let disposable = passwordValid
+    // Scheduler 用于控制任务在那个线程队列运行
+    .subscribeOn(MainScheduler.instance)
+    .observeOn(MainScheduler.instance)
+    .bind(to: observer)
+
+
+...
+
+// 取消绑定，你可以在退出页面时取消绑定
+disposable.dispose()
+下面几节会详细介绍这几个组件的功能和用法。
+
+```
+
+
+### 操作符
+
+
+#### 我想要创建一个 Observable
+
+- 产生特定的一个元素：just
+- 从一个序列拉取元素：from
+- 重复的产生某一个元素：repeatElement
+- 存在自定义逻辑：create
+- 每次订阅时产生：deferred
+- 每隔一段时间，发出一个元素：interval
+- 在一段延时后：timer
+- 一个任何事件都没有产生的序列：never
+
+#### 我想要创建一个 Observable 通过组合其他的 Observables
+
+- 任意一个 Observable 产生了元素，就发出这个元素：merge
+- 让这些 Observables 一个接一个的发出元素，当上一个 Observable 元- 素发送完毕后，下一个 Observable 才能开始发出元素：concat
+- 组合多个 Observables 的元素
+- 当每一个 Observable 都发出一个新的元素：zip
+- 当任意一个 Observable 发出一个新的元素：combineLatest
+
+#### 我想要转换 Observable 的元素后，再将它们发出来
+
+- 对每个元素直接转换：map
+- 转换到另一个 Observable：flatMap
+
+- 只接收最新的元素转换的 Observable 所产生的元素：flatMapLatest
+- 每一个元素转换的 Observable 按顺序产生元素：concatMap
+
+- 基于所有遍历过的元素： scan
+
+#### 我想要将产生的每一个元素，拖延一段时间后再发出：delay
+
+#### 我想要将产生的事件封装成元素发送出来
+
+- 将他们封装成 Event<Element>：materialize
+- 然后解封出来：dematerialize
+#### 我想要忽略掉所有的 next 事件，只接收 completed 和 error 事件：ignoreElements
+
+#### 我想创建一个新的 Observable 在原有的序列前面加入一些元素：startWith
+
+#### 我想从 Observable 中收集元素，缓存这些元素之后在发出：buffer
+
+#### 我想将 Observable 拆分成多个 Observables：window
+
+- 基于元素的共同特征：groupBy
+#### 我想只接收 Observable 中特定的元素
+
+- 发出唯一的元素：single
+#### 我想重新从 Observable 中发出某些元素
+
+- 通过判定条件过滤出一些元素：filter
+- 仅仅发出头几个元素：take
+- 仅仅发出尾部的几个元素：takeLast
+- 仅仅发出第 n 个元素：elementAt
+- 跳过头几个元素
+- 跳过头 n 个元素：skip
+- 跳过头几个满足判定的元素：skipWhile，skipWhileWithIndex
+- 跳过某段时间内产生的头几个元素：skip
+- 跳过头几个元素直到另一个 Observable 发出一个元素：skipUntil
+- 只取头几个元素
+- 只取头几个满足判定的元素：takeWhile，takeWhileWithIndex
+- 只取某段时间内产生的头几个元素：take
+- 只取头几个元素直到另一个 Observable 发出一个元素：takeUntil
+- 周期性的对 Observable 抽样：sample
+- 发出那些元素，这些元素产生后的特定的时间内，没有新的元素产生：debounce
+- 直到元素的值发生变化，才发出新的元素：distinctUntilChanged
+- 并提供元素是否相等的判定函数：distinctUntilChanged
+- 在开始发出元素时，延时后进行订阅：delaySubscription
+#### 我想要从一些 Observables 中，只取第一个产生元素的 Observable：amb
+
+#### 我想评估 Observable 的全部元素
+
+- 并且对每个元素应用聚合方法，待所有元素都应用聚合方法后，发出结果：reduce
+- 并且对每个元素应用聚合方法，每次应用聚合方法后，发出结果：scan
+
+#### 我想把 Observable 转换为其他的数据结构：as...
+
+#### 我想在某个 Scheduler 应用操作符：subscribeOn
+
+- 在某个 Scheduler 监听：observeOn
+#### 我想要 Observable 发生某个事件时, 采取某个行动：do
+
+#### 我想要 Observable 发出一个 error 事件：error
+
+- 如果规定时间内没有产生元素：timeout
+#### 我想要 Observable 发生错误时，优雅的恢复
+
+- 如果规定时间内没有产生元素，就切换到备选 Observable ：timeout
+- 如果产生错误，将错误替换成某个元素 ：catchErrorJustReturn
+- 如果产生错误，就切换到备选 Observable ：catchError
+- 如果产生错误，就重试 ：retry
+
+#### 我创建一个 Disposable 资源，使它与 Observable 具有相同的寿命：using
+
+#### 我创建一个 Observable，直到我通知它可以产生元素后，才能产生元素：publish
+
+- 并且，就算是在产生元素后订阅，也要发出全部元素：replay
+- 并且，一旦所有观察者取消观察，他就被释放掉：refCount
+- 通知它可以产生元素了：connect
+
+
+### 框架
+RxSwift 是一个响应式编程的基础框架，它并不会强制要求你使用某种架构。它和多个应用程序架构完美适配，这一章将介绍几个常用的架构：
+
+MVVM - 当今非常流行的 MVVM 设计模式
+
+RxFeedback - 由 RxSwift 创始人（Krunoslav Zaher） 提供的一个反馈循环架构
+
+ReactorKit - 结合了 Flux 和响应式编程的架构
+
+### 生态
+
+RxCocoa 给 UI框架 提供了 Rx 支持，让我们能够使用按钮点击序列，输入框当前文本序列等。不过 RxCocoa 也只是 RxSwift 生态系统 中的一员。RxSwift 生态系统还给其他框架提供了 Rx 支持：
+
+- RxDataSources - UITableView 和 UICollectionView 数据源
+- RxGesture - 页面手势
+- RxMKMapView - 地图
+- RxCoreMotion - 陀螺仪
+- RxAlamofire - 网络请求
+- RxCoreData - CoreData 数据库
+- RxRealm - Realm 数据库
+- RxMediaPicker - 图片选择器
+- Action - 行为
+- RxWebKit - WebView
+- RxEventHub - 全局通知
+- RxSwiftExt - 添加一些有用的操作符
+- ...
