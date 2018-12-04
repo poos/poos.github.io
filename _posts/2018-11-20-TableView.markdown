@@ -2,7 +2,7 @@
 layout:     post                       # 使用的布局（不需要改）
 title:      TableView 的终极优化：滑动，布局，事件，更新              # 标题
 subtitle:   图片和视图优化，数据处理优化，自动布局和异步加载 Texture（ASDK），复杂 table 和人性化 UI，cell 事件哪里响应，数据同步更新            #副标题
-date:       2018-08-08                 # 时间
+date:       2018-11-20                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
