@@ -1,0 +1,234 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      Swift中的 let，var，optional（可选值的）性能比较                 # 标题
+subtitle:   测试性能              #副标题
+date:       2018-09-01                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 优化
+---
+
+
+### 背景
+
+在一些类中经常会见到这样的写法：虽然使用的 var 修饰变量，但是只是在 init 方法中修改了一次，其他时候都是 get并没有重新 set。
+
+```
+class A {
+    var a = ""
+
+    init() {
+        a = "hahah"
+    }
+}
+```
+
+通过资料查阅和文档查看，区别在于：**var 修饰的变量锁指向的指针是可变的**。但是官方仍然建议尽量多的使用 let。
+
+那么区别到底有多少呢，相较于 let 可选的 var 性能又如何那。所以做了一个测试
+
+### 测试
+
+首先是3种定义方式
+
+```
+class A {
+    var a = ""
+
+    init() {
+        a = "hahah"
+    }
+}
+
+class B {
+    let a: String
+
+    init() {
+        a = "hahah"
+    }
+}
+
+class C {
+    var a: String!
+
+    init() {
+        a = "hahah"
+    }
+}
+
+class D {
+    var a: String?
+
+    init() {
+        a = "hahah"
+    }
+}
+
+```
+
+接下来对3种方式生成的对象进行 init 和 get 测试
+
+```
+    //分别返回 a，b，c 强制解包方式和 c 非强制解包的测试时间（1000次）
+    func once() -> (TimeInterval, TimeInterval, TimeInterval, TimeInterval, TimeInterval, TimeInterval) {
+
+          let timea = Date.init().timeIntervalSince1970
+
+          for _ in 0 ... 999 {
+              let c = A()
+              cas.append(c)
+              res.append(c.a)
+          }
+          let timeb = Date.init().timeIntervalSince1970
+
+          for _ in 0 ... 999 {
+              let c = B()
+              cbs.append(c)
+              res.append(c.a)
+          }
+          let timec = Date.init().timeIntervalSince1970
+
+          for _ in 0 ... 999 {
+              let c = C()
+              ccs.append(c)
+              res.append(c.a!)
+
+          }
+          let timed = Date.init().timeIntervalSince1970
+
+          for _ in 0 ... 999 {
+              let c = C()
+              ccs.append(c)
+              if let s = c.a {
+                  res.append(s)
+              }
+          }
+          let timee = Date.init().timeIntervalSince1970
+
+          for _ in 0 ... 999 {
+              let c = D()
+              cds.append(c)
+              res.append(c.a!)
+
+          }
+          let timef = Date.init().timeIntervalSince1970
+
+          for _ in 0 ... 999 {
+              let c = D()
+              cds.append(c)
+              if let s = c.a {
+                  res.append(s)
+              }
+          }
+          let timeg = Date.init().timeIntervalSince1970
+
+          return(timeb - timea, timec - timeb, timed - timec, timee - timed, timef - timee, timeg - timef)
+
+      }
+```
+
+对上边的 1000 次测试运行 10 次取平均值
+
+```
+    func check() {
+        var ats: Double = 0
+        var bts: Double = 0
+        var cts: Double = 0
+        var dts: Double = 0
+        var ets: Double = 0
+        var fts: Double = 0
+
+        for _ in 0 ... 10 {
+            let rst = once()
+            ats += rst.0
+            bts += rst.1
+            cts += rst.2
+            dts += rst.3
+            ets += rst.4
+            fts += rst.5
+            sleep(1)
+        }
+
+        print(ats)
+        print(bts)
+        print(cts)
+        print(dts)
+        print(ets)
+        print(fts)
+        print("\n")
+    }
+```
+
+#### 结果
+
+我进行了4次 check()，每次都是重新运行工程，手动点击开始测试，结果如下：
+
+```
+
+//6    0.009955167770385742
+//1   0.007562875747680664
+//5    0.008865833282470703
+//4    0.00854039192199707
+//2    0.007955312728881836
+//3    0.0084686279296875
+
+
+//6    0.00855565071105957
+//1    0.006780147552490234
+//4    0.007841110229492188
+//2    0.0074846744537353516
+//3    0.0075147151947021484
+//5    0.00818324089050293
+
+
+//6    0.008449316024780273
+//1    0.0066416263580322266
+//3    0.007724761962890625
+//5    0.007788658142089844
+//2    0.0074040889739990234
+//3    0.007723331451416016
+
+
+//6    0.009873151779174805
+//1    0.0071184635162353516
+//4    0.008206605911254883
+//3    0.008171319961547852
+//2    0.007562398910522461
+//4    0.008209466934204102
+
+```
+
+结果为
+
+```
+24
+6
+16
+14
+9
+15
+```
+
+#### 结果分析
+
+推荐使用的方法依次为：
+
+**第一名：** let a: String
+
+**第二名：** var a: String? 和取值 a！
+
+**第三名：** 一共3种方式：
+
+- var a: String 和取值  if let s = a { // do some ... }
+- var a: String? 和取值  if let s = a { // do some ... }
+- var a: String 和取值  a
+
+**最后一名：** var a = "" 然后 赋值 a = xx 然后取值
+
+### 总结
+
+- 能尽量使用 let 时候就使用 let
+
+- 不用过于纠结可选值的解包问题，对性能影响几乎不存在，所以建议使用 if let s = a { // do some ... } 安全解包，或者使用 guard。
