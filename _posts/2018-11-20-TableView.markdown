@@ -83,9 +83,41 @@ Color Offscreen-Rendered
 
 关于拆分组件和公用组件：**最小的组件，拆到不能拆为止**： 不是一个 View 包括几个 按钮，最小的组件可能是一个定义的按钮。例如 项目中的点赞，关注按钮等
 
-**从小到大的管理是方便，易于控制的。**
+**从小到大的依次组装组件，形成更多组件。**
 
-**组件提供通用方法，然后使用方实现（传入 model 的）便利方法是不错的选择**
+**组件提供通用 init 方法，然后使用方分类实现 convenience init（传入 model / type）**
+
+```
+extension ButtonNode {
+    enum NodeType {
+        case vote
+        case comment
+        case share
+    }
+
+    convenience init(type: NodeType) {
+        switch type {
+        case .vote:
+            self.init(image: "commentLike", selectedImage: "commentLikeSelected")
+        case .comment:
+            self.init(image: "comment")
+        case .share:
+            self.init(image: "share")
+        }
+    }
+}
+```
+
+##### 自定义组件的参数
+
+**使用 let ，var ，可选值？？**
+
+
+- 能尽量使用 let 时候就使用 let
+
+- 不用过于纠结可选值的解包问题，对性能影响几乎不存在，所以建议使用 if let s = a { // do some ... } 安全解包，或者使用 guard。
+
+[Swift中的 let，var，optional（可选值的）性能比较](https://poos.github.io/2018/09/01/SwiftVar/)
 
 
 ### table 元数据优化
@@ -303,5 +335,6 @@ struct SectionData {
 
 [Texture(ASDK)自定义 Node 和 优化 Tab 框架 、自定义 ASDisplayNode ；拆分复杂的 Node 为简单的 Node 组件 等 ](https://poos.github.io/2018/08/18/Texture1/)
 
-
 [Swift 函数式编程（1）  《函数式 Swift》书籍学习，函数式编程介绍，实现，应用； NSMutableAttributeString 封装函数式  ](https://poos.github.io/2018/11/05/SwiftFunctional/)
+
+[Swift中的 let，var，optional（可选值的）性能比较](https://poos.github.io/2018/09/01/SwiftVar/)
