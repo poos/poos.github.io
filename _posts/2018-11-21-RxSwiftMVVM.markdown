@@ -2,7 +2,7 @@
 layout:     post                       # 使用的布局（不需要改）
 title:      RxSwift 的 MVVM 框架理解使用              # 标题
 subtitle:   适用于 RxSwift 的 各个框架， 常用框架的分析            #副标题
-date:       2018-11-20                 # 时间
+date:       2018-11-21                # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档

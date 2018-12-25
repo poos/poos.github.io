@@ -2,7 +2,7 @@
 layout:     post                       # 使用的布局（不需要改）
 title:      项目中 Hybrid 部分的设计              # 标题
 subtitle:   交互方式选择，通用 API，基础&全面 API，cookie， scheme，itunes 白名单            #副标题
-date:       2018-12-01                 # 时间
+date:       2018-12-11                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
