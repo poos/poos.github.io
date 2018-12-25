@@ -1,0 +1,433 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      LeetCode 上的算法题 （两数之和，链表数字相加，最长不重复子字符串，两个数组的中位数，最长回文字符串）              # 标题
+subtitle:   时间/空间 复杂度，链表，后缀二叉树，中位数算法，回文算法            #副标题
+date:       2018-12-01                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 算法
+---
+
+> 在了解到 leetcode 这个网站之后，也是去刷了几个算法题。网站功能强大，可以在线编写测试提交，更强大的是有最佳算法的排行，还有很多答案和解释，每一个问题都能找到很好的解题思路和更加优秀的答案。
+
+网址在这里 ： [https://leetcode.com](https://leetcode.com/problems/two-sum/)
+
+不多说，从题目解题过程中来学习算法的知识吧。
+
+#### Two Sum
+
+```
+Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+Example:
+
+Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+```
+
+这道题被标记为 easy
+
+解法1 ： 使用双层 for 循环来检测， 比较简单，不进行代码描写了
+
+复杂度为 O(n^2) ，处于 平方级别的复杂度。
+
+
+##### 最优解
+
+解法二：
+
+利用一个 hash 表来存储另一半，在遍历的过程中找到另一半即结束。代码如下：
+
+```
+func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+
+    var hash: [Int : Int] = [:]
+    var resArray : [Int] = [];
+
+    for (i, j) in nums.enumerated() {
+        if let index = hash[target - j]{
+            resArray.append(index)
+            resArray.append(i)
+            return resArray
+        }
+        hash[j] = i
+
+    }
+    return resArray;
+}
+
+```
+
+事件复杂度可降为 O（n），瞬间释放压力。
+
+##### 时间和空间复杂度
+
+复杂度通常取随着技术递增最为迅速的一个，常见的复杂度大小如下：
+
+常数阶Ο(1)＜对数阶Ο(logn)＜线性阶Ο(n)＜线性对数阶Ο(nlogn)＜平方Ο(n^2)＜立方阶Ο(n^3)＜…＜指数阶Ο(2^n)＜阶乘阶Ο(n!)。
+
+如果已经复杂度有些恍惚可以看一下下边的资料
+
+ps： [算法的时间复杂度和空间复杂度](http://www.cnblogs.com/songQQ/archive/2009/10/20/1587122.html)
+
+[算法时间复杂度的计算](https://blog.csdn.net/javatiger427/article/details/6070785)
+
+
+#### Add Two Numbers
+
+```
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Example:
+
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+Explanation: 342 + 465 = 807.
+```
+
+这段代码的难度为 中 ，主要是理解链表含有即可。代码中对应的链表节点模型如下：
+
+```
+public class ListNode {
+    public var val: Int
+    public var next: ListNode?
+    public init(_ val: Int) {
+        self.val = val
+        self.next = nil
+    }
+}
+
+```
+
+### 最优解
+
+为了解决相加超过 10，进一位的问题，可以提前创建 next 并确定值为 1，下次相加即可。（同样乘法也可以是这个思路了）。
+最终的解题代码如下：
+
+```
+func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+    guard let n1 = l1 else {
+        return l2
+    }
+    guard let n2 = l2 else {
+        return nil
+    }
+    var l1 = n1, l2 = n2
+    var sum = ListNode(0), first = sum
+    while true {
+        sum.val = sum.val + l1.val + l2.val
+        if sum.val >= 10 {
+            sum.val = sum.val - 10
+            sum.next = ListNode(1)
+        } else {
+            if l1.next == nil && l2.next == nil { break }
+            sum.next = ListNode(0)
+        }
+        l1 = l1.next ?? ListNode(0)
+        l2 = l2.next ?? ListNode(0)
+        sum = sum.next ?? ListNode(0)
+    }
+    return first
+}
+
+```
+
+测试时候可以用类似如下的代码进行测试
+
+```
+
+let two = ListNode.init(2)
+let four = ListNode.init(4)
+let three = ListNode.init(3)
+two.next = four
+four.next = three
+
+let five = ListNode.init(5)
+let six = ListNode.init(6)
+let four2 = ListNode.init(4)
+five.next = six
+six.next = four2
+
+let result2 = Solution().addTwoNumbers(two, six)
+
+print("\(result2?.val)->\(result2?.next?.val)->\(result2?.next?.next?.val)")
+
+```
+
+#### 最长不重复子字符串
+
+```
+3. Longest Substring Without Repeating Characters
+
+Share
+Given a string, find the length of the longest substring without repeating characters.
+
+Example 1:
+
+Input: "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+Example 2:
+
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+Example 3:
+
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+             Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+```
+
+难度被标记为 Medium
+
+
+##### 解题
+
+思路：遍历一遍，并且记录子字符串，如果有包含则去除包含的 prefix 部分；不包含追加一个字符。
+
+
+```
+func lengthOfLongestSubstring(_ s: String) -> Int {
+        var num = 0
+        var subString = String()
+        s.forEach { (element) in
+            if subString.contains(element) {
+                num = max(subString.count, num)
+
+                if let index = subString.firstIndex(of: element) {
+                    subString = String(subString.suffix(from: index))
+                    subString.removeFirst()
+                }
+            }
+            subString.append(element)
+
+            //            print(subString)
+        }
+        num = max(subString.count, num)
+        return num
+    }
+
+```
+
+#### 两个列表的中位数
+
+```
+Median of Two Sorted Arrays
+
+There are two sorted arrays nums1 and nums2 of size m and n respectively.
+
+Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
+
+You may assume nums1 and nums2 cannot be both empty.
+
+Example 1:
+
+nums1 = [1, 3]
+nums2 = [2]
+
+The median is 2.0
+Example 2:
+
+nums1 = [1, 2]
+nums2 = [3, 4]
+
+The median is (2 + 3)/2 = 2.5
+
+```
+
+##### 解法
+
+这道题目如果用单纯的思路去做，重新排序, 取中位数，将会有很高的代价。
+
+在讨论区 有一个超过 1.3k 点赞， 1.5k 收藏的解决方案： [
+Share my O(log(min(m,n)) solution with explanation](https://leetcode.com/problems/median-of-two-sorted-arrays/discuss/2481/Share-my-O(log(min(mn))-solution-with-explanation)
+
+甚至 还有对应的 youtube 视频 https://www.youtube.com/watch?v=LPFhl65R7ww
+
+这个算法大概如下：
+
+1. 将两个数组安装一定的规则拆分，并且将小端小端相组合，大端大端相组合 （初始值由一个公式计算出）
+
+2. 交叉判断（x）如果左侧小于右侧，即可使用两端的较小值和较大值取中位数得出结果。（如不符合将初始值加一，重新拆分）
+
+这个算法的效率极高，复杂度为O（log min（m,n）），是处于 O（log n）级别的算法。**优于线性复杂度的。**
+
+```
+
+func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
+        if nums1.count > nums2.count {
+            return findMedianSortedArrays(nums2, nums1)
+        }
+        let x = nums1.count
+        let y = nums2.count
+
+        var low = 0
+        var high = x
+
+        while low <= high {
+            //计算拆分点
+            let partx = (low + high) / 2
+            let party = (x + y + 1) / 2 - partx
+
+            let maxLeftX = partx == 0 ? Int.min : nums1[partx - 1]
+            let minRightX = partx == x ? Int.max : nums1[partx]
+
+            let maxLeftY = party == 0 ? Int.min : nums2[party - 1]
+            let minRightY = party == y ? Int.max : nums2[party]
+
+            //符合结果即可计算得出结果
+            if maxLeftX <= minRightY && maxLeftY <= minRightX {
+                if (x + y) % 2 == 0 {
+                    return Double(max(maxLeftX, maxLeftY) + min(minRightX, minRightY)) / 2
+                } else {
+                    return Double(max(maxLeftX, maxLeftY))
+                }
+            } else if maxLeftX > minRightY {
+                high = partx - 1
+            } else {
+                low = partx + 1
+            }
+        }
+
+        fatalError("not sorted")
+    }
+
+```
+
+#### 最长回文字符串
+
+```
+Longest Palindromic Substring
+
+Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+
+Example 1:
+
+Input: "babad"
+Output: "bab"
+Note: "aba" is also a valid answer.
+Example 2:
+
+Input: "cbbd"
+Output: "bb"
+```
+
+##### 解题
+
+这道算法题也是有很多的解决方式和答案。
+
+一篇比较全的总结帖子如下：
+
+[Longest Palindromic Substring Part I](https://articles.leetcode.com/longest-palindromic-substring-part-i/)
+
+第一部分介绍了事件复杂度O（n^2），空间复杂度分别为O（n^2）和 O（1）的两个解决方案。
+
+[Longest Palindromic Substring Part II](https://articles.leetcode.com/longest-palindromic-substring-part-ii/)
+
+第二篇文章介绍了一个时间复杂度为 O（2n）的解决方案，非常巧妙
+
+**算法介绍**
+
+1. 在每个字符前后插入一个特殊字符（例如#）来解决单双组合的问题；
+
+2. 计算每个字符串的每一个字符的回文，从中心开始计算
+
+3. 对计算进行优化，利用回文左右相同特性进行下一个值的计算；最大值大于未计算的部分停止计算
+
+
+代码如下:
+
+```
+func longestPalindrome(_ s: String) -> String{
+    guard s.count > 0 else{
+        return ""
+    }
+    guard s.count > 1 else{
+        return s
+    }
+    var str_arr: [Character] = ["#"]
+    s.forEach { (char) in
+        str_arr.append(char)
+        str_arr.append("#")
+    }
+
+    var result_arr = [Int](repeating: 0, count: str_arr.count)
+    var center = 0, boundary = 0, maxLen = 0, result_center = 0
+
+    for i in 1 ..< str_arr.count - 1 {
+        // calc mirror i = center-(i-center)
+        let iMirror = 2 * center - i
+        result_arr[i] = boundary > i ? min(boundary-i, result_arr[iMirror]) : 0
+        // Attempt to expand palindrome centered at i
+        while i-1-result_arr[i] >= 0 , i + 1 + result_arr[i] <= str_arr.count - 1, str_arr[i+1+result_arr[i]] == str_arr[i-1-result_arr[i]]{
+            result_arr[i]+=1
+        }
+        // update center and boundary
+        // 用来记录的
+        if i + result_arr[i] > boundary{
+            center = i
+            boundary = i+result_arr[i]
+        }
+        // update result
+        if result_arr[i] > maxLen{
+            maxLen = result_arr[i]
+            result_center = i
+        }
+    }
+//          let rawStr = String(str_arr[(result_center-maxLen)...(result_center+maxLen)])
+//          print("rawStr: \(rawStr)")
+    //  中心 + 边界， 算出左边， 算出右边
+    //  这里还有一个转换的运算
+    let ans = String(s[
+        s.index(s.startIndex, offsetBy: (result_center-maxLen)/2)
+            ..<
+            s.index(s.startIndex, offsetBy: (result_center+maxLen)/2)])
+
+    // print("ans: \(ans)\n")
+    return ans
+}
+```
+
+##### 后缀树
+
+在解决这个问题的时候有 大佬提出了使用构建后缀树的解决方式，虽然构建的过程是个复杂的过程，但是一旦构建完成，往往能方便的处理字符串。
+
+>
+后缀树提出的目的是用来支持有效的字符串匹配和查询，例如上面的问题。后缀树（Suffix tree）是一种数据结构，能快速解决很多关于字符串的问题。后缀树的概念最早由Weiner 于1973年提出，既而由McCreight 在1976年和Ukkonen在1992年和1995年加以改进完善。 总结一句：一个给定的文本text的后缀树就是一个压缩的后缀字典树。
+
+单词查找树对某些情况非常实用。除了非常好地存储英文，它同样可以作为‘哈希表’的替代， 它有以下几个优势：
+
+- 查找值时通常有一个更好的最坏的时间复杂度
+- 不像哈希表，单词查找树不用担心键冲突问题
+- 不需要哈希算法保证每个元素有一个独一无二的路径
+- 单词树可以按照字母顺序排序
+
+
+![img](https://upload-images.jianshu.io/upload_images/536129-d0a181ae2f8407ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/650/format/webp)
+
+
+构建过程和使用过程博客有太多的资料，就简单列举几个。
+
+[关于Suffix Tree](https://blog.csdn.net/g9yuayon/article/details/2574781)
+
+[算法系列之二十四 - 后缀树（Suffix Tree）](https://blog.csdn.net/SunnyYoona/article/details/43971087)
+
+[Swift 算法俱乐部: Trie](https://www.jianshu.com/p/3be5cbb4cf9b)
+
+
+### 总结
+
+> 在自己的世界中很容易满足，看过外边的风景才会发现自己的狭隘。
+
+不断比较学习才能提高自己，尤其是在探寻的过程中找到的乐趣才是最有意思的。先暂时写这些算法了，等到有空时候自己再去探究更新下一个博客。
