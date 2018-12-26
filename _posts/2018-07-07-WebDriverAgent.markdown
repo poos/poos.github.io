@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      使用WebDriverAgent学习其他app布局,自动化测试               # 标题 
+title:      使用WebDriverAgent学习其他app布局,自动化测试               # 标题
 subtitle:   通过脚本化启动 WebDriverAgent， 使用ATX自动化测试 ； 自动微信跳一跳等               #副标题
 date:       2018-07-07                 # 时间
 author:     poos                         # 作者
@@ -10,7 +10,17 @@ tags:                                #标签
 - 工具
 ---
 
---- 
+---
+**12月26更新**
+
+最新版已经支持 Xcode 10 和 iOS 12 ，重新拉取最新代码即可。
+
+真机测试更改 Build Setting 中的 product bundle identifier 为 自己的，自动创建证书即可测试。
+
+**end**
+
+---
+---
 **9月25更新**
 
 ### 使用最新的Xcode10正式版没法正常测试，可能是某些库的问题，但是可以在9.4下添加iOS12支持包即可
@@ -35,7 +45,7 @@ ps: Xcode升级时候先邮件复制一份旧的，然后直接appStore更新，
 ```
 如果你电脑上没有安装Homebrew，使用下面的命令安装：
 
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 
 如果没有安装carthage，使用下面的命令安装：
@@ -74,10 +84,10 @@ iproxy 8100 8100
 # 解锁keychain，以便可以正常的签名应用，
 PASSWORD="******"
 security unlock-keychain -p $PASSWORD ~/Library/Keychains/login.keychain
- 
+
 # 获取设备的UDID
 UDID=$(idevice_id -l | head -n1)
- 
+
 # 运行测试
 xcodebuild -project ~/WebDriverAgent-master/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=e6a545a6a7490d06e3f5eb32e6f3a6d843ac2d08" test
 
@@ -115,7 +125,7 @@ pip install opencv_python
 ATX的编写都在 python 实现，例如：
 
 import atx
-d = atx.connect('http://localhost:8100', platform='ios') 
+d = atx.connect('http://localhost:8100', platform='ios')
 print d.status()
 
 ＃命令行执行
