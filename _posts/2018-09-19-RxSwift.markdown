@@ -10,6 +10,16 @@ tags:                                #标签
 - 设计
 ---
 
+12.25 补充一下：
+
+在找学习资料时候找了以为非常优秀的大神的文章：https://blog.dianqk.org , 将作者的博客几乎爬了一遍，受益良多。
+
+通常使用的操作符是 map 和 flatmap，一篇文章详细分析了两种区别： [RxSwift 下的 map 与 flatMap](https://medium.com/@DianQK/rxswift-%E4%B8%8B%E7%9A%84-map-%E4%B8%8E-flatmap-d0b319aef819)
+
+另外记住一句话：**rx 最大的好处就是不需要嵌套闭包**
+
+https://rxswift.slack.com/ 是一个很好的交流学习地方
+
 ### 使用
 
 跟其他 Reactive 框架一样，RxSwift 将各个事件以事件流的方式依次输出。通过绑定事件流即可。
@@ -202,7 +212,6 @@ RxCocoa 给 UI框架 提供了 Rx 支持，让我们能够使用按钮点击序�
 
 4. 资源释放/管理
 
-5.
 
 ### 最后
 
