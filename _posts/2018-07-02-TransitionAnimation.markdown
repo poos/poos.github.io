@@ -7,13 +7,28 @@ author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
-- Code
+- Animation
 ---
 
 处理界面专场动画已经有很多库，究其根本就是继承专场动画的协议，然后实现动画的实现即可。
 
 
+### 一个优秀的框架： [transitiontreasury](https://transitiontreasury.com/)
+
+[github项目地址：DianQK/TransitionTreasury](https://github.com/DianQK/TransitionTreasury)
+
+我在 [使用 Tip ： TabBar 的滑动切换效果](https://blog.dianqk.org/2016/03/07/TransitionTreasury%20%E4%BD%BF%E7%94%A8%20Tip%20%EF%BC%9A%20TabBar%20%E7%9A%84%E6%BB%91%E5%8A%A8%E5%88%87%E6%8D%A2%E6%95%88%E6%9E%9C/) 这篇博客了解到了这个库，另外提一下，作者有很多优秀的博客文章，我也是爬着读了很多。以为最近在使用 RxSwift 开发项目，所以爬到了作者的文章。
+
+> 因为博客文章是讨论 TabBar 滑动转场的，所以提到了 **WXTabBarController**。我也看了看，但是因为自己项目的 TabBar 前两个都有多个tag，而且那个项目已经多年没有更新了， 所以就暂时放弃没有深入探究了。还有 wxtabbar 作者的 [MVVMReactiveCocoa](https://github.com/leichunfeng/MVVMReactiveCocoa) ，OC 的 Reactive 项目，相当全面完整的教程。
+
+TransitionTreasury 是一个开放的项目，有一些作者提供了一些更多的动画，所有的动画都可以在 [transitiontreasury](https://transitiontreasury.com/) 上查看。
+
+如果项目使用了自定义的 专场动画，这个框架会是一个不错的选择
+
+
 ### 轻量级，自定制
+
+**我们在项目中使用了原生的 navBar，和原生的 tabBar，并且希望有一个好的跳转动画**
 
 我的项目中用到了异形的 NavigationBar ，这样在跳转界面的就会有撕裂的感觉，对此进行了优化，使用自定制的跳转动画。
 
@@ -136,17 +151,6 @@ public extension UIWindow {
 ```
 
 可以看到 实现的方式是 用了 截图 + Window 动画的方式，这是因为需要处理 tabbar 的情况，而 tabbar 在不同的 iOS 版本还是有不同的实现方法，所有为了统一就直接使用 window 实现动画。
-
-### 一个优秀的框架： [transitiontreasury](https://transitiontreasury.com/)
-
-[github项目地址：DianQK/TransitionTreasury](https://github.com/DianQK/TransitionTreasury)
-
-我在 [使用 Tip ： TabBar 的滑动切换效果](https://blog.dianqk.org/2016/03/07/TransitionTreasury%20%E4%BD%BF%E7%94%A8%20Tip%20%EF%BC%9A%20TabBar%20%E7%9A%84%E6%BB%91%E5%8A%A8%E5%88%87%E6%8D%A2%E6%95%88%E6%9E%9C/) 这篇博客了解到了这个库，另外提一下，作者有很多优秀的博客文章，我也是爬着读了很多。以为最近在使用 RxSwift 开发项目，所以爬到了作者的文章。
-
-> 因为博客文章是讨论 TabBar 滑动转场的，所以提到了 **WXTabBarController**。我也看了看，但是因为自己项目的 TabBar 前两个都有多个tag，而且那个项目已经多年没有更新了， 所以就暂时放弃没有深入探究了。还有 wxtabbar 作者的 [MVVMReactiveCocoa](https://github.com/leichunfeng/MVVMReactiveCocoa) ，OC 的 Reactive 项目，相当全面完整的教程。
-
-TransitionTreasury 是一个开放的项目，有一些作者提供了一些更多的动画，所有的动画都可以在 [transitiontreasury](https://transitiontreasury.com/) 上查看
-
 
 ### 最后
 

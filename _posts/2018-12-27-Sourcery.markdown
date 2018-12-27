@@ -1,0 +1,288 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      使用 Sourcery 进行模板编程（meta编程）              # 标题
+subtitle:   ObjectMapper 自动生成 model 解析代码， 为一些类生成相同的代码，继续填坑             #副标题
+date:       2018-12-27                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 设计
+---
+
+> Sourcery is a code generator for Swift language, built on top of Apple's own SourceKit. It extends the language abstractions to allow you to generate boilerplate code automatically.
+
+![img](https://github.com/krzysztofzablocki/Sourcery/raw/master/Resources/icon-128.png)
+
+### 介绍和前言
+
+Sourcery 是一个非常方便的脚本代码生成器。使用它能为一些类扩展通用的方法，避免手写代码造成的错误。
+
+
+它的 Github 地址在这里 [krzysztofzablocki/Sourcery](https://github.com/krzysztofzablocki/Sourcery)
+
+
+它使用的脚本语法在这里可以找到 [The Stencil template language](http://stencil.fuller.li/en/latest/)
+
+
+这两个地址用于入门是不够的，你可能会看的一脸懵逼，所以还是往下跟着节奏走。
+
+### 使用
+这一部分以 **为 ObjectMapper 的 Model 生成代码**，为总纲写的，但是 Sourcery 实际上不局限于使用在这个地方，理论上只要有代码多处相似都可以用它来优化。
+
+本来正是为了这个目标才注意到这个库的，然而，发现路真的很曲折。不像其他开源库，**能找到的资料太少了**，大多数博客都只是介绍了个官方例子。翻了很久找到了几篇博客，先贴出地址来，看你的心情要不要去看看。
+
+[Reducing boilerplate code with Sourcery](https://medium.com/chili-labs/reducing-boilerplate-code-with-sourcery-e77b654e9afc)， 这个博客，咳咳，一到关键的地方代码就丢了，然而对应 ObjectMapper 的功能演示的很不错。
+
+[Sourcery Tutorial: Generating Swift code for iOS](https://www.raywenderlich.com/501-sourcery-tutorial-generating-swift-code-for-ios)，这个是个入门博客，入门的时候参考着它的。博客中间的注册才能获取 Demo 代码被我忽略了，在 github 上找了一份同样的，**Demo代码稍后在文章给出**。文章后边部分介绍 Swift 4.2 自带的解析库，还没仔细看、
+
+如果英文有些吃力，这里有一篇中文博客  [ObjectMapper实践（一）](https://cdn2.jianshu.io/p/74624e8a3ae8)，主要讲 ObjectMapper 的实践。文章后边会详细介绍。
+
+
+
+#### 安装和调试 Demo
+
+##### 安装工具
+
+安装官方 github 提供的安装方式，先安装工具
+
+```
+brew install sourcery
+```
+
+安装直接需要这一步，下面就是调试Demo，是时候看一看 sourcery 的魅力了。
+
+##### 准备 Demo
+
+安装之后就可以下载 Demo 进行体验了 : [poos/BlogDemo/SourceryTutorial](https://github.com/poos/BlogDemo/tree/master/SourceryTutorial)，其他的几部不用去管，**可以去 ./appetizer/AutoEquatable.playground** 直接体验
+
+
+当你的准备工作做好之后，打开 palygroubnd ，打开Person.swift。这相当于自己写的 Model，下面将用脚本编程的方式为它提供一个 是否相等的方法。
+
+![img](https://koenig-media.raywenderlich.com/uploads/2017/06/Screen-Shot-2017-06-14-at-21.51.10-650x293.png)
+
+##### 编写脚本
+
+在同一级目录创建一个后缀名为 .stencil 的文件，然后在其中编写脚本代码，脚本语法在文章开头部分已经提过。值得注意的是，如果你将文件命名为 AutoEquatable.stencil，那么将生成一个名字为 AutoEquatable.generated.swift 的文件用于存放 Person 的分类脚本。所以通常可以直接命名为 Model.stencil
+
+在其中写下如下脚本，大概可以看出意思是, 循环遍历所有的属性，生成了 guard value == value else { return false } 的代码
+
+```
+public static func ==(lhs: {{ type.name }}, rhs: {{ type.name }}) -> Bool {
+    {% for var in type.variables %}
+    guard lhs.{{ var.name }} == rhs.{{ var.name }} else { return false }
+    {% endfor %}
+
+    return true
+}
+```
+
+##### 运行脚本
+
+在终端运行如下代码, **最后一个 --watch 参数不是必须的**， 如果使用这个参数，代码会在保存时候实时生成脚本
+
+
+```
+sourcery --sources AutoEquatable.playground/Sources \
+--output AutoEquatable.playground/Sources \
+--templates . \
+--watch
+```
+
+
+最后的结果是这样的， 最上边还贴心的给出注释 **// DO NOT EDIT**，通过脚本生成，不要编辑
+
+```
+// Generated using Sourcery 0.15.0 — https://github.com/krzysztofzablocki/Sourcery
+// DO NOT EDIT
+
+
+extension Person: Equatable {
+    public static func ==(lhs: Person, rhs: Person) -> Bool {
+        guard lhs.name == rhs.name else { return false }
+        guard lhs.age == rhs.age else { return false }
+        guard lhs.gender == rhs.gender else { return false }
+    return true
+  }
+}
+
+```
+
+的膜比较简单，如果碰到问题可以回顾一下这个博客，里边有详细的步骤。[Sourcery Tutorial: Generating Swift code for iOS](https://www.raywenderlich.com/501-sourcery-tutorial-generating-swift-code-for-ios)
+
+
+
+#### 在项目中使用 Sourcery
+
+
+##### ObjectMapper
+
+这个博客中主要是将 ObjectMapper 使用的，但是文章末尾讲到了 Sourcery, 值得参考
+
+ [ObjectMapper实践（一）](https://cdn2.jianshu.io/p/74624e8a3ae8)
+
+
+文中的模板代码如下：
+
+```
+import ObjectMapper
+
+{% for type in types.implementing.AutoMappable|struct %}
+// MARK: {{ type.name }} Mappable
+extension {{type.name}}: Mappable {
+
+    init?(map: Map) {
+        return nil
+    }
+
+    mutating func mapping(map: Map) {
+    {% for variable in type.storedVariables %}
+        {% if variable.isArray %}
+            {{variable.name}} <- map["{{variable.name}}.0.value"]
+        {% elif variable.isDictionary %}
+            {{variable.name}} <- map["{{variable.name}}.value"]
+        {% else %}
+            {{variable.name}} <- map["{{variable.name}}"]
+        {% endif %}
+    {% endfor %}
+    }
+}
+{% endfor %}
+
+```
+
+而且可以看到，除了普通参数生成，作者还特意标注了 isArray， isDictionary 的取值方法。但是还是会有问题，如果多个数组需要不同的取值，用这种方式就不能行得通了。
+
+##### 更好的方式: 使用注释
+
+如下的模型：
+
+```
+protocol AutoMappable {}
+
+//sourcery: mappable
+struct Person {
+    //sourcery: jsonKey = "first_name"
+    var firstName: String
+    //sourcery: jsonKey = "last_name"
+    var lastName: String
+    //sourcery: jsonKey = "birth_data"
+    var birthDate: Date
+    var friend: [String]
+    var lalala: Dictionary<String, Any>
+    var age: Int {
+        return Calendar.current.dateComponents([.year],
+                                               from: birthDate,
+                                               to: Date()).year ?? -1
+    }
+}
+extension Person: AutoMappable {}
+```
+
+可以看到，我在 firstName， lastName 等参数上边写了注释，这也同样是文章开头那篇博客里提到的，但是博客里面缺少太多的示例代码。
+
+我通过 github 搜索，在 [aichiko0225/LJInstalment](https://github.com/aichiko0225/LJInstalment) 这个工程里面找到了示例
+
+然后就可以进行如下代码的修改
+
+```
+import ObjectMapper
+
+{% for type in types.implementing.AutoMappable|struct %}
+// MARK: {{ type.name }} Mappable
+extension {{type.name}}: Mappable {
+
+    init?(map: Map) {
+        return nil
+    }
+
+    mutating func mapping(map: Map) {
+        {% for variable in type.storedVariables %}
+        {% if variable.isArray %}
+        {{variable.name}} <- map["{{variable.name}}.0.value"]
+        {% elif variable.isDictionary %}
+        {{variable.name}} <- map["{{variable.name}}.value"]
+        {% else %}
+        {{variable.name}} <- map["{{variable.annotations.jsonKey|default:variable.name}}"]
+        {% endif %}
+        {% endfor %}
+    }
+}
+{% endfor %}
+
+```
+
+
+**更多**，更多的用法就要看一看语法规则，除了协议，注释，还有很多其他有趣的用法。先发一个上边库中的例子，设计类，变量，方法的编程：
+
+```
+
+{% for type in types.based.AutoMockable %}{% if type.kind == 'protocol' %}
+// ...
+
+{% if not type.name == "AutoMockable" %}
+// ...
+
+class {{ type.name }}Mock: {{ type.name }} {
+// 类...
+
+    {% for variable in type.allVariables %}
+    // 属性...
+
+    var {{ variable.name }}: {{ variable.typeName }}
+    // ...
+
+    {% for method in type.allMethods %}
+    // 方法...
+
+    {% if not method.shortName == "init" %}var {{ method.shortName }}Called = false{% endif %}
+    // ...
+
+    {% if method.parameters.count == 1 %}var {{ method.shortName }}Received{% for param in method.parameters %}
+    // 参数...
+
+    {{ param.name|upperFirst }}: {{ param.typeName.unwrappedTypeName }}?{% endfor %}{% else %}{% if not method.parameters.count == 0 %}var {{ method.shortName }}ReceivedArguments: ({% for param in method.parameters %}{{ param.name }}: {% if param.typeAttributes.escaping %}{{ param.unwrappedTypeName }}{% else %}{{ param.typeName }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %})?{% endif %}{% endif %}
+    {% if not method.returnTypeName.isVoid and not method.shortName == "init" %}var {{ method.shortName }}ReturnValue: {{ method.returnTypeName }}!{% endif %}
+    // 更多
+
+{% endfor %}
+}
+{% endif %}{% endif %}
+{% endfor %}
+
+```
+
+我还找到了其他的 repo [ios-sourcery](https://github.com/vburojevic/ios-sourcery/blob/7ab181dc1e420f4160367bd1650863d188a9889e/Templates/AutoJSONDeserializable.stencil#L9)
+
+#### 关于项目集成
+
+说一下项目集成的事情，查到的博客都是下载包然后在工程用的。其实有更方便的方式，看着 sourcery  github 的介绍，支持 cocoapod 的，于是建了个项目试了试，调了几下，完美运行，果然 cocoapods 是最方便的三方库管理工具。
+
+安装如下的步骤即可使用 cocoapods 导入
+
+1. Profile 添加 pod 'ObjectMapper' ，并且导入
+
+2. 项目 build Phases 添加 run Script ；Shell 指向 $PODS_ROOT/Sourcery/bin/sourcery，运行脚本的命令为 sourcery --sources SingleView --templates SingleView --output SingleView
+
+
+这样每次 build 和 run 的时候都会生成最新的模板。
+
+**强烈建议使用文件夹区分 model，和模板扩展**
+
+```
+sourcery --sources ./LJInstalment --templates ./LJInstalment/Templates/AutoCodable.stencil --output ./LJInstalment/Sources/AutoGenerated
+```
+
+
+开发这一块代码的时候， **也可以同时使用 终端的命令** ， 可以在写模型和脚本的时候随时更新。
+
+```
+sourcery --sources SingleView --templates SingleView --output SingleView -- watch
+```
+
+
+### 总结
+
+一路走来，踩了不少坑，后边的路也还有很远，算是入了个门吧。最后给大家一些建议。
+
+使用 cocoapods 集成到项目中；然后，写参数时候注意多用注释，多看语法网站 [The Stencil template language](http://stencil.fuller.li/en/latest/)。
