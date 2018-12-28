@@ -7,7 +7,7 @@ author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
-- Animation
+- 动画
 ---
 
 处理界面专场动画已经有很多库，究其根本就是继承专场动画的协议，然后实现动画的实现即可。
