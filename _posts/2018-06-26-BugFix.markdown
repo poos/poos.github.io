@@ -1,0 +1,90 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      iOS 的 Bug 分析和解决            # 标题
+subtitle:   IDE 调试，测试设备崩溃日志，dsym 分析，apple crash report ，代码获取 crash 日志上传            #副标题
+date:       2018-06-26                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 维护
+---
+
+
+先说一下这篇博客是后来补上的。当时存了一个书签文件夹的博客，全部是 fix bug 的，稍后会详细给出。一些博客的文档已经不是最新，所以一般不展开讲了，但是会详细介绍一下最新的使用方法。
+
+
+### IDE 调试 bug
+
+[Xcode 运行、调试和测试](http://ios.idup.club/xcode/Xcode概述-6(运行，调试和测试)/)
+
+这是 Xcode 的官方文档中文翻译版，感谢作者。建议大家浏览一遍。大概有以下内容。
+
+#### 运行您的应用 Running Your App
+
+- 生成您的应用 Building Your App
+
+- 在模拟器中运行 Running in the Simulator
+
+- 编辑、创建以及管理编译方案 Managing Schemes
+
+#### Debugger
+
+- 使用 Debugger Using the Debugger
+
+- 检查应用对系统资源的影响 Examining System Impact
+
+- 测量应用程序的性能 Measuring Performance
+
+- 模拟问题 mulating Problems
+
+- 自定义调试工作流 Customizing Your Workflow
+
+#### 测试 Testing
+
+- 使用单元测试 Using Unit Tests
+
+- 使用持续集成工作流 Using Continuous Integration Testing
+
+- 使用代码覆盖率 Using Code Coverage
+
+- 记录UI测试 Recording UI Tests
+
+### 获取测试设备上的日志
+
+可以参照这个博客 [iOS崩溃捕捉和分析](https://www.jianshu.com/p/09b6084bcd01)
+
+手机 **诊断与用量** 里边包含 崩溃日志，可以使用 Itunes 同步到电脑，然后进行调试。
+
+![img](https://upload-images.jianshu.io/upload_images/1126977-1c375fc835ae15a2.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/325)
+
+**Xcode获取崩溃日志** ，打开Xcode, 菜单栏上选择Window ->Devices，选中设备，点击View Device Logs -> All logs可以看到所有的崩溃日志。
+
+![img](https://upload-images.jianshu.io/upload_images/1126977-f3f20386c317f8cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/922)
+
+
+### dSYM 崩溃日志
+
+主要可以参考这篇博客 [app上架appStore之后bug crash 手动定位奔溃位置](https://www.jianshu.com/p/61359b2d1da8)
+
+我的博客 Demo 也有工具 [poos/BlogDemo/BugFix](https://github.com/poos/BlogDemo/tree/master/BugFix)
+
+内容比较琐碎，就不说了。
+
+### 在 Xcode 工具中查看崩溃日志
+
+**登录账号（账号有 APP 管理、开发权限即可）的情况下，选择菜单 Window -> Organizer 即可看到。**
+
+主要可以参考这篇博客 [如何查看iOS已上架app的崩溃情况以及定位crash代码行](https://blog.csdn.net/skylin19840101/article/details/52231397)
+
+![img](https://img-blog.csdn.net/20160817155413651?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+
+### 程序中代码获取 crash
+
+**可用于上报至自己的服务器**
+
+主要可以参考这篇博客 [iOS崩溃捕捉和分析](https://www.jianshu.com/p/09b6084bcd01)
+
+## 最后
+
+建议开启项目的 bitcode ，这样随时可以下载 dsym 文件，同时会允许apple 优化项目，还会对安装包的大小有优化。
