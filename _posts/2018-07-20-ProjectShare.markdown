@@ -30,7 +30,7 @@ tags:                                #标签
 
 这里实例调用分享的几个地方
 
-```
+```swift
 //可能是 VC
 //可能是 View
 //可能是 WebView
@@ -49,7 +49,7 @@ class A {
 ```
 
 这里是协议分发管理的 protocol类, 在这里实现分享的方法
-```
+```swift
 // 定义统一的协议
 extension A: ShareProtocol, ShareProtocol2 {
     func share() {
@@ -115,7 +115,7 @@ Manager | 封装各个SDK分享方法
 view 的一些动画，大部分简单的动画就不再介绍。
 
 **设置按顺序弹出动画,layout位移动画**
-```   
+```swift
 
 
     static private func buttonsAnimation(buttons: [UIView]) {
@@ -138,7 +138,7 @@ view 的一些动画，大部分简单的动画就不再介绍。
 ## Manager
 
 #### 调用系统分享
-```
+```swift
     // MARK: - 系统
     //系统分享传入[String, UIImage, URL]
     //注意:系统分享qq会调用URL 对应的web更新数据,若没有对应web页（非 H5页）会显示异常
@@ -165,7 +165,7 @@ view 的一些动画，大部分简单的动画就不再介绍。
 
 
 #### 调用微信分享(建议优化使用 model)
-```
+```swift
 
     fileprivate func share(type: Int, title: String, content: String?, image: UIImage?, url: String) {
         if !WXApi.isWXAppInstalled() {
@@ -239,7 +239,7 @@ view 的一些动画，大部分简单的动画就不再介绍。
 
 
 #### 压缩图片等方法
-```
+```swift
     // MARK: - 通用
     fileprivate func imageCompressSize(image: UIImage, size length: CGFloat) -> UIImage {
         guard image.size.width > length || image.size.height > length else { return image }
@@ -284,7 +284,7 @@ view 的一些动画，大部分简单的动画就不再介绍。
 
 #### 分享回调
 
-```   
+```swift
     // MARK: - SDK回调
     extension AppDelegate: WXApiDelegate {
 

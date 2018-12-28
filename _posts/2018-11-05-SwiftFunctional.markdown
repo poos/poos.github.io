@@ -83,7 +83,7 @@ typealias MutableAttributeFunc = (NSMutableAttributedString) -> NSMutableAttribu
 
 函数传入一个 font， 返回一个函数类型。
 
-```
+```swift
 func font(_ font: UIFont) -> MutableAttributeFunc {
     return { attString in
         attString.addAttribute(.font, value: font, range: NSRange.init(location: 0, length: attString.length))
@@ -110,7 +110,7 @@ let titleOne = font(attS)
 
 更多的 lineSpace, 插入 image, underLine, 大小字符串等，本文作为例子暂时没有实现。
 
-```
+```swift
 func color(_ color: UIColor) -> MutableAttributeFunc {
     return { attString in
         attString.addAttribute(.foregroundColor, value: color, range: NSRange.init(location: 0, length: attString.length))

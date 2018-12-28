@@ -38,7 +38,7 @@ Operator - 创建变化组合事件
 Disposable - 管理绑定（订阅）的生命周期
 Schedulers - 线程队列调配
 
-```
+```swift
 
 // Observable<String>
 let text = usernameOutlet.rx.text.orEmpty.asObservable()

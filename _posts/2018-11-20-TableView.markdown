@@ -87,7 +87,7 @@ Color Offscreen-Rendered
 
 **组件提供通用 init 方法，然后使用方分类实现 convenience init（传入 model / type）**
 
-```
+```swift
 extension ButtonNode {
     enum NodeType {
         case vote
@@ -151,7 +151,7 @@ extension ButtonNode {
 在 swift 下可以使用函数式方便的组合处理
 [Swift 函数式编程（1）  《函数式 Swift》书籍学习，函数式编程介绍，实现，应用； NSMutableAttributeString 封装函数式  ](https://poos.github.io/2018/11/05/SwiftFunctional/)
 
-```
+```swift
 // 组合函数
 let titleOne = font(.systemFont(ofSize: 13)) >>> color(.red)
 
@@ -209,7 +209,7 @@ label.attributedText = titleOne(attS)
 
 - UI 状态在加载前中后有不同的显示，定义一个加载状态枚举，这样在 vc 中根据状态进行处理
 
-```
+```swift
 enum FollowTabViewModelLoadState {
     case begin
     case noNet
@@ -220,7 +220,7 @@ enum FollowTabViewModelLoadState {
 
 除此之外会 **定义加载类型的枚举**, 这样 根据这两个状态就可以准确的显示 UI 了
 
-```
+```swift
 enum FollowTabViewModelLoadType {
     case suggestUser
     case feed
@@ -236,7 +236,7 @@ enum FollowTabViewModelLoadType {
 
 像创建数据模型一样，对各个 section 创建类型，通过 section 区分当前组的数据类型
 
-```
+```swift
 struct SectionData {
     let type: FollowingSectionType
 

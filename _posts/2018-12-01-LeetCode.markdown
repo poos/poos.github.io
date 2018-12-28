@@ -18,7 +18,7 @@ tags:                                #标签
 
 #### Two Sum
 
-```
+```swift
 Given an array of integers, return indices of the two numbers such that they add up to a specific target.
 
 You may assume that each input would have exactly one solution, and you may not use the same element twice.
@@ -44,7 +44,7 @@ return [0, 1].
 
 利用一个 hash 表来存储另一半，在遍历的过程中找到另一半即结束。代码如下：
 
-```
+```swift
 func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
 
     var hash: [Int : Int] = [:]
@@ -81,7 +81,7 @@ ps： [算法的时间复杂度和空间复杂度](http://www.cnblogs.com/songQQ
 
 #### Add Two Numbers
 
-```
+```swift
 You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
 
 You may assume the two numbers do not contain any leading zero, except the number 0 itself.
@@ -95,7 +95,7 @@ Explanation: 342 + 465 = 807.
 
 这段代码的难度为 中 ，主要是理解链表含有即可。代码中对应的链表节点模型如下：
 
-```
+```swift
 public class ListNode {
     public var val: Int
     public var next: ListNode?
@@ -112,7 +112,7 @@ public class ListNode {
 为了解决相加超过 10，进一位的问题，可以提前创建 next 并确定值为 1，下次相加即可。（同样乘法也可以是这个思路了）。
 最终的解题代码如下：
 
-```
+```swift
 func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
     guard let n1 = l1 else {
         return l2
@@ -142,7 +142,7 @@ func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
 
 测试时候可以用类似如下的代码进行测试
 
-```
+```swift
 
 let two = ListNode.init(2)
 let four = ListNode.init(4)
@@ -164,7 +164,7 @@ print("\(result2?.val)->\(result2?.next?.val)->\(result2?.next?.next?.val)")
 
 #### 最长不重复子字符串
 
-```
+```swift
 3. Longest Substring Without Repeating Characters
 
 Share
@@ -197,7 +197,7 @@ Explanation: The answer is "wke", with the length of 3.
 思路：遍历一遍，并且记录子字符串，如果有包含则去除包含的 prefix 部分；不包含追加一个字符。
 
 
-```
+```swift
 func lengthOfLongestSubstring(_ s: String) -> Int {
         var num = 0
         var subString = String()
@@ -222,7 +222,7 @@ func lengthOfLongestSubstring(_ s: String) -> Int {
 
 #### 两个列表的中位数
 
-```
+```swift
 Median of Two Sorted Arrays
 
 There are two sorted arrays nums1 and nums2 of size m and n respectively.
@@ -263,7 +263,7 @@ Share my O(log(min(m,n)) solution with explanation](https://leetcode.com/problem
 
 这个算法的效率极高，复杂度为O（log min（m,n）），是处于 O（log n）级别的算法。**优于线性复杂度的。**
 
-```
+```swift
 
 func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
         if nums1.count > nums2.count {
@@ -348,7 +348,7 @@ Output: "bb"
 
 代码如下:
 
-```
+```swift
 func longestPalindrome(_ s: String) -> String{
     guard s.count > 0 else{
         return ""

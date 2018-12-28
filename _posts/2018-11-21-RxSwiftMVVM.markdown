@@ -35,7 +35,7 @@ MVVM：MVP 的更进一步版本，view 和 model 通过绑定进行通信和同
 
  例子中采用的是 RxSwift + MVVM 的 input-output 设计。实际上，不一定要使用 Reactive 框架，通过输入输出的约束，也可以方便测试。只不过需要处理的事件可能会多一倍（因为有些地方是需要双向绑定的）。
 
-```
+```swift
 public protocol ButtonViewModelInputs {
     var taps: PublishSubject<Void>{ get }
 }
@@ -64,7 +64,7 @@ final class ButtonViewModel: ButtonViewModelType, ButtonViewModelInputs, ButtonV
 
 可以看出这个同样是基于 RxSwift + MVVM 的，但是这个模式同样适用于非 Rx 的模式。通过事件，处理事件，产生最终的页面状态（不使用 rx 就需要在最后一步自己读取 VM / P 的状态进行加载）。
 
-```
+```swift
 final class TextReactor: Reactor {
 
     enum Action {

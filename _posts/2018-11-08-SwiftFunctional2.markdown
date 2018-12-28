@@ -25,7 +25,7 @@ Swift 中的 Array 和 Dictionary 具有 map，fliter，reduce 等高阶函数�
 Swift 标准库已经实现了 map 函数 (基于 SequenceType 协议被定义，需要了解一下生成器和序列的知识)
 如果 **自己实现一个 map 函数** 大概是如下代码
 
-```
+```swift
 extension Array {
     func map2<T>(transform: (Element) -> T) -> [T] {
         var result: [T] = []
@@ -39,7 +39,7 @@ extension Array {
 
 代码里边的 T 即是一个 **泛型** ，在调用时候给出确定的类型即可。调用示例如下：
 
-```
+```swift
 let exampleFiles = ["README.md", "HelloWorld.swift", "FlappyBird.swift"]
 
 
@@ -52,7 +52,7 @@ print(map3)
 
 为什么用 3 ，因为有更加简便的书写方式，Swift 可以用 “$0” 等价为闭包中的第一个元素，“$1”...这算一种语法糖。
 
-```
+```swift
 let map2 = exampleFiles.map2 { $0.count }
 print(map2)
 
@@ -62,7 +62,7 @@ print(map2)
 
 调用系统的 map 函数跟上边自己实现的是差不多的
 
-```
+```swift
 let map = exampleFiles.map { $0.count }
 print(map)
 //[9, 16, 16]
@@ -90,7 +90,7 @@ print(map)
 
 **注意：例子3使用了两个高阶函数链式调用，这会使整个表达式的复杂的上升（O(n*n)）。**
 
-```
+```swift
 
 let exampleFiles2 = [exampleFiles, [""], exampleFiles]
 
@@ -120,7 +120,7 @@ print(flatMap4)
 
 我们可以利用自己的 map 函数，验证组合函数的情况下，数组的遍历实际执行了几次
 
-```
+```swift
 extension Array {
     func map2<T>(transform: (Element) -> T) -> [T] {
         var result: [T] = []
@@ -142,7 +142,7 @@ print(map4)
 
 筛选函数
 
-```
+```swift
 let filter = exampleFiles.filter({ $0.hasSuffix(".swift") })
 print(filter)
 //["HelloWorld.swift", "FlappyBird.swift"]
@@ -159,7 +159,7 @@ print(filter)
 
 **result[key, default: 0] += 1，这个语法糖在碰到 key 的情况下将 Int 型的 Value 加 1**
 
-```
+```swift
 
 var reduceR = exampleFiles.reduce("") { (total, item) -> String in
     if total.count == 0 {
@@ -185,7 +185,7 @@ print(reduceInto)
 
 map - flatMap - 例子2，因为链接高阶函数导致复杂度提升的问题，我们可以用 reduce 和 map 函数组合 **修改转换** 实现。
 
-```
+```swift
 let reduceInto2 = exampleFiles2.reduce(into: [Int]()) { (result, item) in
     return result += item.map({ $0.count })
 }

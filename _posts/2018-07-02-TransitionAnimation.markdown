@@ -37,7 +37,7 @@ TransitionTreasury 是一个开放的项目，有一些作者提供了一些更�
 
 继承 UINavigationController 然后重新 push 和 pop 的方法。在代理中使用自己的动画。
 
-```
+```swift
 
 class NavigationViewController: UINavigationController {
     let navigationAnimatedTransitioning = NavigationAnimatedTransitioning()

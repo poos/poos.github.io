@@ -51,7 +51,7 @@ http://xx.local:4000/test/app
 iOS 的 ipa 可以通过链接（ex：itms-services://?action=download-manifest&url=https://xxx/xx.plist）去请求 itunes 安装app（没有静态网页直接请求这个链接，或者生成二维码在相机扫码即可下载 ipa）。
 
 plist 文件格式如下： 有两个对象一个存储 ipa 和图片，另一个对象存储 app identifier 和 版本信息，plist 代码稍后在下边列出。
-```
+```swift
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">

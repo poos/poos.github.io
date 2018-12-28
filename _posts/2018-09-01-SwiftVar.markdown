@@ -15,7 +15,7 @@ tags:                                #标签
 
 在一些类中经常会见到这样的写法：虽然使用的 var 修饰变量，但是只是在 init 方法中修改了一次，其他时候都是 get并没有重新 set。
 
-```
+```swift
 class A {
     var a = ""
 
@@ -33,7 +33,7 @@ class A {
 
 首先是3种定义方式
 
-```
+```swift
 class A {
     var a = ""
 
@@ -70,7 +70,7 @@ class D {
 
 接下来对3种方式生成的对象进行 init 和 get 测试
 
-```
+```swift
     //分别返回 a，b，c 强制解包方式和 c 非强制解包的测试时间（1000次）
     func once() -> (TimeInterval, TimeInterval, TimeInterval, TimeInterval, TimeInterval, TimeInterval) {
 
@@ -131,7 +131,7 @@ class D {
 
 对上边的 1000 次测试运行 10 次取平均值
 
-```
+```swift
     func check() {
         var ats: Double = 0
         var bts: Double = 0

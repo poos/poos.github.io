@@ -63,15 +63,17 @@ brew install sourcery
 
 ##### 编写脚本
 
+**注意本文中的脚本加了一些""，用以防止更 jekyll 脚本冲突，具体例如："{"{"，"{"%"，"%"}"，"}"}"，**
+
 在同一级目录创建一个后缀名为 .stencil 的文件，然后在其中编写脚本代码，脚本语法在文章开头部分已经提过。值得注意的是，如果你将文件命名为 AutoEquatable.stencil，那么将生成一个名字为 AutoEquatable.generated.swift 的文件用于存放 Person 的分类脚本。所以通常可以直接命名为 Model.stencil
 
 在其中写下如下脚本，大概可以看出意思是, 循环遍历所有的属性，生成了 guard value == value else { return false } 的代码
 
-```
-public static func ==(lhs: {{ type.name }}, rhs: {{ type.name }}) -> Bool {
-    {% for var in type.variables %}
-    guard lhs.{{ var.name }} == rhs.{{ var.name }} else { return false }
-    {% endfor %}
+```swift
+public static func ==(lhs: "{"{" type.name "}"}", rhs: "{"{" type.name "}"}") -> Bool {
+    "{"%" for var in type.variables "%"}"
+    guard lhs."{"{" var.name "}"}" == rhs."{"{" var.name "}"}" else { return false }
+    "{"%" endfor "%"}"
 
     return true
 }
@@ -124,30 +126,30 @@ extension Person: Equatable {
 
 文中的模板代码如下：
 
-```
+```swift
 import ObjectMapper
 
-{% for type in types.implementing.AutoMappable|struct %}
-// MARK: {{ type.name }} Mappable
-extension {{type.name}}: Mappable {
+"{"%" for type in types.implementing.AutoMappable|struct "%"}"
+// MARK: "{"{" type.name "}"}" Mappable
+extension "{"{"type.name"}"}": Mappable {
 
     init?(map: Map) {
         return nil
     }
 
     mutating func mapping(map: Map) {
-    {% for variable in type.storedVariables %}
-        {% if variable.isArray %}
-            {{variable.name}} <- map["{{variable.name}}.0.value"]
-        {% elif variable.isDictionary %}
-            {{variable.name}} <- map["{{variable.name}}.value"]
-        {% else %}
-            {{variable.name}} <- map["{{variable.name}}"]
-        {% endif %}
-    {% endfor %}
+    "{"%" for variable in type.storedVariables "%"}"
+        "{"%" if variable.isArray "%"}"
+            "{"{"variable.name"}"}" <- map[""{"{"variable.name"}"}".0.value"]
+        "{"%" "elif" variable.isDictionary "%"}"
+            "{"{"variable.name"}"}" <- map[""{"{"variable.name"}"}".value"]
+        "{"%" else "%"}"
+            "{"{"variable.name"}"}" <- map[""{"{"variable.name"}"}""]
+        "{"%" endif "%"}"
+    "{"%" endfor "%"}"
     }
 }
-{% endfor %}
+"{"%" endfor "%"}"
 
 ```
 
@@ -157,7 +159,7 @@ extension {{type.name}}: Mappable {
 
 如下的模型：
 
-```
+```swift
 protocol AutoMappable {}
 
 //sourcery: mappable
@@ -185,70 +187,70 @@ extension Person: AutoMappable {}
 
 然后就可以进行如下代码的修改
 
-```
+```swift
 import ObjectMapper
 
-{% for type in types.implementing.AutoMappable|struct %}
-// MARK: {{ type.name }} Mappable
-extension {{type.name}}: Mappable {
+"{"%" for type in types.implementing.AutoMappable|struct "%"}"
+// MARK: "{"{" type.name "}"}" Mappable
+extension "{"{"type.name"}"}": Mappable {
 
     init?(map: Map) {
         return nil
     }
 
     mutating func mapping(map: Map) {
-        {% for variable in type.storedVariables %}
-        {% if variable.isArray %}
-        {{variable.name}} <- map["{{variable.name}}.0.value"]
-        {% elif variable.isDictionary %}
-        {{variable.name}} <- map["{{variable.name}}.value"]
-        {% else %}
-        {{variable.name}} <- map["{{variable.annotations.jsonKey|default:variable.name}}"]
-        {% endif %}
-        {% endfor %}
+        "{"%" for variable in type.storedVariables "%"}"
+        "{"%" if variable.isArray "%"}"
+        "{"{"variable.name"}"}" <- map[""{"{"variable.name"}"}".0.value"]
+        "{"%" "elif" variable.isDictionary "%"}"
+        "{"{"variable.name"}"}" <- map[""{"{"variable.name"}"}".value"]
+        "{"%" else "%"}"
+        "{"{"variable.name"}"}" <- map[""{"{"variable.annotations.jsonKey|default:variable.name"}"}""]
+        "{"%" endif "%"}"
+        "{"%" endfor "%"}"
     }
 }
-{% endfor %}
+"{"%" endfor "%"}"
 
 ```
 
 
 **更多**，更多的用法就要看一看语法规则，除了协议，注释，还有很多其他有趣的用法。先发一个上边库中的例子，设计类，变量，方法的编程：
 
-```
+```swift
 
-{% for type in types.based.AutoMockable %}{% if type.kind == 'protocol' %}
+"{"%" for type in types.based.AutoMockable "%"}""{"%" if type.kind == 'protocol' "%"}"
 // ...
 
-{% if not type.name == "AutoMockable" %}
+"{"%" if not type.name == "AutoMockable" "%"}"
 // ...
 
-class {{ type.name }}Mock: {{ type.name }} {
+class "{"{" type.name "}"}"Mock: "{"{" type.name "}"}" {
 // 类...
 
-    {% for variable in type.allVariables %}
+    "{"%" for variable in type.allVariables "%"}"
     // 属性...
 
-    var {{ variable.name }}: {{ variable.typeName }}
+    var "{"{" variable.name "}"}": "{"{" variable.typeName "}"}"
     // ...
 
-    {% for method in type.allMethods %}
+    "{"%" for method in type.allMethods "%"}"
     // 方法...
 
-    {% if not method.shortName == "init" %}var {{ method.shortName }}Called = false{% endif %}
+    "{"%" if not method.shortName == "init" "%"}"var "{"{" method.shortName "}"}"Called = false"{"%" endif "%"}"
     // ...
 
-    {% if method.parameters.count == 1 %}var {{ method.shortName }}Received{% for param in method.parameters %}
+    "{"%" if method.parameters.count == 1 "%"}"var "{"{" method.shortName "}"}"Received"{"%" for param in method.parameters "%"}"
     // 参数...
 
-    {{ param.name|upperFirst }}: {{ param.typeName.unwrappedTypeName }}?{% endfor %}{% else %}{% if not method.parameters.count == 0 %}var {{ method.shortName }}ReceivedArguments: ({% for param in method.parameters %}{{ param.name }}: {% if param.typeAttributes.escaping %}{{ param.unwrappedTypeName }}{% else %}{{ param.typeName }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %})?{% endif %}{% endif %}
-    {% if not method.returnTypeName.isVoid and not method.shortName == "init" %}var {{ method.shortName }}ReturnValue: {{ method.returnTypeName }}!{% endif %}
+    "{"{" param.name|upperFirst "}"}": "{"{" param.typeName.unwrappedTypeName "}"}"?"{"%" endfor "%"}""{"%" else "%"}""{"%" if not method.parameters.count == 0 "%"}"var "{"{" method.shortName "}"}"ReceivedArguments: ("{"%" for param in method.parameters "%"}""{"{" param.name "}"}": "{"%" if param.typeAttributes.escaping "%"}""{"{" param.unwrappedTypeName "}"}""{"%" else "%"}""{"{" param.typeName "}"}""{"%" endif "%"}""{"%" if not forloop.last "%"}", "{"%" endif "%"}""{"%" endfor "%"}")?"{"%" endif "%"}""{"%" endif "%"}"
+    "{"%" if not method.returnTypeName.isVoid and not method.shortName == "init" "%"}"var "{"{" method.shortName "}"}"ReturnValue: "{"{" method.returnTypeName "}"}"!"{"%" endif "%"}"
     // 更多
 
-{% endfor %}
+"{"%" endfor "%"}"
 }
-{% endif %}{% endif %}
-{% endfor %}
+"{"%" endif "%"}""{"%" endif "%"}"
+"{"%" endfor "%"}"
 
 ```
 
@@ -281,7 +283,10 @@ sourcery --sources SingleView --templates SingleView --output SingleView -- watc
 ```
 
 
+**注意本文中的脚本加了一些""，用以防止更 jekyll 脚本冲突，具体例如："{"{"，"{"%"，"%"}"，"}"}"，**
+
 ### 总结
+
 
 一路走来，踩了不少坑，后边的路也还有很远，算是入了个门吧。最后给大家一些建议。
 

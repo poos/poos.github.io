@@ -63,7 +63,7 @@ tags:                                #标签
 
 2. 代理方法监听
 
-```
+```swift
 func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
         let appName: String = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String
         if appName.contains("tencent.xin") {
@@ -121,7 +121,7 @@ https://*.xxx.com
 
 我在 [stackoverflow](https://stackoverflow.com/questions/28101582/how-to-programmatically-add-a-proxy-to-an-nsurlsession/37466532) 找到了如下的代码：
 
-```
+```swift
 let proxyHost = "192.168.1.226"
 let proxyPort = 8888
 let configuration = URLSessionConfiguration.default
@@ -145,7 +145,7 @@ kCFNetworkProxiesHTTPSPort: proxyPort
 
 将上边的代码替换到下边即可, 原理是直接找了 key 对应的字符串的值，而进行设置
 
-```
+```swift
 let proxyHost = "192.168.1.226"
 let proxyPort = 8888
 let configuration = URLSessionConfiguration.default

@@ -23,7 +23,7 @@ iOS 11以后需要调整layoutMargins值。
 
 
 参考代码如下：
-```
+```swift
 
 
 #### 唯一需要注意的地方就是在iOS 11以下使用”hideRightNavigationBar“需要hideButtons，原因上边已经写出了

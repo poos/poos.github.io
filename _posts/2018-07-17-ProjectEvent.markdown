@@ -119,7 +119,7 @@ key 的 enum
 
 3. 使用链式编程
 
-```
+```swift
 class EventManage {
     //事件名
     enum EventId: String {

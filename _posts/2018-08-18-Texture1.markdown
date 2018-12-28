@@ -21,7 +21,7 @@ tags:                                #标签
 
 但是通常我们只需要关心下面几个方法
 
-```
+```swift
 //重写初始化方法以传入需要的参数
 init() {
 }
@@ -60,7 +60,7 @@ override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec
 
 可以通过枚举方便的确定类型
 
-```
+```swift
 private enum PicturesStyle {
     case larage
     case small
@@ -79,7 +79,7 @@ private enum PicturesStyle {
 
 单个 cell 创建比较简单，传入图片 url 和 需要在 collection 中显示的方格的自身宽带
 
-```
+```swift
 private class CollectionCellNode: ASCellNode {
     let imageNode = NetworkImageNode().then { (node) in
         node.defaultImage = UIImage.init(named: "cardPlaceholder")
@@ -114,7 +114,7 @@ private class CollectionCellNode: ASCellNode {
 
 如果是单个图就直接返回图片；如果是多个图片就返回 collectionView，并且设置大小为 contentSize 即可完整显示。
 
-```
+```swift
 class PicturesView: ASDisplayNode {
 
     let imagePaths: [String]
