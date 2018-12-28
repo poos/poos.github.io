@@ -16,7 +16,7 @@ tags:                                #标签
 
 不多说，从题目解题过程中来学习算法的知识吧。
 
-#### Two Sum
+### Two Sum
 
 ```swift
 Given an array of integers, return indices of the two numbers such that they add up to a specific target.
@@ -38,7 +38,7 @@ return [0, 1].
 复杂度为 O(n^2) ，处于 平方级别的复杂度。
 
 
-##### 最优解
+#### 最优解
 
 解法二：
 
@@ -66,7 +66,7 @@ func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
 
 事件复杂度可降为 O（n），瞬间释放压力。
 
-##### 时间和空间复杂度
+#### 时间和空间复杂度
 
 复杂度通常取随着技术递增最为迅速的一个，常见的复杂度大小如下：
 
@@ -79,7 +79,7 @@ ps： [算法的时间复杂度和空间复杂度](http://www.cnblogs.com/songQQ
 [算法时间复杂度的计算](https://blog.csdn.net/javatiger427/article/details/6070785)
 
 
-#### Add Two Numbers
+### Add Two Numbers
 
 ```swift
 You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
@@ -107,7 +107,7 @@ public class ListNode {
 
 ```
 
-### 最优解
+#### 最优解
 
 为了解决相加超过 10，进一位的问题，可以提前创建 next 并确定值为 1，下次相加即可。（同样乘法也可以是这个思路了）。
 最终的解题代码如下：
@@ -162,7 +162,7 @@ print("\(result2?.val)->\(result2?.next?.val)->\(result2?.next?.next?.val)")
 
 ```
 
-#### 最长不重复子字符串
+### 最长不重复子字符串
 
 ```swift
 3. Longest Substring Without Repeating Characters
@@ -192,7 +192,7 @@ Explanation: The answer is "wke", with the length of 3.
 难度被标记为 Medium
 
 
-##### 解题
+#### 解题
 
 思路：遍历一遍，并且记录子字符串，如果有包含则去除包含的 prefix 部分；不包含追加一个字符。
 
@@ -220,7 +220,7 @@ func lengthOfLongestSubstring(_ s: String) -> Int {
 
 ```
 
-#### 两个列表的中位数
+### 两个列表的中位数
 
 ```swift
 Median of Two Sorted Arrays
@@ -246,7 +246,7 @@ The median is (2 + 3)/2 = 2.5
 
 ```
 
-##### 解法
+#### 解法
 
 这道题目如果用单纯的思路去做，重新排序, 取中位数，将会有很高的代价。
 
@@ -305,7 +305,7 @@ func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
 
 ```
 
-#### 最长回文字符串
+### 最长回文字符串
 
 ```
 Longest Palindromic Substring
@@ -323,7 +323,7 @@ Input: "cbbd"
 Output: "bb"
 ```
 
-##### 解题
+#### 解题
 
 这道算法题也是有很多的解决方式和答案。
 
@@ -399,7 +399,7 @@ func longestPalindrome(_ s: String) -> String{
 }
 ```
 
-##### 后缀树
+#### 后缀树
 
 在解决这个问题的时候有 大佬提出了使用构建后缀树的解决方式，虽然构建的过程是个复杂的过程，但是一旦构建完成，往往能方便的处理字符串。
 

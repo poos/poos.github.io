@@ -63,7 +63,7 @@ extension A: ShareProtocol, ShareProtocol2 {
 ```
 
 
-### 总结
+#### 总结
 
 通过这种设计，ShareManager更加彻底的负责所有的分享事宜；VC 只是简单调用，页面结构更简单了。
 
