@@ -63,7 +63,7 @@ brew install sourcery
 
 ##### 编写脚本
 
-**注意本文中的脚本加了一些""，用以防止更 jekyll 脚本冲突，具体例如："{"{"，"{"%"，"%"}"，"}"}"，**
+**注意本文中的脚本加了一些""，用以防止跟 jekyll 博客脚本冲突，具体例如："{"{"，"{"%"，"%"}"，"}"}"，**
 
 在同一级目录创建一个后缀名为 .stencil 的文件，然后在其中编写脚本代码，脚本语法在文章开头部分已经提过。值得注意的是，如果你将文件命名为 AutoEquatable.stencil，那么将生成一个名字为 AutoEquatable.generated.swift 的文件用于存放 Person 的分类脚本。所以通常可以直接命名为 Model.stencil
 
@@ -110,7 +110,7 @@ extension Person: Equatable {
 
 ```
 
-的膜比较简单，如果碰到问题可以回顾一下这个博客，里边有详细的步骤。[Sourcery Tutorial: Generating Swift code for iOS](https://www.raywenderlich.com/501-sourcery-tutorial-generating-swift-code-for-ios)
+Demo比较简单，如果碰到问题可以回顾一下这个博客，里边有详细的步骤。[Sourcery Tutorial: Generating Swift code for iOS](https://www.raywenderlich.com/501-sourcery-tutorial-generating-swift-code-for-ios)
 
 
 
@@ -153,7 +153,7 @@ extension "{"{"type.name"}"}": Mappable {
 
 ```
 
-而且可以看到，除了普通参数生成，作者还特意标注了 isArray， isDictionary 的取值方法。但是还是会有问题，如果多个数组需要不同的取值，用这种方式就不能行得通了。
+而且可以看到，除了普通参数生成，作者还特意标注了 isArray， isDictionary 的取值方法。注意如果多个数组需要不同的样式，用这种方式就不能行得通了。
 
 ##### 更好的方式: 使用注释
 
@@ -181,11 +181,9 @@ struct Person {
 extension Person: AutoMappable {}
 ```
 
-可以看到，我在 firstName， lastName 等参数上边写了注释，这也同样是文章开头那篇博客里提到的，但是博客里面缺少太多的示例代码。
+可以看到，我在 firstName， lastName 等参数上边写了注释。使用注释来判断需要修改的参数名字，这也同样是文章开头那篇博客里使用的的。但是尴尬的是博客里面缺少太多的示例代码。
 
-我通过 github 搜索，在 [aichiko0225/LJInstalment](https://github.com/aichiko0225/LJInstalment) 这个工程里面找到了示例
-
-然后就可以进行如下代码的修改
+不过 github 上的千万级开发者一定有人分享了这个，我通过 github 搜索，在 [aichiko0225/LJInstalment](https://github.com/aichiko0225/LJInstalment) 这个工程里面找到了示例，对照着例子就可以进行如下代码的修改。**ps：除了找例子，还有一个好的方式就是去读语法规则的代码**。
 
 ```swift
 import ObjectMapper
@@ -260,14 +258,16 @@ class "{"{" type.name "}"}"Mock: "{"{" type.name "}"}" {
 
 说一下项目集成的事情，查到的博客都是下载包然后在工程用的。其实有更方便的方式，看着 sourcery  github 的介绍，支持 cocoapod 的，于是建了个项目试了试，调了几下，完美运行，果然 cocoapods 是最方便的三方库管理工具。
 
-安装如下的步骤即可使用 cocoapods 导入
+按照如下的步骤即可使用 cocoapods 导入
 
 1. Profile 添加 pod 'ObjectMapper' ，并且导入
 
 2. 项目 build Phases 添加 run Script ；Shell 指向 $PODS_ROOT/Sourcery/bin/sourcery，运行脚本的命令为 sourcery --sources SingleView --templates SingleView --output SingleView
 
 
-这样每次 build 和 run 的时候都会生成最新的模板。
+这样每次 build 和 run 的时候都会生成最新的模板。同样这也是官方提供的方式。
+
+#### 集成的一些建议
 
 **强烈建议使用文件夹区分 model，和模板扩展**
 
