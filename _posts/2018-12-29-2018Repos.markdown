@@ -1,0 +1,176 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      18系列-三方库，学习项目，开发工具             # 标题
+subtitle:   Rx，Texture等三方，项目基础扩展必备，一些好的项目总结，开发工具总结             #副标题
+date:       2018-12-29                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 总结
+- 库
+- 工具
+---
+
+>  从年初转到 SWift 开发，已经差不多一个年头了，正好也是年底，作个总结，也算是应景。
+
+这篇博客用于总结今年的写的博客涉及的三方库和工具，**更多的是整理一下其他博客中未提到的资料**
+
+### 博客中的内容
+
+ 大部分的博客内容都可以在这里找到：
+
+ [分类浏览](https://poos.github.io/tags)
+
+主要涉及了 **RxSwift**,  **Texture**,  **swiftlint**,  **Sourcery**,  **CTMdeiator**,  **NavigationMap** 的学习和使用
+
+ ![ant_design](https://poos.github.io/img/2018_poos_github_io.png)
+
+
+### 未提到的库
+
+一些值得提一提，又没必要单独拎出来的写博客的内容
+
+#### 一些项目必备的库
+
+写了几个，最后发现不容易区分博客提到了没有，不如多写一些吧
+
+```
+AEXML // xml 解析
+
+Kingfisher // 图片缓存库
+
+Texture // 异步绘制 UI 库
+
+Moya //网络请求框架
+
+RxSwift //响应式框架
+
+ReactorKit // 基于 rx 的事件流设计框架
+
+SnapKit // auto layout 框架
+
+SwiftLint // 语法风格约束
+
+ReusableKit // 方便的注册和使用tableView
+
+URLNavigator //注册 url ，跳转
+
+ObjectMapper // json解析model
+
+SV/MDHud // 提醒
+
+Sourcery // 元编程
+
+Then // 代码闭包，语法糖
+
+ManualLayout // 手动布局 frame 等扩展
+
+```
+
+### 一些好的项目
+
+摘录一些值得学习研究的项目，有些不出名，但是写的还是非常不错的，作为入门学习是非常好的。**都可以在 github 上找到**。
+
+**跟上边重复的就不写了**
+
+#### 组件化 三方库
+
+CTMSwfitDemo-master
+CTMediator-master
+
+#### RxSwift 和 可以使用的框架
+
+ReactorKit-master
+ResponsiveLabel-master  
+
+GithubClientDemo_swift4_moya_mvvm
+LJInstalment-Sourcery  
+RxSwiftExamples
+RxSwiftStudy-Learn  
+RxTable_refresh
+RxTodo  
+boilerplate-master  
+
+
+#### Sourcery  已经在使用的项目
+
+Sourcery
+SourceryTutorial-Demo
+sourcery-templates
+
+#### 动画
+
+HHTransition-master
+LVAnimator-master
+fluid-interfaces-master
+
+#### 安装包优化相关
+
+ImageOptim  
+LSUnusedResources-master  
+SMCheckProject-master
+SameCodeFinder-master
+XcodeProjectArrangementTool-master  
+jre-8u171-macosx-x64.dmg  
+
+#### 运行时统计埋点
+
+AOPTrack-master
+SwiftAspects-master
+埋点测试  
+
+#### Texture 学习
+
+MMTextureChat-master  
+Texture-master  
+TextureDemo-master  
+
+#### 函数式
+
+functional-swift-master
+
+#### 其他
+cvvm //mvvm 格式 Demo
+
+
+### 工具
+
+一些常用的抓包之类的就不再重复写了。
+
+
+#### WebDriverAgent
+
+用于查看界面视图，也可以用作 UI 测试：
+
+[使用WebDriverAgent学习其他app布局,自动化测试](https://poos.github.io/2018/07/07/WebDriverAgent/)
+
+
+#### Safari 调试 Webview
+
+[客户端的外部调试：JS 调试，应用互调调试，抓包和代理调试](https://poos.github.io/2018/11/12/ProjectConnectTest/)
+
+
+#### fastlane
+
+[Fastlane，App配置和部署的利器](https://poos.github.io/2018/07/24/Fastlane/)
+
+
+#### Atom
+
+编程和编辑博客利器。
+
+#### Xcode 扩展
+
+**Paste JSON as Code • quicktype** ：  json 转 model，生成代码。配合 4.1+ 的原生解析非常方便。
+
+**AlignmentForXcode** ：代码对齐
+
+#### 图片压缩
+
+基本博客图片压缩都在这里： https://tinypng.com
+
+
+### 最后
+
+项目使用起来都是比较方便的，也建议了解一下原理。
