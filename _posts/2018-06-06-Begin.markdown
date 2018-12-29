@@ -114,7 +114,7 @@ continue...
 ---
 ```
 
-至此也刚刚好总结10条，也算是见证了我成长的过程吧。喜欢的话去**[github/poos](https://github.com/poos)**Star 一下。
+至此也刚刚好总结10条，也算是见证了我成长的过程吧。喜欢的话去 **[github/poos](https://github.com/poos)** Star 一下。
 
 
 ---
@@ -160,19 +160,11 @@ flutter 新的移动端语言
 ```
 
 
-### 已经归类总结的部分
-#### 设计
-[**app打点框架  & Aspects 运行时 -> Swift项目打点**](https://poos.github.io/2018/07/17/SwiftEvent/)
-#### 基础
-[**Swift理论和基础 -> Swift基础中需要注意的点**](https://poos.github.io/2018/09/09/SwiftLearning/)
-#### 优化
-[**图片 & 代码 & 设置-> 项目优化-瘦身**](https://poos.github.io/2018/06/16/ProjectPackage/)
-#### 工具
-[**WebDriverAgent  && 脚本 -> 使用WebDriverAgent学习其他app布局,自动化测试**](https://poos.github.io/2018/07/07/WebDriverAgent/)
-#### 轮子
-[**Swift通过swizzleMethod无痕处理NavItem的点击范围**](https://poos.github.io/2018/07/01/UINavItem)
+### 已经完成的
 
+[poos.github.io/tags tag 分类](https://poos.github.io/tags/)
 
+![ant_design](https://poos.github.io/img/2018_poos_github_io.png)
 
 
 ---

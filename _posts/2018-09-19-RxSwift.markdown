@@ -30,6 +30,19 @@ RX 上传手之后需要多查文档才能发现好的用法，另外多看看 R
 
 #### [中文文档 ：RxSwift: ReactiveX for Swift](https://beeth0ven.github.io/RxSwift-Chinese-Documentation/)
 
+ps： [reactivex.io](http://reactivex.io/documentation/operators.html)
+可以看到系列包含很多语言的
+```
+RxJava
+C
+RxJSc
+Rx.NETC
+RxScala
+RxClojure
+RxSwiftC
+Others
+```
+
 
 #### 核心
 Observable - 产生事件

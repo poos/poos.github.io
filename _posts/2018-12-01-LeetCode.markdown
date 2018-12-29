@@ -12,6 +12,8 @@ tags:                                #标签
 
 > 在了解到 leetcode 这个网站之后，也是去刷了几个算法题。网站功能强大，可以在线编写测试提交，更强大的是有最佳算法的排行，还有很多答案和解释，每一个问题都能找到很好的解题思路和更加优秀的答案。
 
+之前也在一些中文算法网站上做了一些算法题。最近起源于了解了一个 github 库，将算法以动画的方式呈现， **[MisterBooo/LeetCodeAnimation](https://github.com/MisterBooo/LeetCodeAnimation)** ，我也是在这里了解到了 leetcode。网站上做了一些题，发现真的是非常活跃，建议有兴趣的一定去看看。
+
 网址在这里 ： [https://leetcode.com](https://leetcode.com/problems/two-sum/)
 
 不多说，从题目解题过程中来学习算法的知识吧。

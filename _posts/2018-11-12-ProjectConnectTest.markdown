@@ -114,6 +114,11 @@ https://*.xxx.com
 
 ![img](https://img.yzcdn.cn/public_files/2018/04/18/1450c9728e75cbbe6f6532370cc36ecf.png)
 
+
+#### 网速限制
+
+网速限制还有另外一个专用的工具可以考虑 [调试网络限速](https://blog.csdn.net/zhai19931004/article/details/52127685)
+
 ### 后续：代码设置代理
 
 

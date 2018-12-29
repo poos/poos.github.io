@@ -841,3 +841,7 @@ convenience
 repeat { //take input from io standard into n } while n <= 10
 
 @discardableResult
+
+### 学习中找到的 3.0 的资料
+
+[swift3 数据类型](https://www.jianshu.com/p/a53429e4e2f3)

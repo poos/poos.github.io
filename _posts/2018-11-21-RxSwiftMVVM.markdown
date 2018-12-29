@@ -8,6 +8,7 @@ header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
 - 设计
+- RxSwift
 ---
 
 ### 设计模式
@@ -136,7 +137,7 @@ model 部分最多可以分为3部分，一般分为2部分。
 
 #### 2. View 部分
 
-- 创建某个页面的类簇，通过类簇生成页面所需的 view
+- 创建某个页面的类簇，通过类簇生成页面所需的 view ，[工厂设计模式的探讨——iOS类簇的应用分析](https://my.oschina.net/u/2340880/blog/508212)
 
 - view 创建处于一个类，且应当不包含 model 信息
 

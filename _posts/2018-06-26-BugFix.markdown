@@ -65,11 +65,15 @@ tags:                                #标签
 
 ### dSYM 崩溃日志
 
-主要可以参考这篇博客 [app上架appStore之后bug crash 手动定位奔溃位置](https://www.jianshu.com/p/61359b2d1da8)
+主要可以参考这篇博客 [app上架appStore之后bug crash 手动定位奔溃位置](https://www.jianshu.com/p/61359b2d1da8)，这一篇博客也有一个简单的教程[iOS使用dSYM文件和堆栈信息定位bug](https://www.jianshu.com/p/bb09caa821a4)
 
 我的博客 Demo 也有工具 [poos/BlogDemo/BugFix](https://github.com/poos/BlogDemo/tree/master/BugFix)
 
 内容比较琐碎，就不说了。
+
+#### 关于 signal SIGSEGV
+
+一版是越界等错误，参考这里 [Application received signal SIGSEGV  Application received signal SIGBUS](https://www.jianshu.com/p/0aad4dd022e1)
 
 ### 在 Xcode 工具中查看崩溃日志
 
