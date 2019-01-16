@@ -433,3 +433,6 @@ func longestPalindrome(_ s: String) -> String{
 > 在自己的世界中很容易满足，看过外边的风景才会发现自己的狭隘。
 
 不断比较学习才能提高自己，尤其是在探寻的过程中找到的乐趣才是最有意思的。先暂时写这些算法了，等到有空时候自己再去探究更新下一个博客。
+
+
+**[本文所有 工具 和 代码 地址](https://github.com/poos/BlogDemo/LeetCode)**
