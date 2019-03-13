@@ -1,0 +1,178 @@
+---
+layout:     post                          # 使用的布局（不需要改）
+title:      app 公共弹窗的控制               # 标题
+subtitle:   HUD，Alert，Sheet，权限申请弹窗，消息页面跳转等   #副标题
+date:       2019-02-19                # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 设计
+---
+
+
+一个 app 通常会有很多类型的弹出窗口，但是当这些弹出窗口一起出现时候就会造成差用户体验。
+
+本章期望对这些弹窗做一个整理，寻找一种好的设计来整理这方面的代码。
+
+### 场景
+
+副标题已经列出了常见的几种类型：
+- **HUD**，通常用于请求成功或者失败的提醒
+- **Alert**，通常用于用户退出、取消和其他动作的确认
+- **Sheet**，通常用于给用户提供不同的选择，包含 **分享弹出**
+- **权限申请**，info.plist管理的权限弹窗
+- **活动**、红包的弹出
+- **新消息**、口令码，邀请用户跳转
+
+可以看出，**除了 HUD 的提醒用户是不需要操作的，其他提醒都是用户需要交互的** ，相应的，**HUD 的层叠或者更新并不会影响用户的体验，而其他有用户交互的弹窗多个层叠，会严重影响用户体验**
+
+
+### HUD
+
+对于 HUD 类的，我们不需要担心相互影响的问题。我们只需要注意，**HUD 可能在很多页面同时出现**， **HUD 会发生状态切换**。例如很多页面会有一个 转圈的动作表示正在加载，加载完成会切换为成功的提醒。**有一些含有加载状态的控件（例如按钮）也是如此**
+
+为此，我们定义一个通用协议
+
+
+```swift
+enum HUDProgressType {
+    case success
+    case failed
+    case progress
+}
+
+protocol HUDProtocol {
+    func show()
+    func hide()
+    func changeTo(_ type: HUDProgressType)
+}
+
+```
+
+一个 **HUD类的创建** ，只需要 **遵守这个协议，实现其中的方法** 即可。例如 加载型页面和加载型按钮，就可以分别实现。
+
+对于一个对象，**使用** 时候通常 **初始化一个 lazy 对象，在合适的时候调用 show()，hide(),changeTo(:) 即可**
+
+### 交互弹窗
+
+交互弹窗通常定义为 **打断或者影响当前的操作**，所以多个打断的出现会造成错乱。常见的是 APP 首次安装启动时候弹出很多窗口，APP 启动时候用户弹窗和活动弹窗的影响，键盘输入和消息跳转的影响，正在进行分享操作受到消息提醒的影响等。
+
+为了解决这一问题我们同样使用一个简单的 **协议来规范弹窗接口** ，使用一个 **管理类来集中处理弹窗**
+
+大概是以下样式的：
+
+```swift
+
+protocol AlertProtocol {
+    var didHide: () -> Void { get set }
+    var priority: Int { get set }
+
+    func show()
+}
+
+class AlertManager {
+    private var alerts = [AlertProtocol]()
+
+    func showAlert(_ alert: AlertProtocol) {
+      //...
+    }
+}
+
+```
+
+
+#### 协议和遵守协议的类
+
+协议由一个 **show()** 方法和 **var priority** 和 **var didHide** Closure 构成。
+
+通过开放这些个接口，他的管理者就可以适时的将窗口弹出。使用 priority 就可以控制弹窗弹出的顺序。
+
+
+重新提一句，遵守协议的类可能是以下这些类：
+
+- **Alert**，通常用于用户退出、取消和其他动作的确认
+- **Sheet**，通常用于给用户提供不同的选择，包含 **分享弹出**
+- **权限申请**，info.plist管理的权限弹窗
+- **活动**、红包的弹出
+- **新消息**、口令码，邀请用户跳转
+
+这样我们可以 **分别创建这些类的父类，并且在父类遵守这些协议，实现通用的接口部分**。
+
+通常我们还在父类中实现一些关于UI、动画的等基础操作，让整个 app 的格调更加相似。
+
+
+**Sheet 父类可以创建 back view，用于解决异形屏的底部视图**
+
+
+#### Mangger 部分
+
+Mangger 部分承担了大量的调剂工作，可以预料会比较复杂，包含很多参数。一个简略的 Manager 类应该是这样的：
+
+```swift
+
+class AlertManager {
+
+    private var timer: Timer?
+
+    private var isShow = false
+
+    private var alerts = [AlertProtocol]()
+
+    private var didAddPrama = [Int: Int]()
+
+    func showAlert(_ alert: inout AlertProtocol) {
+
+        let value = didAddPrama[alert.priority]
+        let newValue = value ?? -1 + 1
+        didAddPrama[alert.priority] = newValue
+        alert.priority = alert.priority * 100 + newValue
+
+        alerts.insert(alert, at: 0)
+        alerts = alerts.sorted(by: { $0.priority < $1.priority })
+        timeRepeat()
+    }
+
+    init() {
+        timer = Timer.init(timeInterval: Double(1), target: self, selector: #selector(timeRepeat), userInfo: nil, repeats: true)
+        RunLoop.main.add(timer!, forMode: RunLoop.Mode.default)
+    }
+
+    deinit {
+        timer?.invalidate()
+        timer = nil
+    }
+
+    @objc func timeRepeat() {
+        guard alerts.count > 0, !isShow else { return }
+        guard var alert = alerts.first else { return }
+
+        alert.show()
+        alert.didHide = { [weak self] in
+            self?.isShow = false
+        }
+        isShow = true
+        self.alerts.removeFirst()
+    }
+}
+```
+
+整体流程是从队伍中拿出一个 Alert 显示，让后当 Alert 显示结束时候，从队伍中拿出第一个继续显示。
+要点两点一是 **队列调整** 部分，和 **轮询显示** 部分。
+
+**队列部分** ：为了遵循先来后到的队列方式，我使用了 didAddPrama 这个键值对用来记录已经添加的 priority 的个数，然后将下一个 priority 相同值的 标记，在数组重新排序时候排到相同值的最后一个。
+
+**轮询显示** ：将计时器加入 RunLoop.Mode.default 模式，这样用户进行 table 滑动的时候就不会弹窗了
+
+**正在输入** ： 如果需要控制在输入的时候不展示弹窗可以在 AlertManager 中开放一个 isEditing 的属性，并且在 time 方法中跳过显示即可。
+
+
+##### 其他
+**队列** 的调整有很多解决方法，文中的方法应该是最懒的一种方法了。最速度的的应该是遍历一遍，然后插入相应的位置，只是代码写起来参数多些，项目中也是推荐这样。还可以考虑跟时间戳挂钩，如果项目已经有全局运行的时间戳的话，这也不失为一个好方法。
+
+**输入** 输入除了对外开放属性，另外一种方式是可以动态的查找正在编辑的窗口，只是这样效率就低了，不再展开。
+
+
+### 总结
+
+整个框架搭下来项目的这一块就变的清晰了，同样一些东西可以以组件的形式复用和扩展，组件不一定是小颗粒，也可以是通用协议框架。

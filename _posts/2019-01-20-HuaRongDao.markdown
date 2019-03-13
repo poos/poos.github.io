@@ -23,7 +23,7 @@ tags:                                #标签
 
 通过制定通用的搜索协议，可以将搜索的算法规范化：某个状态（包含父节点），状态权重，搜索器
 
-```
+```swift
 //某个状态
 protocol SXNodeState {
     var parentState: SXNodeState? { get set }
@@ -64,7 +64,7 @@ protocol SXSeacher {
 
 搜索算法通常以一种 **多叉树** 的形式存在，树的每一个节点如下：**父** 节点，**孩子们** 节点，当前的 **值**， **唯一标识**（用于查询当前节点是否被查询过）
 
-```
+```swift
 protocol SXNodeState {
     var parentState: SXNodeState? { get set }
 
@@ -79,7 +79,7 @@ protocol SXNodeState {
 
 ### 权重
 
-```
+```swift
 protocol SXAStarState {
     var fromValue: Int { get set }
 
@@ -100,7 +100,7 @@ A* 算法的必备要素，根据不同的规则大概可以分为几个值：**
 如下添加了属性 pathStates，historyIdentifier，succcesState 和 方法 getChild()
 
 
-```
+```swift
 class HuaSearch: SXSeacher {
     var startState: SXNodeState
 
@@ -145,7 +145,7 @@ class HuaSearch: SXSeacher {
 
 那么关于二进制位的运算就要了解一下了：
 
-```
+```swift
 extension Int64 {
     // 取空格位置
     func space1Index() -> Int64 {
@@ -226,7 +226,7 @@ extension Int64 {
 
 - **master： 采用字符串作为标识记录和存储节点**
 
-```
+```swift
 protocol SXNodeState {
     var parentState: SXNodeState? { get set }
 
@@ -240,7 +240,7 @@ protocol SXNodeState {
 
 - **Preview： 使用[Int]记录数据，使用 Int64 记录状态，区分重复**
 
-```
+```swift
 protocol SXNodeState {
     var parentState: SXNodeState? { get set }
 
@@ -254,7 +254,7 @@ protocol SXNodeState {
 
 - **Ultimate： 只使用了 Int64 记录当前状态，并且作为唯一标识**
 
-```
+```swift
 protocol SXNodeState {
     var parentState: SXNodeState? { get set }
 
