@@ -1,14 +1,17 @@
 ---
 layout:     post                          # 使用的布局（不需要改）
-title:      Swift 开发必备 tips 《一》            # 标题
-subtitle:   Swift新元素   #副标题
-date:       2019-12-22                # 时间
+title:      Swift 开发必备 tips            # 标题
+subtitle:   Swift新元素， 从Objective-C/C到Swift，Swift与开发环境及一些实践   #副标题
+date:       2019-02-26                # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
 tags:                                #标签
 - 语法
 ---
+
+
+### Swift新元素
 
 #### 柯里化(Currying)
 
@@ -222,21 +225,89 @@ myFunc (numbers: 1, 2, 3, string: "hello" )
 在新版本的Swift中，对于可能初始化失败的情况，我们应该始终使用可返回nil 的初始化方法，而不是类型工厂方法。
 
 #### static和class
-多类型和容器
-default参数
-正则表达式
-模式匹配
-..和..<
-AnyClass,元类型和.self
-协议和类方法中的Self
-动态类型和多方法
-属性观察
-final
-lazy修饰符和lazy方法
-Reflection和Mirror
-隐式解包Optional
-多重Optional
-Optional Map
-Protocol Extension
-where和模式匹配
-indirect和嵌套enum
+#### 多类型和容器
+#### default参数
+#### 正则表达式
+#### 模式匹配
+#### ..和..<
+#### AnyClass,元类型和.self
+#### 协议和类方法中的Self
+#### 动态类型和多方法
+#### 属性观察
+#### final
+#### lazy修饰符和lazy方法
+#### Reflection和Mirror
+#### 隐式解包Optional
+#### 多重Optional
+#### Optional Map
+#### Protocol Extension
+#### where和模式匹配
+#### indirect和嵌套enum
+
+
+### 从Objective-C/C到Swift
+
+#### Selector
+#### 实例方法的动态调用
+#### 单例
+#### 条件编译
+#### 编译标记
+#### @UlApplicationMain
+#### @objc和dynamic
+#### 可选协议和协议扩展
+#### 内存管理，weak 和unowned
+#### @autoreleasepool
+#### 值类型和引用类型
+#### String还是NSString
+#### UnsafePointer
+#### C指针内存管理
+#### COpaquePointer和C convention
+#### GCD和延时调用
+#### 获取对象类型
+#### 自省
+#### KVO
+#### 局部scope
+#### 判等
+#### 哈希
+#### 类簇
+#### 调用C动态库
+#### 输出格式化
+#### Options
+#### 数组enumerate
+#### 类型编码@encode
+#### C代码调用和@asmname
+#### delegate
+#### Associated Object
+#### Lock
+#### Toll-Free Bridging和Unmanaged
+
+
+
+### Swift与开发环境及一些实践
+#### Swift命令行工具
+#### 随机数生成
+#### print和debugPrint
+#### 错误和异常处理
+#### 断言
+#### fatalError
+#### 代码组织和Framework
+#### 安全的资源组织方式
+#### Playground延时运行
+#### Playground与项目协作
+#### Playground可视化开发
+#### 数学和数字
+#### JSON
+#### NSNull
+#### 文档注释
+#### 性能考虑
+#### Log输出
+#### 溢出
+#### 宏定义define
+#### 属性访问控制
+#### Swift中的测试
+#### Core Data
+#### 闭包歧义
+#### 泛型扩展
+#### 兼容性
+#### 列举enum类型
+#### 尾递归

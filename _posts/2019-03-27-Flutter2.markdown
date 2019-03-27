@@ -22,7 +22,7 @@ tags:                                #标签
 项目代码主要是在 **lib/** 文件夹，在 main.dart 中导入相应的文件包即可调用跑起来。
 
 
-```flutter
+```swift
 // main.dart
 
 import 'package:flutter/material.dart';
@@ -43,7 +43,7 @@ void main() => runApp(FetchDataApp());
 然后 分别创建其他 demo 文件；单独编写测试即可。
 
 
-```flutter
+```swift
 //net_json.dart
 
 import 'dart:async';
@@ -130,7 +130,7 @@ class NetJsonApp extends StatelessWidget {
 
 项目的第三方包配置页，例如上边的 **http** 和 **Dio** 即需要导入包方可使用。
 
-```
+```swift
 dependencies:
   flutter:
     sdk: flutter
@@ -236,7 +236,7 @@ print(new String.fromCharCodes(input));
 
 - 判断函数相等
 
-```
+```swift
 void foo() {} // A top-level function
 
 class A {
@@ -296,7 +296,7 @@ assert(foo() == null);
 
 - Cascade notation （层叠标记）
 
-```
+```swift
 querySelector('#confirm') // Get an object.
   ..text = 'Confirm' // Use its members.
   ..classes.add('important')
@@ -347,7 +347,7 @@ button.onClick.listen((e) => window.alert('Confirmed!'));
 
 - 向类添加功能：mixins （相当于代理）
 
-```
+```swift
 mixin Musical {
   bool canPlayPiano = false;
   bool canCompose = false;
