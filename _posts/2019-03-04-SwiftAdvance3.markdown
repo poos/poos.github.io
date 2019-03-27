@@ -2,7 +2,7 @@
 layout:     post                          # 使用的布局（不需要改）
 title:      Swift 开发必备 tips 《三》 完结篇            # 标题
 subtitle:   Swift与开发环境及一些实践   #副标题
-date:       2019-03-04                # 时间
+date:       2019-12-04                # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
 catalog: true                         # 是否归档
