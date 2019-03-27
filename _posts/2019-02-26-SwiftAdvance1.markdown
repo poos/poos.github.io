@@ -29,7 +29,7 @@ func addTo(_ adder: Int) -> (Int) -> Int {
 
 
 #### 将protocol的方法声明为mutating
-Swift 的 mutating􏰅􏰞􏰤􏰃􏰤􏰖􏰕􏰗 关键字修饰方法是为了能在该方法中修改 struct􏰰􏰤􏰄􏰞􏰧􏰤 或是 􏰡􏰕􏰞􏰅enum 的变量，所以如果你没在协议方法里写 mutating 的话，别人如果用 struct􏰰􏰤􏰄􏰞􏰧􏰤 或是 􏰡􏰕􏰞􏰅enum 来实现这个协议的话，就不能在方法里改变自己的变量了。
+Swift 的 mutating 关键字修饰方法是为了能在该方法中修改 struct 或是 enum 的变量，所以如果你没在协议方法里写 mutating 的话，别人如果用 struct 或 enum 来实现这个协议的话，就不能在方法里改变自己的变量了。
 
 ```swift
 protocol AnyProtocol {
@@ -39,7 +39,7 @@ protocol AnyProtocol {
 
 #### Sequence
 
-你使用某个类型遵守 􏰑􏰤􏰡􏰄􏰃􏰤􏰝􏰄􏰟􏰄􏰝􏰤􏰝􏰧􏰝􏰣􏰑􏰤􏰡􏰄􏰃􏰤􏰝􏰄􏰟􏰄􏰝􏰤􏰝􏰧􏰝􏰣IteratorProtocol 协议，那么这个类型即可使用 for ... in 方法了；同时这个类型也可以使用 map，filter，reduce 这些高阶函数。
+你使用某个类型遵守 IteratorProtocol 协议，那么这个类型即可使用 for ... in 方法了；同时这个类型也可以使用 map，filter，reduce 这些高阶函数。
 
 究其根本的话 for in 是这样的
 
@@ -217,7 +217,7 @@ myFunc (numbers: 1, 2, 3, string: "hello" )
 #### Designated, Convenience 和Required
 - designated，不加修饰的初始化方法，必须对非可选的属性进行设置，并且会显式或者隐式调用父类的方法。
 - convenience，便利的初始化方法，必须调用当前类的 designated 方法。**如果在子类重写了当前调用的 designated 方法，那么子类就可以使用父类中相关的 convenience 方法了**
-- 对于某些我们希望子类中一定实现的 designated 初始化方法，我们可以通过添加 required􏰄􏰡􏱇􏰞􏰖􏰄􏰡􏰛 关键字进行限制，强制子类对这个方法重写实现。这样做的最大的好处是 **可以保证依赖于某个 designated 初始化方法的 convenience􏰧􏰝􏰕􏰪􏰡􏰕􏰖􏰡􏰕􏰧􏰡 一直可以被使用。**
+- 对于某些我们希望子类中一定实现的 designated 初始化方法，我们可以通过添加 required 关键字进行限制，强制子类对这个方法重写实现。这样做的最大的好处是 **可以保证依赖于某个 designated 初始化方法的 convenience 一直可以被使用。**
 
 #### 初始化返回nil
 > convenience init?(string URLString: String)
