@@ -177,7 +177,7 @@ dependencies:
 上边了解到的毕竟还是比较少，强烈建议去 [A Tour of the Dart Language](https://www.dartlang.org/guides/language/language-tour)，通读一下代码的语法和规则。
 
 
-#### important
+#### important 一些重要特性
 
 - 您可以放在变量中的所有内容都是一个对象，每个对象都是一个类的实例。偶数，函数和 null对象。所有对象都继承自Object类。
 
@@ -399,7 +399,7 @@ class Maestro extends Person
 
 #### Generators 生成器函数
 
-用于懒惰的生成一系列值。支持同步和异步
+用于懒惰的生成一系列值。支持同步和异步。
 
 
 #### Callable classes 可调用的类
@@ -428,7 +428,7 @@ main() {
 
 #### 元数据
 
-使用元数据提供有关代码的其他信息。元数据注释以字符开头@，后跟对编译时常量的引用（如deprecated）或对常量构造函数的调用。
+使用元数据提供有关代码的其他信息。元数据注释以字符开头@，例如 @override。
 
 元数据可以出现在库，类，typedef，类型参数，构造函数，工厂，函数，字段，参数或变量声明之前以及导入或导出指令之前。您可以使用反射在运行时检索元数据。
 
