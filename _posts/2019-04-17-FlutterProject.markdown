@@ -13,7 +13,7 @@ tags:                                #标签
 
 ### pubspec.yaml
 
-用于存放三方包的地方，可以在 https://pub.dartlang.org/flutter/packages 查询需要的插件；常用的插件如下：udid，cacheImage，上下拉，网络请求，bloc 设计模式（下边会单独说一下）， user_agent 获取，本地存储，分享，toasts，网络连接检查等
+用于存放三方包的地方，可以在 [flutter/packages](https://pub.dartlang.org/flutter/packages) 查询需要的插件；常用的插件如下：udid，cacheImage，上下拉，网络请求，bloc 设计模式（下边会单独说一下）， user_agent 获取，本地存储，分享，toasts，网络连接检查等
 
 ```
 dependencies:
@@ -318,6 +318,6 @@ class AppShare {
 
 关于扩展，对于大多数常用的扩展是都有现成可以使用的。但是也是有一些是难以解决的，flutter 不能直接实现的就需要写三方包来扩展了，这点比较麻烦。
 
-推荐一个 alibaba 的 帮助开发者快速上手 Flutter 的项目 https://github.com/alibaba/flutter-go 。
+推荐一个 alibaba 的 帮助开发者快速上手 Flutter 的项目 [alibaba/flutter-go](https://github.com/alibaba/flutter-go)
 
 ![img](https://camo.githubusercontent.com/b59e4856a54d720712862c763ac3fade321e9dc9/68747470733a2f2f696d672e616c6963646e2e636f6d2f7466732f5442313955616851517a6f4b31526a535a466c58586169345658612d313530302d313130362e706e67)
