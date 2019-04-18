@@ -1,7 +1,7 @@
 ---
 layout:     post                          # 使用的布局（不需要改）
-title:      Flutter 《三》 Week Video           # 标题
-subtitle:   一些特殊用途的 Widget     #副标题
+title:      Flutter 《三》常用组件 & Week Video           # 标题
+subtitle:   官方 Widget 介绍，Week Video 特殊用途的 Widget     #副标题
 date:       2019-03-28                # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
@@ -10,6 +10,73 @@ tags:                                #标签
 - Flutter
 - 语法
 ---
+
+## 常用的 Widgets
+
+### 布局 Widgets
+
+[tutorials/layout](https://flutterchina.club/tutorials/layout/)
+
+
+#### 标准 widgets
+- Container
+添加 padding, margins, borders, background color, 或将其他装饰添加到widget.
+- GridView
+将 widgets 排列为可滚动的网格.
+- ListView
+将widget排列为可滚动列表
+- Stack
+将widget重叠在另一个widget之上.
+
+
+#### Material Components
+- Card
+将相关内容放到带圆角和投影的盒子中。
+- ListTile
+将最多3行文字，以及可选的行前和和行尾的图标排成一行
+
+### 交互 Widgets
+
+[tutorials/interactive](https://flutterchina.club/tutorials/interactive/)
+
+不再展开
+
+#### 标准 widgets:
+- Form
+- FormField
+#### Material Components:
+- Checkbox
+- DropdownButton
+- FlatButton
+- FloatingActionButton
+- IconButton
+- Radio
+- RaisedButton
+- Slider
+- Switch
+- TextField
+
+
+### 其他 widget
+Decoration  装饰
+
+Scaffold  脚手架，提供 navightion bar
+
+Stateful <-> Stateless  有无生命周期状态
+
+列 Column    	ListView
+
+行 Row  		ListTitle
+
+**两个页面写下来就基本掌握了使用方法，没达到效果就看一下 api 即可。**
+
+**flutter 写起来基本就是 widget 套 widget。一切皆是 widget。**
+
+## week video
+
+[Flutter](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw)
+
+flutter 官网在 YouTube 上的 3-5 分钟小视频，介绍一些特殊的用法。
 
 ### SafeArea
 Flutter的SafeArea工具可以避免讨厌的消息通知栏和不规则的手机屏幕干扰您的应用程序的正常显示。 它使用MediaQuery来检查屏幕的尺寸，并使用一个子工具来匹配您的应用程序，确保它能在iOS和Android上都正常显示！
