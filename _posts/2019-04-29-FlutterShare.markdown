@@ -47,7 +47,7 @@ tags:                                #标签
 
 可归为以下3个阶段
 
-- 1.青铜时代。采用 WebView 容器(广 义) + JavaScript Bridge ;
+- 1.青铜时代。采用 WebView 容器(广义) + JavaScript Bridge ;
 - 2.白银时代。用JavaScript开发，绘制交由 Native 接管（JavaScript VM + Native UI）;
 - 3.黄金时代。某开发语言 + engine（每个平台单独的绘图引擎）。
 
@@ -78,7 +78,7 @@ tags:                                #标签
 #### 有多少产品在使用它
 
 
-alibaba 闲鱼，  百老汇音乐剧，  tencent NOW Live直播项目，  Abbey Road的Topline应用程序可帮助艺术家录制歌曲，  JD 金融项目，  Google ad 等
+alibaba 闲鱼，  百老汇音乐剧，  tencent NOW Live直播项目，  Abbey Road的Topline（帮助艺术家录制歌曲），  JD 金融项目，  Google ad 等
 
 在官方宣传网址 [itsallwidgets.com](https://itsallwidgets.com/) 上还有非常多的产品用到了Flutter。
 
@@ -97,11 +97,11 @@ alibaba 闲鱼，  百老汇音乐剧，  tencent NOW Live直播项目，  Abbey
 
 #### 社区如何
 
-这么多人使用一方面反映了google 老大哥的带动效应。有非常多的社区，来发展这个比较年轻的语言。
+这么多开发者使用，也反映了google 老大哥的带动力之大。有非常多的社区，来发展这个比较年轻的语言。
 
 |flutter|社区||flutter|社区|
 |---|---|---|---|---|
-|flutterchina.club| 中文网站||stackoverflow||
+|flutterchina.club| 中文网站||stackoverflow|Q A|
 |GITT ER | github的即时聊天||Google Groups|Google网上论坛|
 |Medium | 博客平台||slack|协作聊天|
 |YouTube | 视频||Discord|实时通话软件|
@@ -123,7 +123,7 @@ Beta1版本是从2018年才开始发展，到现在，基本才只有一个多�
 
 #### 发展 - Roadmap 2019
 
-***在 github 上，flutter 更新频率非常高，最新版已经到1.5+。对于2019年的 flutter 计划，官网上也做出了规划。***
+**在 github 上，flutter 更新频率非常高，最新版已经到1.5+。对于2019年的 flutter 计划，官网上也做出了规划。**
 
 - Fundamentals 基本（bug，性能，测试，api文档）
 
@@ -185,8 +185,10 @@ Dart 的历史也是有波折的。Dart 最早在2011年被 Google Chrome（V8�
 
 **Dart 支持两种编译模式，AOT 和 JIT**。开发环境使用 JIT，借助虚拟机，随时修改代码，随时看到效果，可以实现亚秒级的热重载。发布环境使用 AOT，打包出经过各种编译优化的包，不论是在安装包安装速度，和包内程序运行速度都要很多优势。
 
-Dart 最初就被设计目标就是**持续渲染，不卡顿**。**1）** AOT 编译就像原生代码的 AOT 编译，与“JavaScript桥梁”方案相比，天然少了桥的过程。**2）** Dart 在 抢占式调度、时间分片和共享资源 方面权衡诸多条件，选用最适合界面特点的方案：单线程，程显式让出（使用 async/await、Future 和 Stream）CPU。**3）** 访问共享资源（内存）的情况下，在很多语言中都需要使用锁。但在回收可用内存时， 锁会阻止整个应用程序运行
-。Dart使用先进的 **分代垃圾回收和对象分配方案**，该方案对于分配许多短暂的对象（对于Flutter这样的反应式用户界面来说非常完美，Flutter为每帧重建不可变视图树）都特别快速。
+Dart 最初就被设计目标就是**持续渲染，不卡顿**。所以有很多设计上的优势保证fps。
+- **1）** AOT 编译就像原生代码的 AOT 编译，与“JavaScript桥梁”方案相比，天然少了桥的过程。
+- **2）** Dart 在 抢占式调度、时间分片和共享资源 方面权衡诸多条件，选用最适合界面特点的方案：单线程，程显式让出（使用 async/await、Future 和 Stream）CPU。
+- **3）** 访问共享资源（内存）的情况下，在很多语言中都需要使用锁。但在回收可用内存时， 锁会阻止整个应用程序运行。Dart使用先进的 **分代垃圾回收和对象分配方案**，该方案对于分配许多短暂的对象（对于Flutter这样的反应式用户界面来说非常完美，Flutter为每帧重建不可变视图树）都特别快速。
 
 Dart的另一个好处是**热重载**，Flutter不需要从程序中拆分出额外的模板或布局语言，如JSX或XML，也不需要单独的可视布局工具。借助热重载，可视化编辑就不需要了。体验下来，开发中，**从页面开始创建，到添加资源，请求，封装模型，修改 UI，添加事件，页面最终完成，你都不需要重新编译，一切都是所写即可见**。
 
@@ -326,7 +328,7 @@ class MyTransformer extends StreamEventTransformer {
 
 这篇文章先到这里了。整理分享还是要注意些问题：既要广泛了解，让大家有个认识；又不能太过深入，否则大家不能理解，时间也不允许。不像编程，只要解决问题就好了。
 
-还有下一篇，包含 Flutter 的 Stream，state 更新方案，原生项目和 Flutter 项目互调等精彩内容，不容错过。
+还有下一篇，包含 state 更新方案，原生项目和 Flutter 项目互调等精彩内容，不容错过。
 
 
 
