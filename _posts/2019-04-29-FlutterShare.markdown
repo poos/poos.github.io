@@ -25,19 +25,22 @@ tags:                                #标签
 ##  跨平台开发方案
 
 #### 为什么要跨平台开发
-- 优点：
+
+**优点：**
 
 1.可获取平台全部开放功能，比如摄像头，蓝牙等;
 
 2.用户访问应用的感受通常是速度快、性能高、体验好;
 
-- 缺点：
+**缺点：**
 
 1.为特定平台开发，综合成本高，不同平台维护需要人力成本;
 
 2.动态化能力弱，大多数情况下，新功能更新只能发版;
 
 #### 有哪些跨平台开发方案
+
+可归为以下3个阶段
 
 - 1.青铜时代。采用 WebView 容器(广 义) + JavaScript Bridge ;
 - 2.白银时代。用JavaScript开发，绘制交由 Native 接管（JavaScript VM + Native UI）;
@@ -69,88 +72,70 @@ tags:                                #标签
 
 #### 有多少产品在使用它
 
-alibaba 闲鱼
 
-百老汇音乐剧
-
-tencent NOW Live，直播项目
-
-Abbey Road的Topline应用程序可帮助艺术家录制歌曲
-
-JD 金融项目
-
-Google ad
+alibaba 闲鱼，  百老汇音乐剧，  tencent NOW Live直播项目，  Abbey Road的Topline应用程序可帮助艺术家录制歌曲，  JD 金融项目，  Google ad 等
 
 在官方宣传网址 [itsallwidgets.com](https://itsallwidgets.com/) 上还有非常多的产品用到了Flutter。
 
 网站上还有很多开源的项目，例如 Sandwhich三明治 。
 
-preject：
 
-github 上 flutter 大概 3w。
-github 上 RN 大概 10w。
-github 上 OC 大概 12w。
-github 上 swfit 大概 14w。
-github 上 android 大概 85w。
+在 github 上的项目个数大概如下：
+
+|preject|个数|
+|---|---|
+|flutter| 3w|
+|RN | 10w|
+|OC | 12w|
+|swfit | 14w|
+|android | 85w|
 
 #### 社区如何
 
 这么多人使用一方面反映了google 老大哥的带动效应。有非常多的社区，来发展这个比较年轻的语言。
 
-flutterchina.club
-
-flutter.dev
-
-stackoverflow
-
-GITT ER
-
-Google Groups
-
-Medium
-
-slack
-
-YouTube 
-
-Discord
-
+|flutter|社区||flutter|社区|
+|---|---|---|---|---|
+|flutterchina.club| 中文网站||stackoverflow||
+|GITT ER | github的即时聊天||Google Groups|Google网上论坛|
+|Medium | 博客平台||slack|协作聊天|
+|YouTube | 视频||Discord|实时通话软件|
 
 #### 历史
 
 当前规模的现状，Flutter 用了很长时间吗？
 
-Flutter的第一个版本被称为“Sky”，运行在Android操作系统上。它是在2015年Dart开发者峰会上亮相的，其目的是能够以每秒120帧的速度持续渲染。
+- Flutter的第一个版本被称为“Sky”，运行在Android操作系统上。它是在2015年Dart开发者峰会上亮相的，其目的是能够以每秒120帧的速度持续渲染。
 
-**Beta1版本于2018年2月27日在2018 世界移动大会公布。**
+- **Beta1版本于2018年2月27日在2018 世界移动大会公布。**
 
-**1.0版本于2018年12月5日(北京时间)发布。**
+- **1.0版本于2018年12月5日(北京时间)发布。**
 
-**2019年2月发布1.2版本。目前最新为1.5版本。**
+- **2019年2月发布1.2版本。目前最新为1.5版本。**
 
 
-实际上是从2018年才开始发展，到现在，基本才只有一个多年头。如果从1.0版开始算起，正式版的话才半年，真的非常年轻。
+Beta1版本是从2018年才开始发展，到现在，基本才只有一个多年头。如果从1.0版开始算起，正式版的话才半年，真的非常年轻。
 
 #### 发展 - Roadmap 2019
 
 ***在 github 上，flutter 更新频率非常高，最新版已经到1.5+。对于2019年的 flutter 计划，官网上也做出了规划。***
 
-Fundamentals 基本（bug，性能，测试，api文档）
+- Fundamentals 基本（bug，性能，测试，api文档）
 
-Ease of Adoption （模板，文档，组件）
+- Ease of Adoption （模板，文档，组件）
 
-Ecosystem（C/C++，生态插件，通知，数据存储）
+- Ecosystem（C/C++，生态插件，通知，数据存储）
 
-**Support for platforms beyond mobile（键鼠，Web，macOS，Windows）**
+- **Support for platforms beyond mobile（键鼠，Web，macOS，Windows）**
 
-Tooling（开发工具的改进）
+- Tooling（开发工具的改进）
 
-**Change（在2019年删除了对动态更新的支持）**
+- **Change（在2019年删除了对动态更新的支持）**
 
 
-- 最新的master 分支已经加入了macOS 的代码。
+最新的master 分支已经加入了macOS 的代码。
 
-- 有三个原因使得 flutter 对热更新暂时不准备付出太多的精力：因为系统平台（iOS、Android）对热更新的态度尚且不明确；因为热更新使用下发代码的方式更新，所以不可避免存在安全问题；第三是还没有一个统一平台来做代码下发这件事，如果实现不得不由各个项目开发团队自己搭建。
+有三个原因使得 flutter 对热更新暂时不准备付出太多的精力：因为系统平台（iOS、Android）对热更新的态度尚且不明确；因为热更新使用下发代码的方式更新，所以不可避免存在安全问题；第三是还没有一个统一平台来做代码下发这件事，如果实现不得不由各个项目开发团队自己搭建。
 
 
 ### Dart
@@ -185,6 +170,7 @@ Dart 的历史也是有波折的。Dart 最早在2011年被 Google Chrome（V8�
 
 #### Dart 适合移动端吗
 
+目前看比较适合。
 
 - 1) Dart是AOT (Ahead Of Time)编译的，可编译成快速、可预测的本地代码。
 - 2) Dart也支持JIT (Just In Time)编译，开发周期快（状态热重载）;
