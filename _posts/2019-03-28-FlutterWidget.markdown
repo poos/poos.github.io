@@ -72,6 +72,48 @@ Stateful <-> Stateless  有无生命周期状态
 
 **flutter 写起来基本就是 widget 套 widget。一切皆是 widget。**
 
+
+### StatefulWidget、StatelessWidget
+
+区分要点是 **是否需要用户交互**。
+
+stateful widget 是指有状态变化的组件，例如系统提供的 Checkbox, Radio, Slider, InkWell, Form, TextField 都是 stateful widgets, 他们都是 StatefulWidget的子类。
+
+stateless widget 是没有内部状态变化的组件，例如 Icon、 IconButton, 和Text 都是无状态widget, 他们都是 StatelessWidget的子类。
+
+
+#### 实现方式
+
+```dart
+class XXXX extends StatefulWidget {
+  @override
+  _XXXXState createState() => _XXXXState();
+}
+
+class _XXXXState extends State<XXXX> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+    );
+  }
+}
+
+class LLLL extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+    );
+  }
+}
+```
+
+实现方式也略微不一样，StatefulWidget 为了遵循私有变量的保密性，特别分了一个私有类来管理私有成员变量。
+
+
+
+
 ## week video
 
 [Flutter](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw)
