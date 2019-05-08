@@ -214,13 +214,13 @@ Dart的另一个好处是**热重载**，Flutter不需要从程序中拆分出�
 一切皆是 Widget，Widget 认识和学习。
 
 
-布局方面跟之前用到的 Texture 盒式布局异曲同工，所以没有单独写博客。其实上手还是比较简单的，有兴趣参考[Texture(ASDK)的理解和使用](https://poos.github.io/2018/08/08/Texture/)
+布局方面跟之前用到的 Texture 盒式布局异曲同工，所以没有单独写博客。其实上手还是比较简单的，有兴趣参考[Texture(ASDK)的理解和使用](https://poos.github.io/2018/08/08/Texture/)，理论还是相通的。
 
 ## Stream
 
 顾名思义，Stream 就是流的意思，表示发出的一系列的异步数据。可以简单地认为 Stream 是一个异步数据源。它是 Dart 中处理异步事件流的统一 API。
 
-使用数据流可以更好管理项目代码，设计项目模式，节约设备资源(例如持有大文件)等。
+使用数据流可以更好管理项目代码，设计项目模式，节约设备资源(避免持有大文件)等。
 
 Dart 中，集合（Iterable或Collection）表示一系列的对象。而 Stream （也就是“流”）也表示一系列的对象，但区别在于 Stream 是异步的事件流。比如文件、套接字这种 IO 数据的非阻塞输入流（input data），或者用户界面上用户触发的动作（UI事件）。
 
@@ -284,7 +284,7 @@ stream.listen((e) => print(e));
   sub.onDone(() => print('done'));
   //1 2
 ```
-区别在于高级订阅返回一个 **StreamSubscription<int>** 的对象，这个对象有 **onData，onDone，onError** 方法。
+区别在于高级订阅返回一个 **StreamSubscription** 的对象，这个对象有 **onData，onDone，onError** 方法。
 
 #### 单订阅模式 和 多订阅模式 
 
@@ -296,14 +296,14 @@ stream.listen((e) => print(e));
   bs.last.then(print);
   //1 4
 ```
-上边的 stream 只支持 一个数据流接受，接受完毕就不会再发出数据流了。 可以使用 **asBroadcastStream()**方法返回一个同样类型（Stream<T>）的 stream，这样就可以多次订阅了。
+上边的 stream 只支持 一个数据流接受，接受完毕就监听不到数据流了。 可以使用 **asBroadcastStream()**方法返回一个同样类型（T）的 stream，这样就可以多次订阅了。
 
 
 #### Stream 的集合特性
 
 Stream 和一般的集合类似，都是一组数据，只不过一个是异步推送，一个是同步拉取。所以他们都很多共同的方法。
 
-Stream 还提供一些数据转换方法。还可以自定义转换方法（StreamTransformer）。
+除了既有方法，如果需要自定制，Stream 还提供一些数据转换协议。继承 StreamEventTransformer 并且实现必有方法即可使用。
 
 ```dart
 
@@ -329,7 +329,6 @@ class MyTransformer extends StreamEventTransformer {
 这篇文章先到这里了。整理分享还是要注意些问题：既要广泛了解，让大家有个认识；又不能太过深入，否则大家不能理解，时间也不允许。不像编程，只要解决问题就好了。
 
 还有下一篇，包含 state 更新方案，原生项目和 Flutter 项目互调等精彩内容，不容错过。
-
 
 
 
