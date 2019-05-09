@@ -375,3 +375,7 @@ iOS - swift
 ## 最后
 
 第一部分内容比较广泛，理解起来也能加深对状态处理的认识。第二部分和第三部分涉及编码，最好能够结合项目来看。
+
+
+
+推荐一篇闲鱼的嵌入分享：[闲鱼基于 Flutter 的移动端跨平台应用实践](https://www.infoq.cn/article/xianyu-cross-platform-based-on-flutter)

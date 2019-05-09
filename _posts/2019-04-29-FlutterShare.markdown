@@ -216,6 +216,46 @@ Dart的另一个好处是**热重载**，Flutter不需要从程序中拆分出�
 
 布局方面跟之前用到的 Texture 盒式布局异曲同工，所以没有单独写博客。其实上手还是比较简单的，有兴趣参考[Texture(ASDK)的理解和使用](https://poos.github.io/2018/08/08/Texture/)，理论还是相通的。
 
+
+#### 数据转 model 
+
+dart提供的库 **dart-convert** 可以实现将 json 转换为对象。样例的代码如下：
+
+```dart
+class User {
+    int id;
+    String name;
+    String avatar;
+
+    User({
+        this.id,
+        this.name,
+        this.avatar,
+    });
+
+    factory User.fromJson(Map<String, dynamic> json) => new User(
+        id: json["id"] == null ? null : json["id"],
+        name: json["name"] == null ? null : json["name"],
+        avatar: json["avatar"] == null ? null : json["avatar"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id == null ? null : id,
+        "name": name == null ? null : name,
+        "avatar": avatar == null ? null : avatar,
+    };
+}
+```
+
+**同样有很多方案提供实时转换，但是我还是用了应用来转换。** macOS 有一款应用 **Paste JSON as Code • quicktype.app** 可以轻松转换json 到各个常用语言的模型。
+
+
+#### 调试
+
+在 VS Code，使用 DevTools 可以 方便的调试页面。
+
+DevTools提供的功能：widget 树，debug paint，slow animation；timeline，memory，logging，Debugger 等。还可控制程序热重载喝热重新运行。
+
 ## Stream
 
 顾名思义，Stream 就是流的意思，表示发出的一系列的异步数据。可以简单地认为 Stream 是一个异步数据源。它是 Dart 中处理异步事件流的统一 API。
