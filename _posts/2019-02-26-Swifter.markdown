@@ -1,0 +1,921 @@
+---
+layout:     post                          # 使用的布局（不需要改）
+title:      Swift 开发必备 tips 第三版阅读笔记            # 标题
+subtitle:   Swift新元素， 从Objective-C/C到Swift，Swift与开发环境及一些实践   #副标题
+date:       2019-02-26                # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 语法
+---
+
+
+### Swift新元素
+
+#### 柯里化(Currying)
+
+Swift里可以将方法进行柯里化(Currying)，这是也就是把接受多个参数的方法进行- -些变形，使
+其更加灵活的方法。
+
+之前的博客已经介绍过，不再赘述。
+
+```swift
+func addTo(_ adder: Int) -> (Int) -> Int {
+    return { num in
+        return num + adder
+    }
+```
+
+
+#### 将protocol的方法声明为mutating
+Swift 的 mutating 关键字修饰方法是为了能在该方法中修改 struct 或是 enum 的变量，所以如果你 **没在协议方法里写 mutating** 的话，别人如果用 **struct 或 enum** 来实现这个协议的话，就不能在方法里改变自己的变量了。
+
+```swift
+protocol AnyProtocol {
+    mutating func printName()
+}
+```
+
+#### Sequence
+
+你使用某个类型遵守 IteratorProtocol 协议，那么这个类型即可使用 for ... in 方法了；同时这个类型也可以使用 map，filter，reduce 这些高阶函数。
+
+究其根本的话 for in 是这样的
+
+```swift
+var iterator = arr.makeIterator( )
+while let obj = iterator .next() {
+    print(obj)
+}
+```
+
+
+#### tuple
+
+元组的使用，例如交换两个值，例如返回两个值
+
+```
+//1
+(a, b) = (b, a)
+
+//2
+func calc() -> (Int, Int)
+```
+
+
+#### @autoclosure和??
+
+例如一个函数接受一个闭包，虽然可以使用尾随闭包的特性：
+
+> logIfTrue{2 > 1}
+
+但是，要么是书写起来十分麻烦，要么是表达上不太清晰，看起来都让人生气。于
+是@autoclosure登场了。我们可以改换方法参数，在参数名前面加上@autoclosure 关键字:
+
+```swift
+func logIfTrue(_ predicate: @autoclosure () -> Bool) {
+    if predicate() {
+        print("True" )
+    }
+}
+```
+这时候我们就可以直接写:
+
+> logIfTrue(2 > 1)
+
+
+#### @escaping
+
+逃逸闭包的用法。注意适时使用 [weak self]。
+
+#### Optional Chaining
+
+注意一点，连续可选值调用时候，判断最终调用是否成功容易发生错误：
+
+
+这是错误代码
+
+> let playClosure = {(child: Child) -> () in child.pet?.toy?.play()}
+
+这样的代码是没有意义的!
+问题在于对于 play() 的调用上。定义的时候我们没有写play() 的返回，这表示这个方法返回
+Void (或者写作一对小括号()， 它们是等价的)。但是，经过 Optional Chaining以后
+我们得到的是一个Optional的结果。也就是说，我们最后得到的应该是这样一个 closure :
+
+> let playClosure = {(child: Child) -> ()? in child. pet? . toy?. play()}
+
+这样调用的返回将是一-个()? (或者写成Void? 会更清楚- -些)， 虽然看起来挺奇怪的，但这就是
+事实。使用的时候我们可以通过Optional Binding来判定方法是否调用成功:
+
+```
+if let result: () = playClosure(xiaoming) {
+    print("好开心~")
+} else {
+    print("没有玩具可以玩:(")
+}
+```
+
+
+#### 操作符
+
+可以自定义操作符。可能跟 **柯里化** 擦出不一样的火花。
+
+**注意** 尽量明了，避免歧义和可能的误解。因为一个不被公认的操作符是存在冲突风险和理解难度的， 所以我们不应该滥用这个特性。
+
+#### func的参数修饰
+
+```
+func increaseIt(_ number: inout Int) {
+    number += 1
+}
+```
+
+#### 字面量表达
+
+除了参数初始化时候可以省略类型初始化。
+
+另一种方式 **通过实现协议即可使用 字面量初始化 自定义类型**，例如用字符串初始化 enum 等。
+
+#### 下标
+
+作为一门代表了先进生产力的语言，Swift 是允许我们自定义下标的。这不仅包含了对自己写的类
+型进行下标自定义，也包括了对那些已经支持下标访问的类型(没错就是Array 和 Dictionay)进
+行扩展。
+
+> subscript (index: Int) -> T
+
+> subscript ( subRange: Range<Int>) -> Slice<T>
+
+
+#### 函数嵌套
+
+如果一个函数只是被另一个函数调用，不妨尝试一下。单一功能的代码块会整合到一起。
+
+#### 命名空间
+
+在 Swift 中，由于可以使用命名空间了，即使是名字相同的类型，只要是来自不同的命名空间的 话，都是可以和平共处的。和 C# 这样的显式在文件中指定命名空间的做法不同，Swift 的命名空 间是基于 module 而不是在代码中显式地指明，每个 module 代表了 Swift 中的一个命名空间。也 就是说，同一个 target 里的类型名称还是不能相同的。在我们进行 app 开发时，默认添加到 app 的主 target 的内容都是处于同一个命名空间中的，我们可以通过创建 Cocoa (Touch) Framework 的 target 的方法来新建一个 module，这样我们就可以在两个不同的 target 中添加同样名字的类型 了。
+
+#### typealias
+
+```
+// This is OK
+typealias Worker<T> = Person<T>
+
+
+class Person<T> {}
+typealias WorkId = String
+typealias Worker = Person<WorkId>
+
+
+protocol Cat { ... }
+protocol Dog { ... }
+typealias Pat = Cat & Dog
+
+```
+
+#### associatedtype
+
+```
+// 相当于一个抽象父协议，不能被直接遵守实现
+protocol Animal {
+    associatedtype F: Food
+    func eat(_ food: F)
+}
+
+struct Tiger: Animal {
+    func eat(_ food: Meat) {
+        print("eat (meat)")
+    }
+}
+
+struct Sheep: Animal {
+    func eat(_ food: Grass) {
+        print("eat (food)")
+    }
+}
+```
+
+#### 可变参数函数
+
+不必像 OC 一样拘泥于最后一位。
+
+```
+func myFunc (numbers: Int..., string: String) {
+    numbers.forEach {
+        for i in 0..<$0 {
+        print("'(i + 1): (string)")
+        }
+    }
+}
+myFunc (numbers: 1, 2, 3, string: "hello" )
+```
+
+
+#### 初始化方法顺序
+- 先初始化子类的成员变量常量
+- 调用 super.init
+- 视情况修改父类的成员变量
+
+#### Designated, Convenience 和Required
+- designated，不加修饰的初始化方法，必须对非可选的属性进行设置，并且会显式或者隐式调用父类的方法。
+- convenience，便利的初始化方法，必须调用当前类的 designated 方法。**如果在子类重写了当前调用的 designated 方法，那么子类就可以使用父类中相关的 convenience 方法了**
+- 对于某些我们希望子类中一定实现的 designated 初始化方法，我们可以通过添加 required 关键字进行限制，强制子类对这个方法重写实现。这样做的最大的好处是 **可以保证依赖于某个 designated 初始化方法的 convenience 一直可以被使用。**
+
+#### 初始化返回nil
+> convenience init?(string URLString: String)
+
+在新版本的Swift中，对于可能初始化失败的情况，我们应该始终使用可返回nil 的初始化方法，而不是类型工厂方法。
+
+#### static和class
+
+很早版本（Swift 1.2）时候 class 也可被用于修饰全局静态的方法，现在已经只能用 static 来修饰。
+
+class 仅用于声明一个类
+
+#### 多类型和容器
+
+Array、Dictionary、Set
+
+#### default参数
+
+```swift
+func increasedNum(num: Int, add: Int = 1) -> Int {
+    return num + add
+}
+```
+
+#### 正则表达式
+
+使用 NSRegularExpression 做一个包装来使用。
+
+#### 模式匹配
+
+switch case 支持的模式匹配使得可以写出如下的代码：
+
+```swift
+// - mark  ex1
+let num: Int? = nil
+switch num {
+    case nil: print("nil")
+    default:
+    print("(num!)")
+}
+
+// - mark  ex2
+let x=0.5
+switch x {
+    case -1.0...1.0: print("get")
+    default: print("error")
+}
+
+// - mark  ex3
+let contact = ("http://onevcat.com", "onev@onevcat. com")
+let mailRegex: NSRegularExpression
+let siteRegex: NSRegularExpression
+mailRegex =
+    try ~/"^([a-z0-9_ \\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})$"
+siteRegex =
+    try ~/"^(https?:\\/\\V/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([V\\w \\.-]*)*\\/?$"
+switch contact {
+    case (siteRegex, mailRegex): print ("同时拥有有效的网站和邮箱")
+    case (_ , mailRegex): print(" 只拥有有效的邮箱")
+    case (siteRegex,_ ): print("只拥有有效的网站")
+    default: print("嘛都没有")
+}
+//输出
+//同时拥有网站和邮箱
+```
+
+#### ..和..<
+
+Range 操作。支持泛型。
+
+```swift
+let test = "helLo"
+let interval = "a"..."z"
+for c in test. characters {
+    if !interval.contains(String(c)) {
+        print("\(c)不是小写字母")
+    }
+}
+//输出
+// L不是小写字母
+```
+
+#### AnyClass,元类型和.self
+
+表示任意的概念：Any，AnyObject，AnyClass。
+
+```swift
+//通过 .Type 得到一个元类型（Meta）
+typealias AnyClass = Any0bject.Type
+
+
+//例如
+class A {
+    static func print(){}
+}
+
+let typeA: A.Type = A.self
+typeA.print()
+
+let typeAA: AnyClass = A.self
+(typeAA as! A.Type).print()
+
+
+```
+
+
+#### 协议和类方法中的Self
+在声明协议时，我们希望在协议中使用的类型就是实现这个协议本身的类型的话，就需要使用返回 Self 进行指代。
+```swift
+
+//例如下边
+protocol IntervalType (
+//..
+/// Return rhs clamped to self . The bounds of the result, even
+/// if it is empty, are always within the bounds of self
+    func clamp(intervalToClamp: Self) -> Self
+
+//...
+]
+
+//这是一个个人实现的例子
+class MyClass: Copyable {
+    var num=1
+    func copy() -> Self {
+        let result = type(of: self).init()
+        result.num = num
+        return result
+    }
+    required init() {
+
+    }
+}
+//测试 如下
+let object = MyClass()
+object.num = 100
+let new0bject = object.copy()
+object.num = 1
+
+
+print (object . num) // 1
+print(new0bject.num) // 100
+
+```
+
+#### 动态类型和多方法
+Swift中我们虽然可以通过 dynamicType 来获取一个对象的动态类型(也就是运行时的实际类型，而非代码指定或编译器看到的类型)。但在使用中，Swift 现在却是不支持多方法的，也就是说，不能根据对象在动态时的类型进行合适的重载方法调用。
+
+```swift
+//这样实现很方便
+class Pet {}
+class Cat: Pet {}
+class Dog: Pet {}
+func printPet(_ pet: Pet) {
+    print("Pet")
+}
+func printPet(_ cat: Cat) {
+    print("Cat")
+}
+func printPet(_ dog: Dog) {
+    print("Dog")
+}
+
+
+//但是注意这里的坑
+func printThem(_ pet: Pet,_ cat: Cat) {
+    printPet(pet)
+    printPet(cat)
+}
+printThem(Dog(), Cat())
+//Pet
+//Cat
+
+//打印时的Dog() 的类型信息并没有被用来在运行时选择合适的printPet(dog: Dog)版本的方法,
+//而是被忽略掉，并采用了编译期间决定的Pet 版本的方法。因为Swift默认情况下是不采用动态
+//派发的，因此方法的调用只能在编译时决定。
+//要想绕过这个限制，我们可能需要进行通过对输入类型做判断和转换:
+
+func printThem2(_ pet: Pet,_ cat: Cat) {
+    if let aCat = pet as? Cat{
+        printPet(aCat)
+    } else if let aDog = pet as? Dog {
+        printPet(aDog)
+    }
+    printPet(cat)
+}
+
+printThem2(Dog(), Cat())
+//Dog
+//Cat
+
+```
+
+#### 属性观察
+
+set, get; willSet, didSet
+
+#### final
+
+final关键字可以用在class, func 或者var 前面进行修饰，表示不允许对该内容进行继承或者重写操作。
+
+通常取决于下边几点：
+- 权限控制
+- 类已经完善了
+- 为了某些方法必须执行
+- 性能考虑
+
+
+#### lazy修饰符和lazy方法
+
+延时加载或者说延时初始化是很常用的优化方法，在构建和生成新的对象的时候，内存分配会在运行时耗费不少时间，如果有-些对象的属性和内容非常复杂的话，这个时间更是不可忽略。
+
+#### Reflection和Mirror
+
+swfit 的反射功能相较于运行时要弱很多。且并没有公开官方文档，有可能在未来会被去除。
+
+```swift
+
+struct Person {
+    let name: String
+    let age: Int
+}
+let xiaoMing = Person(name: "XiaoMing", age: 16)
+let r = Mirror(reflecting: xiaoMing) // r是MirrorType
+print("xiaoMing是\(r.displayStyle!)")
+print("属性个数:\(r.children.count)")
+for child in r.children {
+    print("属性名:\(child.label),値: \(child.value)")
+}
+//輸出:
+//xiaoMing是Struct
+//属性个数:2
+//属性名:name,値:XiaoMing
+//属性名:age,値:16
+
+```
+
+AnyForwardCollection 是遵守 collectionType 协议的，因此我们可以简单地使用count 来获取元素的个数，而对于具体的代表属性的多元组，则使用下标进行访问。在对于我们的例子中，每个 Child 都是具有两个元素的多元组，其中第一个是属性名，第二个是这个属性所存储的值。需要特别注意的是，这个值有可能是多个元素组成嵌套的形式(例如属性值是数组或者字典的话，就是这样的形式)。
+
+如果觉得一个个打印太过于麻烦，我们也可以简单地使用dump 方法来通过获取一个对象的镜像
+并进行标准输出的方式将其输出出来。比如对上面的对象xiaoMing :
+```
+dump(xiaoMing)
+/输出:
+// V Person
+// name: XiaoMing
+// age: 16
+```
+在这里因为篇幅有限，而且这部分内容很可能随着版本而改变，我们就不再一一介绍Mirror 的更详细的内容了。有兴趣的读者不妨打开Swift的定义文件并找到这个协议，里面对每个属性和方法的作用有非常详细的注释。
+
+**在现在的版本中，Swift 的反射特性并不是非常强大，我们只能对属性进行读取，还不能对其设 定，不过我们有希望能在将来的版本中获得更为强大的反射特性。**
+
+#### 隐式解包Optional
+
+！来隐式解包。是因为跟 OC 桥接的历史遗留，所以存在这个东东。
+
+在 Apple 的不断修改 (我相信这是一件消耗大量人月的手工工作) 下，在 Swift 的正式 版本中，已经没有太多的隐式解包的 API 了。最近 Objective-C 中又加入了像是 nonnull 和 nullable 这样的修饰符，这样一来，那些真正有可能为 nil 的返回可以被明确定义为普通的 Optional 值，而那些不会是 Optional 的值，也根据情况转换为了确定的类型。现在比较常见的隐 式解包的 Optional 就只有使用 Interface Builder 时建立的 IBOutlet 了:
+
+```Objective-C
+@IBOutlet weak var button: UIButton !
+
+```
+
+#### 多重Optional
+
+会有陷阱。
+```swift
+
+var aNil: String? = nil
+var anotherNil: String?? = aNil
+var literalNil: String?? = nil
+
+// anotherNil 和 literalNil 不等价
+// 因为 anotherNil 是一个 Optional 对象，不是 nil
+```
+
+#### Optional Map
+
+array 等集合使用 .map 过滤 nil
+
+#### Protocol Extension
+
+Swift 2 开始引入的。
+
+整理一下相关的规则的话:
+- 如果类型推断得到的是实际的类型。
+
+那么类型中的实现将被调用;如果类型中没有实现的话，那么协议扩展中的默认实现将被使用
+
+- 如果类型推断得到的是协议，而不是实际类型。
+
+并且方法在协议中进行了定义，那么类型中的实现将被调用; 如果类型中没有实现，那
+么协议扩展中的默认实现被使用。否则(也就是方法没有在协议中定义)，扩展中的默认实现将被调用
+
+```swift
+
+protocol A2 {
+    func method1() -> String
+}
+extension A2 {
+    func method1() -> String {
+        return "hi"
+    }
+    func method2() -> String {
+        return "hi"
+    }
+}
+
+struct B2: A2 {
+    func method1() -> String {
+        return "hello"
+    }
+    func method2() -> String {
+        return "hello"
+    }
+}
+
+let b2 = B2()
+b2.method1() // hello
+b2.method2() // hello
+
+let a2 = b2 as A2
+a2.method1() // hello
+a2.method2() // hi
+
+```
+
+
+#### where和模式匹配
+
+早前版本在判断语句中 **n > 3**即相当于一个 where 模式匹配。 Swift 3 语法省略了这一部分，不过源码还有一些端倪。
+
+**现在多用于 prottocol extension**, 限定某些类的，默认协议方法
+
+```swift
+extension Sequence where Self. Iterator . Element : Comparable {
+    public func sorted() -> [Self. Iter ator . Element ]
+}
+
+```
+
+#### indirect和嵌套enum
+
+当我们创建一些特殊的数据结构（链表，树，图等），我们可以使用可选值来指定头尾。但是如果用来表示一个空的链表（例如），就不得不再外层包一个 Optional。
+
+这时候我们可以使用枚举来定义这种结构。
+
+```swift
+
+indirect enum LinkedList<Element: Comparable> {
+    case empty
+    case node(Element, LinkedList<Element>)
+}
+
+let linkedList = LinkedList.node(1, .node(2, .node(3, .node(4, .empty))))
+```
+
+非常帅，就是这样。
+
+为枚举添加方法如下；
+
+```swift
+func removing(_ element: Element) -> LinkedList<Element> {
+    guard case let .node(value, next) = self else {
+        return . empty
+    }
+    return value == element ?
+        next : LinkedList.node(value, next .removing(element))
+}
+
+let result = linkedList.removing(2)
+print(result)
+//1->3-> 4
+
+```
+
+
+### 从Objective-C/C到Swift
+
+#### Selector
+
+OC 得益于运行时，提供了 @selector 和更加动态的 NSSelectorFromString 方法。
+
+Swift 提供了 #selector 方法，但是实际仍然是调用 OC 运行时。需要加上 @objc 才能在运行时找到对应的方法。
+
+
+#### 实例方法的动态调用
+
+借助函数式我们可以各种神奇的写法：
+
+```swift
+let f1 = MyClass.method
+
+let f2: (Int) -> Int = MyClass.method
+
+let f3: (MyClass) -> (Int) -> Int = MyClass . method
+
+```
+
+#### 单例
+
+Swift 1.2 后有一个方便的写法，将 init 私有化，然后提供 static 的 shared 方法。
+
+```swift
+class MyManager {
+    static let shared = MyManager()
+    private init() {}
+}
+
+```
+
+同时，在初始化类变量的时候，Apple 将会把这个初始化包装在一次 swift_once_block_invoke中，以保证它的唯一性。 不仅如此，对于所有的全局变量，Apple 都会在底层使用这个类似 dispatch_once 的方式来确保只以 lazy 的方式初始化-次。
+
+#### 条件编译
+
+```swift
+//ex
+@IBAction func someButtonPressed(sender: AnyObject!) {
+#if FREE_ VERSION
+//弹出购买提示，导航至商店等
+#else 
+//实际功能
+#endif
+}
+
+```
+
+#### 编译标记
+
+Xcode 在 Swift 下支持的编译标记(- 表示添加一个横线)：
+
+- // MARK: - 
+- // TODO:
+- // FIXME:
+- // WARNING:
+
+现在也支持代码中的 ：
+- #warning("message")
+- #error("message")
+
+
+#### @UlApplicationMain
+
+swift 这一部分被隐藏了，但是如果需要使用，我们可以自己创建一个 main.swift 来实现。
+
+#### @objc和dynamic
+
+重要是用于混编。
+
+Swift 4 已经不能用 @objc 标记一个类开放给 OC 了。
+
+Objective-C 和 Swift 在底层使用的是两套完全不同的机制，Cocoa 中的 Objective-C 对象是基于运行时的，它从骨子里遵循了 KVC (Key-Value Coding，通过类似字典的 方式存储对象信息) 以及动态派发 (Dynamic Dispatch，在运行调用时再决定实际调用的具体实 现)。而 Swift 为了追求性能，如果没有特殊需要的话，是不会在运行时再来决定这些的。也就是 说，Swift 类型的成员或者方法在编译时就已经决定，而运行时便不再需要经过一次查找，而可以 直接使用。
+
+Objective-C 中又加入了像是 nonnull 和 nullable 这样的修饰符，以及泛型的数组和字典等，其实上都是为了使 SDK 更加适合用 Swift。
+
+#### 可选协议和协议扩展
+
+2.0 之前需要使用 @objc 标记，配合 optional 使用。
+
+2.0 之后可以利用协议扩展提供默认的实现方法，实际上就是可选了。
+
+#### 内存管理， weak 和 unowned
+
+**swfit 遵循 arc 方式管理内存引用。**
+
+**unowned** 设置以后即使它原来引用的内容已经被释放了，它仍然会保 持对被已经释放了的对象的一个 "无效的" 引用，它不能是 Optional 值，也不会被指向 nil 。如果 你尝试调用这个引用的方法或者访问成员属性的话，程序就会崩溃。
+
+而 **weak** 则友好一些，在引用的内容被释放后，标记为 weak 的成员将会自动地变成 nil (因此被标记为 @weak 的变量一定 需要是 Optional 值)。
+
+关于两者使用的选择，Apple 给我们的建议是如果能够确定在访问时不会被释放的话，尽量使用 unowned ，如果存在被释放的可能，那就选择用 weak 。 
+
+**闭包使用 [weak self] 防止循环引用**
+
+#### @autoreleasepool
+
+- main 文件
+
+OC 中 main.m 的主文件，整个 app 跑在一个自动释放池里。
+
+而在 Swift 项目中，因为有了 @UIApplicationMain（编译时候自动生成相关代码），我们不再需要 main 文件和 mian 函数，所以原来的整个程序的自动释放池就不存在了。即使我们使用 main.swift 来作为程序的入口时，也是不需要自己再添加自动释放池的。
+
+
+- 其他使用
+
+```swift
+autoreleasepool {
+    let data = NSData.dataWithContentsOfFile(
+        path, options: nil, error: nil)
+
+    NSThread. sleepForTimeInterval(0.5
+}
+```
+
+#### 值类型和引用类型
+
+struct 和 enum 是值类型（存于栈）。class 是引用类型（存于堆）。
+
+使用值类型有什么好处呢?相较于传统的引用类型来说，一个很显而易见的优势就是减少了堆上内存分配和回收的次数。
+
+在使用数组合字典时的最佳实践应该是，按照具体的数据规模和操作特点来决定到时是使用值类型的容器还是引用类型的容器:
+
+在需要处理大量数据并且频繁操作 (增减) 其中元素时，选 择 NSMutableArray 和 NSMUtableDictionary 会更好，而对于容器内条目小而容器本身数目多的情况，应该使用 Swift 语言内建的 Array 和 Dictionary 。
+
+#### String还是NSString
+尽量使用 String。
+
+- 他们可以互换
+- swift 中的 String 是 struct
+- 一些语法特性（更加 swift）
+
+唯一的痛点，关于 Range 的方面，Swift4 提供了 SubString，可以转换为 String。
+
+#### UnsafePointer 与 C 指针管理
+
+swift 和 c 的指针对应。
+
+| C API | Swift Api|
+|---|---|
+|const Type *|UnsafePointer|
+|Type *|UnsafeMutablePointer|
+
+swift 提供 unsafeBitCast 方法 将一个指针强制转换为一个对象。
+
+**关于指针，无数先辈已经用血淋淋的教训告诉我们，要 避免去做这样的不安全的操作，除非你确实知道你在做的是什么。**
+
+#### GCD和延时调用
+
+针对 iOS 8 以上的 GCD，swift 也有相应的类来提供支持，呢就是 **DispatchQuene**。
+
+#### 获取对象类型
+
+针对 OC 对象的 **object_getClass**
+
+针对 Swift 的 **type(of: object)**
+
+#### 自省 Introspection
+
+向一个对象发出询问，以确定它是不是属于某个类，这种操作就称为自省。
+
+Swift 中使用 is 来确定类型。还可以用于 struct 和 enum。编译器还会优化，如果唯一确定，就会警告不必要的代码。
+
+#### KVO
+
+对于 Swift 类型，语言中现在暂时还没有原生的类 似 KVO 的观察机制。
+
+但是可以通过 **属性观察** ， **泛型和闭包** 写出更加 swift 的代码。
+
+#### 局部scope
+C 系语言中在方法内部我们是可以任意添加成对的大括号 {} 来限定代码的作用范围的。
+
+swift 并不支持，但是可以自己定义一个 **() -> void** 闭包来实现。
+
+```swift
+func local(_ closure: ()->()) {
+    closure()
+}
+
+```
+
+#### 判等
+
+除了默认提供的 **==** 等操作符，还可以自定义一些操作符。
+
+#### 哈希
+
+Equatable 提供哈希计算，以判断是否相等。
+
+```swift
+protocol Hashable : Equatable {}
+    var hashValue: Int { get }
+}
+```
+
+#### 类簇
+
+在 Objective-C 中， init 开头的初始化方法虽然打着初始化的名号，但是实际做的事情和其他方 法并没有太多不同之处。类簇在 Objective-C 中实现起来也很自然，在所谓的“初始化方法”中将 self 进行替换，根据调用的方式或者输入的类型，返回合适的私有子类对象就可以了。
+但是 Swift 中的情况有所不同。因为 Swift 拥有真正的初始化方法，在初始化的时候我们只能得到 当前类的实例，并且要完成所有的配置。也就是说对于一个公共类来说，是不可能在初始化方法 中返回其子类的信息的。对于 Swift 中的类簇构建，一种有效的方法是使用工厂方法来进行。例如 下面的代码通过 Drinking 的工厂方法将可乐和啤酒两个私有类进行了类簇化:
+
+
+```swift
+
+class Drinking {
+    typealias LiquidColor = UIColor
+    var color: LiquidColor {
+        return .clear
+    }
+    class func drinking(name: String) -> Drinking {
+        var drinking: Drinking
+        switch name {
+        case "String":
+            drinking = String()
+        case "Int":
+            drinking = Int()
+        default:
+            drinking = Bool()
+        }
+        return drinking
+    }
+}
+class Coke: Drinking {
+    override var color: LiquidColor {
+        return .black
+    }
+}
+class Beer: Drinking {
+    override var color: LiquidColor {
+        return .yellow
+    }
+}
+let coke = Drinking.drinking(name: "Coke")
+coke.color // Black
+let beer = Drinking.drinking(name: "Beer")
+beer.color // Yellow
+
+```
+#### 调用C动态库
+
+因为 Objective-C 是 C 的超集，因此在以前我们可以无缝地访问 C 的内容，只需要指定依赖并且 导入头文件就可以了。但是骄傲的 Swift 的目的之一就是甩开 C 的历史包袱，所以现在在 Swift 中 直接使用 C 代码或者 C 的库是不可能的。
+
+**使用 Xxx-Bridging-Header.h 桥接**
+
+#### 输出格式化
+
+```swift
+"\(object)"
+
+extension Double {
+    func format(_ f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
+}
+
+let f = ".2"
+print("double:\(b.format(f))")
+```
+#### Options
+
+我们谈的是 Options，不是 Optional，或者说是 Objective-C 中的 NS_OPTIONS。
+
+OC 中可以使用 | 来指定多个动画效果叠加，因为内部使用的是二进制移位实现。但是在 swift 这些在枚举中不再重要。不过对于动画，可以用 struct 集合来代表多个动画选项。
+
+```swift
+UIView.animate(withDuration: 0.3,
+    delay: 0.0,
+    options: [.curveEaseIn, .allowUserInteraction],
+    animations: {},
+    completion: nil)
+```
+
+自己实现也是可以的：
+
+```swift
+struct YourOption: OptionSet {
+    et rawValue: UInt
+    static let none = YourOption( rawValue: 0)
+    static let option1 = Your0pti on( rawValue: 1)
+    static let option2 = Your0pti on( rawValue: 1 « 1)
+}
+.. .
+```
+
+#### 数组enumerate
+#### 类型编码@encode
+#### C代码调用和@asmname
+#### delegate
+#### Associated Object
+#### Lock
+#### Toll-Free Bridging和Unmanaged
+
+
+
+### Swift与开发环境及一些实践
+#### Swift命令行工具
+#### 随机数生成
+#### print和debugPrint
+#### 错误和异常处理
+#### 断言
+#### fatalError
+#### 代码组织和Framework
+#### 安全的资源组织方式
+#### Playground延时运行
+#### Playground与项目协作
+#### Playground可视化开发
+#### 数学和数字
+#### JSON
+#### NSNull
+#### 文档注释
+#### 性能考虑
+#### Log输出
+#### 溢出
+#### 宏定义define
+#### 属性访问控制
+#### Swift中的测试
+#### Core Data
+#### 闭包歧义
+#### 泛型扩展
+#### 兼容性
+#### 列举enum类型
+#### 尾递归
