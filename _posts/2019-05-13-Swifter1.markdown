@@ -1,0 +1,462 @@
+---
+layout:     post                          # 使用的布局（不需要改）
+title:      Swift 开发必备 tips 阅读笔记 第二篇           # 标题 
+subtitle:   从Objective-C/C到Swift  #副标题
+date:       2019-05-13                # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 语法
+- Swifter Tips
+---
+
+## tips
+
+全3篇，如下，这是第二篇。
+
+[Swift 开发必备 tips 阅读笔记  第一篇](https://poos.github.io/2019/02/26/Swifter/)，Swift 语言的新特性。
+
+[Swift 开发必备 tips 阅读笔记 第二篇](https://poos.github.io/2019/05/13/Swifter1/)，Objective-C 与 Swift 的一些特性过渡。
+
+[Swift 开发必备 tips 阅读笔记 三 最后一篇](https://poos.github.io/2019/05/13/Swifter1/)，Swift与开发环境及一些实践。
+
+### 从Objective-C/C到Swift
+
+#### Selector
+
+OC 得益于运行时，提供了 @selector 和更加动态的 NSSelectorFromString 方法。
+
+Swift 提供了 #selector 方法，但是实际仍然是调用 OC 运行时。需要加上 @objc 才能在运行时找到对应的方法。
+
+
+#### 实例方法的动态调用
+
+借助函数式我们可以各种神奇的写法：
+
+```swift
+let f1 = MyClass.method
+
+let f2: (Int) -> Int = MyClass.method
+
+let f3: (MyClass) -> (Int) -> Int = MyClass . method
+
+```
+
+#### 单例
+
+Swift 1.2 后有一个方便的写法，将 init 私有化，然后提供 static 的 shared 方法。
+
+```swift
+class MyManager {
+    static let shared = MyManager()
+    private init() {}
+}
+
+```
+
+同时，在初始化类变量的时候，Apple 将会把这个初始化包装在一次 swift_once_block_invoke中，以保证它的唯一性。 不仅如此，对于所有的全局变量，Apple 都会在底层使用这个类似 dispatch_once 的方式来确保只以 lazy 的方式初始化-次。
+
+#### 条件编译
+
+```swift
+//ex
+@IBAction func someButtonPressed(sender: AnyObject!) {
+#if FREE_ VERSION
+//弹出购买提示，导航至商店等
+#else 
+//实际功能
+#endif
+}
+
+```
+
+#### 编译标记
+
+Xcode 在 Swift 下支持的编译标记(- 表示添加一个横线)：
+
+- // MARK: - 
+- // TODO:
+- // FIXME:
+- // WARNING:
+
+现在也支持代码中的 ：
+- #warning("message")
+- #error("message")
+
+
+#### @UlApplicationMain
+
+swift 这一部分被隐藏了，但是如果需要使用，我们可以自己创建一个 main.swift 来实现。
+
+#### @objc和dynamic
+
+重要是用于混编。
+
+Swift 4 已经不能用 @objc 标记一个类开放给 OC 了。
+
+Objective-C 和 Swift 在底层使用的是两套完全不同的机制，Cocoa 中的 Objective-C 对象是基于运行时的，它从骨子里遵循了 KVC (Key-Value Coding，通过类似字典的 方式存储对象信息) 以及动态派发 (Dynamic Dispatch，在运行调用时再决定实际调用的具体实 现)。而 Swift 为了追求性能，如果没有特殊需要的话，是不会在运行时再来决定这些的。也就是 说，Swift 类型的成员或者方法在编译时就已经决定，而运行时便不再需要经过一次查找，而可以 直接使用。
+
+Objective-C 中又加入了像是 nonnull 和 nullable 这样的修饰符，以及泛型的数组和字典等，其实上都是为了使 SDK 更加适合用 Swift。
+
+#### 可选协议和协议扩展
+
+2.0 之前需要使用 @objc 标记，配合 optional 使用。
+
+2.0 之后可以利用协议扩展提供默认的实现方法，实际上就是可选了。
+
+#### 内存管理， weak 和 unowned
+
+**swfit 遵循 arc 方式管理内存引用。**
+
+**unowned** 设置以后即使它原来引用的内容已经被释放了，它仍然会保 持对被已经释放了的对象的一个 "无效的" 引用，它不能是 Optional 值，也不会被指向 nil 。如果 你尝试调用这个引用的方法或者访问成员属性的话，程序就会崩溃。
+
+而 **weak** 则友好一些，在引用的内容被释放后，标记为 weak 的成员将会自动地变成 nil (因此被标记为 @weak 的变量一定 需要是 Optional 值)。
+
+关于两者使用的选择，Apple 给我们的建议是如果能够确定在访问时不会被释放的话，尽量使用 unowned ，如果存在被释放的可能，那就选择用 weak 。 
+
+**闭包使用 [weak self] 防止循环引用**
+
+#### @autoreleasepool
+
+- main 文件
+
+OC 中 main.m 的主文件，整个 app 跑在一个自动释放池里。
+
+而在 Swift 项目中，因为有了 @UIApplicationMain（编译时候自动生成相关代码），我们不再需要 main 文件和 mian 函数，所以原来的整个程序的自动释放池就不存在了。即使我们使用 main.swift 来作为程序的入口时，也是不需要自己再添加自动释放池的。
+
+
+- 其他使用
+
+```swift
+autoreleasepool {
+    let data = NSData.dataWithContentsOfFile(
+        path, options: nil, error: nil)
+
+    NSThread. sleepForTimeInterval(0.5
+}
+```
+
+#### 值类型和引用类型
+
+struct 和 enum 是值类型（存于栈）。class 是引用类型（存于堆）。
+
+使用值类型有什么好处呢?相较于传统的引用类型来说，一个很显而易见的优势就是减少了堆上内存分配和回收的次数。
+
+在使用数组合字典时的最佳实践应该是，按照具体的数据规模和操作特点来决定到时是使用值类型的容器还是引用类型的容器:
+
+在需要处理大量数据并且频繁操作 (增减) 其中元素时，选 择 NSMutableArray 和 NSMUtableDictionary 会更好，而对于容器内条目小而容器本身数目多的情况，应该使用 Swift 语言内建的 Array 和 Dictionary 。
+
+#### String还是NSString
+尽量使用 String。
+
+- 他们可以互换
+- swift 中的 String 是 struct
+- 一些语法特性（更加 swift）
+
+唯一的痛点，关于 Range 的方面，Swift4 提供了 SubString，可以转换为 String。
+
+#### UnsafePointer 与 C 指针管理
+
+swift 和 c 的指针对应。
+
+| C API | Swift Api|
+|---|---|
+|const Type *|UnsafePointer|
+|Type *|UnsafeMutablePointer|
+
+swift 提供 unsafeBitCast 方法 将一个指针强制转换为一个对象。
+
+**关于指针，无数先辈已经用血淋淋的教训告诉我们，要 避免去做这样的不安全的操作，除非你确实知道你在做的是什么。**
+
+#### GCD和延时调用
+
+针对 iOS 8 以上的 GCD，swift 也有相应的类来提供支持，呢就是 **DispatchQuene**。
+
+#### 获取对象类型
+
+针对 OC 对象的 **object_getClass**
+
+针对 Swift 的 **type(of: object)**
+
+#### 自省 Introspection
+
+向一个对象发出询问，以确定它是不是属于某个类，这种操作就称为自省。
+
+Swift 中使用 is 来确定类型。还可以用于 struct 和 enum。编译器还会优化，如果唯一确定，就会警告不必要的代码。
+
+#### KVO
+
+对于 Swift 类型，语言中现在暂时还没有原生的类 似 KVO 的观察机制。
+
+但是可以通过 **属性观察** ， **泛型和闭包** 写出更加 swift 的代码。
+
+#### 局部scope
+C 系语言中在方法内部我们是可以任意添加成对的大括号 {} 来限定代码的作用范围的。
+
+swift 并不支持，但是可以自己定义一个 **() -> void** 闭包来实现。
+
+```swift
+func local(_ closure: ()->()) {
+    closure()
+}
+
+```
+
+#### 判等
+
+除了默认提供的 **==** 等操作符，还可以自定义一些操作符。
+
+#### 哈希
+
+Equatable 提供哈希计算，以判断是否相等。
+
+```swift
+protocol Hashable : Equatable {}
+    var hashValue: Int { get }
+}
+```
+
+#### 类簇
+
+在 Objective-C 中， init 开头的初始化方法虽然打着初始化的名号，但是实际做的事情和其他方 法并没有太多不同之处。类簇在 Objective-C 中实现起来也很自然，在所谓的“初始化方法”中将 self 进行替换，根据调用的方式或者输入的类型，返回合适的私有子类对象就可以了。
+但是 Swift 中的情况有所不同。因为 Swift 拥有真正的初始化方法，在初始化的时候我们只能得到 当前类的实例，并且要完成所有的配置。也就是说对于一个公共类来说，是不可能在初始化方法 中返回其子类的信息的。对于 Swift 中的类簇构建，一种有效的方法是使用工厂方法来进行。例如 下面的代码通过 Drinking 的工厂方法将可乐和啤酒两个私有类进行了类簇化:
+
+
+```swift
+
+class Drinking {
+    typealias LiquidColor = UIColor
+    var color: LiquidColor {
+        return .clear
+    }
+    class func drinking(name: String) -> Drinking {
+        var drinking: Drinking
+        switch name {
+        case "String":
+            drinking = String()
+        case "Int":
+            drinking = Int()
+        default:
+            drinking = Bool()
+        }
+        return drinking
+    }
+}
+class Coke: Drinking {
+    override var color: LiquidColor {
+        return .black
+    }
+}
+class Beer: Drinking {
+    override var color: LiquidColor {
+        return .yellow
+    }
+}
+let coke = Drinking.drinking(name: "Coke")
+coke.color // Black
+let beer = Drinking.drinking(name: "Beer")
+beer.color // Yellow
+
+```
+#### 调用C动态库
+
+因为 Objective-C 是 C 的超集，因此在以前我们可以无缝地访问 C 的内容，只需要指定依赖并且 导入头文件就可以了。但是骄傲的 Swift 的目的之一就是甩开 C 的历史包袱，所以现在在 Swift 中 直接使用 C 代码或者 C 的库是不可能的。
+
+**使用 Xxx-Bridging-Header.h 桥接**
+
+#### 输出格式化
+
+```swift
+"\(object)"
+
+extension Double {
+    func format(_ f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
+}
+
+let f = ".2"
+print("double:\(b.format(f))")
+```
+#### Options
+
+我们谈的是 Options，不是 Optional，或者说是 Objective-C 中的 NS_OPTIONS。
+
+OC 中可以使用 | 来指定多个动画效果叠加，因为内部使用的是二进制移位实现。但是在 swift 这些在枚举中不再重要。不过对于动画，可以用 struct 集合来代表多个动画选项。
+
+```swift
+UIView.animate(withDuration: 0.3,
+    delay: 0.0,
+    options: [.curveEaseIn, .allowUserInteraction],
+    animations: {},
+    completion: nil)
+```
+
+自己实现也是可以的：
+
+```swift
+struct YourOption: OptionSet {
+    et rawValue: UInt
+    static let none = YourOption( rawValue: 0)
+    static let option1 = Your0pti on( rawValue: 1)
+    static let option2 = Your0pti on( rawValue: 1 « 1)
+}
+.. .
+```
+
+#### 数组enumerate
+
+同时枚举 下标和值。
+
+```swift
+arr.enumerated().forEach { (<#(offset: Int, element: String)#>) in
+    <#code#>
+}
+
+```
+
+#### 类型编码 @encode
+Swift 使用了自己的 Metatype 来处理类型，并且在运行时保留了这些类型的信息，所以 Swift 并 没有必要保留这个关键字。我们现在不能获取任意类型的类型编码了，但是在 Cocoa 中我们还是 可以通过 􏱁􏰭􏰺􏰄􏰇􏰊􏰈 的 􏰎􏰓􏱃􏰆􏰳􏰔􏰤􏰈 属性来获取对应值的类型指针:
+
+```swift
+class NSValue : NSObject, NSCopying, NSSecureCoding, NSCoding {
+
+var objCType: UnsafePointer<Int8> { get }
+
+```
+
+#### C代码调用和 @asmname
+- 标准库的 C
+如果我们导入了 Darwin 的 C 库的话，我们就可以在 Swift 中无缝地使用 Darwin 中定义的 C 函数 了。它们涵盖了绝大多数 C 标准库中的内容，可以说为程序设计提供了丰富的工具和基础。导入 Darwin 十分简单，只需要加上 import Darwin 即可。但事实上， Foundation 框架中包含了 Darwin 的导入，而我们在开发 app 时肯定会使用 UIKit 或者 Cocoa 这样的框架，它们又导入了 Foundation ，因此我们在平时开发时并不需要特别做什么，就可以使用这些标准的 C 函数了。很
+让人开心的一件事情是 Swift 在导入时为我们将 Darwin 也进行了类型的自动转换对应，比如对于 三角函数的计算输入和返回都是 Swift 的 Double 类型，而非 C 的类型.
+
+- 三方 C 库
+对于第三方的 C 代码，Swift 也提供了协同使用的方法。我们知道，Swift 中调用 Objective-C 代码非常简单，只需要将合适的头文件暴露在 Bridge Header 文件中就行 了。
+
+#### delegate
+
+这是因为 Swift 的 protocal 是可以被除了 class 以外的其他类型遵守的，而对于像 struct 或是 enum 这样的类型，本身就不通过引用计数来管理内存，所以也不可能用 weak 这样的 ARC 的概念来进行修饰。
+想要在 Swift 中使用 weak delegate，我们就需要将 protocol 限制在 class 内。一种做法是将 protocol 声明为 Objective-C 的，这可以通过在 protocol 前面加上 @objc 关键字来达到， Objective-C 的 protocol 都只有类能实现，因此使用 weak 来修饰就合理了:
+
+```swift
+@objc protocol MyClassDelegate {
+func method()
+}
+```
+另一种可能更好的办法是在 protocol 声明的名字后面加上 􏰆􏰇􏰄􏰂􏰂 ，这可以为编译器显式地指明这 个 protocol 只能由 class 来实现。
+
+```swift
+protocol MyClassDelegate: class {
+func method()
+}
+```
+
+相比起添加 @objc ，后一种方法更能表现出问题的实质，同时也避免了过多的不必要的 Objective-C 兼容，可以说是一种更好的解决方式。
+
+#### Associated Object
+不知道是从什么时候开始，“是否能通过 Category 给已有的类添加成员变量” 就成为了一道 Objective-C 面试中的常见题目。
+
+得益于 Objective-C 的运行时和 Key-Value Coding 的特性，我们可以在运行时向一个对象添加值 存储。而在使用 Category 扩展现有的类的功能的时候，直接添加实例变量这种行为是不被允许 的，这时候一般就使用 property 配合 Associated Object 的方式，将一个对象 “关联” 到已有的要 扩展的对象上。进行关联后，在对这个目标对象访问的时候，从外界看来，就似乎是直接在通过 属性访问对象的实例变量一样，可以非常方便。
+
+在 Swift 中这样的方法依旧有效，只不过在写法上可能有些不同。两个对应的运行时的 get 和 set Associated Object 的 API 是这样的:
+
+```swift
+func objc_ getAssoci ated0bject(object: AnyObject!, 
+                                   key: Uns afePointer<Void>
+                                ) -> AnyObject!
+func objc_ setAssociated0bject(object: AnyObject!,
+                                  key: UnsafePointer<Void> ,
+                                value: AnyObject!,
+                               policy: objc_ AssociationPolicy)
+```
+
+这两个 API 所接受的参数也都 Swift 化了，并且因为 Swift 的安全性，在类型检查上严格了不少， 因此我们有必要也进行一些调整。在 Swift 中向某个 extension 里使用 Associated Object 的方式 将对象进行关联的写法是:
+
+```swift
+import ObjectiveC
+
+
+// MyClass. swift
+class MyClass {}
+
+// MyClassExtension . swift
+private var key: Void?
+extension MyClass {
+    var title: String? {
+        get {
+            return objc_getAssociatedObject(self, &key) as? String
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                        &key, newValue,
+                                        . OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+// test
+func printTitle(_ input: MyClass) {
+    if let title = input.title {
+        print("Title: \(title)")
+    } else {
+        print("no title")
+    }
+}
+let a = MyClass()
+printTitle(a)
+a.title = "Swifter. tips"
+printTitle(a)
+
+```
+
+#### Lock
+
+互斥锁可以用于防止变量在锁作用范围中被其他线程修改。
+
+加锁和解锁都是要消耗一定性能的，因此我们不太可能为所有的方法都加上锁。另外其实在 一个 app 中可能会涉及到多线程的部分是有限的，我们也没有必要为所有东西加上锁。过多的锁不仅没有意义，而且对于多线程编程来说，可能会产生很多像死锁这样的陷阱，也难以调试。因 此在使用多线程时，我们应该尽量将保持简单作为第一要务。
+
+OC 中使用 @sunchronized(obj){ //do something } 为一个变量自动加锁和解锁。
+
+swift 如下，当然也可以利用函数式封装一个闭包。
+```swift
+objc_sync_enter(obj)
+// do something 
+objc_sync_exit(obj)
+```
+
+#### Toll-Free Bridging和Unmanaged
+这里要谈论的是 Core Foundation。在 Swift 中对于 Core Foundation (以及其他一系列 Core 开头的框架) 在内存管理进行了一系列简化，大大降低了与这 些 Core Foundation (以下简称 CF ) API 打交道的复杂程度。
+
+首先值得一提的是对于 Cocoa 中 Toll-Free Bridging 的处理。Cocoa 框架中的大部分 􏱁􏰭 开头的 类其实在 CF 中都有对应的类型存在，可以说 NS 只是对 CF 在更高层面的一个封装。比如 NSURL 和 CFURLRef；NSString 和 CFStringRef。
+
+因为在 Objective-C 中 ARC 负责的只是 NSObject 的自动引用计数，因此对于 CF 对象无法进行 内存管理。我们在把对象在 NS 和 CF 之间进行转换时，需要向编译器说明是否需要转移内存的管理权。对于不涉及到内存管理转换的情况，在 Objective-C 中我们就直接在转换的时候加上 __bridge 来进行说明，表示内存管理权不变。
+
+```swift
+NSURL *fileURL = [NSURL URLWithString:@"SomeURL"];
+SystemSoundID theSoundID;
+//OSStatus AudioServicesCreateSystemSoundID(CFURLRef inFileURL,
+//  SystemSoundID * outSystemSoundID) ;
+OSStatus error = AudioServicesCreateSystemSoundID(
+    (__bridge CFURLRef) fileURL,
+    &theSoundID);
+```
+而在 Swift 中，这样的转换可以直接省掉了，上面的代码可以写为下面的形式，简单了许多:
+
+```swift
+import AudioToolbox
+
+let fileURL = NSURL (string: "SomeURL")
+var theSoundID: SystemSoundID = 0
+//AudioServicesCreateSyst emSoundID(inF ileURL: CFURL,
+//  _ outSystemSoundID: UnsafeMutablePointer<SystemSoundID>) -> OSStatus
+AudioServicesCreateSystemSoundID(fileURL!, &theSoundID)
+```
+细心的读者可能会发现在 Objective-C 中类型的名字是 CFURLRef ，而到了 Swift 里成了
+CFURL 。 CFURLRef 在 Swift 中是被 typealias 到 CFURL 上的，其实不仅是 URL，其他的各类 CF 类 型都进行了类似的处理。这主要是为了减少 API 的迷惑：现在这些 CF 类型的行为更接近于 ARC管理下的对象，因此去掉 Ref 更能表现出这一特性。
+
+另外在 Objective-C 时代 ARC 不能处理的一个问题是 CF 类型的创建和释放。虽然不能自动化， 但是遵循命名规则来处理的话还是比较简单的:对于 CF 系的 API，如果 API 的名字中含有 Create ， Copy 或者 Retain 的话，在使用完成后，我们需要调用 CFRelease 来进行释放。
+
+不过 Swift 中这条规则已成明日黄花。既然我们有了明确的规则，那为什么还要一次一次不厌其烦 地手动去写 Release 呢? 基于这种想法，Swift 中我们不再需要显式地去释放带有这些关键字的内 容了 (事实上，含有 CFRElease 的代码甚至无法通过编译)。也就是说，CF 现在也在 ARC 的管辖范围之内了。其实背后的机理一点都不复杂，只不过在合适的地方加上了像 CF_RETURN_RETAINED 和 CF_RETURNS_NOT_RETAINED 这样的标注。
+
+但是有一点例外，那就是对于非系统的 CF API (比如你自己写的或者是第三方的)，因为并没有强 制机制要求它们一定遵照 Cocoa 的命名规范，所以贸然进行自动内存管理是不可行的。如果你没 有明确地使用上面的标注来指明内存管理的方式的话，将这些返回 CF 对象的 API 导入 Swift 时， 它们的类型会被对对应为 Unmanaged<T> 。 Unmanaged<T> 中还提供了 retain ， release 和 autorelease 这样的 "老朋友" 供我们使用。
