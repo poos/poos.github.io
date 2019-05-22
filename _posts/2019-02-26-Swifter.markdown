@@ -19,7 +19,7 @@ tags:                                #标签
 
 [Swift 开发必备 tips 阅读笔记 第二篇](https://poos.github.io/2019/05/13/Swifter1/)，Objective-C 与 Swift 的一些特性过渡。
 
-[Swift 开发必备 tips 阅读笔记 三 最后一篇](https://poos.github.io/2019/05/13/Swifter1/)，Swift与开发环境及一些实践。
+[Swift 开发必备 tips 阅读笔记 三 最后一篇](https://poos.github.io/2019/05/18/Swifter2/)，Swift与开发环境及一些实践。
 
 
 ### Swift新元素
