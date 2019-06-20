@@ -51,12 +51,15 @@ NSMutableAttributeString 是 Foundation 中处理属性字符串的一个类。�
 
 封装了不同 label 使用的样式，在使用的时候直接讲变量作为函数使用即可
 
-```
+```swift
 // 组合函数
+//titleone 是13，red
 let titleOne = font(.systemFont(ofSize: 13)) >>> color(.red)
 
+//titletwo 是13，black
 let titleTwo = titleOne >>> color(.black)
 
+//contentOne 是11，red，居中，蓝色
 let contentOne = font(.systemFont(ofSize: 11)) >>> color(.red) >>>  alignment(.center) >>> color(.blue)
 
 ...
@@ -66,6 +69,12 @@ let attS = NSMutableAttributedString.init(string: "title content")
 
 label.attributedText = titleOne(attS)
 
+```
+
+当然创建 atts 可以写一个函数，这样调用就更加方便了：
+
+```swift
+label.attributedText = titleOne(newAttS(""title content""))
 ```
 
 #### 函数实现
@@ -95,11 +104,11 @@ func font(_ font: UIFont) -> MutableAttributeFunc {
 
 事实上实现这个 函数 之后，我们就可以安装如下方式调用了。
 
-```
+```swift
 //通过调用上边的函数，生成一个函数
 let font = font(.systemFont(ofSize: 12))
 
-//给字符串添加一个 font 属性
+//使用 font 函数处理字符串。
 let attS = NSMutableAttributedString.init(string: "title content")
 let titleOne = font(attS)
 ```
@@ -134,7 +143,7 @@ func alignment(_ align: NSTextAlignment) -> MutableAttributeFunc {
 
 如果简单调用是这个样子的
 
-```
+```swift
 //     color(      font   (attS)      )
 let title = color(.black)(font(.boldSystemFont(ofSize: 14))(attS))
 
@@ -144,7 +153,7 @@ let title = color(.black)(font(.boldSystemFont(ofSize: 14))(attS))
 
 **创建一个复合函数**
 
-```
+```swift
 func  composeFilters(_ filter1: @escaping MutableAttributeFunc, _ filter2: @escaping MutableAttributeFunc) -> MutableAttributeFunc {
     return { attString in filter2(filter1(attString)) }
 }
@@ -163,7 +172,7 @@ let title = colorAndFont(attS)
 
 上边已经能够明显提示代码清晰度了，但是还有更好的方式，那就是引入运算符：
 
-```
+```swift
 precedencegroup ATPrecedence {
     associativity: left
     higherThan: AdditionPrecedence
@@ -180,7 +189,7 @@ func >>>(filter1: @escaping MutableAttributeFunc, filter2: @escaping MutableAttr
 
 定义了运算符之后，就可以通过运算符进行组合了。到这一步，已经能实现本文开头的功能了。
 
-```
+```swift
 let titleTheme = font(.systemFont(ofSize: 13)) >>> color(.red)
 
 let title = colorAndFont(attS)
@@ -190,7 +199,7 @@ let title = colorAndFont(attS)
 
 用泛型实现 >>> 的符号化
 
-```
+```swift
 func >>> <A, B, C>(f: @escaping (A) -> B, g: @escaping (B) -> C) -> (A) -> C {
     return { x in g(f(x)) }
 }
@@ -204,7 +213,7 @@ func >>> <A, B, C>(f: @escaping (A) -> B, g: @escaping (B) -> C) -> (A) -> C {
 “将一个接受多参数的函数变换为一系列只接受单个参数的函数，这个过程被称为柯里化 (Currying)，它得名于逻辑学家 Haskell Curry。”
 
 
-```
+```swift
 func add1(_ x: Int, _ y: Int) -> Int {
     return x + y
 }

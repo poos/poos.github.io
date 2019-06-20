@@ -100,15 +100,18 @@ MissingPluginException while adding to existing iOS application
 cd xx/flutter_module 
 flutter attach
 ```
+然后重新导入即可连接设备，热更新运行。
 
 发生错误：
 Oops; flutter has exited unexpectedly.
 
 [flutter attach - Oops; flutter has exited unexpectedly.](https://github.com/flutter/flutter/issues/33035)
 
+安照教程更新即可解决.
 
 如果需要更新，可以查看各个 channel 的最新版本。
 [flutter/sdk/releases](https://flutter.dev/docs/development/tools/sdk/releases?tab=macos)
+
 
 
 ### 6. 嵌入 android

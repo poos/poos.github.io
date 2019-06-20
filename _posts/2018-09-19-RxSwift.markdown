@@ -39,7 +39,7 @@ RxJSc
 Rx.NETC
 RxScala
 RxClojure
-RxSwiftC
+RxSwift
 Others
 ```
 
@@ -74,7 +74,7 @@ let disposable = passwordValid
 
 ...
 
-// 取消绑定，你可以在退出页面时取消绑定
+// 取消绑定，你可以在退出页面（或者需要取消监听的时候）进行取消绑定操作。
 disposable.dispose()
 下面几节会详细介绍这几个组件的功能和用法。
 

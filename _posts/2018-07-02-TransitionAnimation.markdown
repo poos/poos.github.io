@@ -35,7 +35,7 @@ TransitionTreasury 是一个开放的项目，有一些作者提供了一些更�
 为了项目的通用性，我封装了这个动画，这样在需要使用的时候调用即可。先看一下代码
 
 
-继承 UINavigationController 然后重新 push 和 pop 的方法。在代理中使用自己的动画。
+继承 UINavigationController 然后重写 push 和 pop 的方法。在代理中使用自己的动画。
 
 ```swift
 
@@ -155,6 +155,6 @@ public extension UIWindow {
 ### 最后
 
 
-这个是 Swift 下好用的转场解决方案，如果在 OC 下有更多的选择，在 Swift 下建议尝试一下。
+这个是 Swift 下好用的转场解决方案，如果在 OC 下有更多的选择，在 Swift 下建议尝试一下本文的方法。
 
 如果碰到问题，去 github 上找一找，有很多前辈已经有了好的通用解决方案。

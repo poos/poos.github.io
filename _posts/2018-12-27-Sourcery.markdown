@@ -16,7 +16,10 @@ tags:                                #标签
 
 ### 介绍和前言
 
-Sourcery 是一个非常方便的脚本代码生成器。使用它能为一些类扩展通用的方法，有些类似于 java 的[注解处理器](https://blog.csdn.net/qfanmingyiq/article/details/75432854)，避免手写代码造成的错误。
+Sourcery 是一个非常方便的脚本代码生成器。使用它能为一些类扩展通用的方法，例如返回枚举的所有元素；例如为类自动生成 encoder 喝 coder 的代码。
+
+
+有些类似于 java 的[注解处理器](https://blog.csdn.net/qfanmingyiq/article/details/75432854)，避免手写代码造成的错误。
 
 
 它的 Github 地址在这里 [krzysztofzablocki/Sourcery](https://github.com/krzysztofzablocki/Sourcery)

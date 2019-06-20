@@ -37,7 +37,7 @@ tags:                                #标签
 介绍各种通讯方式，最后作者提出建议的通讯方式为
 
 ```
-聊了这么多这个好好，如果换做我们项目，我会选择啥？
+聊了这么多这个方式，如果换做我们项目，我会选择啥？
 
 iOS：MessageHandler注入/Prompt弹框拦截(JSToNative) + evaluatingJavaScript
 (NativeToJS)

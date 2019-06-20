@@ -44,6 +44,16 @@ android studio 等第三方软件可以使用 **cask** 工具包安装。可以�
 
 - 全局的环境变量要设置好 。
 
+#### 在中国使用
+
+将以下代码放入 .bash_podfile，或者直接在终端运行即可。
+
+export FLUTTER_STORAGE_BASE_URL=https://mirrors.sjtug.sjtu.edu.cn
+export PUB_HOSTED_URL=https://dart-pub.mirrors.sjtug.sjtu.edu.cn
+
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+
 #### 总结
 
 文档比较全，按文档走基本没有问题。

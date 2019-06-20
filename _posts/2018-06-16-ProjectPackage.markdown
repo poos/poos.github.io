@@ -76,7 +76,7 @@ https://github.com/ImageOptim/ImageOptim
 https://www.jianshu.com/p/867d9fa85770
 
 ### 1.6 非必须图片从服务器下载
-如上
+如标题：非必须图片从服务器下载。
 
 ## 2. 第三方库
 

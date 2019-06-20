@@ -52,13 +52,13 @@ override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec
 
 话不多说，来代码中继续讨论：
 
-**需求** ：类似微信中的图片显示器，**1图按照当前尺寸，多图安装9宫格排列**
+**需求** ：类似微信中的图片显示器，**1图按照当前尺寸，多图安装9宫格排列**，当然下边的示例代码只是简单化处理了一下
 
-**分析** ：一种更加方案化的解决方式是使用 CollectionView；通过不同的 type 使用不同的 size 即可。
+**分析** ：一种更加方案化的解决方式是使用 CollectionView；通过不同的 type 使用不同的 size 即可，但是 **性能会比直接排布查很多，因为相对于这个场景，添加了很多不必要的优化**。
 
 ##### 创建类型
 
-可以通过枚举方便的确定类型
+可以通过枚举对象，方便的提供各个属性
 
 ```swift
 private enum PicturesStyle {
@@ -70,6 +70,14 @@ private enum PicturesStyle {
             self = .larage
         } else {
             self = .small
+        }
+    }
+
+    var width: Double {
+        switch self {
+            case larage:
+            return 23
+            //...
         }
     }
 }
@@ -219,3 +227,9 @@ extension PicturesView: ASCollectionDelegate, ASCollectionDataSource {
 到这里一个复杂的 View 封装完成了，基本上还是不错了。之所以选择这个例子，也是因为 collection 的特性比较支持九宫格。另外，如果不使用 collection ,强行布局，相信会写很多代码。而且，在 Texture 下，这种布局就更加不适合了。
 
 除此之外想提一点是，组件应当最小化的拆分，本文是跟 Texture 相关的，所以就不展开详细阐述了。
+
+## 后记
+
+collection 方案省却了很多复杂的代码，使得我们可以使用开箱即用的现成组件。但是在后续的项目优化过程中，发现，collection view 并不适合在 tableview cell 中大量的使用。因为 collection view 有着 cell 复用等特性，所以在此场景下会进行大量的无用的操作。
+
+我们的项目中最终使用了普通的图片堆叠的方式来处理了这种情况。最终的性能得到大幅提升。当然不可避免的是创建一些行组件函数，以实现代码的优化。

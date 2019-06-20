@@ -44,7 +44,8 @@ ViewController,lifeCycle,viewWillLayoutSubviews,,
 ViewController,other,buttonActionNext2:,,
 ,,,,
 ```
-**那么在Swift下是否好用呢**，我尝试写了一个demo在[**干货 poos/AspectOrientedProgramming**](https://github.com/poos/SwiftEFarm)。完全是不侵入业务的，甚至移除了TrackManager这个文件夹原项目仍然可以很好运行
+
+**那么在Swift下是否好用呢**，我尝试写了一个demo在[**干货 poos/AspectOrientedProgramming**](https://github.com/poos/SwiftEFarm)。完全是不侵入业务的，甚至 **直接移除** TrackManager 这个文件夹原项目仍然可以很好运行。
 
 1. Demo中对常用的buttonClick，tableSelect，lifeCycle做了监听，在相应的地方会触发打印
 
@@ -52,15 +53,14 @@ ViewController,other,buttonActionNext2:,,
 
 **使用的结果呢**： 它在Demo中可以完美的检测和打点.....
 
-**然而...**：将它运行到Swift项目中，你就会发现问题：我的大部分函数和方法不是 **@objc** 的，大部分的swift方法并没有OC的运行时，而且 **在Swift4.0之后不能简单的@objc标志类** 的动态性
+**然而...**：将它运行到Swift项目中，你就会发现问题：我的大部分函数和方法不是 **@objc** 的，大部分的swift方法并不支持OC的运行时，而且 **在Swift4.0之后不能简单的@objc标志类的动态性** ，这意味着你需要将所有的相关方法使用 **@objc** 暴露出来。
 
-这就是说你所有监控的方法都要开放给Objective-C，Swift新版把这个口堵了
 
 **方案一优劣简介**
 ```
 - oc下的动态埋点方案，使用csv文件标志要打的的类和方法，动态hook方法打点
 动态埋点，运行时，在方法执行前后插入打点方法
-- oc下可解决部分打点，其他打点可以通过开放类，传入上下文，造专属的打点方法
+- oc下可解决部分打点，其他打点可以通过扩展类，传入上下文，造专属的打点方法
 
 
 然而
@@ -92,7 +92,7 @@ ViewController,other,buttonActionNext2:,,
 
 2. 一些属于操作的点可以整合
 
-3. 可以使用链式的方案减少打点的痛苦😄
+3. 可以使用链式的方案减少打点的痛苦😄（ex： **EventManage.share.event(.click).page(.home).push()** ）
 
 
 **方案三优劣简介**
@@ -176,7 +176,7 @@ EventManage.share.event(.click).page(.home).push()
 
 上拉下拉等同上
 
-一些业务相关需要传入page的，维护一个正在显示的page参数即可
+一些业务相关需要传入page的，维护一个正在显示的page参数即可，只需要在 vc 父类更新 page 。
 
 
 
@@ -188,7 +188,7 @@ EventManage.share.event(.click).page(.home).push()
 **众里寻她千百度，蓦然回首，那人却在灯火阑珊处**
 
 当你苦苦寻找如何直接实时显示打点，让测试方便测试的时候，有没有发现这个东西
-**Console**或者叫**控制台**，这是mac自带的一个程序，通过**NSLog**即可将Xcode的输出显示到终端，啰嗦一句，print是不可以的，猜测也是跟OC运行时的关系吧
+**Console**或者叫**控制台**，这是mac自带的一个程序，通过**NSLog**即可将Xcode的输出显示到终端，啰嗦一句，swift 中 print 是不可以的，所以你需要使用 **NSLog**，猜测也是跟OC运行时的关系吧
 
 ~~--懒得传图，从网上找个图片--~~
 ![控制台](http://images.macx.cn/forum/201202/27/1206273lioivz2pvlnkpz3.jpg)
