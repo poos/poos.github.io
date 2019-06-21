@@ -1,7 +1,7 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
 title:      Swift 中 高级枚举使用，模式匹配                 # 标题
-subtitle:   翻译一下 terhechte 的模式匹配文章             #副标题
+subtitle:   Swift GG 关于模式匹配的资料，实践枚举和模式匹配的开发             #副标题
 date:       2019-06-13                 # 时间
 author:     poos                         # 作者
 header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
@@ -120,6 +120,9 @@ enum Level {
             break
         }
         return ([], [])
+
+    }
+}
 ```
 
 
