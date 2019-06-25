@@ -304,7 +304,7 @@ print("double:\(b.format(f))")
 
 我们谈的是 Options，不是 Optional，或者说是 Objective-C 中的 NS_OPTIONS。
 
-OC 中可以使用 | 来指定多个动画效果叠加，因为内部使用的是二进制移位实现。但是在 swift 这些在枚举中不再重要。不过对于动画，可以用 struct 集合来代表多个动画选项。
+OC 中可以使用 ‘|’ 来指定多个动画效果叠加，因为内部使用的是二进制移位实现。但是在 swift 这些在枚举中不再重要。不过对于动画，可以用 struct 集合来代表多个动画选项。
 
 ```swift
 UIView.animate(withDuration: 0.3,
