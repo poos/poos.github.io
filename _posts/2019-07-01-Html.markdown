@@ -1,0 +1,180 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      深度使用 HTML                  # 标题
+subtitle:   图片缓存，数据传输，UI适配等～           #副标题
+date:       2019-07-01                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 架构
+- Code
+---
+
+### 背景及相关链接
+
+为了 iOS/Android 体验统一化和快速迭代，我们在做某问答产品时候，嵌入了 Html-JS 模块。那么问答产品的核心体验就是写问答和浏览问答，那么本文就是为了探讨和分享 Html 嵌入的可行性。如果有一些疑问🤔️，不妨看一下，到文末再发表评论。
+
+首先我们是国内的问答产品，竞争激烈，所以在用户体验上是奔着完美去做的。可以预料的会有图片缓存，数据传输，UI适配方面的问题，那么就看下是否能 **完美** 的解决了～
+
+### 打包 Html 和嵌入
+
+[Resource 资源往哪里放](https://blog.csdn.net/Z1591090/article/details/88355955)
+
+那第一步就是和 Web 一起调试好显示，先在工程中使用 WebView 加载，启动起来～
+
+```
+Resource
+├── a-some.html
+├── a-some-1.html
+├── css
+│   ├── some.css
+│   └── some-1.css
+├── images
+│   ├── some.png
+│   └── some-1.png
+└── js
+    ├── some.js
+    └── some-1.js
+```
+
+作为 Resource 文件直接放入工程中，然后在网页中使用 Bundle 里面的文件就好了。
+
+
+**然而，走在追求完美的路上，**，为了更好的管理文件，所有的文件都应该放在它合适的地方。Html 资源们，应该像图片一样被缓存和分类，在需要的时候去加载或者预加载。
+
+
+将文件 Copy 到固定的位置然后 load 使用，像下边一样。
+
+```
+Cache
+├── Readme
+├── img
+│   ├── some.png
+│   └── some-1.png
+└── other
+    ├── some.css
+    └── some-1.css
+```
+
+> 如果发现资源更新了，但是没有展现在 UI 上，那么很可能是引用了旧的资源，推荐将资源文件纳入统一的 manager 进行管理。
+
+最后不要忘记版本升级的时候对于 Html 的缓存更新问题，Html 资源推荐跟随 AppBuildNum 进行更新，省事。当然也可以使用 plist 统一版本～
+
+
+### Images 的下载存储
+
+细心的童鞋已经发现缓存目录里有图片～ 那么虽然使用了Html 加载，但是如果图片还是从网页加载，不好好利用 Mobile 的缓存，那不是太可惜了。
+
+为了在显示上无异，而速度上取胜，我们必须对接和共用 Image Cache。
+
+可以构想到分为几步：
+
+1. 从 html 中读取 url
+2. 使用原生下载库，下载和缓存
+3. 替换 html 中的 url 为 local path
+
+没错，完美～
+
+然后就就是着手正则筛选匹配，对接图片下载库，之类的细节。
+
+...
+
+随着项目的推进，会发现有更多的优化:
+
+- [images] 在列表中使用小尺寸，进入详情可以异步下载大尺寸图片，异步下载 html 加载等
+
+- 存储前进行图片重绘，只存储手机使用的对应备图
+
+> 因为涉及图片管理，所以也会有图片 **上传** 的相应优化，在此只简单说一下：图片压缩算法，图片异步上传优化，服务端图片去重等～
+
+### Html 嵌入本地图片
+
+好像刚才已经提到了： “替换 html 中的 url 为 local path”。这确实是解决问题的好办法，但是我们确实有更好的选择。
+
+因为已经比较深度的使用了 Html，那么也不介意更进一步，**使用 js 对 html 的 [img] 进行链接提取加工**，这样就在客户端最大限度共用了部分逻辑，相应的减少了总代码量，减少了错误的可能性。
+
+```
+function(url, localUri ,index) {
+}
+```
+那么当下载完成就去调用更新即可，Html 模块也可以定制更多功能，例如在加载图片时候使用占位图片等～
+
+### 其他 UI 更新
+
+一套 Html 库可能包含了作者（头像，title）、Tag /话题、问题、回答、评论赞数等内容，因为框架的 Resource 在本地，数据从 api 获取，那么就需要大量的数据交互，这些通常都是使用 js 函数进行交互的。
+
+```
+updateData(json, id) {
+}
+updateImage(url, localPath, index) {
+}
+updateState(state) {
+}
+```
+
+甚至可能给 **可信的** 网站传输用户信息：
+```
+updateCredentials(json) {
+}
+```
+
+### 交互
+
+如果上边都已经解决，这一部分其实可以很快完成，主要是双方约定一套 action/push 规则，然后对接本地的 Ruoter即可。
+
+
+**使用 navigationAction url进行管理**
+
+```
+func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    guard navigationAction.isClientHandle else {
+        decisionHandler(.success)
+        return
+    }
+
+//        let navigate = Router.tryAutoNavigate(navigationAction.request, manual: { [weak self] in
+//            //need custom push...
+//        })
+    if Router.tryAutoNavigate(navigationAction.request) == false {
+        handleAction(navigationAction.request)
+    }
+    decisionHandler(.cancel)
+}
+```
+
+>利用 action 可以组合出很多有趣的行为，例如： Web 控制 App Navigate Item (Share 等) 显示，同时传输（分享）数据.
+
+### 编辑
+
+关于编辑可以看看这个项目：
+
+[ZSSRichTextEditor](https://github.com/nnhubbard/ZSSRichTextEditor) blob/master/ZSSRichTextEditor/Source/ZSSRichTextEditor.js
+
+```
+zss_editor.setBold = function() {
+    document.execCommand('bold', false, null);
+    zss_editor.enabledEditingItems();
+}
+...
+```
+
+当然使用起来免不了一步步的定制 css，定制数据交互，缩减功能等。
+
+
+关于本课题：当然是插入图片，和 html转换的问题了：
+
+1. 本地选择图片，插入编辑器
+2. 生成 html，暂存
+3. 图片异步上传，获取 url，替换html，上传服务器
+
+跟上边展示有点儿相似，就不具体展开说了。
+
+> 更多可以将本次上传的图片，处理和重绘本机尺寸，以备浏览时候展示
+
+
+### 总结
+
+那现在，基本上所有在原生可以实现的功能，嵌入都可以实现；所以嵌入的性能也都可以解决。可以称得上是完整的解决方案。
+
+> 这基本是一套经得起考验的架构，有问题可以留言支持一下～

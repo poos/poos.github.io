@@ -57,14 +57,8 @@ extension Array: DictionaryValue where Element: DictionaryValue {
 
 Reacnative 中文网站，有相当多的学习资料，之前也了解过一些。因为其他技能学习原因，没有深入。现在热点减少，更有大厂放弃，开发其他方案，还有新的 **Flutter** 语言出现，所以贴几个地址罢了。
 
-https://reactnative.cn/       
-https://reactnative.cn/docs/0.51/getting-started.html       
-https://reactnative.cn/docs/0.51/platform-specific-code.html#content       
-https://reactnative.cn/docs/0.51/communication-android.html#content       
-https://reactnative.cn/docs/0.51/running-on-device-ios.html#content       
-http://update.reactnative.cn/login       
-https://github.com/reactnativecn/react-native-pushy/blob/master/README.md       
-https://reactnative.cn/about.html
+[reactnative.cn/docs](https://reactnative.cn/docs)     
+[github.com/reactnativecn/react-native-pushy](https://github.com/reactnativecn/react-native-pushy/blob/master/README.md       
 
 #### Swift 3.0 的编译速度问题
 
@@ -78,10 +72,10 @@ Swift3 代码当项目内容非常多的时候编译会非常慢，即使是非�
 
 理解和使用 ssh 比你想象的更简单，就不展开说了。也列一个地址：
 
-https://www.waitig.com/git%E5%8F%8Atoken%E7%9A%84%E4%BD%BF%E7%94%A8.html  
-https://blog.csdn.net/pipisorry/article/details/52269785  
-https://git-scm.com/book/zh/v1/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-%E7%94%9F%E6%88%90-SSH-%E5%85%AC%E9%92%A5  
-https://www.cnblogs.com/superGG1990/p/6844952.html
+[waitig](https://www.waitig.com/git%E5%8F%8Atoken%E7%9A%84%E4%BD%BF%E7%94%A8.html)
+[pipisorry](https://blog.csdn.net/pipisorry/article/details/52269785)
+[book](https://git-scm.com/book/zh/v1/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-%E7%94%9F%E6%88%90-SSH-%E5%85%AC%E9%92%A5)
+[cnblogs.com/superGG1990](https://www.cnblogs.com/superGG1990/p/6844952.html)
 
 ps: 配置好电脑之后，设置好 ssh， **用一个文档 clone 所有库，装新机简直不要太爽**
 
