@@ -1,0 +1,129 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      Textview 相关                 # 标题
+subtitle:   加载 html，事件响应            #副标题
+date:       2019-09-24                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 总结
+- Code
+---
+
+### 简洁
+
+Textview 具有很多特性，所以它在很多地方可以非常巧妙的使用：
+
+- 显示多内容并且提供滑动，或者不滑动支持扩展高度显示
+- 加载 Html 和显示，加载 Attribute String 显示，也可以显示图片
+- 提供的一些快捷调用的，支持手机号短信地址等
+
+
+### 解读特性
+
+**滑动**
+
+通常使用在协议或者弹窗提供大量文字上，如果碰到这种情况，基本直接使用 TextView，因为跟随业务扩展，免不了扩展使用。使用 TextView 可以做到业务的前瞻性。
+
+**Html**
+
+这个自然是为了动态，方便从接口读出的数据复杂的显示。可以理解为扩展了字符串。通常情况下本地定义一套显示样式，以后就可以直接使用了（当然也可从服务器下发，通常是全局的）。
+
+**快捷调用**
+
+通过默认支持的快捷调用可以调用很多原生功能，手机，链接，地址，日历提醒等
+
+
+### String or AttributeSting
+
+借助于原生的 AttributeSting 的支持，可以非常方便的创建一些复杂的静态布局，而不需要创建多个 UI 控件，这在节省性能上提升十分明显。
+
+![img](https://poos.github.io/img/textview_2.png)
+![img](https://poos.github.io/img/textview_2.png)
+
+上图两种通常在图文列表中显示，通常需要多个UI控件去组合操作。但是如果使用 AttributeSting，使用一个 Textview 或者 Label 就可以实现所有的功能。减少了控件使用，也是最简单的性能优化方式了。
+
+### HTML
+
+[HTML-Textview](https://poos.github.io/2019/08/16/Html/)，这里有 html 和 textview 撞出的火花～.
+
+那么同样的：
+
+如果需要下面一个结果：
+
+![img](https://poos.github.io/img/textview_1.png)
+
+同样也可以使用 Html 进行加载
+
+```
+<html><p>p1</p><ul><li>li</li><li>li</li><li>li</li><br><p>p.</p><html>
+```
+
+虽然 Textview 不能直接加载 Html，但是 AttributeSting 支持从 Html data 初始化，这就间接支持了 Html 加载。上图其实就是用html加载的：
+
+```
+let tv = UITextView(frame: .init(x: 0, y: 0, width: 100, height: 300))
+self.view.addSubview(tv)
+
+let htmlS = "<html><p>p1</p><ul><li>li</li><li>li</li><li>li</li><br><p>p.</p><html>";
+
+let css = String(format:"<body style=\"font-family: 'HelveticaNeue-Light'; color: \(UIColor.darkText); font-size: \(20)\">%@</body>", htmlS)
+let data = css.data(using: .utf16, allowLossyConversion: false)
+
+do {
+
+    let attributedString = try NSAttributedString(data: data!,
+                                                  options: [.documentType : NSAttributedString.DocumentType.html],
+                                                  documentAttributes: nil)
+    tv.attributedText = attributedString
+} catch let error as NSError {
+    print("error: \(error)");
+}
+```
+
+### 事件响应
+
+通过设置 dataDetectorTypes 可以支持许多类型的响应：
+```
+typedef NS_OPTIONS(NSUInteger, UIDataDetectorTypes) {
+    UIDataDetectorTypePhoneNumber                                        = 1 << 0, // Phone number detection
+    UIDataDetectorTypeLink                                               = 1 << 1, // URL detection
+    UIDataDetectorTypeAddress API_AVAILABLE(ios(4.0))                 = 1 << 2, // Street address detection
+    UIDataDetectorTypeCalendarEvent API_AVAILABLE(ios(4.0))           = 1 << 3, // Event detection
+    UIDataDetectorTypeShipmentTrackingNumber API_AVAILABLE(ios(10.0)) = 1 << 4, // Shipment tracking number detection
+    UIDataDetectorTypeFlightNumber API_AVAILABLE(ios(10.0))           = 1 << 5, // Flight number detection
+    UIDataDetectorTypeLookupSuggestion API_AVAILABLE(ios(10.0))       = 1 << 6, // Information users may want to look up
+
+    UIDataDetectorTypeNone          = 0,               // Disable detection
+    UIDataDetectorTypeAll           = NSUIntegerMax    // Enable all types, including types that may be added later
+} API_UNAVAILABLE(tvos);
+```
+
+自动适配确实很好，但是 link 有时候在一些旧设备上会造成反应慢等问题。
+
+如果在 **服务大多数人** 和 **体验做到极致** 纠结太多的话，可以使用下边的方法精准控制。 ~~**没有什么是一个手势解决不了的。**~~
+
+事实上可以拿到 tap 的位置的 url 信息，进一步做其他操作：
+
+```
+    let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapTextview(_:)))
+    textView.addGestureRecognizer(tapRecognizer)
+
+
+    @objc func tapTextview(_ gesture: UITapGestureRecognizer) {
+
+        let tapLocation = gesture.location(in: staticTextView)
+        guard
+            let textPosition = staticTextView.closestPosition(to: tapLocation),
+            let url = staticTextView.textStyling(at: textPosition, in: .forward)?[NSAttributedString.Key.link],
+            let urlString = (url as? String) ?? (url as? URL)?.absoluteString
+        else { return }
+
+        //Do some
+    }
+```
+
+### 总结
+
+本文写的比较简单，主要是重新梳理一下 Textview 的使用，阅读之后有了更多的了解，在新的问题出现的时候就会有更多的选择。

@@ -28,6 +28,11 @@ swift 中的枚举有很强大的功能：
 
 - 因为枚举可以添加方法和属性，所有枚举甚至可以遵守协议，这又给了枚举以无限可能
 
+-  使用字符串赋值枚举等神奇操作
+
+Swift 中枚举被用作网络框架，统计打点框架，Router框架，Theme框架等等。当然除了框架以外，用在一些业务也是非常贴切，本文就是一个简单的栗子～
+
+
 ##### [Swift Pattern Matching详细信息](http://appventure.me/2015/08/20/swift-pattern-matching-in-detail/)
 
 swift 中的模式匹配，switch case：
@@ -50,9 +55,11 @@ swift 中的模式匹配，switch case：
 
 ### 例子
 
-下边是一个真实的例子，需求是展现一个个页面情景，根据不同的选择，产出最终产出结果，有点像情景交互游戏：
+下边是一个真实的例子，需求是展现一个个页面情景，根据不同的选择，产出最终产出结果，有点像情景交互游戏，或者年度账单之类：
 
 **利用枚举实现类簇，保证项目风格，且容易调试**：
+
+CView定义了当前页面的所有元素，背景色或view，前景view，焦点，可选按钮等...
 
 ```swift
 enum CView {
@@ -61,7 +68,7 @@ enum CView {
     case eye(position: CGPoint)
     case ground(image: String)
     case button(position: CGPoint, size: CGSize)
-    
+
     var node: UIView {
         switch self {
         case .back:
@@ -84,6 +91,8 @@ enum CView {
 
 **利用枚举定义关卡，利用方法返回关卡的背景音乐，同时返回需要添加的view，和 view 对应的事件（使用元组的方式）**：
 
+如果说第一个枚举只是当前场景的所有view列举的话，第二个就是枚举场景并且提供场景转换...
+
 ```swift
 enum Level {
     case welocme
@@ -92,8 +101,8 @@ enum Level {
     case levelSelf
     case pay
     case copyright
-    
-    
+
+
     //初始化界面，返回
     var music: String? {
         switch self {
@@ -105,16 +114,16 @@ enum Level {
             return nil
         }
     }
-    
+
     //初始化界面，返回
-    func didMove() -> ([UIView], [(UIView, Level)]) {
+    func nodes() -> ([UIView], [(UIView, Level)]) {
         switch self {
         case .name:
             let ground = CView.ground(image: "name").node
             let button0 = CView.button(position: CGPoint(x: 0, y: -70),
                                       size: CGSize.init(width: 450, height: 100)).node
             return ([ground, button0], [(button0, .changeName)])
-            
+
             //...
         default:
             break
@@ -129,7 +138,7 @@ enum Level {
 可以看到通过这个几个枚举的创建，一个个页面的选择和选择之后的结果都十分明显的确定了。很明显在调试应用的时候能够避免很多的错误。
 
 
-写完框架之后，需要的只是添加和修改 enum 这一块了，这种方式在情景对话中非常适合。
+写完框架之后，需要的只是添加和修改 enum 这一块了，这种方式在情景对话中非常适合。当然可以更加具体的扩展枚举提供更多的功能。
 
 
 ### 总结

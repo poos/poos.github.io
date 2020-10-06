@@ -1,0 +1,195 @@
+---
+layout:     post                       # 使用的布局（不需要改）
+title:      Router                  # 标题
+subtitle:   方案比较，新项目，想法            #副标题
+date:       2019-10-16                 # 时间
+author:     poos                         # 作者
+header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
+catalog: true                         # 是否归档
+tags:                                #标签
+- 设计
+- Code
+---
+
+
+### 组件化方案
+
+因为 Router 在本质上也是将一个个 feature 隔离提供，所以也算是组件化方案里的一环了。
+
+[组件化方案](https://poos.github.io/2018/10/10/Module/)
+
+### Router 应当有的功能
+
+将 Router 泛化之后，几乎所有独立的功能可以使用 Router 来操作，例如页面跳转，action sheet，login等，甚至 App 之间相互调用 等
+
+- 不同 feature 跳转
+- 支持 Deep Link 等
+- 页面跳转支持多种跳转方式，push，present，custom 等
+- 开放 Protocol, 支持生命周期控制
+
+
+### 示例
+
+先从最基本的 Code 写起来，最后再展示封装后使用方式.
+
+你就会发现 delegate 的生命周期的设计，这也是为了一些特殊方案的预设。虽然在同一个项目里面的话使用频率不会很高，但是如果划分 framework，在不同的 workspace 工作的时候，它的作用就体现出来了。
+
+delegate 在 iOS Foundation, UIKit, WebKit 等一些地方有非常多的使用，这里也有参考的一些思想。
+
+#### 利用 Protocol 和 Enum 定义基本属性
+
+例如跳转可以使用这样的方式：
+```
+enum NavigationType {
+  case push(from: UIViewController, to: UIViewController, animated: Bool)
+  case present(from: UIViewController, to: UIViewController, animated: Bool, completion: (()->Void)?)
+  case custom(from: UIViewController, to: UIViewController)
+}
+
+//info can include vision
+enum ActionType {
+  case share(info: [AnyHashable : Any])
+  case sheet(info: [AnyHashable : Any])
+  case laluchApp(info: [AnyHashable : Any])
+}
+
+enum xxxxType {}
+```
+
+
+在跳转添加 delegate 等
+```
+protocol RouterLifeCycle {
+  func prepare(_)
+  func willRouter(_) -> Bool
+  func didRouter(_)
+  func didError(_, ErrorClosure)
+}
+```
+
+
+从 notification 拿来的 Deeplink 信息
+```
+struct Deeplink {
+  var destinationKey: String
+  var type: String
+  var userInfo: [AnyHashable : Any]
+}
+```
+
+#### RouterManager
+
+应当实现 Router 并且实现生命周期方法。
+
+```
+class RouterDB {
+  var map: [AnyHashable : Any]
+
+  ...
+
+
+  func navigate(...) {   }
+
+  func action(...) {   }
+
+  func module(...) {   }
+
+  ...
+}
+
+
+struct Router {
+
+  var delegate: RouterLifeCycle?
+
+  var type: NavigationType?
+
+  conveniences init(...)
+
+
+  func navigate(_ type: NavigationType) {
+    delegate?.prepare()
+
+    guard let delegate = self.delegate, delegate.willRouter() else {
+      delegate?.didError(Error(<xxx>))
+      return
+    }
+    switch type {
+
+    }
+
+    delegate.didRouter()
+  }
+
+
+  func action(_ action: ActionType) { ... }
+}
+```
+
+#### 使用
+
+
+[链式语法的Event Track](https://poos.github.io/2018/07/17/ProjectEvent/)
+
+简单的 router：
+
+```
+static let AppRouter = Router.default
+
+AppRouter.navigate(.push(from: VC1, to: VC2))
+AppRouter.action(.sheet(...))
+```
+
+有生命周期的 router：
+
+```
+class A {
+   lazy var router = Router(delegate: self)
+
+
+   func someAction() {
+     AppRouter.navigate(.push(from: VC1, to: VC2))
+     AppRouter.action(.sheet(...))
+   }
+}
+
+/*
+//Apple - Operation - Api - Example
+
+isCancelled - read-only
+
+isAsynchronous - read-only
+
+isExecuting - read-only
+
+isFinished - read-only
+
+isReady - read-only
+
+dependencies - read-only
+
+queuePriority - readable and writable
+
+completionBlock - readable and writable
+*/
+
+extension A: RouterLifeCycle {
+  func prepare(_)
+  func willRouter(_) -> Bool
+  func didRouter(_)
+  func didError(_, ErrorClosure)
+}
+```
+
+**当然，如果使用了 RX，也可以将 delegate 的各个函数封装使用，会更方便**
+
+
+#### 组合使用
+
+
+如果你的 Router 划分的足够节点化，那么有可能对 Router 的层级进行划分，通过多个节点的组合，可以实现一个大的 router ～ 这也是 Router 的意义之一吧～
+
+
+### 最后
+
+本文只是一个轻量级的基础框架，因为业务之初往往是比较简单的。框架的作用就是在业务变得复杂时候，可以用最小的修改去适应～
