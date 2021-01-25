@@ -12,7 +12,7 @@ tags:                                #标签
 
 
 
-![fastlane](https://docs.fastlane.tools/img/fastlane_text.png)
+![img](https://docs.fastlane.tools/img/fastlane_text.png)
 
 
 写在文章前的话：有问题就去查文档和issues，错不了的

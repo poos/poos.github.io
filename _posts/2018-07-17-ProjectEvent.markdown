@@ -191,7 +191,7 @@ EventManage.share.event(.click).page(.home).push()
 **Console**或者叫**控制台**，这是mac自带的一个程序，通过**NSLog**即可将Xcode的输出显示到终端，啰嗦一句，swift 中 print 是不可以的，所以你需要使用 **NSLog**，猜测也是跟OC运行时的关系吧
 
 ~~--懒得传图，从网上找个图片--~~
-![控制台](http://images.macx.cn/forum/201202/27/1206273lioivz2pvlnkpz3.jpg)
+![img](http://images.macx.cn/forum/201202/27/1206273lioivz2pvlnkpz3.jpg)
 
 
 ### 参考资料：

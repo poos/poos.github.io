@@ -23,4 +23,5 @@ Temporary Items
 
 # debug file
 _site
+.jekyll-cache/
 

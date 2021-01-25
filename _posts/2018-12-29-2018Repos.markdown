@@ -24,7 +24,7 @@ tags:                                #标签
 
 主要涉及了 **RxSwift**,  **Texture**,  **swiftlint**,  **Sourcery**,  **CTMdeiator**,  **NavigationMap** 的学习和使用
 
- ![ant_design](https://poos.github.io/img/2018poos_github_io.png)
+ ![img](https://poos.github.io/img/2018poos_github_io.png)
 
 
 ### 未提到的库
