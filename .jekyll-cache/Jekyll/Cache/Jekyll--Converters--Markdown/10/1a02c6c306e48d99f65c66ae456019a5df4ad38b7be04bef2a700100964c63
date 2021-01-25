@@ -1,0 +1,113 @@
+I"}<h3 id="简洁">简洁</h3>
+
+<p>Textview 具有很多特性，所以它在很多地方可以非常巧妙的使用：</p>
+
+<ul>
+  <li>显示多内容并且提供滑动，或者不滑动支持扩展高度显示</li>
+  <li>加载 Html 和显示，加载 Attribute String 显示，也可以显示图片</li>
+  <li>提供的一些快捷调用的，支持手机号短信地址等</li>
+</ul>
+
+<h3 id="解读特性">解读特性</h3>
+
+<p><strong>滑动</strong></p>
+
+<p>通常使用在协议或者弹窗提供大量文字上，如果碰到这种情况，基本直接使用 TextView，因为跟随业务扩展，免不了扩展使用。使用 TextView 可以做到业务的前瞻性。</p>
+
+<p><strong>Html</strong></p>
+
+<p>这个自然是为了动态，方便从接口读出的数据复杂的显示。可以理解为扩展了字符串。通常情况下本地定义一套显示样式，以后就可以直接使用了（当然也可从服务器下发，通常是全局的）。</p>
+
+<p><strong>快捷调用</strong></p>
+
+<p>通过默认支持的快捷调用可以调用很多原生功能，手机，链接，地址，日历提醒等</p>
+
+<h3 id="string-or-attributesting">String or AttributeSting</h3>
+
+<p>借助于原生的 AttributeSting 的支持，可以非常方便的创建一些复杂的静态布局，而不需要创建多个 UI 控件，这在节省性能上提升十分明显。</p>
+
+<p><img src="https://poos.github.io/img/textview_2.png" alt="img" />
+<img src="https://poos.github.io/img/textview_2.png" alt="img" /></p>
+
+<p>上图两种通常在图文列表中显示，通常需要多个UI控件去组合操作。但是如果使用 AttributeSting，使用一个 Textview 或者 Label 就可以实现所有的功能。减少了控件使用，也是最简单的性能优化方式了。</p>
+
+<h3 id="html">HTML</h3>
+
+<p><a href="https://poos.github.io/2019/08/16/Html/">HTML-Textview</a>，这里有 html 和 textview 撞出的火花～.</p>
+
+<p>那么同样的：</p>
+
+<p>如果需要下面一个结果：</p>
+
+<p><img src="https://poos.github.io/img/textview_1.png" alt="img" /></p>
+
+<p>同样也可以使用 Html 进行加载</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;html&gt;&lt;p&gt;p1&lt;/p&gt;&lt;ul&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;br&gt;&lt;p&gt;p.&lt;/p&gt;&lt;html&gt;
+</code></pre></div></div>
+
+<p>虽然 Textview 不能直接加载 Html，但是 AttributeSting 支持从 Html data 初始化，这就间接支持了 Html 加载。上图其实就是用html加载的：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let tv = UITextView(frame: .init(x: 0, y: 0, width: 100, height: 300))
+self.view.addSubview(tv)
+
+let htmlS = "&lt;html&gt;&lt;p&gt;p1&lt;/p&gt;&lt;ul&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;br&gt;&lt;p&gt;p.&lt;/p&gt;&lt;html&gt;";
+
+let css = String(format:"&lt;body style=\"font-family: 'HelveticaNeue-Light'; color: \(UIColor.darkText); font-size: \(20)\"&gt;%@&lt;/body&gt;", htmlS)
+let data = css.data(using: .utf16, allowLossyConversion: false)
+
+do {
+
+    let attributedString = try NSAttributedString(data: data!,
+                                                  options: [.documentType : NSAttributedString.DocumentType.html],
+                                                  documentAttributes: nil)
+    tv.attributedText = attributedString
+} catch let error as NSError {
+    print("error: \(error)");
+}
+</code></pre></div></div>
+
+<h3 id="事件响应">事件响应</h3>
+
+<p>通过设置 dataDetectorTypes 可以支持许多类型的响应：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef NS_OPTIONS(NSUInteger, UIDataDetectorTypes) {
+    UIDataDetectorTypePhoneNumber                                        = 1 &lt;&lt; 0, // Phone number detection
+    UIDataDetectorTypeLink                                               = 1 &lt;&lt; 1, // URL detection
+    UIDataDetectorTypeAddress API_AVAILABLE(ios(4.0))                 = 1 &lt;&lt; 2, // Street address detection
+    UIDataDetectorTypeCalendarEvent API_AVAILABLE(ios(4.0))           = 1 &lt;&lt; 3, // Event detection
+    UIDataDetectorTypeShipmentTrackingNumber API_AVAILABLE(ios(10.0)) = 1 &lt;&lt; 4, // Shipment tracking number detection
+    UIDataDetectorTypeFlightNumber API_AVAILABLE(ios(10.0))           = 1 &lt;&lt; 5, // Flight number detection
+    UIDataDetectorTypeLookupSuggestion API_AVAILABLE(ios(10.0))       = 1 &lt;&lt; 6, // Information users may want to look up
+
+    UIDataDetectorTypeNone          = 0,               // Disable detection
+    UIDataDetectorTypeAll           = NSUIntegerMax    // Enable all types, including types that may be added later
+} API_UNAVAILABLE(tvos);
+</code></pre></div></div>
+
+<p>自动适配确实很好，但是 link 有时候在一些旧设备上会造成反应慢等问题。</p>
+
+<p>如果在 <strong>服务大多数人</strong> 和 <strong>体验做到极致</strong> 纠结太多的话，可以使用下边的方法精准控制。 <del><strong>没有什么是一个手势解决不了的。</strong></del></p>
+
+<p>事实上可以拿到 tap 的位置的 url 信息，进一步做其他操作：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapTextview(_:)))
+    textView.addGestureRecognizer(tapRecognizer)
+
+
+    @objc func tapTextview(_ gesture: UITapGestureRecognizer) {
+
+        let tapLocation = gesture.location(in: staticTextView)
+        guard
+            let textPosition = staticTextView.closestPosition(to: tapLocation),
+            let url = staticTextView.textStyling(at: textPosition, in: .forward)?[NSAttributedString.Key.link],
+            let urlString = (url as? String) ?? (url as? URL)?.absoluteString
+        else { return }
+
+        //Do some
+    }
+</code></pre></div></div>
+
+<h3 id="总结">总结</h3>
+
+<p>本文写的比较简单，主要是重新梳理一下 Textview 的使用，阅读之后有了更多的了解，在新的问题出现的时候就会有更多的选择。</p>
+:ET

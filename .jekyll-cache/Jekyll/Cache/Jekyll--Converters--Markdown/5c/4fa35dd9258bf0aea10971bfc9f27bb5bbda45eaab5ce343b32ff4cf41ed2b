@@ -1,0 +1,190 @@
+I"�0<p><strong><a href="https://github.com/poos/BlogDemo">本文所有 工具 和 代码 地址</a></strong></p>
+
+<h3 id="app-中的-web-和-safari-中的-web-调试">App 中的 web 和 Safari 中的 web 调试</h3>
+
+<p>在开发中经常会碰到跟 H5 页面联调的情况，这种情况下所有的操作并不能在我们的 IDE 中检测到，那么如何调试呢，本章会详细介绍。Get 到了本文的技能之后，React 调试会更加方便，会更加一针见血的调试到问题所在。</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/2363263-9b5f0e4ce311e25b.jpg" alt="img" /></p>
+
+<p>这是一个入门的教程：<a href="https://www.jianshu.com/p/ed4b1bfb57dc">Safari 真机调试js</a></p>
+
+<p>基本步骤如下：</p>
+
+<ol>
+  <li>
+    <p>开启iOS设备的调试功能，打开“设置”程序，进入“Safari”-&gt;“高级”页面开启“Web检查器”</p>
+  </li>
+  <li>
+    <p>开启电脑 Develop 功能，点击“Safari”菜单下面的“偏好设置（Preferences…）”，切换到“高级选项（Advanced）”，选择 develop</p>
+  </li>
+  <li>
+    <p>连接设备，点击电脑 Safari 菜单 Develop 下的设备名，调试的 web 名（ 注意 APP 内部的 web 调试需要提前打开页面）</p>
+  </li>
+</ol>
+
+<p><strong>教程中没有提到的：</strong></p>
+
+<ol>
+  <li>
+    <p>网页检查器和 safari 中的 “command + option + I” 是一个调试器，所以功能还是很强大的</p>
+  </li>
+  <li>
+    <p>选择 “网络” 菜单，可以查看请求头，请求体，请求结果等，可以查看 App 是否正常提交 token ，user agent 是否正确提交等</p>
+  </li>
+  <li>
+    <p>元素页面可以编辑调试 html 页面，h5 开发用的到</p>
+  </li>
+  <li>
+    <p>调试器最下边一行是 <strong>命令行</strong> ，可以执行操作，用于测试调用原生，页面跳转，互调等非常方便。</p>
+  </li>
+</ol>
+
+<h3 id="universal-links-和-app-scheme-配置和测试">Universal Links 和 App scheme 配置和测试</h3>
+
+<p>如果需要从 浏览器 跳转 App，有必要了解一下本章，简短说，通常情况下只需要配置 <strong>Universal Links</strong> 和 <strong>Scheme</strong></p>
+
+<h4 id="universal-links-跳转-app">Universal Links 跳转 APP</h4>
+
+<p><strong><a href="https://www.jianshu.com/p/77b530f0c67b">iOS9 Universal Links踩坑之旅，移动应用之deeplink唤醒app</a></strong></p>
+
+<p>上边的链接是一个很好的教程。值得一提是文章介绍了如何 <strong>在自己 APP 中限制其他 APP 的 link</strong> （仿微信的限制）。这里就简单总结一下，如何配置 Universal Links：</p>
+
+<ol>
+  <li>
+    <p>创建 apple-app-site-association 文件并且放在服务器上</p>
+  </li>
+  <li>
+    <p>配置app 的 applink，然后在app里面添加代理方法</p>
+  </li>
+</ol>
+
+<h4 id="app-scheme-跳转-app">App scheme 跳转 APP</h4>
+
+<p>上边的方式可以在其他应用 <strong>使用 Safari 打开</strong> 或者 <strong>从其他域名网站跳转到本 APP 域名网页</strong> 时候检查并且自动跳转至 APP。</p>
+
+<p>另外一种情况是，我们已经安装 APP，在 Safari 中浏览（safari 顶部会出现在 APP 中打开），但是我们 H5 想要主动调起 App ，这就需要 Scheme 了。</p>
+
+<ol>
+  <li>
+    <p>app info.plist 设置 Scheme</p>
+  </li>
+  <li>
+    <p>代理方法监听</p>
+  </li>
+</ol>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">app</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="kd">open</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIApplicationOpenURLOptionsKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">appName</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="kt">UIApplicationOpenURLOptionsKey</span><span class="o">.</span><span class="n">sourceApplication</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">String</span>
+        <span class="k">if</span> <span class="n">appName</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"tencent.xin"</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kt">WXApi</span><span class="o">.</span><span class="nf">handleOpen</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+        <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">absoluteString</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"zhimawenda://jump"</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">jump</span><span class="o">...</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">openURL</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="如何调试">如何调试</h4>
+
+<p>非常简单，参考上一章的 方法</p>
+
+<ol>
+  <li>
+    <p>打开 iphone safari， 打开电脑相应的调试器</p>
+  </li>
+  <li>
+    <p>在最下边命令行输入命令调试即可</p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//使用 iframe 和 widow 跳转都可以
+location.href = "scheme://xxxx"
+</code></pre></div></div>
+
+<h3 id="charles-https-抓包">Charles https 抓包</h3>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/2469183-c422573ff7075723.png?imageMogr2/auto-orient/" alt="img" /></p>
+
+<p>上边第二章 Universal Links 实现时候我们需要检查 app 首次启动时候，apple-app-site-association 文件是否下载成功。这个时候就需要 Https 抓包了。</p>
+
+<p>这也是一篇比较好的文章：<a href="https://www.jianshu.com/p/1c1023036a75">抓包之Charles For Mac 4.0+破解版</a></p>
+
+<p>同样简单总结：</p>
+
+<ol>
+  <li>
+    <p>安装电脑版和破解（怕折腾和土豪跳过）</p>
+  </li>
+  <li>
+    <p>手机连接同一局域网，设置代理地址和端口 8888 ，访问下载 ssh 证书</p>
+  </li>
+  <li>
+    <p><strong>重要，到手机 通用 -&gt; 关于本机 -&gt; 证书信任设置 信任证书</strong> <a href="https://www.jianshu.com/p/3b26934fb839">IOS手机为什么安装Charles证书后，还是抓不到HTTPS请求</a></p>
+  </li>
+</ol>
+
+<p>完成之后 就可以调试了；同样可以调试其他 API 的请求。推荐去 Charles 的 Recording Setting -&gt; Include 设置过滤：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://*.xxx.com
+</code></pre></div></div>
+
+<p><img src="https://img.yzcdn.cn/public_files/2018/04/18/1450c9728e75cbbe6f6532370cc36ecf.png" alt="img" /></p>
+
+<h4 id="网速限制">网速限制</h4>
+
+<p>网速限制还有另外一个专用的工具可以考虑 <a href="https://blog.csdn.net/zhai19931004/article/details/52127685">调试网络限速</a></p>
+
+<h3 id="另一种代理代码设置代理">另一种代理：代码设置代理</h3>
+
+<p>在代码中直接设置开关，访问代理服务器。</p>
+
+<p><strong>解决缺点</strong> ，每次调试都需要打开 iPhone 的设置，打开代理，写地址和端口；调试完成之后又需要关闭。有没有代码的方式设置呢：</p>
+
+<p>我在 <a href="https://stackoverflow.com/questions/28101582/how-to-programmatically-add-a-proxy-to-an-nsurlsession/37466532">stackoverflow</a> 找到了如下的代码：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">proxyHost</span> <span class="o">=</span> <span class="s">"192.168.1.226"</span>
+<span class="k">let</span> <span class="nv">proxyPort</span> <span class="o">=</span> <span class="mi">8888</span>
+<span class="k">let</span> <span class="nv">configuration</span> <span class="o">=</span> <span class="kt">URLSessionConfiguration</span><span class="o">.</span><span class="k">default</span>
+<span class="n">configuration</span><span class="o">.</span><span class="n">connectionProxyDictionary</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nv">kCFNetworkProxiesHTTPEnable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">kCFNetworkProxiesHTTPProxy</span><span class="p">:</span> <span class="n">proxyHost</span><span class="p">,</span>
+    <span class="nv">kCFNetworkProxiesHTTPPort</span><span class="p">:</span> <span class="n">proxyPort</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="cm">/* 下边的键值对已经不可用
+kCFNetworkProxiesHTTPSEnable: true,
+kCFNetworkProxiesHTTPSProxy: proxyHost,
+kCFNetworkProxiesHTTPSPort: proxyPort
+*/</span>
+</code></pre></div></div>
+
+<p><strong>将 URLSessionConfiguration配置在你封装的网络框架中即可</strong></p>
+
+<p>但是很快发现 <strong>关于 https 的键在 swift 下已经不可用， 在 OC 下运行正常</strong> 。</p>
+
+<p>经过多方寻找，我找到了国际友人写的这个：<a href="https://up.smartrecruiters.com/debugging-ios-simulator-network-calls-for-free-b8e02a0c9bed">Debugging iOS Simulator network calls (for free)</a>，简直就是蓦然回首，灯火阑珊，没想到远在大陆彼岸的友人会有跟我相同的想法。还比我更早一步，nb.</p>
+
+<p>将上边的代码替换到下边即可, 原理是直接找了 key 对应的字符串的值，而进行设置</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">proxyHost</span> <span class="o">=</span> <span class="s">"192.168.1.226"</span>
+<span class="k">let</span> <span class="nv">proxyPort</span> <span class="o">=</span> <span class="mi">8888</span>
+<span class="k">let</span> <span class="nv">configuration</span> <span class="o">=</span> <span class="kt">URLSessionConfiguration</span><span class="o">.</span><span class="k">default</span>
+<span class="n">configuration</span><span class="o">.</span><span class="n">connectionProxyDictionary</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">"HTTPSEnable"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"HTTPSProxy"</span><span class="p">:</span> <span class="n">proxyHost</span><span class="err">，</span>
+    <span class="s">"HTTPSPort"</span><span class="p">:</span> <span class="n">proxyPort</span>
+<span class="p">]</span>
+</code></pre></div></div>
+<p>过程是曲折坎坷的，收获也是不错的，终于 <strong>能单独在我们的 app 中设置代理</strong> ，也不用去设置中心来回修改了。</p>
+
+<p><strong>不过记得要把这段代码添加 DEBUG 宏判断里面去</strong> 或者 <strong>设置专门的 config</strong>，以防止在正式环境出现错误</p>
+
+<h2 id="总结">总结</h2>
+
+<p>是不是看了本文之后就像又打开了一扇门，借助这些工具我们调试就能够切中痛点，一击致命，所向披靡，无所畏惧…</p>
+
+<p>最后本文的 Charles 工具再放一下，帮到你的话点个赞吧。</p>
+
+<p><strong><a href="https://github.com/poos/BlogDemo">本文所有 工具 和 代码 地址</a></strong></p>
+:ET

@@ -32,7 +32,7 @@ Sourcery 是一个非常方便的脚本代码生成器。使用它能为一些�
 
 ### 使用
 
-![ant_design](https://poos.github.io/img/sourcery.gif)
+![img](https://poos.github.io/img/sourcery.gif)
 
 这一部分以 **为 ObjectMapper 的 Model 生成代码**，为总纲写的，但是 Sourcery 实际上不局限于使用在这个地方，理论上只要有代码多处相似都可以用它来优化。
 

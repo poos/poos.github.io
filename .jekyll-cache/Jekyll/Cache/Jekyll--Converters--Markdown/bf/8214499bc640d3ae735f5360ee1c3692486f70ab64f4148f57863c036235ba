@@ -1,0 +1,234 @@
+I"�C<h3 id="相关链接">相关链接</h3>
+
+<h5 id="appledesignhumaninterfaceguidelines"><a href="https://developer.apple.com/design/human-interface-guidelines/ios/overview/themes/">Apple/Design/HumanInterfaceGuidelines</a></h5>
+
+<h5 id="texturelayoutexample"><a href="https://texturegroup.org/docs/automatic-layout-examples-2.html">Texture/LayoutExample</a></h5>
+
+<h5 id="xcodeinterfacebuilder"><a href="https://developer.apple.com/xcode/interface-builder/">Xcode/InterfaceBuilder</a></h5>
+
+<h5 id="swiftui"><a href="https://developer.apple.com/xcode/swiftui/">SwiftUI</a></h5>
+
+<h5 id="flutteruserinterface"><a href="https://flutter.dev/docs/development/ui">Flutter/UserInterface</a></h5>
+
+<h5 id="autolayoutvisualformat"><a href="https://www.raywenderlich.com/277-auto-layout-visual-format-language-tutorial#:~:text=The%20Auto%20Layout%20Visual%20Format,constraints%20one%20at%20a%20time">AutoLayoutVisualFormat</a></h5>
+
+<p>在iOS上可用的布局方式大体分为 InterfaceBuilder 和 Code，而在 Code 方面因为 Frame 的不方便，衍生了很多 Layout 方式。那么就一起比对一下吧～</p>
+
+<h3 id="frame">Frame</h3>
+
+<p>Frame 是最简单粗暴的布局方式：<code class="language-plaintext highlighter-rouge">CGRect(x: 0, y: 0, width: 36, height: 36)</code>，那同时也是效率最高的布局方式。</p>
+
+<p>使用不同的 Layout 方式，在复杂 TableView 的快速滚动上，使用 Model 提前计算 Frame，重用时候直接调整 Frame 且显示，往往能够获得更高的帧数。（注意是通常情况下，一些深度优化的多线程技术例外：Texture等）</p>
+
+<p>上句提到的性能最佳，也是因为其他布局往往是在主线程占有资源，计算为 Frame 并最终使用的。</p>
+
+<h3 id="uiviewautoresizing-interfacebuilder--code">UIViewAutoresizing (InterfaceBuilder / Code)</h3>
+
+<p><img src="https://poos.github.io/img/layout_1.png" alt="img" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef NS_OPTIONS(NSUInteger, UIViewAutoresizing) {
+    UIViewAutoresizingNone                 = 0,
+    UIViewAutoresizingFlexibleLeftMargin   = 1 &lt;&lt; 0,
+    UIViewAutoresizingFlexibleWidth        = 1 &lt;&lt; 1,
+    UIViewAutoresizingFlexibleRightMargin  = 1 &lt;&lt; 2,
+    UIViewAutoresizingFlexibleTopMargin    = 1 &lt;&lt; 3,
+    UIViewAutoresizingFlexibleHeight       = 1 &lt;&lt; 4,
+    UIViewAutoresizingFlexibleBottomMargin = 1 &lt;&lt; 5
+};
+</code></pre></div></div>
+
+<p>如图，最简单的布局方式2，哈哈哈～</p>
+
+<p>然鹅…其实并没有，这种布局往往只是相当于给 Frame 加了个 Extension，之后不用苦逼的计算每个屏幕下应该怎么扩展显示了。也就是说，如果你之前是有一套自己的 Frame 计算逻辑的话，这个好像很鸡肋，功能又不强大，迁移又太麻烦。</p>
+
+<p><del>这么一说好像为它开一个栏的必要都木有了，</del>继续默默的等比例，或者等边距，哈哈哈～</p>
+
+<h3 id="nslayoutanchor-interfacebuilder--code">NSLayoutAnchor (InterfaceBuilder / Code)</h3>
+
+<p>啊，早在 iOS9 的时候美丽的 NSLayoutAnchor 已经横空粗现了，你是否已经爱上了它…</p>
+
+<p><img src="https://poos.github.io/img/layout_2.png" alt="img" />
+<img src="https://poos.github.io/img/layout_3.png" alt="img" /></p>
+
+<p>讲实话这个确实是 Layout 的神器，搭配 Xib/Storyboard，使用起来不要太爽了～</p>
+
+<ul>
+  <li>边界/宽高约束</li>
+  <li>Priority</li>
+  <li>Text Size</li>
+  <li>Scroll Content</li>
+  <li>StackView</li>
+</ul>
+
+<p>而且搭配 Code，能够实现所有你想要的布局，就是说纯 Code 能达到的，配合起来能更方便的达到。</p>
+
+<p><img src="https://poos.github.io/img/layout_4.gif" alt="img" /></p>
+
+<p>再来一个然鹅…因为这种布局书写起来真的比较麻烦，所以少见有全使用 Code 来添加约束的<del>，也是因为大家的选择太多了，不必盯着Code这一棵树</del>。</p>
+
+<p>如果要使用这个方案，这一趴还是使用 Xib 或者 Storyboard 来用吧，更有利于项目的整体风格和代码观点～</p>
+
+<p>下边的 Code 就简单看一眼吧：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UIView</span> <span class="p">{</span>
+
+    <span class="cm">/* UILayoutGuide objects owned by the receiver.
+     */</span>
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">9.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">open</span> <span class="k">var</span> <span class="nv">layoutGuides</span><span class="p">:</span> <span class="p">[</span><span class="kt">UILayoutGuide</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">UIView</span> <span class="p">{</span>
+
+    <span class="cm">/* Constraint creation conveniences. See NSLayoutAnchor.h for details.
+     */</span>
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">9.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">open</span> <span class="k">var</span> <span class="nv">leadingAnchor</span><span class="p">:</span> <span class="kt">NSLayoutXAxisAnchor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">NSLayoutAnchor</span><span class="o">&lt;</span><span class="kt">AnchorType</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span><span class="p">,</span> <span class="kt">NSCoding</span> <span class="k">where</span> <span class="kt">AnchorType</span> <span class="p">:</span> <span class="kt">AnyObject</span> <span class="p">{</span>
+
+    <span class="c1">// NSLayoutAnchor conforms to &lt;NSCopying&gt; and &lt;NSCoding&gt; on macOS 10.12, iOS 10, and tvOS 10</span>
+
+    <span class="c1">// These methods return an inactive constraint of the form thisAnchor = otherAnchor.</span>
+    <span class="kd">open</span> <span class="kd">func</span> <span class="nf">constraint</span><span class="p">(</span><span class="n">equalTo</span> <span class="nv">anchor</span><span class="p">:</span> <span class="kt">NSLayoutAnchor</span><span class="o">&lt;</span><span class="kt">AnchorType</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+
+<span class="c1">// Axis-specific subclasses for location anchors: top/bottom, leading/trailing, baseline, etc.</span>
+
+<span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">9.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">NSLayoutXAxisAnchor</span> <span class="p">:</span> <span class="kt">NSLayoutAnchor</span><span class="o">&lt;</span><span class="kt">NSLayoutXAxisAnchor</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// A composite anchor for creating constraints relating horizontal distances between locations.</span>
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">10.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">open</span> <span class="kd">func</span> <span class="nf">anchorWithOffset</span><span class="p">(</span><span class="n">to</span> <span class="nv">otherAnchor</span><span class="p">:</span> <span class="kt">NSLayoutXAxisAnchor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutDimension</span>
+<span class="p">}</span>
+
+<span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">9.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">NSLayoutYAxisAnchor</span> <span class="p">:</span> <span class="kt">NSLayoutAnchor</span><span class="o">&lt;</span><span class="kt">NSLayoutYAxisAnchor</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// A composite anchor for creating constraints relating vertical distances between locations.</span>
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">10.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">open</span> <span class="kd">func</span> <span class="nf">anchorWithOffset</span><span class="p">(</span><span class="n">to</span> <span class="nv">otherAnchor</span><span class="p">:</span> <span class="kt">NSLayoutYAxisAnchor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutDimension</span>
+<span class="p">}</span>
+
+<span class="c1">// This layout anchor subclass is used for sizes (width &amp; height).</span>
+
+<span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">9.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">NSLayoutDimension</span> <span class="p">:</span> <span class="kt">NSLayoutAnchor</span><span class="o">&lt;</span><span class="kt">NSLayoutDimension</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// These methods return an inactive constraint of the form thisVariable = constant.</span>
+    <span class="kd">open</span> <span class="kd">func</span> <span class="nf">constraint</span><span class="p">(</span><span class="n">equalToConstant</span> <span class="nv">c</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="ios11-以下拖入-wkwebview">iOS11 以下拖入 WKWebview</h4>
+
+<p>当你在 Storyboard 使用 WKWebview 的时候，你会发现如果你的项目支持 iOS11 以下，那么拖入 WKWebview Xcode 会报错？纳尼？？</p>
+
+<p><strong>尽管 WKWebview 从 iOS8 开始提供，但是在 –[WKWebView initWithCoder:] 有个bug，一直到 iOS11 才被修复！！</strong>
+<a href="https://developer.apple.com/documentation/webkit/wkwebview">Apple document/WKWebview</a>
+<a href="https://bmnotes.com/2019/01/25/error-wkwebview-before-ios-11-0-nscoding-support-was-broken-in-the-previous-version/">WKWebView before iOS 11.0</a></p>
+
+<p>所以在使用的时候需要通过代码初始化创建，那么就需要用代码添加约束了～</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    _webView = [WKWebView new];
+    _webView.translatesAutoresizingMaskIntoConstraints = false;
+
+    [_contentView addSubview: _webView];
+
+    [[_webView.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor] setActive:true];
+    [[_webView.trailingAnchor constraintEqualToAnchor:_contentView.trailingAnchor] setActive:true];
+    [[_webView.topAnchor constraintEqualToAnchor:_contentView.topAnchor] setActive:true];
+    [[_webView.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor] setActive:true];
+</code></pre></div></div>
+
+<h3 id="flexbox">Flexbox</h3>
+
+<p><a href="https://github.com/google/flexbox-layout">Google/FlexboxLayout</a></p>
+
+<p>好的框架往往是可以移植的，而且大家是乐于去移植和使用的。Texture 就是借鉴了 Flexbox 的布局方式。</p>
+
+<p><img src="https://poos.github.io/img/layout_5.png" alt="img" /></p>
+
+<p>盒式布局使用的是盒子堆盒子、者盒子套盒子，所以有一些方面使用是非常舒服的～</p>
+
+<ul>
+  <li>布局共用，因为是以盒子为单位，所以更能促进大家公用Node，毕竟如果你不想公用就只能自己实现…</li>
+  <li>Content 的适应，盒子有很多填充方式，用于适配不同屏幕甚至横屏</li>
+  <li>StackView 布局等</li>
+</ul>
+
+<blockquote>
+  <p><a href="https://poos.github.io/2019/02/26/Swifter/">Texture(ASDK)的理解和使用</a>，Swift 语言的新特性。那么也科普和安利一下，Texture 也就是 ASDK，自己实现了一套异步渲染框架，来给手机显示提供更高的性能。简言之就是使用一套与 View 匹配的 Node 来在背景线程计算布局，最终在主线程直接使用计算完成的值，这样来提供强大的性能。当然除了这个基本目标，它也使用了当时最先进的布局方式，FlexBox，写起来真的不要太爽。<strong>在一些复杂table上性能提升最为明显</strong>，在做内容类，商品类产品的时候，使用这套框架确实提升了相当的性能。</p>
+</blockquote>
+
+<h3 id="swiftui--flutterui">SwiftUI / FlutterUI</h3>
+
+<p>如果做 Android 或者 RN 开发，常见的就是 xml 布局和逻辑代码的分离化。相反的如果你习惯了使用 Code 去码界面，那么这一扒一定不要错过！</p>
+
+<p>那其实 FlutterUI 的布局方式就是借鉴的 FlexBox，这块可以和 FlexBox 一起看。紧随其后出现的 SwiftUI 可以 Code 方式跟 Flutter 几乎一样，等到大家的项目都是 iOS 13 起始，并且新建项目的时候就又多了个选择😂 。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">ZStack</span> <span class="p">{</span>
+    <span class="kt">EmptyView</span><span class="p">()</span><span class="o">.</span><span class="nf">frame</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nv">alignment</span><span class="p">:</span> <span class="o">.</span><span class="n">bottom</span><span class="p">);</span>
+    <span class="kt">Image</span><span class="p">(</span><span class="s">"img"</span><span class="p">)</span><span class="o">.</span><span class="nf">scaledToFill</span><span class="p">();</span>
+    <span class="kt">Text</span><span class="p">(</span><span class="s">"hello"</span><span class="p">)</span><span class="o">.</span><span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="n">headline</span><span class="p">)</span><span class="o">.</span><span class="nf">foregroundColor</span><span class="p">(</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><del>还是挺好玩的，等 iOS 13 全民时代的时候 Swift 也能 build 出 Android 就舒服了～</del> 所以个人认为，现在 Fultter 还是非常占优的！</p>
+<blockquote>
+  <p>2020/06/22 iOS 13的百分比已经占到了 87%</p>
+</blockquote>
+
+<h3 id="vfl">VFL</h3>
+
+<p>全称是 Auto Layout Visual Format Language Tutorial, 应该是比较小众的布局方式了，毕竟需要手写 Format 字符串，小手一抖那可就不好了…</p>
+
+<p>不过还是可以欣赏一下这种 Format 的思想，另外，现在 Swift可以支持自定义符号了，完全可以定义符号避免手写format。不过个人感觉这种满满的 Code 味道，不具备现代编程语言简单快速清晰等优点，这也是小众的原因吧。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 1
+let views: [String: Any] = [
+  "iconImageView": iconImageView,
+  "appNameLabel": appNameLabel,
+  "skipButton": skipButton]
+
+// 2
+var allConstraints: [NSLayoutConstraint] = []
+
+// 3
+let iconVerticalConstraints = NSLayoutConstraint.constraints(
+  withVisualFormat: "V:|-20-[iconImageView(30)]",
+  metrics: nil,
+  views: views)
+allConstraints += iconVerticalConstraints
+
+// 4
+let nameLabelVerticalConstraints = NSLayoutConstraint.constraints(
+  withVisualFormat: "V:|-23-[appNameLabel]",
+  metrics: nil,
+  views: views)
+allConstraints += nameLabelVerticalConstraints
+
+// 5
+let skipButtonVerticalConstraints = NSLayoutConstraint.constraints(
+  withVisualFormat: "V:|-20-[skipButton]",
+  metrics: nil,
+  views: views)
+allConstraints += skipButtonVerticalConstraints
+
+// 6
+let topRowHorizontalConstraints = NSLayoutConstraint.constraints(
+  withVisualFormat: "H:|-15-[iconImageView(30)]-[appNameLabel]-[skipButton]-15-|",
+  metrics: nil,
+  views: views)
+allConstraints += topRowHorizontalConstraints
+
+// 7
+NSLayoutConstraint.activate(allConstraints)
+</code></pre></div></div>
+
+<h3 id="总结">总结</h3>
+
+<p>多种布局方式各有优劣，应当最大限度的遵循当前项目的风格，但是如果项目风格确实太老了，不妨逐步迁移使用新的。重要的是确定规则并严格的实施。</p>
+:ET

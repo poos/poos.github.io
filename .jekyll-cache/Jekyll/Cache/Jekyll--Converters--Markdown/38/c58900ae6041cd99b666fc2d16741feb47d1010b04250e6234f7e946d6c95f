@@ -1,0 +1,200 @@
+I"�L<h3 id="背景">背景</h3>
+
+<p>在5个月之前就有收到相关的消息，要更新 UIWebview 到 WKWebview。虽然苹果的最后期限一直往后推，但是不可避免的项目修改终于来了。</p>
+
+<p>整个修改要说多也不多，但是还是单独开了一篇文章，因为一些细节还是值得一提的。</p>
+
+<p>背景的的噱头比较大：</p>
+
+<ul>
+  <li>古老的 Main.storyboard 有 1M +</li>
+  <li>古老的 Main.storyboard 有 ScrollView 使用了 contentLayoutGuide 和 frameLayoutGuide，但是这两个特性在 Xcode 的版本适应问题</li>
+  <li>古老的 Main.storyboard 打开即有超百项修改。</li>
+  <li>使用了 UIWebview 有 5 个 以上地方，且有可能有使用多种方式。</li>
+</ul>
+
+<p>问题有一个结：在 Storyboard 的 Webview怎么处理，解决好这个结问题就简单多了。</p>
+
+<p>基本上整个流程是：</p>
+
+<ul>
+  <li>修复 contentLayoutGuide 和 frameLayoutGuide 的问题</li>
+  <li>创建通用的协议</li>
+  <li>使用协议修改项目工程</li>
+  <li>善后</li>
+</ul>
+
+<h4 id="关于源码xml">关于源码xml</h4>
+<p>为了解决这个结，必须要看看 storyboard 里面的代码是什么样的。</p>
+
+<p>可以看到，是一份 UTF-8 的 xml 文件。</p>
+
+<p>而我们最关心的 webView 就是以标签的样式存在着，这就给了我们直接去源码修改的可能。</p>
+
+<blockquote>
+  <p>还能看到其他的参数，delegate 之类…</p>
+</blockquote>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+<span class="nt">&lt;webView</span> <span class="na">translatesAutoresizingMaskIntoConstraints=</span><span class="s">"NO"</span> <span class="na">contentMode=</span><span class="s">"scaleToFill"</span> <span class="na">id=</span><span class="s">"4sF-t2-MpG"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;rect</span> <span class="na">key=</span><span class="s">"frame"</span> <span class="na">x=</span><span class="s">"5"</span> <span class="na">y=</span><span class="s">"0.0"</span> <span class="na">width=</span><span class="s">"310"</span> <span class="na">height=</span><span class="s">"500"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;color</span> <span class="na">key=</span><span class="s">"backgroundColor"</span> <span class="na">white=</span><span class="s">"0.0"</span> <span class="na">alpha=</span><span class="s">"0.0"</span> <span class="na">colorSpace=</span><span class="s">"calibratedWhite"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;connections&gt;</span>
+        <span class="nt">&lt;outlet</span> <span class="na">property=</span><span class="s">"delegate"</span> <span class="na">destination=</span><span class="s">"T1J-I6-9wj"</span> <span class="na">id=</span><span class="s">"60D-a7-u0y"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/connections&gt;</span>
+<span class="nt">&lt;/webView&gt;</span>
+...
+</code></pre></div></div>
+
+<h4 id="contentlayoutguide-和-framelayoutguide">contentLayoutGuide 和 frameLayoutGuide</h4>
+
+<p><code class="language-plaintext highlighter-rouge">error: Content and frame layout guides before iOS 11.0</code></p>
+
+<p>因为 xx 某个提交引入了这个错：在使用 Scrollview 的时候，使用了 contentLayout。</p>
+
+<p>当项目在 Xcode 11.3 的时候运行没有问题，但是当项目在 Xcode 11.4+ 运行的时候即发生了错误。</p>
+
+<blockquote>
+  <p>就是 Xcode 11.3 也应该报这个错的，但是没有报错，可能属性被忽略了，但是没有给出错误提醒。</p>
+</blockquote>
+
+<p>这个问题究其根本还是 Code 的写法有问题，所以直接进入 1M + 的 storyboard修改了即可。</p>
+
+<p>其实最终就是在 storyboard 去掉 contentLayoutGuide 和 frameLayoutGuide 的相关属性描述。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;viewLayoutGuide</span> <span class="na">key=</span><span class="s">"contentLayoutGuide"</span> <span class="na">id=</span><span class="s">"39H-sL-yCR"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;viewLayoutGuide</span> <span class="na">key=</span><span class="s">"frameLayoutGuide"</span> <span class="na">id=</span><span class="s">"1kj-R0-kSP"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="创建通用的协议--view">创建通用的协议 / View</h4>
+
+<p>这段属于精髓之一了。为了能让代码有最小的修改，创建了一个继承 WKWebView 的类，用于桥接旧的 Webview delegate。</p>
+
+<p>很简单， 仿照 UIWebView 的代理方法进行一层封装，然后提供一个替换 UIWebview 的 UI 类。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+<span class="cp">#import &lt;WebKit/WebKit.h&gt;</span>
+<span class="kt">NS_ASSUME_NONNULL_BEGIN</span>
+<span class="kd">@protocol</span> <span class="kt">SXWebViewDelegate</span> <span class="o">&lt;</span><span class="kt">NSObject</span><span class="o">&gt;</span>
+<span class="kd">@optional</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">shouldStartLoadWithRequest</span><span class="p">:(</span><span class="kt">NSURLRequest</span> <span class="o">*</span><span class="p">)</span><span class="n">request</span> <span class="nv">navigationType</span><span class="p">:(</span><span class="kt">WKNavigationType</span><span class="p">)</span><span class="n">navigationType</span><span class="p">;</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webViewDidStartLoad</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span><span class="p">;</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webViewDidFinishLoad</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span><span class="p">;</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">didFailLoadWithError</span><span class="p">:(</span><span class="kt">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">;</span>
+<span class="kd">@end</span>
+<span class="kd">@interface</span> <span class="kt">SXWKWebView</span> <span class="p">:</span> <span class="kt">WKWebView</span>
+<span class="kd">@property</span> <span class="p">(</span><span class="k">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="kt">SXWebViewDelegate</span><span class="o">&gt;</span> <span class="n">delegate</span><span class="p">;</span>
+<span class="kd">@end</span>
+<span class="kt">NS_ASSUME_NONNULL_END</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import "SXWKWebView.h"</span>
+<span class="cp">#import &lt;WebKit/WebKit.h&gt;</span>
+<span class="kd">@interface</span> <span class="kt">SXWKWebView</span> <span class="p">()</span> <span class="o">&lt;</span><span class="kt">WKNavigationDelegate</span><span class="o">&gt;</span>
+<span class="kd">@end</span>
+<span class="kd">@implementation</span> <span class="kt">SXWKWebView</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nv">initWithCoder</span><span class="p">:(</span><span class="kt">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="n">coder</span>
+<span class="p">{</span>
+    <span class="k">self</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">initWithFrame</span><span class="p">:</span><span class="kt">CGRectZero</span> <span class="nv">configuration</span><span class="p">:[</span><span class="kt">WKWebViewConfiguration</span> <span class="k">new</span><span class="p">]];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="kt">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">self</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#pragma mark - WKNavigationDelegate</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">decidePolicyForNavigationAction</span><span class="p">:(</span><span class="kt">WKNavigationAction</span> <span class="o">*</span><span class="p">)</span><span class="n">navigationAction</span> <span class="nv">decisionHandler</span><span class="p">:(</span><span class="nf">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">WKNavigationActionPolicy</span><span class="p">))</span><span class="n">decisionHandler</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_delegate</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">decisionHandler</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">BOOL</span> <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">_delegate</span> <span class="nv">webView</span><span class="p">:</span><span class="n">webView</span> <span class="nv">shouldStartLoadWithRequest</span><span class="p">:</span><span class="n">navigationAction</span><span class="o">.</span><span class="n">request</span> <span class="nv">navigationType</span><span class="p">:</span> <span class="n">navigationAction</span><span class="o">.</span><span class="n">navigationType</span><span class="p">];</span>
+    <span class="nf">decisionHandler</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">didStartProvisionalNavigation</span><span class="p">:(</span><span class="kt">WKNavigation</span> <span class="o">*</span><span class="p">)</span><span class="n">navigation</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">_delegate</span> <span class="nv">webViewDidStartLoad</span><span class="p">:</span> <span class="n">webView</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">didFinishNavigation</span><span class="p">:(</span><span class="kt">WKNavigation</span> <span class="o">*</span><span class="p">)</span><span class="n">navigation</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">_delegate</span> <span class="nv">webViewDidFinishLoad</span><span class="p">:</span> <span class="n">webView</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">didFailNavigation</span><span class="p">:(</span><span class="kt">WKNavigation</span> <span class="o">*</span><span class="p">)</span><span class="n">navigation</span> <span class="nv">withError</span><span class="p">:(</span><span class="kt">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">_delegate</span> <span class="nv">webView</span><span class="p">:</span><span class="n">webView</span> <span class="nv">didFailLoadWithError</span><span class="p">:</span> <span class="n">error</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="kd">@end</span>
+</code></pre></div></div>
+
+<h4 id="修改-sxwkwebview-以支持-storyboard-拖入-delegate">修改 SXWKWebView 以支持 Storyboard 拖入 delegate</h4>
+
+<ol>
+  <li>属性添加 IBOutlet 标志</li>
+</ol>
+
+<p><code class="language-plaintext highlighter-rouge">@property (weak, nonatomic) id&lt;SXWebViewDelegate&gt; delegate;</code></p>
+
+<p>-&gt;</p>
+
+<p><code class="language-plaintext highlighter-rouge">@property (weak, nonatomic) IBOutlet id&lt;SXWebViewDelegate&gt; delegate;</code></p>
+
+<ol>
+  <li>实现 Set 方法</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)setDelegate:(id&lt;RSHWebViewDelegate&gt;)delegate {
+    _delegate = delegate;
+    self.navigationDelegate = self;
+}
+</code></pre></div></div>
+
+<h4 id="修改-storyboard-和-code">修改 Storyboard 和 Code</h4>
+
+<ol>
+  <li>Storyboard 只需要修改标签到<code class="language-plaintext highlighter-rouge">&lt;webView ...&gt; &lt;/webView&gt;</code> 到 <code class="language-plaintext highlighter-rouge">&lt;view ...&gt; &lt;/view&gt;</code> 即可。</li>
+</ol>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+<span class="nt">&lt;view</span> <span class="na">translatesAutoresizingMaskIntoConstraints=</span><span class="s">"NO"</span> <span class="na">contentMode=</span><span class="s">"scaleToFill"</span> <span class="na">id=</span><span class="s">"4sF-t2-MpG"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;rect</span> <span class="na">key=</span><span class="s">"frame"</span> <span class="na">x=</span><span class="s">"5"</span> <span class="na">y=</span><span class="s">"0.0"</span> <span class="na">width=</span><span class="s">"310"</span> <span class="na">height=</span><span class="s">"500"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;color</span> <span class="na">key=</span><span class="s">"backgroundColor"</span> <span class="na">white=</span><span class="s">"0.0"</span> <span class="na">alpha=</span><span class="s">"0.0"</span> <span class="na">colorSpace=</span><span class="s">"calibratedWhite"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;connections&gt;</span>
+        <span class="nt">&lt;outlet</span> <span class="na">property=</span><span class="s">"delegate"</span> <span class="na">destination=</span><span class="s">"T1J-I6-9wj"</span> <span class="na">id=</span><span class="s">"60D-a7-u0y"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/connections&gt;</span>
+<span class="nt">&lt;/view&gt;</span>
+...
+</code></pre></div></div>
+
+<ol>
+  <li>代码只需要修改<code class="language-plaintext highlighter-rouge">UIWebView</code> 到 <code class="language-plaintext highlighter-rouge">WKWebView</code> 即可。</li>
+</ol>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webViewDidStartLoad</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span><span class="p">{</span>
+    <span class="p">[</span><span class="n">_progressService</span> <span class="n">presentBusyIndicator</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webViewDidFinishLoad</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">_progressService</span> <span class="n">dismissBusyIndicator</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>至此，项目就可以愉快的跑起来了。给 QA 出一个测试包吧～</p>
+
+<h4 id="善后">善后</h4>
+
+<p><strong>1. 如果使用了 Pod 或者其他包管理工具的问题。</strong></p>
+
+<p><strong>2. 网页实际效果问题</strong></p>
+
+<p>有些网页在 UIWebView 上显示很好，但是在 WKWebView 显示被缩放很小。评论说，WKWebView 更接近手机 Safari 的显示效果。
+// https://stackoverflow.com/questions/26102908/suppress-wkwebview-from-scaling-content-to-render-at-same-magnification-as-uiweb</p>
+
+<p>不过，为了缩放正常，我们可以添加 <code class="language-plaintext highlighter-rouge">initial-scale=1.0</code> 来进行控制。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">didCommitNavigation</span><span class="p">:(</span><span class="kt">WKNavigation</span> <span class="o">*</span><span class="p">)</span><span class="n">navigation</span> <span class="p">{</span>
+    <span class="kt">NSString</span> <span class="o">*</span><span class="n">javascript</span> <span class="o">=</span> <span class="s">@"var meta = document.createElement('meta');meta.setAttribute('name', 'viewport');meta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');document.getElementsByTagName('head')[0].appendChild(meta);"</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">webView</span> <span class="nv">evaluateJavaScript</span><span class="p">:</span><span class="n">javascript</span> <span class="nv">completionHandler</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="总结">总结</h3>
+
+<p>这些是使用过程中，一些方便的点，希望能够帮助到看到这篇文章的人。</p>
+:ET

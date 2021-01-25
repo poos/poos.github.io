@@ -1,0 +1,195 @@
+I"�9<h3 id="简介">简介</h3>
+
+<p>使用了一段时间的 Storyboard，记录一些使用，方便以后查阅。</p>
+
+<blockquote>
+  <p>本文就不讨论优劣好坏，只是多一些实用的技巧。</p>
+</blockquote>
+
+<h4 id="constant">Constant</h4>
+
+<p>一个典型的例子：当键盘升起的时候, 被遮挡的 View 需要向上移动。这个时候就需要修改 constant 来适应高度了</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">c</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">!</span>
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+        <span class="c1">// Do any additional setup after loading the view.</span>
+
+        <span class="kt">NotificationCenter</span><span class="o">.</span><span class="k">default</span><span class="o">.</span><span class="nf">addObserver</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="nv">selector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">keyboardWillShowNotification</span><span class="kd">)</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">UIResponder</span><span class="o">.</span><span class="n">keyboardDidChangeFrameNotification</span><span class="p">,</span> <span class="nv">object</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+    <span class="kd">@objc</span> <span class="kd">func</span> <span class="nf">keyboardWillShowNotification</span><span class="p">(</span><span class="n">_</span> <span class="nv">notif</span><span class="p">:</span> <span class="kt">Notification</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"🧩--</span><span class="se">\(</span><span class="n">notif</span><span class="o">.</span><span class="n">userInfo</span><span class="se">)\n</span><span class="s">--🧩--</span><span class="se">\(</span><span class="kt">Date</span><span class="p">()</span><span class="se">)</span><span class="s">--</span><span class="se">\(</span><span class="kd">#function</span><span class="se">)</span><span class="s">--</span><span class="se">\(</span><span class="kd">#line</span><span class="se">)</span><span class="s">🧩"</span><span class="p">)</span>
+
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">size</span> <span class="o">=</span> <span class="n">notif</span><span class="o">.</span><span class="n">userInfo</span><span class="p">?[</span><span class="kt">UIResponder</span><span class="o">.</span><span class="n">keyboardFrameEndUserInfoKey</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">CGRect</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="n">size</span><span class="o">.</span><span class="n">height</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="priority">Priority</h4>
+
+<p>这个通常用来处理有多个相似约束的取舍问题。</p>
+
+<p>例如界面顶部上有一个可有可无的控件，当有的时候就需要整个界面向下空出距离。</p>
+
+<p>除了设置上面控件（可有可无的那一个）的height，一种更好的做法是使用优先级来区分：</p>
+
+<ul>
+  <li>约束1，距顶部 priority = 500</li>
+  <li>约束2，距view priority = 250</li>
+</ul>
+
+<p>这样就可以通过设置约束2的 priority 进行快速的调整UI了</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c.priority = view.isHidden ? .defaultLow : .defaultHigh
+</code></pre></div></div>
+
+<p><strong>这样写的好处是没有 height 的修改，所以就不会有具体的 hard-code 的值的存在。同时如果 view 是自适应 contnet 的话也不受影响</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UILayoutPriority</span> <span class="p">{</span>
+
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">required</span><span class="p">:</span> <span class="kt">UILayoutPriority</span>
+
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">defaultHigh</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="c1">// This is the priority level with which a button resists compressing its content.</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">dragThatCanResizeScene</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="c1">// This is the appropriate priority level for a drag that may end up resizing the window's scene.</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">sceneSizeStayPut</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="c1">// This is the priority level at which the window's scene prefers to stay the same size.  It's generally not appropriate to make a constraint at exactly this priority. You want to be higher or lower.</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">dragThatCannotResizeScene</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="c1">// This is the priority level at which a split view divider, say, is dragged.  It won't resize the window's scene.</span>
+
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">defaultLow</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="c1">// This is the priority level at which a button hugs its contents horizontally.</span>
+
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">fittingSizeLevel</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="c1">// When you send -[UIView systemLayoutSizeFittingSize:], the size fitting most closely to the target size (the argument) is computed.  UILayoutPriorityFittingSizeLevel is the priority level with which the view wants to conform to the target size in that computation.  It's quite low.  It is generally not appropriate to make a constraint at exactly this priority.  You want to be higher or lower.</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="stackview">StackView</h4>
+
+<p>当有同一组 UI 的时候可以方便的通过不同方式进行排列，StackView 提供了非常多的排列方式。</p>
+
+<ul>
+  <li>居上，中和下</li>
+  <li>内容，等宽，等间距…</li>
+  <li>支持 content</li>
+  <li>支持 remove</li>
+</ul>
+
+<p>尤其是支持 remove 让它在一些地方使用起来非常方便。</p>
+
+<h4 id="scrollview">ScrollView</h4>
+
+<p><strong>&amp; StackView</strong></p>
+
+<p>有一些界面，看起来像 Table，但是却是确定的本地数据，数量也就三五个，不妨试试 ScrollView &amp; StackView。</p>
+
+<p>直接上图吧，看一下它的魅力：</p>
+
+<p>![img](https://poos.github.io/storyboard1.png]</p>
+
+<h4 id="table-cell">Table-Cell</h4>
+
+<ol>
+  <li>拖 Cell 到 Tableview 里面。</li>
+  <li>填写 class name。</li>
+</ol>
+
+<p>这样带来了一些好处：</p>
+
+<ul>
+  <li>在 Table 中嵌套 Cell 可以有效的减少项目文件个数。</li>
+  <li>省区去了注册cell的代码。</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TestCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">titleL</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableV</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+        <span class="n">tableV</span><span class="o">.</span><span class="nf">reloadData</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">3</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"TestCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as?</span> <span class="kt">TestCell</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kt">UITableViewCell</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">titleL</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"documents?.documentStatements?[indexPath.row].title"</span>
+        <span class="k">return</span> <span class="n">cell</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="segue">Segue</h4>
+
+<p>使用 Storyboard 的好处之一是可以直观的看到页面的层级结构，为了让页面之间能互相传递数据，就要用到 Segue 了。</p>
+
+<ul>
+  <li>`+, 新建 VC</li>
+  <li>在旧的 VC 右键按钮，然后选择第一项 <code class="language-plaintext highlighter-rouge">action</code>, 然后链接新的 VC</li>
+  <li>设置 Segue 的 <code class="language-plaintext highlighter-rouge">identifer</code></li>
+</ul>
+
+<p>使用 Segue 来准备页面跳转所需要的数据。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if segue.identifier == "Home",
+            let headerVC = segue.destination as? HeaderVC {
+			homeLockEvent = HomeLockEvent()
+            headerVC.delegate = self
+		}
+}
+</code></pre></div></div>
+
+<h4 id="container-view">Container View</h4>
+
+<p>除了直接跳转，还有一种方式是引用 vc（其他的 Storyboard 上） 的 view。</p>
+
+<p>![img](https://poos.github.io/storyboard2]</p>
+
+<h5 id="使用-viewcontroller">使用 ViewController</h5>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">+</code>, 新建 Container View</li>
+</ul>
+
+<p>这样就会默认创建一个引用 VC View 的 Embed segues。</p>
+
+<h5 id="使用-storyboard">使用 Storyboard</h5>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">+</code>, 新建 Storyboard</li>
+  <li><code class="language-plaintext highlighter-rouge">+</code>, 新建 Container View</li>
+  <li>删除原有的链接，删除默认创建的 VC， 最后添加 Storyboard 的链接</li>
+</ul>
+
+<p>这样就会默认创建一个引用 Storyboard View 的 Embed segues。</p>
+
+<p><img src="" alt="img" /></p>
+
+<h3 id="总结">总结</h3>
+
+<p>这些是使用过程中，一些方便的点，希望能够帮助到看到这篇文章的人。</p>
+:ET

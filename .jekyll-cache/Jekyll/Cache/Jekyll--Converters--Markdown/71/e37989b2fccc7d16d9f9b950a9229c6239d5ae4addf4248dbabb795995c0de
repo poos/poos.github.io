@@ -1,0 +1,132 @@
+I"�<h3 id="介绍">介绍</h3>
+
+<p>记录一个 AppleAppSiteAssociation 的发布历程吧，总结一下中间的经验教训。</p>
+
+<h4 id="配置流程">配置流程</h4>
+
+<p>https://developer.apple.com/documentation/safariservices/supporting_associated_domains</p>
+
+<p>基本按照流程走即可，坑位在下边…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "applinks": {
+      "details": [
+           {
+             "appIDs": [ "ABCDE12345.com.example.app", "ABCDE12345.com.example.app2" ],
+             "components": [
+               {
+                  "#": "no_universal_links",
+                  "exclude": true,
+                  "comment": "Matches any URL whose fragment equals no_universal_links and instructs the system not to open it as a universal link"
+               },
+               {
+                  "/": "/buy/*",
+                  "comment": "Matches any URL whose path starts with /buy/"
+               },
+               {
+                  "/": "/help/website/*",
+                  "exclude": true,
+                  "comment": "Matches any URL whose path starts with /help/website/ and instructs the system not to open it as a universal link"
+               },
+               {
+                  "/": "/help/*",
+                  "?": { "articleNumber": "????" },
+                  "comment": "Matches any URL whose path starts with /help/ and which has a query item with name 'articleNumber' and a value of exactly 4 characters"
+               }
+             ]
+           }
+       ]
+   },
+   "webcredentials": {
+      "apps": [ "ABCDE12345.com.example.app" ]
+   },
+    "appclips": {
+        "apps": ["ABCED12345.com.example.MyApp.Clip"]
+    }
+}
+</code></pre></div></div>
+
+<h4 id="app-prefix">App-Prefix</h4>
+
+<p><strong>ABCED12345</strong>.com.example.MyApp.Clip</p>
+
+<p>可能 Developer 账号经历了迁移，新的账号 ID 同时支持 mac 和 iOS 等应用。</p>
+
+<p>这个时候就需要到网站上看具体的 bundle-id 的 App-Prefix <strong>（不一定是账号 ID）</strong>。</p>
+
+<h4 id="debug">Debug</h4>
+
+<p>https://ios13.dev/universal-links-debugging-on-ios-13-cjwsux93w001p6ws1swtstmzc</p>
+
+<ol>
+  <li>json 部署</li>
+</ol>
+
+<p>怎么知道文件部署好了没有，基本上是看 json 能否被设备成功解析。除了<strong>https</strong>的要求外，还要求<strong>当前设备所处的网络环境无重定向，账户验证等</strong>。</p>
+
+<p>例如下边的命令是用来验证服务端部署的，就依赖电脑的网络环境。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -I https://www.uber.com/.well-known/apple-app-site-association
+</code></pre></div></div>
+
+<ol>
+  <li>手机成功解析 json 和跳转log</li>
+</ol>
+
+<ul>
+  <li>在 <strong>app 安装</strong>的时候（通过各种途径安装，非启动）会下载和配置 json 数据。</li>
+  <li>在点击 universal-link 的时候会有其他log。</li>
+</ul>
+
+<p>这时候为了验证设置的 json 是否已经被手机认可，就可以看下设备的 log，有两种方式。</p>
+
+<ul>
+  <li>打开 Console.使用 <code class="language-plaintext highlighter-rouge">apple-app-site-association</code> 或者使用 <code class="language-plaintext highlighter-rouge">swcd</code> 做搜索。</li>
+  <li>查看手机日志 <code class="language-plaintext highlighter-rouge">sysdiagnose_YYYY.MM.DD_HH-MM-SS-XX…</code> 中的 <code class="language-plaintext highlighter-rouge">swcutil_show.txt</code> 文件。</li>
+</ul>
+
+<blockquote>
+  <p>还可以通过 sysdiagnose 的日志来查看。 https://download.developer.apple.com/iOS/iOS_Logs/sysdiagnose_Logging_Instructions.pdf。
+log 在 iOS 设备的 <code class="language-plaintext highlighter-rouge">Settings &gt; Privacy &gt; Analytics &gt; Analytics Data &gt;</code> 名字是  <code class="language-plaintext highlighter-rouge">sysdiagnose_YYYY.MM.DD_HH-MM-SS-XX…</code>。还提醒一下的是，这是一份完整的设备日志（大概500M+），需要在电脑上查看详情。</p>
+</blockquote>
+
+<h5 id="关于日志">关于日志</h5>
+
+<p><code class="language-plaintext highlighter-rouge">Settings.app &gt; Privacy &gt; Analytics &gt; Analytics Data</code></p>
+
+<p>通常的 App crash 日志也是放在这里，通过导出日志，然后使用 *.dsym 文件即可反符号到相应的代码提升。</p>
+
+<h4 id="多-domain-使用了同一个-json">多 domain 使用了同一个 json</h4>
+
+<p>沟通中发现，我们当前服务端有多个 domain 最终使用了同一个 json file。</p>
+
+<p>所有的 app bundle id 都被正确的配置了。服务端虽然在不同的 domain，但是客户端根据 domain 做后续的事情，所以每个app都能正确的工作，没有问题。</p>
+
+<p><strong>也就是说 json 中的非本应用 bundleid 的部分被忽略了。</strong></p>
+
+<h4 id="借助博客网站验证-json">借助博客网站验证 json</h4>
+
+<p>通常后端的发布都是有周期的，那么为了提前验证 json 是否正确，就可以找个网站进行验证。例如 firebase 的 <code class="language-plaintext highlighter-rouge">pagelink</code> 等。但是有更好的方式，使用 <code class="language-plaintext highlighter-rouge">github.io</code> 博客网址的 domain 也可以方便的验证 json 是否正确。</p>
+
+<blockquote>
+  <p>配置 json 到能访问的位置即可，或者 404 的page，哈哈哈。</p>
+</blockquote>
+
+<h4 id="跳转">跳转</h4>
+
+<p>当一切都搞好之后，就可以测试 link 的 path 了，使用联系人的个人网站，Notes 等都可以测。</p>
+
+<h4 id="短链接">短链接</h4>
+
+<p>测试中邮件有发送短链接，经过重定向然后到达指定 url：</p>
+
+<p>这种情况在 iOS 没法正常的工作。</p>
+
+<blockquote>
+  <p>android 可以。😂</p>
+</blockquote>
+
+<h3 id="最后">最后</h3>
+
+<p>文章主要是将了一些坑点，具体的文档大概介绍了一下。对初次配置的小伙伴应该帮助比较大，看一下这些奇技淫巧可以省很多时间。</p>
+:ET

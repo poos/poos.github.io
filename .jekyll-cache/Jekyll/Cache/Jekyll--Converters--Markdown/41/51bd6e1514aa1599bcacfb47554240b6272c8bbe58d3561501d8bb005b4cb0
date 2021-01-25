@@ -1,0 +1,502 @@
+I"�p<h2 id="demo">Demo</h2>
+
+<p><strong><a href="https://github.com/poos/BlogDemo">本文所有代码 Demo 地址</a></strong></p>
+
+<h4 id="介绍">介绍</h4>
+
+<p>项目代码主要是在 <strong>lib/</strong> 文件夹，在 main.dart 中导入相应的文件包即可调用跑起来。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.dart</span>
+
+<span class="kd">import</span> <span class="err">'</span><span class="nv">package</span><span class="p">:</span><span class="n">flutter</span><span class="o">/</span><span class="n">material</span><span class="o">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+
+<span class="c1">//import 'package:flutter_app_layout/add_example.dart';</span>
+<span class="c1">//void main() =&gt; runApp(AddExampleApp());</span>
+
+<span class="kd">import</span> <span class="err">'</span><span class="nv">package</span><span class="p">:</span><span class="n">flutter_app_layout</span><span class="o">/</span><span class="n">fetch_data</span><span class="o">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">void</span> <span class="nf">main</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nf">runApp</span><span class="p">(</span><span class="kt">FetchDataApp</span><span class="p">());</span>
+
+<span class="c1">//import 'package:flutter_app_layout/net_json.dart';</span>
+<span class="c1">//void main() =&gt; runApp(NetJsonApp());</span>
+
+
+</code></pre></div></div>
+
+<p>然后 分别创建其他 demo 文件；单独编写测试即可。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//net_json.dart</span>
+
+<span class="kd">import</span> <span class="err">'</span><span class="nv">dart</span><span class="p">:</span><span class="n">async</span><span class="err">'</span><span class="p">;</span>
+<span class="kd">import</span> <span class="err">'</span><span class="nv">dart</span><span class="p">:</span><span class="n">convert</span><span class="err">'</span><span class="p">;</span>
+
+<span class="kd">import</span> <span class="err">'</span><span class="nv">package</span><span class="p">:</span><span class="n">flutter</span><span class="o">/</span><span class="n">material</span><span class="o">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="kd">import</span> <span class="err">'</span><span class="nv">package</span><span class="p">:</span><span class="n">http</span><span class="o">/</span><span class="n">http</span><span class="o">.</span><span class="n">dart</span><span class="err">'</span> <span class="k">as</span> <span class="n">http</span><span class="p">;</span>
+
+
+<span class="c1">//https://github.com/flutterchina/dio</span>
+<span class="kd">import</span> <span class="err">'</span><span class="nv">package</span><span class="p">:</span><span class="n">dio</span><span class="o">/</span><span class="n">dio</span><span class="o">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+
+<span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Post</span><span class="o">&gt;</span> <span class="nf">fetchPost</span><span class="p">()</span> <span class="n">async</span> <span class="p">{</span>
+  <span class="kd">final</span> <span class="n">responce</span> <span class="o">=</span> <span class="n">await</span> <span class="n">http</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//jsonplaceholder.typicode.com/posts/1');</span>
+  <span class="kd">final</span> <span class="n">responseJson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">responce</span><span class="o">.</span><span class="n">body</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="kt">Post</span><span class="o">.</span><span class="nf">fromJson</span><span class="p">(</span><span class="n">responseJson</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">Post</span> <span class="p">{</span>
+  <span class="kd">final</span> <span class="n">int</span> <span class="n">userId</span><span class="p">;</span>
+  <span class="kd">final</span> <span class="n">int</span> <span class="n">id</span><span class="p">;</span>
+  <span class="kd">final</span> <span class="kt">String</span> <span class="n">title</span><span class="p">;</span>
+  <span class="kd">final</span> <span class="kt">String</span> <span class="n">body</span><span class="p">;</span>
+
+  <span class="kt">Post</span><span class="p">({</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">userId</span><span class="p">,</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">body</span><span class="p">});</span>
+
+  <span class="n">factory</span> <span class="kt">Post</span><span class="o">.</span><span class="nf">fromJson</span><span class="p">(</span><span class="kt">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span> <span class="kd">dynamic</span><span class="o">&gt;</span> <span class="n">json</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kt">Post</span><span class="p">(</span>
+      <span class="nv">userId</span><span class="p">:</span> <span class="n">json</span><span class="p">[</span><span class="err">'</span><span class="n">userId</span><span class="err">'</span><span class="p">],</span>
+      <span class="nv">id</span><span class="p">:</span> <span class="n">json</span><span class="p">[</span><span class="err">'</span><span class="n">id</span><span class="err">'</span><span class="p">],</span>
+      <span class="nv">title</span><span class="p">:</span> <span class="n">json</span><span class="p">[</span><span class="err">'</span><span class="n">title</span><span class="err">'</span><span class="p">],</span>
+      <span class="nv">body</span><span class="p">:</span> <span class="n">json</span><span class="p">[</span><span class="err">'</span><span class="n">body</span><span class="err">'</span><span class="p">],</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">NetJsonApp</span> <span class="n">extends</span> <span class="kt">StatelessWidget</span> <span class="p">{</span>
+  <span class="kd">@override</span>
+  <span class="kt">Widget</span> <span class="nf">build</span><span class="p">(</span><span class="kt">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">getHttp</span><span class="p">();</span>
+
+    <span class="c1">// TODO: implement build</span>
+    <span class="k">return</span> <span class="kt">MaterialApp</span><span class="p">(</span>
+      <span class="nv">home</span><span class="p">:</span> <span class="kt">Scaffold</span><span class="p">(</span>
+        <span class="nv">appBar</span><span class="p">:</span> <span class="kt">AppBar</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="kt">Text</span><span class="p">(</span><span class="err">'</span><span class="kt">Fetch</span> <span class="n">data</span> <span class="n">demo</span><span class="err">'</span><span class="p">),),</span>
+        <span class="nv">body</span><span class="p">:</span> <span class="kt">Center</span><span class="p">(</span>
+          <span class="nv">child</span><span class="p">:</span> <span class="kt">FutureBuilder</span><span class="o">&lt;</span><span class="kt">Post</span><span class="o">&gt;</span><span class="p">(</span>
+            <span class="nv">future</span><span class="p">:</span> <span class="nf">fetchPost</span><span class="p">(),</span>
+            <span class="nv">builder</span><span class="p">:</span> <span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">snapshot</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">snapshot</span><span class="o">.</span><span class="n">hasData</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="kt">Text</span><span class="p">(</span><span class="n">snapshot</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">title</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">snapshot</span><span class="o">.</span><span class="n">hasError</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="kt">Text</span><span class="p">(</span><span class="err">'$</span><span class="p">{</span><span class="n">snapshot</span><span class="o">.</span><span class="n">error</span><span class="p">}</span><span class="err">'</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="kt">CircularProgressIndicator</span><span class="p">();</span>
+          <span class="p">}),</span>
+        <span class="p">),</span>
+      <span class="p">),</span>
+      <span class="nv">title</span><span class="p">:</span> <span class="err">'</span><span class="n">fetch</span> <span class="n">data</span> <span class="n">examole</span><span class="err">'</span><span class="p">,</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 测试 Dio</span>
+  <span class="n">void</span> <span class="nf">getHttp</span><span class="p">()</span> <span class="n">async</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kt">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">await</span> <span class="kt">Dio</span><span class="p">()</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//raw.githubusercontent.com/poos/poos.github.io/master/test/example.json');</span>
+      <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+    <span class="p">}</span> <span class="nf">catch</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">print</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="pubspecyaml">pubspec.yaml</h4>
+
+<p>项目的第三方包配置页，例如上边的 <strong>http</strong> 和 <strong>Dio</strong> 即需要导入包方可使用。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">dependencies</span><span class="p">:</span>
+  <span class="nv">flutter</span><span class="p">:</span>
+    <span class="nv">sdk</span><span class="p">:</span> <span class="n">flutter</span>
+
+  <span class="cp"># The following adds the Cupertino Icons font to your application.</span>
+  <span class="cp"># Use with the CupertinoIcons class for iOS style icons.</span>
+  <span class="nv">cupertino_icons</span><span class="p">:</span> <span class="o">^</span><span class="mf">0.1</span><span class="o">.</span><span class="mi">2</span>
+
+  <span class="nv">http</span><span class="p">:</span> <span class="n">any</span>
+  <span class="nv">dio</span><span class="p">:</span> <span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span>
+
+</code></pre></div></div>
+
+<h2 id="学习-dart-语法">学习 Dart 语法</h2>
+
+<p>基本上敲了3个 demo 之后，对 Dart 的语法已经有了一些理解：</p>
+
+<p>函数：</p>
+
+<ul>
+  <li>
+    <p>main 函数为起点</p>
+  </li>
+  <li>
+    <p>单行函数简写</p>
+  </li>
+  <li>
+    <p>两种函数返回值类型</p>
+  </li>
+  <li>
+    <p>一些异步函数</p>
+  </li>
+  <li>
+    <p>一些关键词</p>
+  </li>
+</ul>
+
+<p>常，变量：</p>
+
+<ul>
+  <li>
+    <p>字面量</p>
+  </li>
+  <li>
+    <p>字符串，引用字符串</p>
+  </li>
+</ul>
+
+<p>以及</p>
+
+<ul>
+  <li>代码风格，非常多的，缩进</li>
+</ul>
+
+<h3 id="系统阅读-dart-文档">系统阅读 Dart 文档</h3>
+
+<p>上边了解到的毕竟还是比较少，强烈建议去 <a href="https://www.dartlang.org/guides/language/language-tour">A Tour of the Dart Language</a>，通读一下代码的语法和规则。</p>
+
+<h4 id="important-一些重要特性">important 一些重要特性</h4>
+
+<ul>
+  <li>
+    <p>您可以放在变量中的所有内容都是一个对象，每个对象都是一个类的实例。偶数，函数和 null对象。所有对象都继承自Object类。</p>
+  </li>
+  <li>
+    <p>尽管Dart是强类型的，但类型注释是可选的，因为Dart可以推断类型。在上面的代码中，number 推断为类型int。如果要明确说明不需要任何类型，请使用特殊类型dynamic。</p>
+  </li>
+  <li>
+    <p>Dart支持泛型类型，如List<int>（整数列表）或List<dynamic>（任何类型的对象列表）。</dynamic></int></p>
+  </li>
+  <li>
+    <p>Dart支持顶级函数（例如main()），以及绑定到类或对象的函数（分别是静态和实例方法）。您还可以在函数内创建函数（嵌套函数或本地函数）。</p>
+  </li>
+  <li>
+    <p>类似地，Dart支持顶级变量，以及绑定到类或对象的变量（静态和实例变量）。实例变量有时称为字段或属性。</p>
+  </li>
+  <li>
+    <p>与Java，Dart不具备关键字public，protected和private。如果标识符以下划线 _ 开头，则它对其库是私有的。有关详细信息，请参阅 库和可见性。标识符可以以字母或下划线 _ 开头，后跟这些字符加数字的任意组合。</p>
+  </li>
+  <li>
+    <p>Dart有表达式（具有运行时值）和 语句（不具有）。例如，条件表达式 condition ? expr1 : expr2的值为expr1或expr2。将其与if-else语句进行比较，该语句没有任何值。语句通常包含一个或多个表达式，但表达式不能直接包含语句。</p>
+  </li>
+  <li>
+    <p>Dart工具可以报告两种问题：警告和错误。警告只是表明您的代码可能无法正常工作，但它们不会阻止您的程序执行。错误可以是编译时或运行时。编译时错误会阻止代码执行; 运行时错误导致 代码执行时引发异常。</p>
+  </li>
+</ul>
+
+<h4 id="数据类型">数据类型</h4>
+
+<ul>
+  <li>字符串</li>
+</ul>
+
+<p>值得一提的是 字符串支持 单引号 ’ 和 双引号 “ 两种，好处如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var s3 = 'It\'s easy to escape the string delimiter.';
+var s4 = "It's even easier to use the other delimiter.";
+</code></pre></div></div>
+
+<p>${  }  来进行取值</p>
+
+<ul>
+  <li>Runs</li>
+</ul>
+
+<p>Dart 使用 utf-16 编码，32位的编码表示如下：笑的表情符号（😆）是\u{1f600}。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Runes input = new Runes(
+      '\u2665  \u{1f605}  \u{1f60e}  \u{1f47b}  \u{1f596}  \u{1f44d}');
+print(new String.fromCharCodes(input));
+</code></pre></div></div>
+
+<ul>
+  <li>Symbols</li>
+</ul>
+
+<p>如果某个 api 使用了关键字，你可以使用 # 来进行使用，例如： #radix</p>
+
+<h4 id="函数">函数</h4>
+
+<ul>
+  <li>
+    <p>支持可选值和默认值</p>
+  </li>
+  <li>
+    <p>顶级函数和 main()</p>
+  </li>
+  <li>
+    <p>匿名函数</p>
+  </li>
+  <li>
+    <p>嵌套函数，作用域</p>
+  </li>
+  <li>
+    <p>函数式</p>
+  </li>
+  <li>
+    <p>判断函数相等</p>
+  </li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">void</span> <span class="nf">foo</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// A top-level function</span>
+
+<span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+  <span class="kd">static</span> <span class="n">void</span> <span class="nf">bar</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// A static method</span>
+  <span class="n">void</span> <span class="nf">baz</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// An instance method</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="nv">x</span><span class="p">;</span>
+
+  <span class="c1">// Comparing top-level functions.</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">foo</span><span class="p">;</span>
+  <span class="nf">assert</span><span class="p">(</span><span class="n">foo</span> <span class="o">==</span> <span class="n">x</span><span class="p">);</span>
+
+  <span class="c1">// Comparing static methods.</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="kt">A</span><span class="o">.</span><span class="n">bar</span><span class="p">;</span>
+  <span class="nf">assert</span><span class="p">(</span><span class="kt">A</span><span class="o">.</span><span class="n">bar</span> <span class="o">==</span> <span class="n">x</span><span class="p">);</span>
+
+  <span class="c1">// Comparing instance methods.</span>
+  <span class="k">var</span> <span class="nv">v</span> <span class="o">=</span> <span class="kt">A</span><span class="p">();</span> <span class="c1">// Instance #1 of A</span>
+  <span class="k">var</span> <span class="nv">w</span> <span class="o">=</span> <span class="kt">A</span><span class="p">();</span> <span class="c1">// Instance #2 of A</span>
+  <span class="k">var</span> <span class="nv">y</span> <span class="o">=</span> <span class="n">w</span><span class="p">;</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">baz</span><span class="p">;</span>
+
+  <span class="c1">// These closures refer to the same instance (#2),</span>
+  <span class="c1">// so they're equal.</span>
+  <span class="nf">assert</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">baz</span> <span class="o">==</span> <span class="n">x</span><span class="p">);</span>
+
+  <span class="c1">// These closures refer to different instances,</span>
+  <span class="c1">// so they're unequal.</span>
+  <span class="nf">assert</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">baz</span> <span class="o">!=</span> <span class="n">w</span><span class="o">.</span><span class="n">baz</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>返回值，无返回值 等价 返回值为 null</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>foo() {}
+assert(foo() == null);
+</code></pre></div></div>
+
+<h4 id="操作符">操作符</h4>
+
+<ul>
+  <li>
+    <p>数学操作符</p>
+  </li>
+  <li>
+    <p>关系判断操作符</p>
+  </li>
+  <li>
+    <p>类型判断操作符，as，is，is！</p>
+  </li>
+  <li>
+    <p>包含赋值的 ~/=</p>
+  </li>
+  <li>
+    <p>逻辑取反，与，或</p>
+  </li>
+  <li>
+    <p>移位操作符</p>
+  </li>
+  <li>
+    <p>if-esle 表达式</p>
+  </li>
+  <li>
+    <p>Cascade notation （层叠标记）</p>
+  </li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">querySelector</span><span class="p">(</span><span class="err">'#</span><span class="n">confirm</span><span class="err">'</span><span class="p">)</span> <span class="c1">// Get an object.</span>
+  <span class="o">..</span><span class="n">text</span> <span class="o">=</span> <span class="err">'</span><span class="kt">Confirm</span><span class="err">'</span> <span class="c1">// Use its members.</span>
+  <span class="o">..</span><span class="n">classes</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="err">'</span><span class="n">important</span><span class="err">'</span><span class="p">)</span>
+  <span class="o">..</span><span class="n">onClick</span><span class="o">.</span><span class="nf">listen</span><span class="p">((</span><span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">window</span><span class="o">.</span><span class="nf">alert</span><span class="p">(</span><span class="err">'</span><span class="kt">Confirmed</span><span class="o">!</span><span class="err">'</span><span class="p">));</span>
+
+<span class="c1">//等价于</span>
+<span class="k">var</span> <span class="nv">button</span> <span class="o">=</span> <span class="nf">querySelector</span><span class="p">(</span><span class="err">'#</span><span class="n">confirm</span><span class="err">'</span><span class="p">);</span>
+<span class="n">button</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="err">'</span><span class="kt">Confirm</span><span class="err">'</span><span class="p">;</span>
+<span class="n">button</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="err">'</span><span class="n">important</span><span class="err">'</span><span class="p">);</span>
+<span class="n">button</span><span class="o">.</span><span class="n">onClick</span><span class="o">.</span><span class="nf">listen</span><span class="p">((</span><span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">window</span><span class="o">.</span><span class="nf">alert</span><span class="p">(</span><span class="err">'</span><span class="kt">Confirmed</span><span class="o">!</span><span class="err">'</span><span class="p">));</span>
+</code></pre></div></div>
+
+<ul>
+  <li>其他符号()[]?.</li>
+</ul>
+
+<h4 id="control-flow-statements-控制流">Control flow statements 控制流</h4>
+
+<ul>
+  <li>if and else</li>
+  <li>for loops</li>
+  <li>while and do-while loops</li>
+  <li>break and continue</li>
+  <li>switch and case</li>
+  <li>assert 如果表达式的值为true，则断言成功并继续执行。如果为false，则断言失败并抛出异常（ <strong>仅测试环境下抛出</strong> ）。</li>
+</ul>
+
+<h4 id="exceptions">Exceptions</h4>
+
+<ul>
+  <li>
+    <p>throw</p>
+  </li>
+  <li>
+    <p>try - catch</p>
+  </li>
+  <li>
+    <p>try - finally</p>
+  </li>
+</ul>
+
+<h4 id="类">类</h4>
+
+<ul>
+  <li>
+    <p>成员变量 ，使用 .runtimeType 获取 Type 对象。</p>
+  </li>
+  <li>
+    <p>构造函数</p>
+  </li>
+  <li>
+    <p>方法</p>
+  </li>
+  <li>
+    <p>抽象方法，类，抽象方法只能存在抽象类中</p>
+  </li>
+  <li>
+    <p>隐式接口</p>
+  </li>
+  <li>
+    <p>扩展</p>
+  </li>
+  <li>
+    <p>枚举类</p>
+  </li>
+  <li>
+    <p>向类添加功能：mixins （相当于代理）</p>
+  </li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mixin</span> <span class="kt">Musical</span> <span class="p">{</span>
+  <span class="n">bool</span> <span class="n">canPlayPiano</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="n">bool</span> <span class="n">canCompose</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="n">bool</span> <span class="n">canConduct</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="n">void</span> <span class="nf">entertainMe</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">canPlayPiano</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">print</span><span class="p">(</span><span class="err">'</span><span class="kt">Playing</span> <span class="n">piano</span><span class="err">'</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">canConduct</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">print</span><span class="p">(</span><span class="err">'</span><span class="kt">Waving</span> <span class="n">hands</span><span class="err">'</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nf">print</span><span class="p">(</span><span class="err">'</span><span class="kt">Humming</span> <span class="n">to</span> <span class="k">self</span><span class="err">'</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">Maestro</span> <span class="n">extends</span> <span class="kt">Person</span>
+    <span class="n">with</span> <span class="kt">Musical</span><span class="p">,</span> <span class="kt">Aggressive</span><span class="p">,</span> <span class="kt">Demented</span> <span class="p">{</span>
+  <span class="kt">Maestro</span><span class="p">(</span><span class="kt">String</span> <span class="n">maestroName</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">maestroName</span><span class="p">;</span>
+    <span class="n">canConduct</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>类变量和方法</li>
+</ul>
+
+<h4 id="泛型">泛型</h4>
+
+<p>正确指定泛型类型会产生更好的生成代码。您可以使用泛型来减少代码重复。不再展开了，用到再去文档中学习即可。</p>
+
+<h4 id="使用库">使用库</h4>
+
+<ul>
+  <li>
+    <p>如果库名重复可以指定别名。</p>
+  </li>
+  <li>
+    <p>可以只使用库的某个文件。</p>
+  </li>
+  <li>
+    <p>延迟加载库。</p>
+  </li>
+</ul>
+
+<h4 id="异步">异步</h4>
+
+<ul>
+  <li>
+    <p>异步函数 async， await</p>
+  </li>
+  <li>
+    <p>使用try，catch和finally 处理使用await以下代码的错误和清</p>
+  </li>
+  <li>
+    <p>声明异步函数，例如： Future &lt; String &gt; lookUpVersion （）async =&gt; ‘1.0.0’</p>
+  </li>
+  <li>
+    <p>处理流：使用async和异步for循环（await for）</p>
+  </li>
+</ul>
+
+<h4 id="generators-生成器函数">Generators 生成器函数</h4>
+
+<p>用于懒惰的生成一系列值。支持同步和异步。</p>
+
+<h4 id="callable-classes-可调用的类">Callable classes 可调用的类</h4>
+
+<p>如下，直接调用  WannabeFunction(“Hi”,”there,”,”gang”);</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class WannabeFunction {
+  call(String a, String b, String c) =&gt; '$a $b $c!';
+}
+
+main() {
+  var wf = new WannabeFunction();
+  var out = wf("Hi","there,","gang");
+  print('$out');
+}
+</code></pre></div></div>
+
+<h4 id="分离">分离</h4>
+
+<p>使用多核CPU。</p>
+
+<h4 id="类型声明定义">类型声明定义</h4>
+
+<p>目前，typedef仅限于函数类型。我们希望这会改变。</p>
+
+<h4 id="元数据">元数据</h4>
+
+<p>使用元数据提供有关代码的其他信息。元数据注释以字符开头@，例如 @override。</p>
+
+<p>元数据可以出现在库，类，typedef，类型参数，构造函数，工厂，函数，字段，参数或变量声明之前以及导入或导出指令之前。您可以使用反射在运行时检索元数据。</p>
+
+<h4 id="注释------">注释 // , / * * /</h4>
+
+<h4 id="documentation-comments">Documentation comments</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// A domesticated South American camelid (Lama glama).
+///
+/// Andean cultures have used llamas as meat and pack
+/// animals since pre-Hispanic times.
+</code></pre></div></div>
+:ET

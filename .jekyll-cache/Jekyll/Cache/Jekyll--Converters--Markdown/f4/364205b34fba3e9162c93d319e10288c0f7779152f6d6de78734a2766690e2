@@ -1,0 +1,218 @@
+I"t<p>在iOS 11 以下可以通过添加space的方式实现，但是iOS 11 之后引入了safe area这个方式仍然受限于safe area。
+iOS 11以后需要调整layoutMargins值。</p>
+
+<p><strong>注意因为是运行时 swizzleMethod 交换方法实现，所以引入将会使得整个工程生效，可能影响三方库，例如 ImagePicker</strong></p>
+
+<h3 id="本文通过区分版本遍历navview调整相应的视图且使用swizzlemethod无痕注入">本文通过区分版本，遍历navview调整相应的视图，且使用swizzleMethod无痕注入</h3>
+
+<p>封装: 使用了swizzleMethod在多个地方无痕设置</p>
+
+<p>参考代码如下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+<span class="cp">#### 唯一需要注意的地方就是在iOS 11以下使用”hideRightNavigationBar“需要hideButtons，原因上边已经写出了</span>
+
+<span class="kd">import</span> <span class="kt">Foundation</span>
+<span class="kd">import</span> <span class="kt">UIKit</span>
+
+<span class="kd">extension</span> <span class="kt">NSObject</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">swizzleMethod</span><span class="p">(</span><span class="n">_</span> <span class="nv">cls</span><span class="p">:</span> <span class="kt">AnyClass</span><span class="p">,</span> <span class="nv">originalSelector</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="nv">swizzleSelector</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">){</span>
+
+        <span class="k">let</span> <span class="nv">originalMethod</span> <span class="o">=</span> <span class="nf">class_getInstanceMethod</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">originalSelector</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="nv">swizzledMethod</span> <span class="o">=</span> <span class="nf">class_getInstanceMethod</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">swizzleSelector</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="nv">didAddMethod</span> <span class="o">=</span> <span class="nf">class_addMethod</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>
+                                           <span class="n">originalSelector</span><span class="p">,</span>
+                                           <span class="nf">method_getImplementation</span><span class="p">(</span><span class="n">swizzledMethod</span><span class="p">),</span>
+                                           <span class="nf">method_getTypeEncoding</span><span class="p">(</span><span class="n">swizzledMethod</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">didAddMethod</span> <span class="p">{</span>
+            <span class="nf">class_replaceMethod</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span>
+                                <span class="n">swizzleSelector</span><span class="p">,</span>
+                                <span class="nf">method_getImplementation</span><span class="p">(</span><span class="n">originalMethod</span><span class="p">),</span>
+                                <span class="nf">method_getTypeEncoding</span><span class="p">(</span><span class="n">originalMethod</span><span class="p">))</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nf">method_exchangeImplementations</span><span class="p">(</span><span class="n">originalMethod</span><span class="p">,</span>
+                                           <span class="n">swizzledMethod</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">extension</span> <span class="kt">UIApplication</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">classSwizzedMethod</span><span class="p">:</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="kt">UINavigationController</span><span class="o">.</span><span class="n">sx_initialize</span>
+        <span class="k">if</span> <span class="kd">#available(iOS 11.0, *)</span> <span class="p">{</span>
+            <span class="kt">UINavigationBar</span><span class="o">.</span><span class="n">sx_initialize</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">next</span><span class="p">:</span> <span class="kt">UIResponder</span><span class="p">?</span> <span class="p">{</span>
+        <span class="kt">UIApplication</span><span class="o">.</span><span class="n">classSwizzedMethod</span>
+        <span class="k">return</span> <span class="k">super</span><span class="o">.</span><span class="n">next</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">//swiftlint:disable identifier_name</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">sx_defultFixSpace</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">sx_disableFixSpace</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+
+<span class="kd">extension</span> <span class="kt">UINavigationController</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="kd">struct</span> <span class="kt">AssociatedKeys</span> <span class="p">{</span>
+        <span class="kd">static</span> <span class="k">var</span> <span class="nv">tempDisableFixSpace</span> <span class="o">=</span> <span class="s">"tempDisableFixSpace"</span>
+        <span class="kd">static</span> <span class="k">var</span> <span class="nv">tempBehavor</span> <span class="o">=</span> <span class="s">"tempBehavor"</span>
+    <span class="p">}</span>
+
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">sx_initialize</span><span class="p">:</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">once</span><span class="p">(</span><span class="kt">UUID</span><span class="p">()</span><span class="o">.</span><span class="n">uuidString</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="nf">swizzleMethod</span><span class="p">(</span><span class="kt">UINavigationController</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+                          <span class="nv">originalSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationController.viewDidLoad</span><span class="kd">)</span><span class="p">,</span>
+                          <span class="nv">swizzleSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationController.sx_viewDidLoad</span><span class="kd">)</span><span class="p">)</span>
+
+            <span class="nf">swizzleMethod</span><span class="p">(</span><span class="kt">UINavigationController</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+                          <span class="nv">originalSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationController.viewWillAppear(_:)</span><span class="kd">)</span><span class="p">,</span>
+                          <span class="nv">swizzleSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationController.sx_viewWillAppear(_:)</span><span class="kd">)</span><span class="p">)</span>
+
+            <span class="nf">swizzleMethod</span><span class="p">(</span><span class="kt">UINavigationController</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+                          <span class="nv">originalSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationController.viewWillDisappear(_:)</span><span class="kd">)</span><span class="p">,</span>
+                          <span class="nv">swizzleSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationController.sx_viewWillDisappear(_:)</span><span class="kd">)</span><span class="p">)</span>
+
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">tempDisableFixSpace</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nf">objc_getAssociatedObject</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="o">&amp;</span><span class="kt">AssociatedKeys</span><span class="o">.</span><span class="n">tempDisableFixSpace</span><span class="p">)</span> <span class="k">as?</span> <span class="kt">Bool</span> <span class="p">??</span> <span class="kc">false</span>
+        <span class="p">}</span>
+        <span class="k">set</span> <span class="p">{</span>
+            <span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="o">&amp;</span><span class="kt">AssociatedKeys</span><span class="o">.</span><span class="n">tempDisableFixSpace</span><span class="p">,</span> <span class="n">newValue</span><span class="p">,</span> <span class="o">.</span><span class="kt">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">11.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">tempBehavor</span><span class="p">:</span> <span class="kt">UIScrollViewContentInsetAdjustmentBehavior</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nf">objc_getAssociatedObject</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="o">&amp;</span><span class="kt">AssociatedKeys</span><span class="o">.</span><span class="n">tempBehavor</span><span class="p">)</span> <span class="k">as?</span> <span class="kt">UIScrollViewContentInsetAdjustmentBehavior</span> <span class="p">??</span> <span class="o">.</span><span class="n">automatic</span>
+        <span class="p">}</span>
+        <span class="k">set</span> <span class="p">{</span>
+            <span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="o">&amp;</span><span class="kt">AssociatedKeys</span><span class="o">.</span><span class="n">tempBehavor</span><span class="p">,</span> <span class="n">newValue</span><span class="p">,</span> <span class="o">.</span><span class="kt">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">@objc</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">sx_viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">disableFixSpace</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="nv">with</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+        <span class="nf">sx_viewDidLoad</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="kd">@objc</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">sx_viewWillAppear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">disableFixSpace</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="nv">with</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span>
+        <span class="nf">sx_viewWillAppear</span><span class="p">(</span><span class="n">animated</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">@objc</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">sx_viewWillDisappear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">disableFixSpace</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="nv">with</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+        <span class="nf">sx_viewWillDisappear</span><span class="p">(</span><span class="n">animated</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">disableFixSpace</span><span class="p">(</span><span class="n">_</span> <span class="nv">disable</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="n">with</span> <span class="nv">temp</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span> <span class="o">==</span> <span class="kt">UIImagePickerController</span><span class="o">.</span><span class="k">self</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">disable</span> <span class="o">==</span> <span class="kc">true</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="n">temp</span> <span class="p">{</span> <span class="n">tempDisableFixSpace</span> <span class="o">=</span> <span class="n">sx_disableFixSpace</span> <span class="p">}</span>
+                <span class="n">sx_disableFixSpace</span> <span class="o">=</span> <span class="kc">true</span>
+                <span class="k">if</span> <span class="kd">#available(iOS 11.0, *)</span> <span class="p">{</span>
+                    <span class="n">tempBehavor</span> <span class="o">=</span> <span class="kt">UIScrollView</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="n">contentInsetAdjustmentBehavior</span>
+                    <span class="kt">UIScrollView</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="n">contentInsetAdjustmentBehavior</span> <span class="o">=</span> <span class="o">.</span><span class="n">automatic</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">sx_disableFixSpace</span> <span class="o">=</span> <span class="n">tempDisableFixSpace</span>
+                <span class="k">if</span> <span class="kd">#available(iOS 11.0, *)</span> <span class="p">{</span>
+                    <span class="kt">UIScrollView</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="n">contentInsetAdjustmentBehavior</span> <span class="o">=</span> <span class="n">tempBehavor</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">11.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">extension</span> <span class="kt">UINavigationBar</span> <span class="p">{</span>
+
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">sx_initialize</span><span class="p">:</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">once</span><span class="p">(</span><span class="kt">UUID</span><span class="p">()</span><span class="o">.</span><span class="n">uuidString</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nf">swizzleMethod</span><span class="p">(</span><span class="kt">UINavigationBar</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+                          <span class="nv">originalSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationBar.layoutSubviews</span><span class="kd">)</span><span class="p">,</span>
+                          <span class="nv">swizzleSelector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UINavigationBar.sx_layoutSubviews</span><span class="kd">)</span><span class="p">)</span>
+
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="kd">@objc</span> <span class="kd">func</span> <span class="nf">sx_layoutSubviews</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">sx_layoutSubviews</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">sx_disableFixSpace</span> <span class="o">==</span> <span class="kc">false</span> <span class="p">{</span>
+            <span class="n">layoutMargins</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span>
+            <span class="k">let</span> <span class="nv">space</span> <span class="o">=</span> <span class="n">sx_defultFixSpace</span>
+            <span class="k">for</span> <span class="n">view</span> <span class="k">in</span> <span class="n">subviews</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="kt">NSStringFromClass</span><span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">classForCoder</span><span class="p">)</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"ContentView"</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">view</span><span class="o">.</span><span class="n">layoutMargins</span> <span class="o">=</span> <span class="kt">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">space</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">UINavigationItem</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="kd">enum</span> <span class="kt">BarButtonItem</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">left</span> <span class="o">=</span> <span class="s">"_leftBarButtonItem"</span>
+        <span class="k">case</span> <span class="n">right</span> <span class="o">=</span> <span class="s">"_rightBarButtonItem"</span>
+    <span class="p">}</span>
+
+    <span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">setValue</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="n">forKey</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="kd">#available(iOS 11.0, *)</span> <span class="p">{</span>
+            <span class="k">super</span><span class="o">.</span><span class="nf">setValue</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">sx_disableFixSpace</span> <span class="o">==</span> <span class="kc">false</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="kt">BarButtonItem</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">rawValue</span> <span class="o">||</span> <span class="n">key</span> <span class="o">==</span> <span class="kt">BarButtonItem</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">rawValue</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">guard</span> <span class="k">let</span> <span class="nv">item</span> <span class="o">=</span> <span class="n">value</span> <span class="k">as?</span> <span class="kt">UIBarButtonItem</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">super</span><span class="o">.</span><span class="nf">setValue</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="k">return</span>
+                <span class="p">}</span>
+                <span class="k">let</span> <span class="nv">space</span> <span class="o">=</span> <span class="kt">UIBarButtonItem</span><span class="p">(</span><span class="nv">barButtonSystemItem</span><span class="p">:</span> <span class="o">.</span><span class="n">fixedSpace</span><span class="p">,</span> <span class="nv">target</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+                <span class="n">space</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">sx_defultFixSpace</span> <span class="o">-</span> <span class="mi">16</span>
+
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="kt">BarButtonItem</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">rawValue</span> <span class="p">{</span>
+                    <span class="n">leftBarButtonItems</span> <span class="o">=</span> <span class="p">[</span><span class="n">space</span><span class="p">,</span> <span class="n">item</span><span class="p">]</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="n">rightBarButtonItems</span> <span class="o">=</span> <span class="p">[</span><span class="n">space</span><span class="p">,</span> <span class="n">item</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">super</span><span class="o">.</span><span class="nf">setValue</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">DispatchQueue</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="kd">var</span> <span class="p">`</span><span class="nv">default</span><span class="p">`:</span> <span class="kt">DispatchQueue</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="p">`</span><span class="nv">default</span><span class="p">`)</span> <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">userInteractive</span><span class="p">:</span> <span class="kt">DispatchQueue</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="n">userInteractive</span><span class="p">)</span> <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">userInitiated</span><span class="p">:</span> <span class="kt">DispatchQueue</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="n">userInitiated</span><span class="p">)</span> <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">utility</span><span class="p">:</span> <span class="kt">DispatchQueue</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="n">utility</span><span class="p">)</span> <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">background</span><span class="p">:</span> <span class="kt">DispatchQueue</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="n">background</span><span class="p">)</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">after</span><span class="p">(</span><span class="n">_</span> <span class="nv">delay</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="n">execute</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">asyncAfter</span><span class="p">(</span><span class="nv">deadline</span><span class="p">:</span> <span class="o">.</span><span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">delay</span><span class="p">,</span> <span class="nv">execute</span><span class="p">:</span> <span class="n">closure</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">_onceTracker</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span><span class="p">]()</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">once</span><span class="p">(</span><span class="n">_</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">block</span><span class="p">:()</span><span class="o">-&gt;</span><span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">objc_sync_enter</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+        <span class="k">defer</span> <span class="p">{</span> <span class="nf">objc_sync_exit</span><span class="p">(</span><span class="k">self</span><span class="p">)</span> <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">_onceTracker</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        <span class="n">_onceTracker</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="nf">block</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

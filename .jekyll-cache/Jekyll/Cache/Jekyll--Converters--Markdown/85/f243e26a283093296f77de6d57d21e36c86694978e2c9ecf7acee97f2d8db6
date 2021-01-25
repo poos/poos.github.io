@@ -1,0 +1,112 @@
+I"6<h2 id="tips">tips</h2>
+
+<p>关于 Flutter 的总结。</p>
+
+<p><a href="https://poos.github.io/tags/#Flutter">所有 Flutter 的资料</a>。</p>
+
+<ul>
+  <li>介绍和技术分享会</li>
+  <li>dart 语法简介</li>
+  <li>widget 和 layout</li>
+  <li>设计模式</li>
+  <li>嵌入原生项目</li>
+</ul>
+
+<h2 id="坑点">坑点</h2>
+
+<p>一些开发遇到的坑</p>
+
+<h3 id="flutter-channle">flutter channle</h3>
+
+<p>当需要切换分支时候你可以使用 flutter channle 命令。</p>
+
+<p>我在前段时间做 flutter 嵌入 iOS 原生项目时候，发生了 image asset 没有找到的情况。Issue 有人提出切换 master，当然现在已经修复了</p>
+
+<h3 id="use-in-china">use in China</h3>
+
+<p>不多说，可能需要修改镜像地址。尤其是 flutter channle 更换之后往往需要重新下载。</p>
+
+<p>基本设置如下即可。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PUB_HOSTED_URL</span><span class="o">=</span>https://pub.flutter-io.cn
+<span class="nb">export </span><span class="nv">FLUTTER_STORAGE_BASE_URL</span><span class="o">=</span>https://storage.flutter-io.cn
+</code></pre></div></div>
+
+<p>如不能解决，<a href="https://flutter-io.cn/">flutter-io.cn/</a> 最底部也明显提出解决办法。</p>
+
+<p><strong>如果 flutter doctor 遇到安卓协议 卡了很长时间，那么换个网试一下。不行了，按照 flutter 文档，重新确认一下。</strong></p>
+
+<h3 id="原生项目添加-flutter">原生项目添加 flutter</h3>
+
+<p>安装官方文档添加即可：<a href="https://github.com/flutter/flutter/wiki/Add-Flutter-to-existing-apps">flutter/wiki/Add-Flutter-to-existing-apps</a>。</p>
+
+<p><strong>但是注意如下几点：</strong></p>
+
+<h3 id="1-flutter_boost">1. flutter_boost</h3>
+
+<p>如果你使用了三方的 页面管理方案，例如 flutter_boost。有可能不需要上述的官方文档中提到的注册一步。即省略如下相关：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//...</span>
+    <span class="kt">GeneratedPluginRegistrant</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">flutterEngine</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="2-verbose-2enginecc">2. VERBOSE-2:engine.cc……</h3>
+
+<ul>
+  <li>
+    <p>使用了非官方推荐的方式导入，需要按照你使用的例子，添加相应的 app.framework 和 flutter.framework。</p>
+  </li>
+  <li>
+    <p>或者你使用的是官方导入方式，升级 flutter 遇到的问题，那么升级到最新 stable channel，重新生成一个 module 再试试。</p>
+  </li>
+</ul>
+
+<h3 id="3-failed-to-find-assets-path-for-frameworksappframeworkflutter_assets">3. Failed to find assets path for “Frameworks/App.framework/flutter_assets”</h3>
+
+<p>这个 bug 已经在5月初修复，现在不需要添加 framework 了。</p>
+
+<p>所以 <strong>升级到最新 stable channel，重新生成一个 module</strong> 再试试。</p>
+
+<h3 id="4-模拟器好的真机错误">4. 模拟器好的，真机错误</h3>
+
+<p>很莫名其妙，哪里出错了。模拟器好的，真机错误，这种情况可以往证书方面考虑。</p>
+
+<p><strong>MissingPluginException while adding to existing iOS application</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+iPhone Developer: xxx (MQF8D9PK85): ambiguous (matches "iPhone Developer: xxx (MQF8D9PK85)
+iPhone Developer: xxx (MQF8D9PK85): ambiguous (matches "iPhone Developer: xxx (MQF8D9PK85)
+MissingPluginException while adding to existing iOS application 
+</code></pre></div></div>
+
+<p>这是因为在 keychain 中有多个开发者证书，所以产生了冲突。</p>
+
+<p><strong>虽然在原生项目中，Xcode 会帮你处理，使用正确的证书。但是，Flutter 的脚本还没有处理这个方面的问题。</strong> 为了保持一个干净的证书环境，还是删除没用的证书吧。</p>
+
+<h3 id="5-热启动热加载-与-dart代码调试">5. 热启动/热加载 与 Dart代码调试</h3>
+
+<p>命令如下</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>xx/flutter_module 
+flutter attach
+</code></pre></div></div>
+<p>然后重新导入即可连接设备，热更新运行。</p>
+
+<p>发生错误：
+Oops; flutter has exited unexpectedly.</p>
+
+<p><a href="https://github.com/flutter/flutter/issues/33035">flutter attach - Oops; flutter has exited unexpectedly.</a></p>
+
+<p>安照教程更新即可解决.</p>
+
+<p>如果需要更新，可以查看各个 channel 的最新版本。
+<a href="https://flutter.dev/docs/development/tools/sdk/releases?tab=macos">flutter/sdk/releases</a></p>
+
+<h3 id="6-嵌入-android">6. 嵌入 android</h3>
+
+<p>尚在探索中</p>
+
+<h3 id="其他坑">其他坑</h3>
+
+<p>尚在探索中</p>
+
+:ET

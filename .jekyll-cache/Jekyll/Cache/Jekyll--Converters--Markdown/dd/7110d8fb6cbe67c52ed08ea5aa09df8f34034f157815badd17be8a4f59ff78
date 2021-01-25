@@ -1,0 +1,294 @@
+I"�B<p><strong><a href="https://github.com/poos/testIpa">本文所有 资源 地址</a></strong></p>
+
+<p><strong>目前可以在局域网和 github 访问下载 ipa，可以从日常 build 导出ipa（未加密，应只在公司网使用）</strong></p>
+
+<h2 id="to-do">to do</h2>
+
+<p>一键打包 build 中的 app，上传ipa本地发布，甚至发消息提示测试
+一键 achieve app，上传ipa本地发布，甚至发消息提示测试</p>
+
+<p><a href="https://daniate.com/2016/11/27/通过xcodebuild自动构建并发布Ad-Hoc测试包.html">通过xcodebuild自动构建并发布Ad Hoc测试包</a></p>
+
+<h2 id="踩坑点">踩坑点</h2>
+
+<p>10月30日</p>
+
+<ol>
+  <li>
+    <p><strong>plist 要在 https:// 上面</strong></p>
+  </li>
+  <li>
+    <p><strong>plist 中的链接要准确获取：ipa为下载链接，image同样，bundle-identifier要准确，bundle-version和title可以不准确</strong></p>
+  </li>
+  <li>
+    <p><strong>ipa 下载地址选择：优先选择局域网；github上传大文件使用Git Lfs（不推荐下载慢）；七牛下载（未正确获取下载链接，未测试）</strong></p>
+  </li>
+  <li>
+    <p><strong>导出 ipa 方式选择：xcrun + PackageApplication（在日常 build 中导出ipa）；脚本打包 achieve，导出出 ipa</strong></p>
+  </li>
+</ol>
+
+<blockquote>
+  <p>xcrun -sdk iphoneos PackageApplication -v ~/xx/xx.app -o ~/xx/xx.ipa</p>
+</blockquote>
+
+<ol>
+  <li><strong>在局域网网页发布：使用 xxx.loacl:4000/ 网址；个人借用了博客 jekyll 新建了个发布静态网页</strong></li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll serve -w --host=0.0.0.0
+
+http://xx.local:4000/test/app
+</code></pre></div></div>
+
+<h2 id="原理和分析">原理和分析</h2>
+
+<p>iOS 的 ipa 可以通过链接（ex：itms-services://?action=download-manifest&amp;url=https://xxx/xx.plist）去请求 itunes 安装app（没有静态网页直接请求这个链接，或者生成二维码在相机扫码即可下载 ipa）。</p>
+
+<p>plist 文件格式如下： 有两个对象一个存储 ipa 和图片，另一个对象存储 app identifier 和 版本信息，plist 代码稍后在下边列出。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="p">?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">"1.0"</span> <span class="n">encoding</span><span class="o">=</span><span class="s">"UTF-8"</span><span class="p">?</span><span class="o">&gt;</span>
+<span class="o">&lt;!</span><span class="kt">DOCTYPE</span> <span class="n">plist</span> <span class="kt">PUBLIC</span> <span class="s">"-//Apple//DTD PLIST 1.0//EN"</span> <span class="s">"http://www.apple.com/DTDs/PropertyList-1.0.dtd"</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">plist</span> <span class="n">version</span><span class="o">=</span><span class="s">"1.0"</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">dict</span><span class="o">&gt;</span>
+	<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">items</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+	<span class="o">&lt;</span><span class="n">array</span><span class="o">&gt;</span>
+		<span class="o">&lt;</span><span class="n">dict</span><span class="o">&gt;</span>
+			<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">assets</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+			<span class="o">&lt;</span><span class="n">array</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">dict</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">kind</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="n">software</span><span class="o">-</span><span class="n">package</span><span class="o">&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">url</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="nv">http</span><span class="p">:</span><span class="c1">//xxx/test.ipa&lt;/string&gt;</span>
+				<span class="o">&lt;/</span><span class="n">dict</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">dict</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">kind</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="n">display</span><span class="o">-</span><span class="n">image</span><span class="o">&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">url</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="nv">http</span><span class="p">:</span><span class="c1">//xxx/icon57.png&lt;/string&gt;</span>
+				<span class="o">&lt;/</span><span class="n">dict</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">dict</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">kind</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="n">full</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="n">image</span><span class="o">&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">url</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+					<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="nv">http</span><span class="p">:</span><span class="c1">//xxx/icon512.png&lt;/string&gt;</span>
+				<span class="o">&lt;/</span><span class="n">dict</span><span class="o">&gt;</span>
+			<span class="o">&lt;/</span><span class="n">array</span><span class="o">&gt;</span>
+			<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">metadata</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+			<span class="o">&lt;</span><span class="n">dict</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">bundle</span><span class="o">-</span><span class="n">identifier</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="n">com</span><span class="o">.</span><span class="n">appid</span><span class="o">&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">bundle</span><span class="o">-</span><span class="n">version</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="mf">1.0</span><span class="o">&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">kind</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="n">software</span><span class="o">&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">title</span><span class="o">&lt;/</span><span class="n">key</span><span class="o">&gt;</span>
+				<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="kt">XXName</span><span class="o">&lt;/</span><span class="n">string</span><span class="o">&gt;</span>
+			<span class="o">&lt;/</span><span class="n">dict</span><span class="o">&gt;</span>
+		<span class="o">&lt;/</span><span class="n">dict</span><span class="o">&gt;</span>
+	<span class="o">&lt;/</span><span class="n">array</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">dict</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">plist</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h2 id="过程">过程</h2>
+
+<h3 id="github-发布ipa">github 发布ipa</h3>
+
+<p>主要是借助 有 ssh 证书的 github 网站来存储 manifest.plsit 文件</p>
+
+<p><strong>可能遇到以下问题</strong></p>
+
+<ol>
+  <li>
+    <p>plist 文件： ipa 是否是下载地址；bundle identifier 是否正确</p>
+  </li>
+  <li>
+    <p>plist 文件是否能正常访问</p>
+  </li>
+  <li>
+    <p>ipa 是否对应 bundle identifier</p>
+  </li>
+  <li>
+    <p>如果在 静态 blog 中，不要使用 xx.io/xx.ipa；itunes 有可能拿不到</p>
+  </li>
+  <li>
+    <p>还是不行，新建 repo 去存储 manifest.plsit</p>
+  </li>
+</ol>
+
+<p>参考资料</p>
+
+<p><a href="https://www.jianshu.com/p/b885f14b00e2">利用Github 实现iOS 测试包的在线分发</a>: Github 存储 plist + Flask 搭建静态网页</p>
+
+<p><a href="https://www.jianshu.com/p/3f9e11fad442">iOS 用github自建ipa应用分发平台</a></p>
+
+<p><a href="https://github.com/1ilI/TestMyipa_Resource">1ilI/TestMyipa_Resource</a></p>
+
+<h3 id="github-上传ipa">github 上传ipa</h3>
+
+<p>如果你要用 github 存储 ipa 文件，那么这真的不明智 <del>操蛋</del>，<strong>不使用Github存储 ipa 跳过本章</strong>…</p>
+
+<p><strong>1. 不建议使用 github 存储 ipa ，访问速度很慢</strong></p>
+
+<p><strong>2. 关于 github 单个文件超过100M</strong></p>
+
+<p>添加 git LFs ： <a href="https://blog.csdn.net/qq_35559420/article/details/81783787">关于Github的上传文件超限问题解决</a></p>
+
+<p>后悔了，移除 git LFs ：</p>
+
+<p>a. 删除 .gitattributes, 添加忽略*.ipa，删除 app.ipa, push</p>
+
+<p>b. 如果 push 不成功，可能是本地有多个 commint ，其中有 app.ipa 的修改，不需要后退合并 commint 即可，需要先 push 那些分支在删除</p>
+
+<h3 id="打包-ipa-的-n-种方式">打包 ipa 的 N 种方式</h3>
+
+<p>博客资料很多，其实究其原理两种</p>
+
+<ol>
+  <li>
+    <p>achieve 然后导出 ipa</p>
+  </li>
+  <li>
+    <p>将 build 的.app 转换为 ipa</p>
+  </li>
+</ol>
+
+<p>抛却 zip，手动打包等方式。如果完整打包就使用 <strong>xcodebuild -exportArchive</strong>，这也是 Xcode8 之后御用的方式；如果只是需要将 .app 导出为 .ipa 可以使用 Xrun</p>
+
+<h4 id="xcrun">Xcrun</h4>
+
+<p><strong>使用Xrun将 build 直接转换为 ipa，因为打包快，直接把平时运行的 build 导出 ipa 了</strong></p>
+
+<p>Xcode 8 以上即不包含 PackageApplication 包，添加方法，注意 <strong>sudo</strong></p>
+
+<p>因为是在 XCode 包中添加的，如果升级 Xcode 可能失效，<strong>重新安装一下即可</strong></p>
+
+<p><a href="https://github.com/poos/testIpa">PackageApplication</a></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 下载
+链接如上
+
+添加PackageApplication
+
+# 放到指定目录
+sudo cp ./PackageApplication /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/
+
+# 终端执行下面两条命令
+sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer/
+
+sudo chmod +x /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/PackageApplication
+</code></pre></div></div>
+
+<p><a href="https://blog.csdn.net/skylin19840101/article/details/54406080">iOS自动构建以及打包命令(xcodebuild,xcrun)</a></p>
+
+<p><a href="https://blog.csdn.net/NB_Token/article/details/80018747?utm_source=blogxgwz7">Jenkins集成iOS自动化打包（GitLab + xcodebuild + xcrun + ftp）</a></p>
+
+<p><a href="https://www.cnblogs.com/kingbo/p/3709617.html">Xrun 将 app 转化为 IPA</a></p>
+
+<p><a href="https://www.cnblogs.com/Crazy-ZY/p/7115076.html">Xcode脚本自动化打包问题xcrun: error: unable to find utility “PackageApplication”, not a developer tool or in PATH</a></p>
+
+<p><strong>打包命令</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xcrun -sdk iphoneos PackageApplication -v ~/xx/xx.app -o ~/xx/xx.ipa
+</code></pre></div></div>
+
+<h3 id="mainfest-生成">mainfest 生成</h3>
+
+<p>在原理分析一章已经介绍过了</p>
+
+<p>重申一下，<strong>.plist 中所有的链接都要是直接指向文件的链接</strong></p>
+
+<h3 id="ipa-下载">ipa 下载</h3>
+
+<p>只需要在手机 safari 中 访问如下链接即可</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>itms-services://?action=download-manifest&amp;url=https://xxx/xx.plist
+</code></pre></div></div>
+
+<p><strong>1. 直接生成二维码，相机扫码访问</strong></p>
+
+<p><strong>2. 在静态网页中添加 a 链接访问</strong></p>
+
+<h4 id="jekyll-静态博客发布到局域网">jekyll 静态博客发布到局域网</h4>
+
+<p>上代码</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 发布
+jekyll serve -w --host=0.0.0.0
+
+// 端口占用
+ps -ax|grep -i "jekyll"|grep -v grep|awk '{print "kill -9 " $1}'|sh
+
+</code></pre></div></div>
+
+<p>另外</p>
+
+<p>在 mac 中设置电脑的 name.local 即可使用 name.local:端口//xxx 访问，这样就不用去查IP了</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>偏好设置 -&gt; 共享 -&gt; ”电脑名下边的 local 地址”
+ex:
+
+http:shown.local:4000/test
+
+</code></pre></div></div>
+<p><a href="https://www.jianshu.com/p/650b96306013">如何让jekyll服务可以在局域网中访问</a></p>
+
+<h4 id="jekyll-静态博客-的其他使用">jekyll 静态博客 的其他使用</h4>
+
+<p><strong>屏蔽某些页面</strong></p>
+
+<p>我在 nav 的 遍历博客中添加了博客 title 的判断，如果是 ‘test’ 就不会出现在博客目录中</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if page.title != 'test'
+</code></pre></div></div>
+<p>现在我有两个页面，一个测试 scheme 码的测试页面，一个是 ipa 的下载页面</p>
+
+<p><strong>静态 json 文件</strong></p>
+
+<p>注意一下访问地址</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://raw.githubusercontent.com/poos/poos.github.io/master/test/xx.json
+</code></pre></div></div>
+
+<h5 id="别忘了在博客中屏蔽-ipa">别忘了在博客中屏蔽 .ipa</h5>
+
+<p><a href="https://www.cnblogs.com/zuopeng/p/4305367.html">使用Git如何优雅的忽略掉一些不必的文件</a></p>
+
+<p><strong>ps：全局git 忽略文件</strong></p>
+
+<p>第一步要找到一个 .gitignore_global 的配置文件,在~/ 目录下使用ls -all就能找这个文件,然后vi .gitignore_global打开它,把下面的代码添加进去,然后wq退项目.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+
+# CocoaPods
+#
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
+#
+# Pods/
+</code></pre></div></div>
+
+<h3 id="结语">结语</h3>
+
+<p>正常配置即可访问安装了。测试设备的100个设备现在装起来就很方便了。</p>
+
+<p>过程算是走通了，现在算是半自动化吧，后续再看看脚本完善优化一下。</p>
+:ET

@@ -1,0 +1,177 @@
+I"<p><img src="https://docs.fastlane.tools/img/fastlane_text.png" alt="img" /></p>
+
+<p>写在文章前的话：有问题就去查文档和issues，错不了的</p>
+
+<p>列举一下 在自己电脑上常用的功能</p>
+
+<ul>
+  <li>fastlane 在 iOS 下可以很容易的管理证书和 p12文件</li>
+  <li>很容易修改项目 version，build，截图等需要j提交审核的资源文件</li>
+  <li>
+    <p>xcode command line自动化打包，提交测试</p>
+  </li>
+  <li>[CI]在 git 提交到测试分支时候执行 CI，打包上传到 TstFlight。打 tag 时候就会上传审核</li>
+</ul>
+
+<p><a href="https://docs.fastlane.tools/best-practices/continuous-integration/">官方文档关于 CI 的介绍</a></p>
+
+<h2 id="官网文档-fastlane">官网文档 ：<a href="https://docs.fastlane.tools/">fastlane</a></h2>
+
+<h3 id="github-是一个强大的社区-mythkivenad_fastlane有一个很好的例子和demo工程实现了从零到自动打包上传的详细操作步骤">github 是一个强大的社区 ,<a href="https://github.com/mythkiven/AD_Fastlane">mythkiven/AD_Fastlane</a>有一个很好的例子，和Demo工程，实现了从零到自动打包上传的详细操作步骤。</h3>
+
+<h3 id="另外一个文档包括一些多语言和-ci等处理fastlane-持续集成是另一个一个非常好的教学文档">另外一个文档，包括一些多语言、和 CI等处理。<a href="https://juejin.im/post/5a7b10bb6fb9a0636263bfd5">fastlane 持续集成</a>，是另一个一个非常好的教学文档。</h3>
+
+<p>还有可以 google到很多非常有用的博客资料。但是据自己实践来看，很多文档你只需要返回去看官方文档就可以解决。</p>
+
+<h2 id="介绍一下自己用到的一些脚本">介绍一下自己用到的一些脚本</h2>
+
+<p>如果想学习 Ruby 脚本语言可以到这里：<strong><a href="https://www.kancloud.cn/imxieke/ruby-base/107282">Ruby 文档</a></strong></p>
+
+<h3 id="在管理员电脑打包机器上一些有用的脚本">在管理员电脑/打包机器上一些有用的脚本</h3>
+
+<ul>
+  <li>注册新的设备</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>desc "register device"
+lane :new_devices do
+    register_devices(devices_file: "./devices.txt")
+    match(type: "develop", force_for_new_devices: true)
+end
+
+</code></pre></div></div>
+
+<ul>
+  <li>提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :beta do
+    build
+    upload_to_testflight(ipa: './build/Zhima_iOS.ipa',
+                         changelog: '增加评论功能',
+                         groups: ['beta'],
+                         demo_account_required: true,
+                         skip_waiting_for_build_processing: true)
+end
+
+lane :release do
+    build
+    upload_to_app_store(ipa: './build/Zhima_iOS.ipa',
+                        force: true,
+                        submit_for_review: false,
+                        automatic_release: false)
+end
+
+lane :release_from_beta do
+    upload_to_app_store(
+                        build_number: get_build_number,
+                        skip_binary_upload: true,
+                        force: true,
+                        submit_for_review: true,
+                        automatic_release: false)
+end
+</code></pre></div></div>
+
+<h3 id="在开发者电脑上一些有用的脚本">在开发者电脑上一些有用的脚本</h3>
+
+<ul>
+  <li>同步证书</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :setup do
+    match(type: 'development', readonly: true)
+    match(type: 'appstore', readonly: true)
+    match(type: 'adhoc', readonly: true)
+end
+</code></pre></div></div>
+
+<ul>
+  <li>设置项目的 version number、build number</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :set_version do
+    if UI.interactive?
+        changelog = UI.input "Please enter the new version number: "
+    end
+    increment_version_number(
+                             version_number: "#{changelog}"
+                             )
+end
+
+lane :set_build_number do
+    if UI.interactive?
+        changelog = UI.input "Please enter the new build numbe: "
+    end
+    increment_version_number(
+                             build_number: "#{changelog}"
+                             )
+end
+
+lane :increase_build_number do
+    updateProjectBuildNumber
+end
+
+
+
+# 这是定义在 Fastlane 文件之外的一段脚本，目的是设置当前的build 为日期加版本
+def updateProjectBuildNumber
+    currentTime = Time.new.strftime("%y%m%d")
+    build = get_build_number()
+
+    if build.include?"#{currentTime}"
+
+        # =&gt; 为当天版本 计算迭代版本号
+        lastStr = build[build.length-1]
+        lastNum = lastStr.to_i
+
+        if lastNum == 9
+
+            UI.error " 🚫  error =&gt;  build末位已经是 9 "
+            return
+        end
+
+        lastNum = lastNum +1
+        build ="#{currentTime}#{lastNum}"
+
+        else
+
+        # =&gt; 非当天版本 build 号重置
+        build ="#{currentTime}0"
+    end
+
+    puts("*************| 更新build #{build} |*************")
+
+    # =&gt; 更改项目 build 号
+    increment_build_number(
+                           build_number:"#{build}"
+                           )
+end
+</code></pre></div></div>
+
+<ul>
+  <li>用模拟器测试、打包ipa</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :tests do
+    run_tests(scheme: "Project", devices: ["iPhone 8"])
+end
+
+lane :build do
+    build_app(scheme: 'Project',
+              output_directory: './build')
+end
+</code></pre></div></div>
+
+<ul>
+  <li>运行 swiftlint</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    desc "run swiftlint"
+    lane :lint do
+        swiftlint( strict: true )
+    end
+
+</code></pre></div></div>
+
+<p>暂时这些功能吧…</p>
+:ET

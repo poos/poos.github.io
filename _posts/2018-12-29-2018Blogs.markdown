@@ -9,7 +9,7 @@ catalog: true                         # 是否归档
 tags:                                #标签
 - 总结
 - 工具
-- 维护
+- Debug
 ---
 
 >  从年初转到 SWift 开发，已经差不多一个年头了，正好也是年底，作个总结，也算是应景。
@@ -28,7 +28,7 @@ tags:                                #标签
 
 可以看出，30 余篇博客多集中在 **优化**，**工具**，**语法**，**设计**，**架构** 方面。
 
-![ant_design](https://poos.github.io/img/2018_poos_github_io.png)
+![img](https://poos.github.io/img/2018_poos_github_io.png)
 
 ### 其他的
 

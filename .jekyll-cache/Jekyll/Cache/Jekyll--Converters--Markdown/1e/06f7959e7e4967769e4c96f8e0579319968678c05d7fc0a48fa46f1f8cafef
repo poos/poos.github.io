@@ -1,0 +1,580 @@
+I"��<h2 id="tips">tips</h2>
+
+<p>全3篇，如下，这是第一篇。</p>
+
+<p><a href="https://poos.github.io/2019/02/26/Swifter/">Swift 开发必备 tips 阅读笔记  第一篇</a>，Swift 语言的新特性。</p>
+
+<p><a href="https://poos.github.io/2019/05/13/Swifter1/">Swift 开发必备 tips 阅读笔记 第二篇</a>，Objective-C 与 Swift 的一些特性过渡。</p>
+
+<p><a href="https://poos.github.io/2019/05/18/Swifter2/">Swift 开发必备 tips 阅读笔记 三 最后一篇</a>，Swift与开发环境及一些实践。</p>
+
+<h3 id="swift新元素">Swift新元素</h3>
+
+<h4 id="柯里化currying">柯里化(Currying)</h4>
+
+<p>Swift里可以将方法进行柯里化(Currying)，把接受多个参数的方法进行一些变形，使其更加灵活。</p>
+
+<p>之前的博客已经介绍过，不再赘述。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addTo</span><span class="p">(</span><span class="n">_</span> <span class="nv">adder</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">num</span> <span class="k">in</span>
+        <span class="k">return</span> <span class="n">num</span> <span class="o">+</span> <span class="n">adder</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="将protocol的方法声明为mutating">将protocol的方法声明为mutating</h4>
+<p>Swift 的 mutating 关键字修饰方法是为了能在该方法中修改 struct 或是 enum 的变量，所以如果你 <strong>没在协议方法里写 mutating</strong> 的话，别人如果用 <strong>struct 或 enum</strong> 来实现这个协议的话，就不能在方法里改变自己的变量了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">AnyProtocol</span> <span class="p">{</span>
+    <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">printName</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="sequence-序列">Sequence 序列</h4>
+
+<p>你使用某个类型遵守 IteratorProtocol 协议，那么这个类型即可使用 for … in 方法了；同时这个类型也可以使用 map，filter，reduce 这些高阶函数。</p>
+
+<p>究其根本的话 for in 是这样的</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="nv">iterator</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="nf">makeIterator</span><span class="p">(</span> <span class="p">)</span>
+<span class="k">while</span> <span class="k">let</span> <span class="nv">obj</span> <span class="o">=</span> <span class="n">iterator</span> <span class="o">.</span><span class="nf">next</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="tuple-元组">tuple 元组</h4>
+
+<p>元组的使用，例如交换两个值，例如返回两个值</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//1
+(a, b) = (b, a)
+
+//2
+func calc() -&gt; (Int, Int)
+</code></pre></div></div>
+
+<h4 id="autoclosure-和-">@autoclosure 和 ??</h4>
+
+<p>例如一个函数接受一个闭包，虽然可以使用尾随闭包的特性：</p>
+
+<blockquote>
+  <p>logIfTrue{2 &gt; 1}</p>
+</blockquote>
+
+<p>但是，要么是书写起来十分麻烦，要么是表达上不太清晰，看起来都让人生气。于
+是@autoclosure登场了。我们可以改换方法参数，在参数名前面加上@autoclosure 关键字:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">logIfTrue</span><span class="p">(</span><span class="n">_</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nf">predicate</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"True"</span> <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>这时候我们就可以直接写:</p>
+
+<blockquote>
+  <p>logIfTrue(2 &gt; 1)</p>
+</blockquote>
+
+<h4 id="escaping">@escaping</h4>
+
+<p>逃逸闭包的用法。注意适时使用 [weak self]。</p>
+
+<h4 id="optional-chaining">Optional Chaining</h4>
+
+<p>注意一点，连续可选值调用时候，判断最终调用是否成功容易发生错误：</p>
+
+<p>这是错误代码</p>
+
+<blockquote>
+  <p>let playClosure = {(child: Child) -&gt; () in child.pet?.toy?.play()}</p>
+</blockquote>
+
+<p>这样的代码是没有意义的!
+问题在于对于 play() 的调用上。定义的时候我们没有写play() 的返回，这表示这个方法返回
+Void (或者写作一对小括号()， 它们是等价的)。但是，经过 Optional Chaining以后
+我们得到的是一个Optional的结果。也就是说，我们最后得到的应该是这样一个 closure :</p>
+
+<blockquote>
+  <p>let playClosure = {(child: Child) -&gt; ()? in child. pet? . toy?. play()}</p>
+</blockquote>
+
+<p>这样调用的返回将是一-个()? (或者写成Void? 会更清楚- -些)， 虽然看起来挺奇怪的，但这就是
+事实。使用的时候我们可以通过Optional Binding来判定方法是否调用成功:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if let result: () = playClosure(xiaoming) {
+    print("好开心~")
+} else {
+    print("没有玩具可以玩:(")
+}
+</code></pre></div></div>
+
+<h4 id="操作符">操作符</h4>
+
+<p>可以自定义操作符。可能跟 <strong>柯里化</strong> 擦出不一样的火花。</p>
+
+<p><strong>注意</strong> 尽量明了，避免歧义和可能的误解。因为一个不被公认的操作符是存在冲突风险和理解难度的， 所以我们不应该滥用这个特性。</p>
+
+<h4 id="func的参数修饰">func的参数修饰</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func increaseIt(_ number: inout Int) {
+    number += 1
+}
+</code></pre></div></div>
+
+<h4 id="字面量表达">字面量表达</h4>
+
+<p>除了参数初始化时候可以省略类型初始化。</p>
+
+<p>另一种方式 <strong>通过实现协议即可使用 字面量初始化 自定义类型</strong>，例如用字符串初始化 enum 等。</p>
+
+<h4 id="下标">下标</h4>
+
+<p>作为一门代表了先进生产力的语言，Swift 是允许我们自定义下标的。这不仅包含了对自己写的类
+型进行下标自定义，也包括了对那些已经支持下标访问的类型(没错就是Array 和 Dictionay)进
+行扩展。</p>
+
+<blockquote>
+  <p>subscript (index: Int) -&gt; T</p>
+</blockquote>
+
+<blockquote>
+  <p>subscript ( subRange: Range<Int>) -&gt; Slice<T></T></Int></p>
+</blockquote>
+
+<h4 id="函数嵌套">函数嵌套</h4>
+
+<p>如果一个函数只是被另一个函数调用，不妨尝试一下。单一功能的代码块会整合到一起。</p>
+
+<h4 id="命名空间">命名空间</h4>
+
+<p>在 Swift 中，由于可以使用命名空间了，即使是名字相同的类型，只要是来自不同的命名空间的 话，都是可以和平共处的。和 C# 这样的显式在文件中指定命名空间的做法不同，Swift 的命名空 间是基于 module 而不是在代码中显式地指明，每个 module 代表了 Swift 中的一个命名空间。也 就是说，同一个 target 里的类型名称还是不能相同的。在我们进行 app 开发时，默认添加到 app 的主 target 的内容都是处于同一个命名空间中的，我们可以通过创建 Cocoa (Touch) Framework 的 target 的方法来新建一个 module，这样我们就可以在两个不同的 target 中添加同样名字的类型 了。</p>
+
+<h4 id="typealias">typealias</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// This is OK
+typealias Worker&lt;T&gt; = Person&lt;T&gt;
+
+
+class Person&lt;T&gt; {}
+typealias WorkId = String
+typealias Worker = Person&lt;WorkId&gt;
+
+
+protocol Cat { ... }
+protocol Dog { ... }
+typealias Pat = Cat &amp; Dog
+
+</code></pre></div></div>
+
+<h4 id="associatedtype">associatedtype</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 相当于一个抽象父协议，不能被直接遵守实现
+protocol Animal {
+    associatedtype F: Food
+    func eat(_ food: F)
+}
+
+struct Tiger: Animal {
+    func eat(_ food: Meat) {
+        print("eat (meat)")
+    }
+}
+
+struct Sheep: Animal {
+    func eat(_ food: Grass) {
+        print("eat (food)")
+    }
+}
+</code></pre></div></div>
+
+<h4 id="可变参数函数">可变参数函数</h4>
+
+<p>不必像 OC 一样，只能将可变参数设置在最后一位。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func myFunc (numbers: Int..., string: String) {
+    numbers.forEach {
+        for i in 0..&lt;$0 {
+        print("'(i + 1): (string)")
+        }
+    }
+}
+myFunc (numbers: 1, 2, 3, string: "hello" )
+</code></pre></div></div>
+
+<h4 id="初始化方法顺序">初始化方法顺序</h4>
+<ul>
+  <li>先初始化子类的成员变量常量</li>
+  <li>调用 super.init</li>
+  <li>视情况修改父类的成员变量</li>
+</ul>
+
+<h4 id="designated-convenience-和required">Designated, Convenience 和Required</h4>
+<ul>
+  <li>designated，不加修饰的初始化方法，必须对非可选的属性进行设置，并且会显式或者隐式调用父类的方法。</li>
+  <li>convenience，便利的初始化方法，必须调用当前类的 designated 方法。<strong>如果在子类重写了当前调用的 designated 方法，那么子类就可以使用父类中相关的 convenience 方法了</strong></li>
+  <li>对于某些我们希望子类中一定实现的 designated 初始化方法，我们可以通过添加 required 关键字进行限制，强制子类对这个方法重写实现。这样做的最大的好处是 <strong>可以保证依赖于某个 designated 初始化方法的 convenience 一直可以被使用。</strong></li>
+</ul>
+
+<h4 id="初始化返回nil">初始化返回nil</h4>
+<blockquote>
+  <p>convenience init?(string URLString: String)</p>
+</blockquote>
+
+<p>在新版本的Swift中，对于可能初始化失败的情况，我们应该始终使用可返回 nil 的初始化方法，而不是类型工厂方法。</p>
+
+<h4 id="static-和-class">static 和 class</h4>
+
+<p>很早版本（Swift 1.2）时候 class 也可被用于修饰全局静态的方法，现在已经只能用 static 来修饰。</p>
+
+<p>class 仅用于声明一个类</p>
+
+<h4 id="多类型和容器">多类型和容器</h4>
+
+<p>Array、Dictionary、Set</p>
+
+<h4 id="default参数">default参数</h4>
+
+<p>现在已经不能使用 = default，而需要指定具体的值。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">increasedNum</span><span class="p">(</span><span class="nv">num</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">add</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">num</span> <span class="o">+</span> <span class="n">add</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="正则表达式">正则表达式</h4>
+
+<p>使用 NSRegularExpression 做一个包装来使用。</p>
+
+<h4 id="模式匹配-switch-case">模式匹配 switch case</h4>
+
+<p>switch case 支持的模式匹配使得可以写出如下的代码：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// - mark  ex1</span>
+<span class="k">let</span> <span class="nv">num</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="k">switch</span> <span class="n">num</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nv">nil</span><span class="p">:</span> <span class="nf">print</span><span class="p">(</span><span class="s">"nil"</span><span class="p">)</span>
+    <span class="k">default</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"(num!)"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// - mark  ex2</span>
+<span class="k">let</span> <span class="nv">x</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="k">switch</span> <span class="n">x</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">...</span><span class="mf">1.0</span><span class="p">:</span> <span class="nf">print</span><span class="p">(</span><span class="s">"get"</span><span class="p">)</span>
+    <span class="k">default</span><span class="p">:</span> <span class="nf">print</span><span class="p">(</span><span class="s">"error"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// - mark  ex3</span>
+<span class="k">let</span> <span class="nv">contact</span> <span class="o">=</span> <span class="p">(</span><span class="s">"http://onevcat.com"</span><span class="p">,</span> <span class="s">"onev@onevcat. com"</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">mailRegex</span><span class="p">:</span> <span class="kt">NSRegularExpression</span>
+<span class="k">let</span> <span class="nv">siteRegex</span><span class="p">:</span> <span class="kt">NSRegularExpression</span>
+<span class="n">mailRegex</span> <span class="o">=</span>
+    <span class="k">try</span> <span class="o">~/</span><span class="s">"^([a-z0-9_ </span><span class="se">\\</span><span class="s">.-]+)@([</span><span class="se">\\</span><span class="s">da-z</span><span class="se">\\</span><span class="s">.-]+)</span><span class="se">\\</span><span class="s">.([a-z</span><span class="se">\\</span><span class="s">.]{2,6})$"</span>
+<span class="n">siteRegex</span> <span class="o">=</span>
+    <span class="k">try</span> <span class="o">~/</span><span class="s">"^(https?:</span><span class="se">\\</span><span class="s">/</span><span class="se">\\</span><span class="s">V/)?([</span><span class="se">\\</span><span class="s">da-z</span><span class="se">\\</span><span class="s">.-]+)</span><span class="se">\\</span><span class="s">.([a-z</span><span class="se">\\</span><span class="s">.]{2,6})([V</span><span class="se">\\</span><span class="s">w </span><span class="se">\\</span><span class="s">.-]*)*</span><span class="se">\\</span><span class="s">/?$"</span>
+<span class="k">switch</span> <span class="n">contact</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="p">(</span><span class="n">siteRegex</span><span class="p">,</span> <span class="n">mailRegex</span><span class="p">):</span> <span class="nf">print</span> <span class="p">(</span><span class="s">"同时拥有有效的网站和邮箱"</span><span class="p">)</span>
+    <span class="k">case</span> <span class="p">(</span><span class="n">_</span> <span class="p">,</span> <span class="n">mailRegex</span><span class="p">):</span> <span class="nf">print</span><span class="p">(</span><span class="s">" 只拥有有效的邮箱"</span><span class="p">)</span>
+    <span class="k">case</span> <span class="p">(</span><span class="n">siteRegex</span><span class="p">,</span><span class="n">_</span> <span class="p">):</span> <span class="nf">print</span><span class="p">(</span><span class="s">"只拥有有效的网站"</span><span class="p">)</span>
+    <span class="k">default</span><span class="p">:</span> <span class="nf">print</span><span class="p">(</span><span class="s">"嘛都没有"</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">//输出</span>
+<span class="c1">//同时拥有网站和邮箱</span>
+</code></pre></div></div>
+
+<h4 id="-和--range-操作符">.. 和 ..&lt; Range 操作符</h4>
+
+<p>Range 操作。支持泛型。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">test</span> <span class="o">=</span> <span class="s">"helLo"</span>
+<span class="k">let</span> <span class="nv">interval</span> <span class="o">=</span> <span class="s">"a"</span><span class="o">...</span><span class="s">"z"</span>
+<span class="k">for</span> <span class="n">c</span> <span class="k">in</span> <span class="n">test</span><span class="o">.</span> <span class="n">characters</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">interval</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="kt">String</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">c</span><span class="se">)</span><span class="s">不是小写字母"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">//输出</span>
+<span class="c1">// L不是小写字母</span>
+</code></pre></div></div>
+
+<h4 id="anyclass-元类型和-self">AnyClass, 元类型和 .self</h4>
+
+<p>表示任意的概念：Any，AnyObject，AnyClass。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//通过 .Type 得到一个元类型（Meta）</span>
+<span class="kd">typealias</span> <span class="kt">AnyClass</span> <span class="o">=</span> <span class="kt">Any0bject</span><span class="o">.</span><span class="k">Type</span>
+
+<span class="c1">//例如</span>
+<span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">print</span><span class="p">(){}</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">typeA</span><span class="p">:</span> <span class="kt">A</span><span class="o">.</span><span class="k">Type</span> <span class="o">=</span> <span class="kt">A</span><span class="o">.</span><span class="k">self</span>
+<span class="n">typeA</span><span class="o">.</span><span class="nf">print</span><span class="p">()</span>
+
+<span class="k">let</span> <span class="nv">typeAA</span><span class="p">:</span> <span class="kt">AnyClass</span> <span class="o">=</span> <span class="kt">A</span><span class="o">.</span><span class="nf">self</span>
+<span class="p">(</span><span class="n">typeAA</span> <span class="k">as!</span> <span class="kt">A</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span><span class="o">.</span><span class="nf">print</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h4 id="协议和类方法中的-self">协议和类方法中的 Self</h4>
+<p>在声明协议时，我们希望在协议中使用的类型就是实现这个协议本身的类型的话，就需要使用返回 Self 进行指代。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//例如下边</span>
+<span class="kd">protocol</span> <span class="kt">IntervalType</span> <span class="p">(</span>
+<span class="c1">//..</span>
+<span class="c1">/// Return rhs clamped to self . The bounds of the result, even</span>
+<span class="c1">/// if it is empty, are always within the bounds of self</span>
+    <span class="kd">func</span> <span class="nf">clamp</span><span class="p">(</span><span class="nv">intervalToClamp</span><span class="p">:</span> <span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span>
+
+<span class="c1">//...</span>
+<span class="p">]</span>
+
+<span class="c1">//这是一个个人实现的例子</span>
+<span class="kd">class</span> <span class="kt">MyClass</span><span class="p">:</span> <span class="kt">Copyable</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">num</span><span class="o">=</span><span class="mi">1</span>
+    <span class="kd">func</span> <span class="nf">copy</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">num</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="p">}</span>
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">//测试 如下</span>
+<span class="k">let</span> <span class="nv">object</span> <span class="o">=</span> <span class="kt">MyClass</span><span class="p">()</span>
+<span class="n">object</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="k">let</span> <span class="nv">new0bject</span> <span class="o">=</span> <span class="n">object</span><span class="o">.</span><span class="nf">copy</span><span class="p">()</span>
+<span class="n">object</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<span class="nf">print</span> <span class="p">(</span><span class="n">object</span><span class="o">.</span><span class="n">num</span><span class="p">)</span> <span class="c1">// 1</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">new0bject</span><span class="o">.</span><span class="n">num</span><span class="p">)</span> <span class="c1">// 100</span>
+</code></pre></div></div>
+
+<h4 id="动态类型和多方法">动态类型和多方法</h4>
+<p>Swift中我们虽然可以通过 dynamicType 来获取一个对象的动态类型(也就是运行时的实际类型，而非代码指定或编译器看到的类型)。但在使用中，Swift 现在却是不支持多方法的，也就是说，不能根据对象在动态时的类型进行合适的重载方法调用。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//这样实现很方便</span>
+<span class="kd">class</span> <span class="kt">Pet</span> <span class="p">{}</span>
+<span class="kd">class</span> <span class="kt">Cat</span><span class="p">:</span> <span class="kt">Pet</span> <span class="p">{}</span>
+<span class="kd">class</span> <span class="kt">Dog</span><span class="p">:</span> <span class="kt">Pet</span> <span class="p">{}</span>
+<span class="kd">func</span> <span class="nf">printPet</span><span class="p">(</span><span class="n">_</span> <span class="nv">pet</span><span class="p">:</span> <span class="kt">Pet</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Pet"</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nf">printPet</span><span class="p">(</span><span class="n">_</span> <span class="nv">cat</span><span class="p">:</span> <span class="kt">Cat</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Cat"</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nf">printPet</span><span class="p">(</span><span class="n">_</span> <span class="nv">dog</span><span class="p">:</span> <span class="kt">Dog</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Dog"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//但是注意这里的坑</span>
+<span class="kd">func</span> <span class="nf">printThem</span><span class="p">(</span><span class="n">_</span> <span class="nv">pet</span><span class="p">:</span> <span class="kt">Pet</span><span class="p">,</span><span class="n">_</span> <span class="nv">cat</span><span class="p">:</span> <span class="kt">Cat</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">printPet</span><span class="p">(</span><span class="n">pet</span><span class="p">)</span>
+    <span class="nf">printPet</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nf">printThem</span><span class="p">(</span><span class="kt">Dog</span><span class="p">(),</span> <span class="kt">Cat</span><span class="p">())</span>
+<span class="c1">//Pet</span>
+<span class="c1">//Cat</span>
+
+<span class="c1">//打印时的Dog() 的类型信息并没有被用来在运行时选择合适的printPet(dog: Dog)版本的方法,</span>
+<span class="c1">//而是被忽略掉，并采用了编译期间决定的Pet 版本的方法。因为Swift默认情况下是不采用动态</span>
+<span class="c1">//派发的，因此方法的调用只能在编译时决定。</span>
+<span class="c1">//要想绕过这个限制，我们可能需要进行通过对输入类型做判断和转换:</span>
+
+<span class="kd">func</span> <span class="nf">printThem2</span><span class="p">(</span><span class="n">_</span> <span class="nv">pet</span><span class="p">:</span> <span class="kt">Pet</span><span class="p">,</span><span class="n">_</span> <span class="nv">cat</span><span class="p">:</span> <span class="kt">Cat</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">aCat</span> <span class="o">=</span> <span class="n">pet</span> <span class="k">as?</span> <span class="kt">Cat</span><span class="p">{</span>
+        <span class="nf">printPet</span><span class="p">(</span><span class="n">aCat</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">aDog</span> <span class="o">=</span> <span class="n">pet</span> <span class="k">as?</span> <span class="kt">Dog</span> <span class="p">{</span>
+        <span class="nf">printPet</span><span class="p">(</span><span class="n">aDog</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nf">printPet</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nf">printThem2</span><span class="p">(</span><span class="kt">Dog</span><span class="p">(),</span> <span class="kt">Cat</span><span class="p">())</span>
+<span class="c1">//Dog</span>
+<span class="c1">//Cat</span>
+
+</code></pre></div></div>
+
+<h4 id="属性观察">属性观察</h4>
+
+<p>set, get; willSet, didSet</p>
+
+<h4 id="final">final</h4>
+
+<p>final关键字可以用在class, func 或者var 前面进行修饰，表示不允许对该内容进行继承或者重写操作。</p>
+
+<p>通常取决于下边几点：</p>
+<ul>
+  <li>权限控制</li>
+  <li>类已经完善了</li>
+  <li>为了某些方法必须执行</li>
+  <li>性能考虑</li>
+</ul>
+
+<h4 id="lazy修饰符和lazy方法">lazy修饰符和lazy方法</h4>
+
+<p>延时加载或者说延时初始化是很常用的优化方法，在构建和生成新的对象的时候，内存分配会在运行时耗费不少时间，如果有-些对象的属性和内容非常复杂的话，这个时间更是不可忽略。</p>
+
+<h4 id="reflection-和-mirror">Reflection 和 Mirror</h4>
+
+<p>swfit 的反射功能相较于运行时要弱很多。且并没有公开官方文档，有可能在未来会被去除。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">struct</span> <span class="kt">Person</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">age</span><span class="p">:</span> <span class="kt">Int</span>
+<span class="p">}</span>
+<span class="k">let</span> <span class="nv">xiaoMing</span> <span class="o">=</span> <span class="kt">Person</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"XiaoMing"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">16</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">r</span> <span class="o">=</span> <span class="kt">Mirror</span><span class="p">(</span><span class="nv">reflecting</span><span class="p">:</span> <span class="n">xiaoMing</span><span class="p">)</span> <span class="c1">// r是MirrorType</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"xiaoMing是</span><span class="se">\(</span><span class="n">r</span><span class="o">.</span><span class="n">displayStyle</span><span class="o">!</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"属性个数:</span><span class="se">\(</span><span class="n">r</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">count</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">child</span> <span class="k">in</span> <span class="n">r</span><span class="o">.</span><span class="n">children</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"属性名:</span><span class="se">\(</span><span class="n">child</span><span class="o">.</span><span class="n">label</span><span class="se">)</span><span class="s">,値: </span><span class="se">\(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">//輸出:</span>
+<span class="c1">//xiaoMing是Struct</span>
+<span class="c1">//属性个数:2</span>
+<span class="c1">//属性名:name,値:XiaoMing</span>
+<span class="c1">//属性名:age,値:16</span>
+
+</code></pre></div></div>
+
+<p>AnyForwardCollection 是遵守 collectionType 协议的，因此我们可以简单地使用count 来获取元素的个数，而对于具体的代表属性的多元组，则使用下标进行访问。在对于我们的例子中，每个 Child 都是具有两个元素的多元组，其中第一个是属性名，第二个是这个属性所存储的值。需要特别注意的是，这个值有可能是多个元素组成嵌套的形式(例如属性值是数组或者字典的话，就是这样的形式)。</p>
+
+<p>如果觉得一个个打印太过于麻烦，我们也可以简单地使用dump 方法来通过获取一个对象的镜像
+并进行标准输出的方式将其输出出来。比如对上面的对象 xiaoMing:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dump(xiaoMing)
+/输出:
+// V Person
+// name: XiaoMing
+// age: 16
+</code></pre></div></div>
+<p>在这里因为篇幅有限，而且这部分内容很可能随着版本而改变，我们就不再一一介绍Mirror 的更详细的内容了。有兴趣的读者不妨打开Swift的定义文件并找到这个协议，里面对每个属性和方法的作用有非常详细的注释。</p>
+
+<p><strong>在现在的版本中，Swift 的反射特性并不是非常强大，我们只能对属性进行读取，还不能对其设 定，不过我们有希望能在将来的版本中获得更为强大的反射特性。</strong></p>
+
+<h4 id="隐式解包-optional">隐式解包 Optional</h4>
+
+<p>！来隐式解包。是因为跟 OC 桥接的历史遗留，所以存在这个东东。</p>
+
+<p>在 Apple 的不断修改 (我相信这是一件消耗大量人月的手工工作) 下，在 Swift 的正式 版本中，已经没有太多的隐式解包的 API 了。最近 Objective-C 中又加入了像是 nonnull 和 nullable 这样的修饰符，这样一来，那些真正有可能为 nil 的返回可以被明确定义为普通的 Optional 值，而那些不会是 Optional 的值，也根据情况转换为了确定的类型。现在比较常见的隐 式解包的 Optional 就只有使用 Interface Builder 时建立的 IBOutlet 了:</p>
+
+<pre><code class="language-Objective-C">@IBOutlet weak var button: UIButton !
+
+</code></pre>
+
+<h4 id="多重optional">多重Optional</h4>
+
+<p>会有陷阱。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">var</span> <span class="nv">aNil</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="k">var</span> <span class="nv">anotherNil</span><span class="p">:</span> <span class="kt">String</span><span class="p">??</span> <span class="o">=</span> <span class="n">aNil</span>
+<span class="k">var</span> <span class="nv">literalNil</span><span class="p">:</span> <span class="kt">String</span><span class="p">??</span> <span class="o">=</span> <span class="kc">nil</span>
+
+<span class="c1">// anotherNil 和 literalNil 不等价</span>
+<span class="c1">// 因为 anotherNil 是一个 Optional 对象，不是 nil</span>
+</code></pre></div></div>
+
+<h4 id="optional-map">Optional Map</h4>
+
+<p>array 等集合使用 .map 过滤 nil</p>
+
+<h4 id="protocol-extension">Protocol Extension</h4>
+
+<p>Swift 2 开始引入的。</p>
+
+<p>整理一下相关的规则的话:</p>
+<ul>
+  <li>如果类型推断得到的是实际的类型。</li>
+</ul>
+
+<p>那么类型中的实现将被调用;如果类型中没有实现的话，那么协议扩展中的默认实现将被使用</p>
+
+<ul>
+  <li>如果类型推断得到的是协议，而不是实际类型。</li>
+</ul>
+
+<p>并且方法在协议中进行了定义，那么类型中的实现将被调用; 如果类型中没有实现，那
+么协议扩展中的默认实现被使用。否则(也就是方法没有在协议中定义)，扩展中的默认实现将被调用</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">protocol</span> <span class="kt">A2</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">method1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span>
+<span class="p">}</span>
+<span class="kd">extension</span> <span class="kt">A2</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">method1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"hi"</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">method2</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"hi"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="kt">B2</span><span class="p">:</span> <span class="kt">A2</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">method1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"hello"</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">method2</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"hello"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">b2</span> <span class="o">=</span> <span class="kt">B2</span><span class="p">()</span>
+<span class="n">b2</span><span class="o">.</span><span class="nf">method1</span><span class="p">()</span> <span class="c1">// hello</span>
+<span class="n">b2</span><span class="o">.</span><span class="nf">method2</span><span class="p">()</span> <span class="c1">// hello</span>
+
+<span class="k">let</span> <span class="nv">a2</span> <span class="o">=</span> <span class="n">b2</span> <span class="k">as</span> <span class="kt">A2</span>
+<span class="n">a2</span><span class="o">.</span><span class="nf">method1</span><span class="p">()</span> <span class="c1">// hello</span>
+<span class="n">a2</span><span class="o">.</span><span class="nf">method2</span><span class="p">()</span> <span class="c1">// hi</span>
+
+</code></pre></div></div>
+
+<h4 id="where-和模式匹配">where 和模式匹配</h4>
+
+<p>早前版本在判断语句中 <strong>n &gt; 3</strong> 即相当于一个 where 模式匹配。 Swift 3 语法省略了这一部分，不过源码还有一些端倪。</p>
+
+<p><strong>现在多用于 prottocol extension</strong>, 限定某些类的，默认协议方法</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Sequence</span> <span class="k">where</span> <span class="k">Self</span><span class="o">.</span> <span class="kt">Iterator</span> <span class="o">.</span> <span class="kt">Element</span> <span class="p">:</span> <span class="kt">Comparable</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">sorted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="k">Self</span><span class="o">.</span> <span class="kt">Iter</span> <span class="n">ator</span> <span class="o">.</span> <span class="kt">Element</span> <span class="p">]</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="indirect-和嵌套-enum">indirect 和嵌套 enum</h4>
+
+<p>当我们创建一些特殊的数据结构（链表，树，图等），我们可以使用可选值来指定头尾。但是如果用来表示一个空的链表（例如），就不得不再外层包一个 Optional。</p>
+
+<p>这时候我们可以使用枚举来定义这种结构。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">indirect</span> <span class="kd">enum</span> <span class="kt">LinkedList</span><span class="o">&lt;</span><span class="kt">Element</span><span class="p">:</span> <span class="kt">Comparable</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">empty</span>
+    <span class="k">case</span> <span class="nf">node</span><span class="p">(</span><span class="kt">Element</span><span class="p">,</span> <span class="kt">LinkedList</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">linkedList</span> <span class="o">=</span> <span class="kt">LinkedList</span><span class="o">.</span><span class="nf">node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="nf">node</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="nf">node</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">.</span><span class="nf">node</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="o">.</span><span class="n">empty</span><span class="p">))))</span>
+</code></pre></div></div>
+
+<p>非常帅，就是这样。</p>
+
+<p>为枚举添加方法如下；</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">removing</span><span class="p">(</span><span class="n">_</span> <span class="nv">element</span><span class="p">:</span> <span class="kt">Element</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">LinkedList</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">guard</span> <span class="k">case</span> <span class="kd">let</span> <span class="o">.</span><span class="nf">node</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="o">=</span> <span class="k">self</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">.</span> <span class="n">empty</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="o">==</span> <span class="n">element</span> <span class="p">?</span>
+        <span class="nv">next</span> <span class="p">:</span> <span class="kt">LinkedList</span><span class="o">.</span><span class="nf">node</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">next</span> <span class="o">.</span><span class="nf">removing</span><span class="p">(</span><span class="n">element</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">linkedList</span><span class="o">.</span><span class="nf">removing</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="c1">//1-&gt;3-&gt;4</span>
+
+</code></pre></div></div>
+:ET

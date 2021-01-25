@@ -1,0 +1,188 @@
+I"�<h3 id="相关链接">相关链接</h3>
+
+<p>Apple document:</p>
+
+<p><a href="https://developer.apple.com/documentation/security/password_autofill/about_the_password_autofill_workflow">password_autofill/about_the_password_autofill_workflow</a></p>
+
+<p>Video:</p>
+
+<p><a href="https://developer.apple.com/videos/play/wwdc2017/206/">wwdc2017/206</a></p>
+
+<p>大类区分为用户名密码（Password）和其他类型（Name, Phone, Address, Email, 2FACode…）的 AutoFill。</p>
+
+<p>总体来说，基础版本的 auto-fill 是被 iOS system 自动发现的，也就是说你可以无需适配使用这个功能。</p>
+
+<p>但是，为了让用户能够自动填入与当前 app 相匹配的用户密码，你可以将 app bundle id 绑定。</p>
+
+<h3 id="password">Password</h3>
+
+<h4 id="默认提供的">默认提供的</h4>
+
+<p>如果有两个以上输入框（和一个确定按钮），在某一个输入框为 Secure 的时候，它和上边的那个输入框即可被自动填入用户密码。</p>
+
+<p>Demo 比较简单，可以想象一下拖 Storyboard，几个 Textfield 即可验证。</p>
+
+<h4 id="基于-associated-domain">基于 Associated Domain</h4>
+
+<h5 id="app">App</h5>
+
+<p>像添加 Universal link 一样，可以通过添加 webcredentials 来给应用指定 domain。</p>
+
+<p>Project -&gt; Capabilities -&gt; Associated Domains</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>links::example.com
+webcredentials:example.com
+</code></pre></div></div>
+
+<h5 id="server">Server</h5>
+
+<p>配置 apple-app-site-association</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+   "webcredentials": {
+       "apps": [    "AppPrefix.com.example.DemoApp",
+                    "AppPrefix.com.example.DemoAdminApp" ]
+    }
+}
+</code></pre></div></div>
+<h4 id="keychain-sharing">Keychain Sharing</h4>
+
+<p>这个是当一个 Apple 账号发布了多个应用程序， 那么创建一个组，可以让这多个应用共享用户信息。在设置中填入要共享的应用的 Bundle Identifier 即可。</p>
+
+<p>Project -&gt; Capabilities -&gt; Keychain Sharing</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.example.DemoApp
+com.example.DemoAdminApp
+</code></pre></div></div>
+
+<h3 id="其他类型的输入框">其他类型的输入框</h3>
+
+<p>当一个输入框被设置了 content type，那么就知道了这个输入框的类型，iOS 就可以提供相应的快速键入选项。</p>
+
+<p>API:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// The textContentType property is to provide the keyboard with extra information about the semantic intent of the text document.
+@available(iOS 10.0, *)
+optional var textContentType: UITextContentType! { get set } // default is nil
+</code></pre></div></div>
+
+<p>Content:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension UITextContentType {
+
+
+    @available(iOS 10.0, *)
+    public static let name: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let namePrefix: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let givenName: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let middleName: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let familyName: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let nameSuffix: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let nickname: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let jobTitle: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let organizationName: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let location: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let fullStreetAddress: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let streetAddressLine1: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let streetAddressLine2: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let addressCity: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let addressState: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let addressCityAndState: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let sublocality: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let countryName: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let postalCode: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let telephoneNumber: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let emailAddress: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let URL: UITextContentType
+
+    @available(iOS 10.0, *)
+    public static let creditCardNumber: UITextContentType
+
+    @available(iOS 11.0, *)
+    public static let username: UITextContentType
+
+    @available(iOS 11.0, *)
+    public static let password: UITextContentType
+
+    @available(iOS 12.0, *)
+    public static let newPassword: UITextContentType
+
+    @available(iOS 12.0, *)
+    public static let oneTimeCode: UITextContentType
+}
+
+</code></pre></div></div>
+
+<blockquote>
+  <p>FYI: TWO-FACTOR AUTHENTICATION (2FA)</p>
+</blockquote>
+
+<h3 id="原理工作流程">原理（工作流程）</h3>
+
+<h4 id="应用生命周期">应用生命周期</h4>
+
+<p>当用户点击了 QuickType Bar 之后，系统会验证 Face ID（或者其他），<code class="language-plaintext highlighter-rouge">applicationWillResignActive(_:)</code>， 然后验证完成<code class="language-plaintext highlighter-rouge">applicationDidBecomeActive(_:)</code>。</p>
+
+<p>在应用离开响应的时候，不要做 <code class="language-plaintext highlighter-rouge">dismiss</code>, <code class="language-plaintext highlighter-rouge">pop</code> 或者 <code class="language-plaintext highlighter-rouge">TF removeFromSuperView</code>，这些都会导致自己填入失败。 所以要注意一下应用蒙板，自动退出等特殊情况。</p>
+
+<h4 id="textfield-生命周期">Textfield 生命周期</h4>
+
+<p>系统会发送 <code class="language-plaintext highlighter-rouge">textDidChangeNotification</code> 当被更新。对应到不同的输入框稍微有点差别：</p>
+
+<ul>
+  <li>
+    <p>UITextField: UITextFieldDelegate <code class="language-plaintext highlighter-rouge">textField(_:shouldChangeCharactersIn:replacementString:)</code></p>
+  </li>
+  <li>
+    <p>UITextView: UITextViewDelegate <code class="language-plaintext highlighter-rouge">textView(_:shouldChangeTextIn:replacementText:)</code></p>
+  </li>
+  <li>
+    <p>自定义的继承于 UITextInput protocol 的: <code class="language-plaintext highlighter-rouge">insertText(_:)</code> 或者 <code class="language-plaintext highlighter-rouge">replace(_:withText:)</code></p>
+  </li>
+</ul>
+
+<h3 id="总结">总结</h3>
+
+<p>基于这一套，可以在不修改代码，或者少量修改代码的时候，给用户提供更多的便利。</p>
+
+<p>在 Password 方面，还有一些三方的，例如 1-Password 等，虽然供应商不同，但是到 App 内部代码处理上，已经被协议化了，可以方便的使用而不作修改～</p>
+:ET

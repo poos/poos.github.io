@@ -1,0 +1,172 @@
+I"�"<h3 id="ios-组件化的探究">iOS 组件化的探究</h3>
+
+<p>为了更好的进行项目管理、测试和开发，工程会有了组件化的需求。那么如何使组件化之间解耦、如何方便的调用、如何在现有工程改造组件化。这就到了如何开展组件化的讨论中了。</p>
+
+<p>本文的背景是项目已经上线一年时间。现有的工程依赖比较复杂，代码划分不明确，且编译时间较长。那么本项目需求的组件化方案就有x以下要求：</p>
+
+<ol>
+  <li>可持续的拆分组件</li>
+  <li>解耦，在子工程可以编译子功能</li>
+  <li>调用方便</li>
+  <li>结构清晰，易于推广</li>
+  <li>尽可能轻量</li>
+  <li>侵入性小</li>
+  <li>易于扩展功能，例如统计等</li>
+</ol>
+
+<h4 id="介绍一下常见的组件化方案的原理">介绍一下常见的组件化方案的原理</h4>
+
+<p>摘自<a href="https://github.com/halfrost/Halfrost-Field/blob/master/contents/iOS/iOSRouter/iOS_Router.md">halfrost/Halfrost-Field/blob</a></p>
+
+<h5 id="1-urlroute注册方案的优缺点">1. URLRoute注册方案的优缺点</h5>
+
+<p>首先URLRoute也许是借鉴前端Router和系统App内跳转的方式想出来的方法。它通过URL来请求资源。不管是H5，RN，Weex，iOS界面或者组件请求资源的方式就都统一了。URL里面也会带上参数，这样调用什么界面或者组件都可以。所以这种方式是最容易，也是最先可以想到的。</p>
+
+<p>URLRoute的优点很多，最大的优点就是服务器可以动态的控制页面跳转，可以统一处理页面出问题之后的错误处理，可以统一三端，iOS，Android，H5 / RN / Weex 的请求方式。</p>
+
+<p>但是这种方式也需要看不同公司的需求。如果公司里面已经完成了服务器端动态下发的脚手架工具，前端也完成了Native端如果出现错误了，可以随时替换相同业务界面的需求，那么这个时候可能选择URLRoute的几率会更大。</p>
+
+<p>但是如果公司里面H5没有做相关出现问题后能替换的界面，H5开发人员觉得这是给他们增添负担。如果公司也没有完成服务器动态下发路由规则的那套系统，那么公司可能就不会采用URLRoute的方式。因为URLRoute带来的少量动态性，公司是可以用JSPatch来做到。线上出现bug了，可以立即用JSPatch修掉，而不采用URLRoute去做。</p>
+
+<p>所以选择URLRoute这种方案，也要看公司的发展情况和人员分配，技术选型方面。</p>
+
+<p>URLRoute方案也是存在一些缺点的，首先URL的map规则是需要注册的，它们会在load方法里面写。写在load方法里面是会影响App启动速度的。</p>
+
+<p>其次是大量的硬编码。URL链接里面关于组件和页面的名字都是硬编码，参数也都是硬编码。而且每个URL参数字段都必须要一个文档进行维护，这个对于业务开发人员也是一个负担。而且URL短连接散落在整个App四处，维护起来实在有点麻烦，虽然蘑菇街想到了用宏统一管理这些链接，但是还是解决不了硬编码的问题。</p>
+
+<p>真正一个好的路由是在无形当中服务整个App的，是一个无感知的过程，从这一点来说，略有点缺失。</p>
+
+<p>最后一个缺点是，对于传递NSObject的参数，URL是不够友好的，它最多是传递一个字典。=</p>
+
+<p><strong>URLRoute注册，组件通过向 Manager中心注册，通过 url 形式调用其他组件</strong></p>
+
+<h5 id="2-protocol-class注册方案的优缺点">2. Protocol-Class注册方案的优缺点</h5>
+
+<p>Protocol-Class方案的优点，这个方案没有硬编码。</p>
+
+<p>Protocol-Class方案也是存在一些缺点的，每个Protocol都要向ModuleManager进行注册。</p>
+
+<p>这种方案ModuleEntry是同时需要依赖ModuleManager和组件里面的页面或者组件两者的。当然ModuleEntry也是会依赖ModuleEntryProtocol的，但是这个依赖是可以去掉的，比如用Runtime的方法NSProtocolFromString，加上硬编码是可以去掉对Protocol的依赖的。但是考虑到硬编码的方式对出现bug，后期维护都是不友好的，所以对Protocol的依赖还是不要去除。</p>
+
+<p>最后一个缺点是组件方法的调用是分散在各处的，没有统一的入口，也就没法做组件不存在时或者出现错误时的统一处理。</p>
+
+<p><strong>Protocol-Class注册，组件通过向 Manager中心注册已经遵守协议，其他组件即可调自己</strong></p>
+
+<h5 id="3-target-action方案的优缺点">3. Target-Action方案的优缺点</h5>
+
+<p>Target-Action方案的优点，充分的利用Runtime的特性，无需注册这一步。Target-Action方案只有存在组件依赖Mediator这一层依赖关系。在Mediator中维护针对Mediator的Category，每个category对应一个Target，Categroy中的方法对应Action场景。Target-Action方案也统一了所有组件间调用入口。</p>
+
+<p>Target-Action方案也能有一定的安全保证，它对url中进行Native前缀进行验证。</p>
+
+<p>Target-Action方案的缺点，Target_Action在Category中将常规参数打包成字典，在Target处再把字典拆包成常规参数，这就造成了一部分的硬编码。</p>
+
+<p><strong>Target-Action，依靠 runtime 的 taget 调用 action，传入字典类型的param</strong></p>
+
+<h3 id="通过三大方案的对比我选择了轻量级的target-action方案">通过三大方案的对比，我选择了轻量级的Target-Action方案。</h3>
+
+<p>之所以选择这个方案，有一点是因为我们需要在开发过程中 <strong>逐步迁移</strong> 实现组件化。另外使用Target-Action充分利用 OC/Swift 语言的特性。入乡随俗嘛。</p>
+
+<p><strong>简单研究之后，我写下了这个Demo <a href="https://github.com/poos/BlogDemo">poos/BlogDemo/tree/master/testCTMdeiator</a></strong></p>
+
+<p>Demo实现了 <strong>主工程调用组件</strong>，<strong>组件调用主公程</strong>。实现了组件代码 <strong>插入即可运行</strong> ，<strong>移除之后主公程可运行其他业务</strong>。</p>
+
+<h3 id="确定组件化方案">确定组件化方案</h3>
+
+<ol>
+  <li>使用CTMediator，用 Jump 和 Action 来路由跳转和组件之间的调用。</li>
+  <li>主工程维护一个 CTMediator 分类，在分类中实现的组件都可以在主工程调用。</li>
+  <li>各个分类组件通过 pod 本地库的方式导入主工程。</li>
+</ol>
+
+<h3 id="开展组件化工作">开展组件化工作</h3>
+
+<p>先列个提纲，一步一实施。</p>
+
+<h4 id="1-收纳整理主公程">1. 收纳整理主公程</h4>
+
+<ul>
+  <li>
+    <p>分类；</p>
+  </li>
+  <li>
+    <p>公用组件；</p>
+  </li>
+  <li>
+    <p>公用 UI及样式；</p>
+  </li>
+  <li>
+    <p>公用第三方；</p>
+  </li>
+  <li>
+    <p>项目基本目录修改（添加不同环境的 Scheme）；</p>
+  </li>
+</ul>
+
+<h4 id="2-主工程封装-pod-仓库">2. 主工程封装 pod 仓库</h4>
+
+<ul>
+  <li>baseProject 基础仓库，所有公共资源和项目配置。原则：用tag标记稳定版本；可以用稳定版本开发新功能。</li>
+</ul>
+
+<h4 id="3-主工程的分支管理">3. 主工程的分支管理</h4>
+
+<ul>
+  <li>
+    <p>develop 开发分支，完整项目的开发分支。</p>
+  </li>
+  <li>
+    <p>test 测试分支，所有移交测试的版本，测试完成即可并入master。</p>
+  </li>
+  <li>
+    <p>master 主分支，只存放完整项目稳定的版本的分支，tag上线版本。</p>
+  </li>
+</ul>
+
+<h4 id="4-其他子模块">4. 其他子模块</h4>
+
+<ul>
+  <li>xxxxx 小模块仓库等，pod 导入 baseProject 开发的模块pod</li>
+  <li>…</li>
+</ul>
+
+<h3 id="公共组件">公共组件</h3>
+
+<p>基本上到上述第二步之后就可以很好的进行项目组件管理了，下一步对一些值得优化的公共组件进行优化。</p>
+
+<ul>
+  <li>
+    <p>项目 Theme 设计</p>
+  </li>
+  <li>
+    <p>Navigator 页面跳转（可选）</p>
+  </li>
+  <li>
+    <p>弹窗统一管理 设计</p>
+  </li>
+  <li>
+    <p>Review控制 设计</p>
+  </li>
+  <li>
+    <p>通知统一管理 设计</p>
+  </li>
+  <li>
+    <p>通用链接，调用系统分享等与iOS系统对接的设计</p>
+  </li>
+  <li>
+    <p>测试环境下的专用配置，例如不上传统计，例如动态修改UI</p>
+  </li>
+</ul>
+
+<h3 id="end">end</h3>
+
+<p>通过这些优化项目会清晰，可控很多，在开发间隙慢慢迭代实施中…</p>
+
+<h2 id="一些好的资料">一些好的资料</h2>
+
+<ul>
+  <li><a href="https://github.com/casatwy/CTMediator">casatwy/CTMediator</a></li>
+  <li><a href="https://juejin.im/post/5a7dcc025188254e5c6c6120">组件化方案调研</a></li>
+  <li><a href="https://halfrost.com/ios_router/">iOS 组件化方案-路由设计分析</a></li>
+  <li><a href="https://github.com/devxoul/URLNavigator">devxoul/URLNavigator</a></li>
+</ul>
+:ET

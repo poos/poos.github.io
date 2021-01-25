@@ -1,0 +1,131 @@
+I"�<p>首先明确一下 <strong>项目架构</strong> 非 <strong>设计模式</strong>。在我看来，MVVM，MVP，Reactive，Reactor…这些都只能算是某个功能点的设计，而难以称得上项目架构</p>
+
+<h3 id="项目架构">项目架构</h3>
+
+<p>先看几个项目的架构：</p>
+
+<p><a href="https://mp.weixin.qq.com/s/pzDt08LgchigK0Ow1qJo3w">模块化与解耦式开发在蚂蚁金服 mPaaS 深度实践探讨</a></p>
+
+<p><img src="https://poos.github.io/img/module_ali.png" alt="img" /></p>
+
+<p><a href="https://juejin.im/post/5a620cf5f265da3e36415764">蜂鸟商家版 iOS 组件化 / 模块化实践总结</a></p>
+
+<p><img src="https://poos.github.io/img/module_fengniao.png" alt="img" /></p>
+
+<p><a href="https://juejin.im/post/5b2b1a73e51d4558b27782c0">今日头条：iOS 架构设计杂谈</a></p>
+
+<p><img src="https://poos.github.io/img/module_toutiao.png" alt="img" /></p>
+
+<h4 id="提炼">提炼</h4>
+
+<p>有了例子之后，理解起来应该就会好很多了。对比非常经典的 <strong>TCP/IP 5层模型</strong>，我们的 APP 会划分如下：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>层</th>
+      <th>组件</th>
+      <th>组件</th>
+      <th>组件</th>
+      <th>组件</th>
+      <th>组件</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>应用</td>
+      <td>芝麻问答</td>
+      <td><del>芝麻问答 Pro</del></td>
+      <td><del>芝麻头条</del></td>
+      <td><del>大学生专版芝</del></td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>业务</td>
+      <td>登录</td>
+      <td>分享业务</td>
+      <td>回答页、问题页、个人页</td>
+      <td>项目WebKit</td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>服务（应用）</td>
+      <td>项目UI风格</td>
+      <td>统计</td>
+      <td>用户数据库、缓存数据</td>
+      <td>服务</td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>服务（基础）</td>
+      <td>设备信息</td>
+      <td>基础统计、catch 统计</td>
+      <td>基类 和 Aop</td>
+      <td>Log（request、page、action）</td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>库（三方）</td>
+      <td>Net</td>
+      <td>Rx</td>
+      <td>UI（PopView，Alert，Sheet）</td>
+      <td>WebKit</td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>库（Cocoa）</td>
+      <td>扩展</td>
+      <td>封装</td>
+      <td>语法糖</td>
+      <td>便利</td>
+      <td>…</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>申明一下组件化的核心是： <strong>每一层只依赖下一层, 同一层之间解耦</strong></p>
+
+<p>在这个 Protocol 下, 每一个组件在接口不改变的情况下只需要 <strong>替换组件即可完成功能上的迭代</strong>，如果接口改变了也只需要上层使用的模块做对应的更新修改即可。</p>
+
+<p><strong>解释一下</strong> ，为什么把服务分为2层：</p>
+
+<ol>
+  <li>
+    <p>首先，服务和业务是一个分界点，毋庸置疑，之所以没有用“组件”这个名字，是因为觉得服务更加贴切，符合后边描述对应的内容</p>
+  </li>
+  <li>
+    <p>服务分为应用和基础两个方面，那么开发新的系统时候就会很明确：<strong>基础服务</strong> 应当 <strong>不需要改动</strong> 就可以在其上开发其他应用。<strong>应用服务</strong> 需要的是 <strong>修改类</strong> ，即可适配 新的系统。</p>
+  </li>
+</ol>
+
+<p>有了这个基本架构图就可以进行编码设计了</p>
+
+<h3 id="具体实施">具体实施</h3>
+<blockquote>
+  <p>如果有些不明白的可以看一下上一篇：  <strong><a href="http://poos.github.io/2018/10/10/Module/">Swift组件化方案探究和实践</a></strong> ，了解一下项目整体采用的方案，主工程和组件工程之间的关系。</p>
+</blockquote>
+
+<h4 id="模块实施">模块实施</h4>
+
+<p>自下而上实施如下：</p>
+
+<ol>
+  <li><strong>库</strong> ：应当将 <strong>库（三方）</strong> 和 <strong>库（Cocoa）</strong> 放于一个 repo 下，此项目不包含任何其他业务代码（纯粹扩展系统功能），相当于一个基础 framework 库，按照版本更新。具体就是包含 pod 和一些对应的扩展，部分分类亦可用于实现第三方接口发生变化时候更新三方库单维持原接口。（此部分API应稳定，故放置统一 repo）。</li>
+  <li><strong>服务（基础）</strong> ： 将基础服务分别创建 repo，单独管理升级，将项目冠以 base 前缀。<strong>不应当依赖主工程，应当只依赖下层，即： 库</strong></li>
+  <li><strong>服务（应用）</strong> ： 分别创建 repo，单独管理升级，项目冠以 project 前缀。<strong>不应当依赖主工程，应当只依赖下层，即： 库</strong></li>
+  <li><strong>业务</strong> ： 根据情况依赖某些服务，分别创建 repo，项目冠以 module 前缀。<strong>不应当依赖主工程，应当只依赖下层，即： 服务</strong></li>
+  <li><strong>应用</strong> ： 主工程按需导入相应的应用，设置主框架，灵活插入组件即可实现应用更新迭代。</li>
+</ol>
+
+<h4 id="注意点">注意点</h4>
+
+<p><strong>主工程作为一个特殊的工程程，按需豁免，可以依赖底层库（待商榷）。</strong></p>
+
+<p><strong>组件不应当依赖主工程，应当只依赖下层</strong></p>
+
+<p><strong>版本号命名： 基础组件tag版本号第一个跟 base 组件相同，例如 base 基于于 swift 4.0，版本号 1+，依赖 base 的各个组件版本号应当同为1+，当更新为 swift 4.2 时候， 版本号应当为2+，组件版本应同为2+</strong></p>
+
+<h3 id="结语">结语</h3>
+
+<p>在此项目框架和组件化的要求之下，业务和组件分别依赖底层，相互直接不产生依赖，项目更加清晰明了，易于维护，测试和扩展。</p>
+:ET

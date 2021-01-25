@@ -1,0 +1,101 @@
+I"�<p>先说一下这篇博客是后来补上的。当时存了一个书签文件夹的博客，全部是 fix bug 的，稍后会详细给出。一些博客的文档已经不是最新，所以一般不展开讲了，但是会详细介绍一下最新的使用方法。</p>
+
+<h3 id="ide-调试-bug">IDE 调试 bug</h3>
+
+<p><a href="http://ios.idup.club/xcode/Xcode概述-6(运行，调试和测试)/">Xcode 运行、调试和测试</a></p>
+
+<p>这是 Xcode 的官方文档中文翻译版，感谢作者。建议大家浏览一遍。大概有以下内容。</p>
+
+<h4 id="运行您的应用-running-your-app">运行您的应用 Running Your App</h4>
+
+<ul>
+  <li>
+    <p>生成您的应用 Building Your App</p>
+  </li>
+  <li>
+    <p>在模拟器中运行 Running in the Simulator</p>
+  </li>
+  <li>
+    <p>编辑、创建以及管理编译方案 Managing Schemes</p>
+  </li>
+</ul>
+
+<h4 id="debugger">Debugger</h4>
+
+<ul>
+  <li>
+    <p>使用 Debugger Using the Debugger</p>
+  </li>
+  <li>
+    <p>检查应用对系统资源的影响 Examining System Impact</p>
+  </li>
+  <li>
+    <p>测量应用程序的性能 Measuring Performance</p>
+  </li>
+  <li>
+    <p>模拟问题 mulating Problems</p>
+  </li>
+  <li>
+    <p>自定义调试工作流 Customizing Your Workflow</p>
+  </li>
+</ul>
+
+<h4 id="测试-testing">测试 Testing</h4>
+
+<ul>
+  <li>
+    <p>使用单元测试 Using Unit Tests</p>
+  </li>
+  <li>
+    <p>使用持续集成工作流 Using Continuous Integration Testing</p>
+  </li>
+  <li>
+    <p>使用代码覆盖率 Using Code Coverage</p>
+  </li>
+  <li>
+    <p>记录UI测试 Recording UI Tests</p>
+  </li>
+</ul>
+
+<h3 id="获取测试设备上的日志">获取测试设备上的日志</h3>
+
+<p>可以参照这个博客 <a href="https://www.jianshu.com/p/09b6084bcd01">iOS崩溃捕捉和分析</a></p>
+
+<p>手机 <strong>诊断与用量</strong> 里边包含 崩溃日志，可以使用 Itunes 同步到电脑，然后进行调试。</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/1126977-1c375fc835ae15a2.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/325" alt="img" /></p>
+
+<p><strong>Xcode获取崩溃日志</strong> ，打开Xcode, 菜单栏上选择Window -&gt;Devices，选中设备，点击View Device Logs -&gt; All logs可以看到所有的崩溃日志。</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/1126977-f3f20386c317f8cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/922" alt="img" /></p>
+
+<h3 id="dsym-崩溃日志">dSYM 崩溃日志</h3>
+
+<p>主要可以参考这篇博客 <a href="https://www.jianshu.com/p/61359b2d1da8">app上架appStore之后bug crash 手动定位奔溃位置</a>，这一篇博客也有一个简单的教程<a href="https://www.jianshu.com/p/bb09caa821a4">iOS使用dSYM文件和堆栈信息定位bug</a></p>
+
+<p>我的博客 Demo 也有工具 <a href="https://github.com/poos/BlogDemo/tree/master/BugFix">poos/BlogDemo/BugFix</a></p>
+
+<p>内容比较琐碎，就不说了。</p>
+
+<h4 id="关于-signal-sigsegv">关于 signal SIGSEGV</h4>
+
+<p>一版是越界等错误，参考这里 <a href="https://www.jianshu.com/p/0aad4dd022e1">Application received signal SIGSEGV  Application received signal SIGBUS</a></p>
+
+<h3 id="在-xcode-工具中查看崩溃日志">在 Xcode 工具中查看崩溃日志</h3>
+
+<p><strong>登录账号（账号有 APP 管理、开发权限即可）的情况下，选择菜单 Window -&gt; Organizer 即可看到。</strong></p>
+
+<p>主要可以参考这篇博客 <a href="https://blog.csdn.net/skylin19840101/article/details/52231397">如何查看iOS已上架app的崩溃情况以及定位crash代码行</a></p>
+
+<p><img src="https://img-blog.csdn.net/20160817155413651?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="img" /></p>
+
+<h3 id="程序中代码获取-crash">程序中代码获取 crash</h3>
+
+<p><strong>可用于上报至自己的服务器</strong></p>
+
+<p>主要可以参考这篇博客 <a href="https://www.jianshu.com/p/09b6084bcd01">iOS崩溃捕捉和分析</a></p>
+
+<h2 id="最后">最后</h2>
+
+<p>建议开启项目的 bitcode ，这样随时可以下载 dsym 文件，同时会允许apple 优化项目，还会对安装包的大小有优化。</p>
+:ET

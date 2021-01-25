@@ -25,7 +25,7 @@ tags:                                #标签
 
 ---
 
-![fastlane](https://raw.githubusercontent.com/texturegroup/≈/master/docs/static/images/logo.png)
+![img](https://raw.githubusercontent.com/texturegroup/≈/master/docs/static/images/logo.png)
 
 写在文章前的话：有问题就去查文档和issues，错不了的
 

@@ -1,0 +1,123 @@
+I"!<blockquote>
+  <p>从年初转到 SWift 开发，已经差不多一个年头了，正好也是年底，作个总结，也算是应景。</p>
+</blockquote>
+
+<p>这篇博客用于总结今年的写的博客，<strong>更多的是整理一下其他博客中未提到的资料</strong></p>
+
+<h3 id="继承">继承</h3>
+
+<p>之前的博客都在这里 <a href="https://poos.github.io/2018/06/06/-Begin">新的征程</a>，这是我建立 <strong>poos.github.io</strong> 的第一篇博客。博客大概总结了一下之前在 osChina 的博客，然后列了一堆可能会总结的点。</p>
+
+<h3 id="纳新">纳新</h3>
+
+<p>现在已经总结的差不多了，具体可以看一下这里：</p>
+
+<p><strong><a href="https://poos.github.io/tags/">poos.github.io/tags</a></strong></p>
+
+<p>可以看出，30 余篇博客多集中在 <strong>优化</strong>，<strong>工具</strong>，<strong>语法</strong>，<strong>设计</strong>，<strong>架构</strong> 方面。</p>
+
+<p><img src="https://poos.github.io/img/2018_poos_github_io.png" alt="img" /></p>
+
+<h3 id="其他的">其他的</h3>
+
+<p>一些值得提一提，又没必要单独拎出来的博客</p>
+
+<h4 id="codable-和-protocal">Codable 和 Protocal</h4>
+
+<p>Swift4 开始支持 Codable， 填不了 Swift 框架解档归档模型的空白，使用 Codable 可以方便的解析 Int、String、Float 等基本类型，借助一些协议支持，解包 Date 类型、自定义类型也能实现。还是可以尝试使用的。</p>
+
+<p><a href="https://onevcat.com/2018/03/swift-meta/">不同角度看问题 - 从 Codable 到 Swift 元编程</a></p>
+
+<p><a href="https://www.jianshu.com/p/bdd9c012df15">Swift 4 踩坑之 Codable 协议</a></p>
+
+<p>其中提到了 Swift 4.1 之后就可以使用带有条件语句 (也就是 where 从句，Element 和 Value 满足 DictionaryValue) 的 extension。使用协议的这个特性，代码能够更加的优雅。我在之前的 <strong>分享设计</strong> 博客一文中曾希望使用此种方式，无奈项目基于 4.0，现在已经使用 4.2，可以使用这个特性了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Array</span><span class="p">:</span> <span class="kt">DictionaryValue</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt">DictionaryValue</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span> <span class="p">{</span> <span class="k">return</span> <span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">value</span> <span class="p">}</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>关于解析还有一个选择，可以使用 <strong><a href="https://poos.github.io/tags/">Sourcery + ObjectMapper</a></strong> 的方式。另外元编程也为其他编程提供了支持。</p>
+
+<h4 id="reacnative">Reacnative</h4>
+
+<p>Reacnative 中文网站，有相当多的学习资料，之前也了解过一些。因为其他技能学习原因，没有深入。现在热点减少，更有大厂放弃，开发其他方案，还有新的 <strong>Flutter</strong> 语言出现，所以贴几个地址罢了。</p>
+
+<p><a href="https://reactnative.cn/docs">reactnative.cn/docs</a>   <br />
+[github.com/reactnativecn/react-native-pushy](https://github.com/reactnativecn/react-native-pushy/blob/master/README.md</p>
+
+<h4 id="swift-30-的编译速度问题">Swift 3.0 的编译速度问题</h4>
+
+<p>Swift3 代码当项目内容非常多的时候编译会非常慢，即使是非全编译也会非常难，当时在改 UI坐标 时候非常痛苦。不过最后使用拆分项目，组件化的方式了。同样贴几个网站。PS ：现在改了一两行代码编译速度已经明显提升。</p>
+
+<p><a href="http://www.sohu.com/a/141470191_115128">Uber使用Swift重写APP的踩坑经历及解决方案_搜狐科技_搜狐网</a>     <br />
+<a href="https://imtx.me/archives/2106.html">评测 Swift 3.0 项目编译优化选项对编译速度的影响 | I’m TualatriX</a>     <br />
+<a href="https://github.com/facebook/buck">facebook/buck: A fast build system that encourages the creation of small, reusable modules over a variety of platforms and languages.</a></p>
+
+<h4 id="ssh">SSH</h4>
+
+<p>理解和使用 ssh 比你想象的更简单，就不展开说了。也列一个地址：</p>
+
+<p><a href="https://www.waitig.com/git%E5%8F%8Atoken%E7%9A%84%E4%BD%BF%E7%94%A8.html">waitig</a>
+<a href="https://blog.csdn.net/pipisorry/article/details/52269785">pipisorry</a>
+<a href="https://git-scm.com/book/zh/v1/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-%E7%94%9F%E6%88%90-SSH-%E5%85%AC%E9%92%A5">book</a>
+<a href="https://www.cnblogs.com/superGG1990/p/6844952.html">cnblogs.com/superGG1990</a></p>
+
+<p>ps: 配置好电脑之后，设置好 ssh， <strong>用一个文档 clone 所有库，装新机简直不要太爽</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/Desktop/
+
+git clone --depth 1 git@gitee.com:poos/DailyNote.git
+
+cd ~/
+mkdir poos
+cd poos
+
+git clone --depth 1 git@github.com:poos/poos.github.io.git
+
+mkdir other
+cd other
+
+git clone --depth 1 git@gitee.com:poos/BasePrj.git
+
+git clone --depth 1 git@github.com:poos/SwiftEFarm.git
+
+</code></pre></div></div>
+
+<h4 id="sh-命令">sh 命令</h4>
+
+<p>shell 脚本可以在 linux 操作和读取文件，常用的统计代码行，查找项目未使用的图片都是通过 sh 脚本命令实现的。</p>
+
+<p>https://blog.csdn.net/qq_39498080/article/details/78416965<br />
+http://man.linuxde.net/sh</p>
+
+<h4 id="swiftlint">swiftlint</h4>
+
+<p>用于代码风格约束。之前也写过一些文档，但只是文档级别的。这个就厉害了，在编译时候检查代码，给出警告和错误。编码风格是 facebook 团队使用的，具体可以去开源 github 上查看。使用和配置方式跟 <a href="https://poos.github.io/2018/12/27/Sourcery">Sourcery</a> 差不多。</p>
+
+<p>https://blog.csdn.net/mango_ios/article/details/55190625</p>
+
+<h4 id="testflight-外部测试-内部测试">TestFlight 外部测试 内部测试</h4>
+
+<ol>
+  <li>
+    <p>connect 用户 当提交 build 之后就可以去下载，属于内部测试，人数较少（好像是20）。</p>
+  </li>
+  <li>
+    <p>外部测试用户理论不限数量，需要提交 testFilght 审核，然后可以对外发布。<strong>发布方式原始版本为 邮件邀请，用户下载 testFlight app，填入邀请码测试</strong></p>
+  </li>
+</ol>
+
+<p>关于1，内部测试，自己也可以构建下载环境进行下载 <strong><a href="https://poos.github.io/2018/10/30/ProjectIpaTest/">局域网/公网 发布ipa （类似蒲公英，fir 等）</a></strong></p>
+
+<p>由于这种方式难度较大，产生了一种提前邮箱批量申请邀请码，生成链接分发测试用户的操作。—-&gt; 进一步产生了  https://testflight.top 这种专注提供这种服务的三方公司。</p>
+
+<p><strong>大概 18下半年，apple connect 提供了批量链接邀请的功能</strong>， 有需要的可以直接去 TestFlight 发布 beta 版测试。</p>
+
+<p><a href="https://www.jianshu.com/p/173ec6ec44a5">TestFlight - 简书</a></p>
+
+<h3 id="最后">最后</h3>
+
+<p>暂时总结这些吧，大多数文件比较琐碎，不能构成知识链，单个挑出也没什么意思。</p>
+
+<p><strong><a href="https://github.com/poos/BlogDemo">本文所有 工具 和 代码 地址</a></strong></p>
+:ET

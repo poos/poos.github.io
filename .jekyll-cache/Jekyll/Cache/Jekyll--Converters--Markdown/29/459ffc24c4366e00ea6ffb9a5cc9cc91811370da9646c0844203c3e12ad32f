@@ -1,0 +1,337 @@
+I"V�<blockquote>
+  <p>HuaRongDao</p>
+</blockquote>
+
+<p><strong>项目地址：<a href="https://gitee.com/poos/HuaRongDao">ShownBie/HuaRongDaoSwift</a></strong></p>
+
+<p>本文介绍华容道的搜索算法的构建和实现。</p>
+
+<h3 id="协议">协议</h3>
+
+<p>使用协议可以让代码看起来更调理，更加有框架。而且可以将框架部分简单的应用于其他搜索搜索游戏。</p>
+
+<p>通过制定通用的搜索协议，可以将搜索的算法规范化：某个状态（包含父节点），状态权重，搜索器</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//某个状态</span>
+<span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">Int64</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1">//某个状态的权重 暂未使用</span>
+<span class="kd">protocol</span> <span class="kt">SXAStarState</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">fromValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">toValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">totalValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">toTargetStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span>
+<span class="p">}</span>
+
+<span class="c1">//搜索器</span>
+<span class="kd">protocol</span> <span class="kt">SXSeacher</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">startState</span><span class="p">:</span> <span class="kt">SXNodeState</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">targetState</span><span class="p">:</span> <span class="kt">SXNodeState</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">successComparator</span><span class="p">:</span> <span class="p">(</span><span class="kt">SXNodeState</span><span class="p">,</span> <span class="kt">SXNodeState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">search</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+
+    <span class="kd">func</span> <span class="nf">pathWithState</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="多叉树">多叉树</h3>
+
+<p>搜索算法通常以一种 <strong>多叉树</strong> 的形式存在，树的每一个节点如下：<strong>父</strong> 节点，<strong>孩子们</strong> 节点，当前的 <strong>值</strong>， <strong>唯一标识</strong>（用于查询当前节点是否被查询过）</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">Int64</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="权重">权重</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXAStarState</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">fromValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">toValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">totalValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">toTargetStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A* 算法的必备要素，根据不同的规则大概可以分为几个值：<strong>到开始的权重</strong>，<strong>到成功状态的权重</strong>，<strong>总权重</strong>。需要传入开始点，结束点和当前点</p>
+
+<h3 id="搜索类">搜索类</h3>
+
+<p>搜索类继承 <strong>搜索协议</strong>， 然后添加几个私有变量用于计算存储即可。</p>
+
+<p>如下添加了属性 pathStates，historyIdentifier，succcesState 和 方法 getChild()</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">HuaSearch</span><span class="p">:</span> <span class="kt">SXSeacher</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">startState</span><span class="p">:</span> <span class="kt">SXNodeState</span>
+
+    <span class="k">var</span> <span class="nv">targetState</span><span class="p">:</span> <span class="kt">SXNodeState</span>
+
+    <span class="k">var</span> <span class="nv">successComparator</span><span class="p">:</span> <span class="p">(</span><span class="kt">SXNodeState</span><span class="p">,</span> <span class="kt">SXNodeState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+
+    <span class="nf">init</span><span class="p">(</span><span class="nv">start</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">,</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">search</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">pathWithState</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+
+    <span class="c1">//MARK: private</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">pathStates</span> <span class="o">=</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]()</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">historyIdentifier</span> <span class="o">=</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">succcesState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span>
+
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">getChild</span><span class="p">(</span><span class="nv">state</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">child</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="nf">childeStates</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">child</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="关于比特位">关于比特位</h3>
+
+<p>当状态可以使用一个 <strong>64位Int 型</strong> 表示的时候，可以考虑使用二进制位来记录当前 Identifier，这会大幅提升算法速度。</p>
+
+<p>也可以考虑 <strong>直接使用 Int64 同时作为 data 和 Identifier</strong></p>
+
+<p>那么关于二进制位的运算就要了解一下了：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Int64</span> <span class="p">{</span>
+    <span class="c1">// 取空格位置</span>
+    <span class="kd">func</span> <span class="nf">space1Index</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int64</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">self</span> <span class="o">&amp;</span> <span class="mb">0b11111</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">space0Index</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int64</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">self</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span> <span class="o">&amp;</span> <span class="mb">0b11111</span>
+    <span class="p">}</span>
+    <span class="c1">// 取某位的值</span>
+    <span class="kd">func</span> <span class="nf">valueAtByte</span><span class="p">(</span><span class="nv">index</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int64</span> <span class="p">{</span>
+        <span class="nf">return</span> <span class="p">(</span><span class="k">self</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">40</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">index</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b11</span>
+    <span class="p">}</span>
+    <span class="c1">// 根据一个 identifier 推出另一个 identifier</span>
+    <span class="kd">func</span> <span class="nf">mapToAnotherIdentifier</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int64</span> <span class="p">{</span>
+        <span class="kd">func</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">Int64</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int64</span> <span class="p">{</span>
+            <span class="k">var</span> <span class="nv">left</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span>
+            <span class="k">var</span> <span class="nv">right</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="mb">0b1111</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="n">right</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">right</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">|</span> <span class="n">right</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">base</span> <span class="o">=</span> <span class="k">self</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span>
+
+        <span class="k">var</span> <span class="nv">first</span> <span class="o">=</span> <span class="n">base</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span>
+        <span class="k">var</span> <span class="nv">second</span> <span class="o">=</span> <span class="n">base</span> <span class="o">&gt;&gt;</span> <span class="mi">12</span> <span class="o">&amp;</span> <span class="mb">0b11111111</span>
+        <span class="k">var</span> <span class="nv">third</span> <span class="o">=</span> <span class="n">base</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="o">&amp;</span> <span class="mb">0b11111111</span>
+        <span class="k">var</span> <span class="nv">fourth</span> <span class="o">=</span> <span class="n">base</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span> <span class="o">&amp;</span> <span class="mb">0b11111111</span>
+        <span class="k">var</span> <span class="nv">fifth</span> <span class="o">=</span> <span class="n">base</span> <span class="o">&amp;</span> <span class="mb">0b11111111</span>
+
+        <span class="n">first</span> <span class="o">=</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">first</span><span class="p">)</span>
+        <span class="n">second</span> <span class="o">=</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">second</span><span class="p">)</span>
+        <span class="n">third</span> <span class="o">=</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">third</span><span class="p">)</span>
+        <span class="n">fourth</span> <span class="o">=</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">fourth</span><span class="p">)</span>
+        <span class="n">fifth</span> <span class="o">=</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">fifth</span><span class="p">)</span>
+
+        <span class="k">var</span> <span class="nv">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">third</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">fourth</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">|</span> <span class="n">fifth</span>
+
+        <span class="k">let</span> <span class="nv">space0</span> <span class="o">=</span> <span class="nf">space0Index</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">space1</span> <span class="o">=</span> <span class="nf">space1Index</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">&amp;&lt;&lt;=</span> <span class="mi">5</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="kt">Int64</span><span class="p">(</span><span class="kt">Int64</span><span class="p">(</span><span class="n">space0</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">space0</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">&amp;&lt;&lt;=</span> <span class="mi">5</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="kt">Int64</span><span class="p">(</span><span class="kt">Int64</span><span class="p">(</span><span class="n">space1</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">space1</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="p">}</span>
+    <span class="c1">// 用于交换某两个比特位的值</span>
+    <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">exchangeByte</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">,</span> <span class="nv">isSpace0</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">func</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="kt">Int64</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int64</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">value0</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">from</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b11</span>
+            <span class="k">let</span> <span class="nv">value1</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">to</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b11</span>
+            <span class="k">let</span> <span class="nv">set0</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="mb">0b11</span> <span class="o">&lt;&lt;</span> <span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">from</span><span class="p">)))</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="mb">0b11</span> <span class="o">&lt;&lt;</span> <span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">to</span><span class="p">)))</span>
+            <span class="k">let</span> <span class="nv">valueNew0</span> <span class="o">=</span> <span class="n">value1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">from</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">valueNew1</span> <span class="o">=</span> <span class="n">value0</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">to</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">set0</span> <span class="o">+</span> <span class="n">valueNew0</span> <span class="o">+</span> <span class="n">valueNew1</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">exchangePrefix</span> <span class="o">=</span> <span class="nf">exchange</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="k">self</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">from</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="n">to</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">let</span> <span class="nv">suffix</span><span class="p">:</span> <span class="kt">Int64</span>
+        <span class="k">if</span> <span class="n">isSpace0</span> <span class="p">{</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="k">self</span> <span class="o">&amp;</span> <span class="mb">0b00000000000000000000000000000000000000001111100000</span> <span class="o">+</span> <span class="n">to</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="k">self</span> <span class="o">&amp;</span> <span class="mb">0b00000000000000000000000000000000000000000000011111</span> <span class="o">+</span> <span class="n">to</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span>
+        <span class="p">}</span>
+        <span class="k">self</span> <span class="o">=</span> <span class="n">exchangePrefix</span> <span class="o">&lt;&lt;</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">suffix</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="优化">优化</h3>
+
+<p>项目分3个分支，都是使用了广度优先算法进行遍历计算，区别在于用于存储的节点使用的数据类型不一样</p>
+
+<ul>
+  <li><strong>master： 采用字符串作为标识记录和存储节点</strong></li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Preview： 使用[Int]记录数据，使用 Int64 记录状态，区分重复</strong></li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">Int64</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Ultimate： 只使用了 Int64 记录当前状态，并且作为唯一标识</strong></li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">Int64</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="关于-ultimate">关于 Ultimate</h4>
+
+<p>通过 0（曹操） 1（横将） 2（纵将） 3（单个）来使用二进制位记录当前状态，在分别使用两个5位的数据用来表示两个空格的位置</p>
+
+<p>例如如下布局的表示为：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>卒卒张赵
+关关张赵
+曹曹马马
+曹曹黄黄
+卒卒〇〇
+
+-------十进制如下----------
+3322
+1122
+0011
+0011
+3333
+
+其空格分别为18，19
+--------二进制即是---------
+11 11 10 10
+01 01 10 10
+00 00 01 01
+00 00 01 01
+11 11 11 11
+
+其空格分别为10010，10011
+--------所以其最终 id 为 50 位的二进制数---------
+
+let identifier: Int64 = 0b11111010010110100000010100000101111111111001010011
+
+</code></pre></div></div>
+
+<h4 id="关于效率">关于效率</h4>
+
+<ol>
+  <li>无疑最慢</li>
+  <li>使用 Set<Int64> 记录历史之后快了很多，得益于 **swift 数组的性能**，运算速度比较快快的</Int64></li>
+  <li>identifier 即数据，内存占用大大优化；虽然位运算速度快很多，但是大量的位移和判断对性能有影响</li>
+</ol>
+
+<h4 id="更进一步的优化">更进一步的优化</h4>
+
+<p><strong>这部分不准备在这个项目继续更新了</strong></p>
+
+<ol>
+  <li><strong>增加权重</strong></li>
+</ol>
+
+<p>鉴于华容道的特殊性，其最终状态是不确定的（只要曹操走到下部最中间即可），所以计算接近于最终状态的事情变得复杂了</p>
+
+<p><strong>如果非要使用也不是不可以</strong> ： 华容道现在有 400 多种初始布局，对应的有400多种最终布局，分别记录并增加权重即可。</p>
+
+<p>本项目只是研究了一种布局，理论上可以添加一个最终布局，增加权重</p>
+
+<p><strong>还有一个问题，华容道有很多类似重复的来回走动，为了将一些子交换位置，所以加权的效果是有限的</strong></p>
+
+<ol>
+  <li><strong>最快解法</strong></li>
+</ol>
+
+<p><strong>上一条说过</strong> ：华容道有有限的布局</p>
+
+<p><strong>并且华容道是有 一横，二横，三横，四横等不同的解法步骤</strong></p>
+
+<p>所以如同魔方一样，一定有一些有限的中间布局，只需要从初始转换为中间布局，即可根据既定步骤求出解。</p>
+
+<ol>
+  <li><strong>结合资料和算法</strong></li>
+</ol>
+
+<p>广度优先求解 15 步以内在 0.5 秒以内，如果再加上加权，0.5秒能解出更多的步骤。</p>
+
+<p>最简单的方式应该是下边的样子</p>
+
+<p><strong>利用一个个关键点（木桩）的记录，使用搜索（跳）求解</strong></p>
+
+<h3 id="总结">总结</h3>
+
+<p><strong>华容道</strong> 比普通的 <strong>九宫格拼图</strong> 求解更加复杂。因为不确定最终状态，所以A*没法发挥威力；因为存在多种初始布局，且对应多种最终布局，所以让普通搜索求解无能为力。但是（下边换一段）…</p>
+
+<p><strong>像魔方算法一样，虽然中间过程非常复杂，但是通过有限的中间状态转换，依然可以在秒级算出正确解法</strong>。</p>
+
+<p>因为使用了分支来区分代码，所以不方便放入 BlogDemo，感兴趣可以到这里查看
+<strong>项目地址：<a href="https://gitee.com/poos/HuaRongDao">ShownBie/HuaRongDaoSwift</a></strong></p>
+:ET

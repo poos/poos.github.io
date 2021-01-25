@@ -1,0 +1,171 @@
+I"�<h3 id="组件化方案">组件化方案</h3>
+
+<p>因为 Router 在本质上也是将一个个 feature 隔离提供，所以也算是组件化方案里的一环了。</p>
+
+<p><a href="https://poos.github.io/2018/10/10/Module/">组件化方案</a></p>
+
+<h3 id="router-应当有的功能">Router 应当有的功能</h3>
+
+<p>将 Router 泛化之后，几乎所有独立的功能可以使用 Router 来操作，例如页面跳转，action sheet，login等，甚至 App 之间相互调用 等</p>
+
+<ul>
+  <li>不同 feature 跳转</li>
+  <li>支持 Deep Link 等</li>
+  <li>页面跳转支持多种跳转方式，push，present，custom 等</li>
+  <li>开放 Protocol, 支持生命周期控制</li>
+</ul>
+
+<h3 id="示例">示例</h3>
+
+<p>先从最基本的 Code 写起来，最后再展示封装后使用方式.</p>
+
+<p>你就会发现 delegate 的生命周期的设计，这也是为了一些特殊方案的预设。虽然在同一个项目里面的话使用频率不会很高，但是如果划分 framework，在不同的 workspace 工作的时候，它的作用就体现出来了。</p>
+
+<p>delegate 在 iOS Foundation, UIKit, WebKit 等一些地方有非常多的使用，这里也有参考的一些思想。</p>
+
+<h4 id="利用-protocol-和-enum-定义基本属性">利用 Protocol 和 Enum 定义基本属性</h4>
+
+<p>例如跳转可以使用这样的方式：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum NavigationType {
+  case push(from: UIViewController, to: UIViewController, animated: Bool)
+  case present(from: UIViewController, to: UIViewController, animated: Bool, completion: (()-&gt;Void)?)
+  case custom(from: UIViewController, to: UIViewController)
+}
+
+//info can include vision
+enum ActionType {
+  case share(info: [AnyHashable : Any])
+  case sheet(info: [AnyHashable : Any])
+  case laluchApp(info: [AnyHashable : Any])
+}
+
+enum xxxxType {}
+</code></pre></div></div>
+
+<p>在跳转添加 delegate 等</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol RouterLifeCycle {
+  func prepare(_)
+  func willRouter(_) -&gt; Bool
+  func didRouter(_)
+  func didError(_, ErrorClosure)
+}
+</code></pre></div></div>
+
+<p>从 notification 拿来的 Deeplink 信息</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Deeplink {
+  var destinationKey: String
+  var type: String
+  var userInfo: [AnyHashable : Any]
+}
+</code></pre></div></div>
+
+<h4 id="routermanager">RouterManager</h4>
+
+<p>应当实现 Router 并且实现生命周期方法。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class RouterDB {
+  var map: [AnyHashable : Any]
+
+  ...
+
+
+  func navigate(...) {   }
+
+  func action(...) {   }
+
+  func module(...) {   }
+
+  ...
+}
+
+
+struct Router {
+
+  var delegate: RouterLifeCycle?
+
+  var type: NavigationType?
+
+  conveniences init(...)
+
+
+  func navigate(_ type: NavigationType) {
+    delegate?.prepare()
+
+    guard let delegate = self.delegate, delegate.willRouter() else {
+      delegate?.didError(Error(&lt;xxx&gt;))
+      return
+    }
+    switch type {
+
+    }
+
+    delegate.didRouter()
+  }
+
+
+  func action(_ action: ActionType) { ... }
+}
+</code></pre></div></div>
+
+<h4 id="使用">使用</h4>
+
+<p><a href="https://poos.github.io/2018/07/17/ProjectEvent/">链式语法的Event Track</a></p>
+
+<p>简单的 router：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static let AppRouter = Router.default
+
+AppRouter.navigate(.push(from: VC1, to: VC2))
+AppRouter.action(.sheet(...))
+</code></pre></div></div>
+
+<p>有生命周期的 router：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class A {
+   lazy var router = Router(delegate: self)
+
+
+   func someAction() {
+     AppRouter.navigate(.push(from: VC1, to: VC2))
+     AppRouter.action(.sheet(...))
+   }
+}
+
+/*
+//Apple - Operation - Api - Example
+
+isCancelled - read-only
+
+isAsynchronous - read-only
+
+isExecuting - read-only
+
+isFinished - read-only
+
+isReady - read-only
+
+dependencies - read-only
+
+queuePriority - readable and writable
+
+completionBlock - readable and writable
+*/
+
+extension A: RouterLifeCycle {
+  func prepare(_)
+  func willRouter(_) -&gt; Bool
+  func didRouter(_)
+  func didError(_, ErrorClosure)
+}
+</code></pre></div></div>
+
+<p><strong>当然，如果使用了 RX，也可以将 delegate 的各个函数封装使用，会更方便</strong></p>
+
+<h4 id="组合使用">组合使用</h4>
+
+<p>如果你的 Router 划分的足够节点化，那么有可能对 Router 的层级进行划分，通过多个节点的组合，可以实现一个大的 router ～ 这也是 Router 的意义之一吧～</p>
+
+<h3 id="最后">最后</h3>
+
+<p>本文只是一个轻量级的基础框架，因为业务之初往往是比较简单的。框架的作用就是在业务变得复杂时候，可以用最小的修改去适应～</p>
+:ET

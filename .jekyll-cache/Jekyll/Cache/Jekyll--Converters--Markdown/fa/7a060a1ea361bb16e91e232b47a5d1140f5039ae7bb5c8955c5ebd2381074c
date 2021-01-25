@@ -1,0 +1,237 @@
+I"�<h3 id="背景">背景</h3>
+
+<p>通常情况先在银行，仓库等具有严格权限控制的应用需要这个层级。</p>
+
+<p>其次是有 vip 业务的应用需要这个模块。</p>
+
+<p>最后是，app 经常需要发布活动，可以使用 FeatureControl 来管理。</p>
+
+<p>当然还有其他场景，功能模块升级迭代等等。。。</p>
+
+<h3 id="设计">设计</h3>
+
+<ul>
+  <li>
+    <p>配置更新 通常是本地一份基础配置，从服务端拿取新的基础配置，登陆之后从服务端拿取基于用户的基础配置。</p>
+  </li>
+  <li>
+    <p>权限控制 通常在模块打开之前。</p>
+  </li>
+</ul>
+
+<p><a href="https://poos.github.io/2019/10/16/Router/">Router</a></p>
+
+<p><strong>权限控制也可以被穿插在 Router 控制之中 ～</strong></p>
+
+<h4 id="default-json">Default Json</h4>
+
+<p>默认的话可以使用服务队返回的 json～</p>
+
+<p>default.json</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "changeAccountID": {
+    "available": true
+  },
+  "changeAvatar": {
+    "available": true,
+    "vision": 2,
+    "description": "firstAllowed"
+  }
+}
+</code></pre></div></div>
+
+<h4 id="基础-code">基础 Code</h4>
+
+<p>下图是一个基本的三层控制，也是参考学习了一些现有产品的设计，但是经过个人的加工理解，形成新的易于使用清晰明了的设计：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+struct Feature {
+    enum State {
+        case unknow
+        case enable
+        case disable
+
+        func allow() -&gt; Bool {
+            self == .enable
+        }
+    }
+
+    enum Name {
+        case changeAccountID
+        case changeAvatar
+    }
+
+    let name: Name
+
+    var state: State?
+}
+
+class FeatureManager {
+    enum CheckMode {
+        case `default`
+        case service
+        case user
+    }
+
+    let `default` = FeatureManager()
+    private init() {
+        //config
+    }
+
+    var defaultState: [Feature]
+    var serviceState: [Feature]
+    var userState: [Feature]
+
+
+    func check(_ mode: CheckMode, feature name: Feature.Name) -&gt; Feature.State? {
+        guard mode != .default else {
+            return defaultState.first(where: { $0.name != name })?.state
+        }
+        guard mode != .service else {
+            return serviceState.first(where: { $0.name != name })?.state
+        }
+        return userState.first(where: { $0.name != name })?.state
+    }
+
+}
+
+</code></pre></div></div>
+
+<p>经过上面的设计之后，使用上去直接去调用 FeatureManager 即可：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FeatureManager.default.check(.user, feature: .changeAccountID).allow()
+</code></pre></div></div>
+
+<p>当然这只是基础调用，你可以封装 convenience 的使用方式</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public func FeatureAllowed(_ name: Feature.Name) -&gt; Bool
+
+extension Feature {
+  public func featureAllowed(_ name: Feature.Name) -&gt; Bool
+}
+
+extension RouterManager {
+  public func routerWithFeatureCheck(_ router: Router, mode: CheckMode = .user)
+}
+
+</code></pre></div></div>
+
+<p>通过封装可以实现更简短的代码量。</p>
+
+<blockquote>
+  <p>ps, 忘了在那个大佬那里听到过。更少的代码量意味着更低的 bug 几率。同一个程序/功能，你用十分之一的代码行实现，往往意味着出现 bug 的概率是原来的十分之一。</p>
+</blockquote>
+
+<h3 id="pro">Pro</h3>
+
+<p>在一些场景中，有些功能并非是不可用的，而是需要一些 <strong>前置条件</strong>，而且，当前置条件消除之后，往往 <strong>可以继续之前的工作</strong>。</p>
+
+<p>经典的例子是，我要修改用户名，但是前置条件是需要通过手机号码验证。</p>
+
+<p>更加灵活的是，这个手机号验证可能被更换为邮箱验证。这个切换，往往在服务队部署。</p>
+
+<p>为 Feature 添加 dependency，checked 等参数。</p>
+
+<p>为 FeatureManager 接入 Router 模块， 并且监听 completionBlock with success，然后作进一步的处理。</p>
+
+<p>使用枚举，逐级检查；使用函数回调，处理完每一级别的 dependency，然后 completion。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Feature {
+  ...
+
+
+    var dependency: [Feature]
+
+    var isChecked: Bool
+
+    var checked: () -&gt; Void
+}
+
+class FeatureManager {
+    enum CheckMode: Int, Comparable {
+        case `default`
+        case service
+        case user
+
+        static func &lt; (lhs: FeatureManager.CheckMode, rhs: FeatureManager.CheckMode) -&gt; Bool {
+            return lhs.rawValue &lt; rhs.rawValue
+        }
+    }
+
+
+    .....
+
+    func routerFeature(_ feature: Feature, verified: () -&gt; Void) {
+        Router.router(feature.name) { (state) in
+            if state == .success {
+                verified()
+            }
+        }
+    }
+
+    func errorAlert() {
+        //..
+    }
+
+    func checkAndWait(_ mode: CheckMode, feature: Feature) {
+        //default
+        var defaultF = defaultState.first(where: { $0.name != feature.name })
+        guard defaultF?.state?.enable() == true else {
+            errorAlert()
+            return
+        }
+
+        if mode &gt;= .default,
+            let dependencyD = defaultF?.dependency.first(where: { $0.isChecked == false }) {
+
+            FeatureManager.default.routerFeature(dependencyD) {
+                defaultF?.dependency.removeFirst()
+                checkAndWait(mode, feature: feature)
+                return
+            }
+        }
+
+        //service
+        let serviceF = serviceState.first(where: { $0.name != feature.name })
+        guard serviceF?.state?.enable() == true else {
+            errorAlert()
+            return
+        }
+        if mode &gt;= .service,
+            let dependencyS = serviceF?.dependency.first(where: { $0.isChecked == false }) {
+
+            FeatureManager.default.routerFeature(dependencyS) {
+                defaultF?.dependency.removeFirst()
+                checkAndWait(mode, feature: feature)
+                return
+            }
+        }
+
+        //user
+        let userStateF = userState.first(where: { $0.name != feature.name })
+        guard userStateF?.state?.enable() == true else {
+            errorAlert()
+            return
+        }
+
+        if let dependency = userStateF?.dependency.first(where: { $0.isChecked == false }) {
+
+            FeatureManager.default.routerFeature(dependency) {
+                defaultF?.dependency.removeFirst()
+                checkAndWait(mode, feature: feature)
+                return
+            }
+        }
+
+        feature.checked()
+    }
+
+}
+
+
+</code></pre></div></div>
+
+<h3 id="其他">其他</h3>
+
+<p>本文只是搭建了一个简单的框架，但应当经得起推敲考验。希望能提供一个思路，大家碰到相应的设计时候可以作一个参考～</p>
+:ET

@@ -1,0 +1,223 @@
+I"�A<h3 id="背景">背景</h3>
+
+<p>在一些类中经常会见到这样的写法：虽然使用的 var 修饰变量，但是只是在 init 方法中修改了一次，其他时候都是 get并没有重新 set。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">a</span> <span class="o">=</span> <span class="s">""</span>
+
+    <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="s">"hahah"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>通过资料查阅和文档查看，区别在于：<strong>var 修饰的变量锁指向的指针是可变的</strong>。但是官方仍然建议尽量多的使用 let。</p>
+
+<p>那么区别到底有多少呢，相较于 let 可选的 var 性能又如何那。所以做了一个测试</p>
+
+<h3 id="测试">测试</h3>
+
+<p>首先是3种定义方式</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">a</span> <span class="o">=</span> <span class="s">""</span>
+
+    <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="s">"hahah"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">B</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">a</span><span class="p">:</span> <span class="kt">String</span>
+
+    <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="s">"hahah"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">C</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">a</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span>
+
+    <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="s">"hahah"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">D</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">a</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+
+    <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="s">"hahah"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>接下来对3种方式生成的对象进行 init 和 get 测试</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//分别返回 a，b，c 强制解包方式和 c 非强制解包的测试时间（1000次）</span>
+    <span class="kd">func</span> <span class="nf">once</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="p">{</span>
+
+          <span class="k">let</span> <span class="nv">timea</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
+
+          <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">999</span> <span class="p">{</span>
+              <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="kt">A</span><span class="p">()</span>
+              <span class="n">cas</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+              <span class="n">res</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+          <span class="p">}</span>
+          <span class="k">let</span> <span class="nv">timeb</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
+
+          <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">999</span> <span class="p">{</span>
+              <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="kt">B</span><span class="p">()</span>
+              <span class="n">cbs</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+              <span class="n">res</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+          <span class="p">}</span>
+          <span class="k">let</span> <span class="nv">timec</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
+
+          <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">999</span> <span class="p">{</span>
+              <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="kt">C</span><span class="p">()</span>
+              <span class="n">ccs</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+              <span class="n">res</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="o">!</span><span class="p">)</span>
+
+          <span class="p">}</span>
+          <span class="k">let</span> <span class="nv">timed</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
+
+          <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">999</span> <span class="p">{</span>
+              <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="kt">C</span><span class="p">()</span>
+              <span class="n">ccs</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+              <span class="k">if</span> <span class="k">let</span> <span class="nv">s</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">a</span> <span class="p">{</span>
+                  <span class="n">res</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+          <span class="k">let</span> <span class="nv">timee</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
+
+          <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">999</span> <span class="p">{</span>
+              <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="kt">D</span><span class="p">()</span>
+              <span class="n">cds</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+              <span class="n">res</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="o">!</span><span class="p">)</span>
+
+          <span class="p">}</span>
+          <span class="k">let</span> <span class="nv">timef</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
+
+          <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">999</span> <span class="p">{</span>
+              <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="kt">D</span><span class="p">()</span>
+              <span class="n">cds</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+              <span class="k">if</span> <span class="k">let</span> <span class="nv">s</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">a</span> <span class="p">{</span>
+                  <span class="n">res</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+          <span class="k">let</span> <span class="nv">timeg</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
+
+          <span class="nf">return</span><span class="p">(</span><span class="n">timeb</span> <span class="o">-</span> <span class="n">timea</span><span class="p">,</span> <span class="n">timec</span> <span class="o">-</span> <span class="n">timeb</span><span class="p">,</span> <span class="n">timed</span> <span class="o">-</span> <span class="n">timec</span><span class="p">,</span> <span class="n">timee</span> <span class="o">-</span> <span class="n">timed</span><span class="p">,</span> <span class="n">timef</span> <span class="o">-</span> <span class="n">timee</span><span class="p">,</span> <span class="n">timeg</span> <span class="o">-</span> <span class="n">timef</span><span class="p">)</span>
+
+      <span class="p">}</span>
+</code></pre></div></div>
+
+<p>对上边的 1000 次测试运行 10 次取平均值</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">func</span> <span class="nf">check</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">ats</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">var</span> <span class="nv">bts</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">var</span> <span class="nv">cts</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">var</span> <span class="nv">dts</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">var</span> <span class="nv">ets</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">var</span> <span class="nv">fts</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">10</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">rst</span> <span class="o">=</span> <span class="nf">once</span><span class="p">()</span>
+            <span class="n">ats</span> <span class="o">+=</span> <span class="n">rst</span><span class="o">.</span><span class="mi">0</span>
+            <span class="n">bts</span> <span class="o">+=</span> <span class="n">rst</span><span class="o">.</span><span class="mi">1</span>
+            <span class="n">cts</span> <span class="o">+=</span> <span class="n">rst</span><span class="o">.</span><span class="mi">2</span>
+            <span class="n">dts</span> <span class="o">+=</span> <span class="n">rst</span><span class="o">.</span><span class="mi">3</span>
+            <span class="n">ets</span> <span class="o">+=</span> <span class="n">rst</span><span class="o">.</span><span class="mi">4</span>
+            <span class="n">fts</span> <span class="o">+=</span> <span class="n">rst</span><span class="o">.</span><span class="mi">5</span>
+            <span class="nf">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="n">ats</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">bts</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">cts</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">dts</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">ets</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">fts</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="结果">结果</h4>
+
+<p>我进行了4次 check()，每次都是重新运行工程，手动点击开始测试，结果如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+//6    0.009955167770385742
+//1   0.007562875747680664
+//5    0.008865833282470703
+//4    0.00854039192199707
+//2    0.007955312728881836
+//3    0.0084686279296875
+
+
+//6    0.00855565071105957
+//1    0.006780147552490234
+//4    0.007841110229492188
+//2    0.0074846744537353516
+//3    0.0075147151947021484
+//5    0.00818324089050293
+
+
+//6    0.008449316024780273
+//1    0.0066416263580322266
+//3    0.007724761962890625
+//5    0.007788658142089844
+//2    0.0074040889739990234
+//3    0.007723331451416016
+
+
+//6    0.009873151779174805
+//1    0.0071184635162353516
+//4    0.008206605911254883
+//3    0.008171319961547852
+//2    0.007562398910522461
+//4    0.008209466934204102
+
+</code></pre></div></div>
+
+<p>结果为</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>24
+6
+16
+14
+9
+15
+</code></pre></div></div>
+
+<h4 id="结果分析">结果分析</h4>
+
+<p>推荐使用的方法依次为：</p>
+
+<p><strong>第一名：</strong> let a: String</p>
+
+<p><strong>第二名：</strong> var a: String? 和取值 a！</p>
+
+<p><strong>第三名：</strong> 一共3种方式：</p>
+
+<ul>
+  <li>var a: String 和取值  if let s = a { // do some … }</li>
+  <li>var a: String? 和取值  if let s = a { // do some … }</li>
+  <li>var a: String 和取值  a</li>
+</ul>
+
+<p><strong>最后一名：</strong> var a = “” 然后 赋值 a = xx 然后取值</p>
+
+<h3 id="总结">总结</h3>
+
+<ul>
+  <li>
+    <p>能尽量使用 let 时候就使用 let</p>
+  </li>
+  <li>
+    <p>不用过于纠结可选值的解包问题，对性能影响几乎不存在，所以建议使用 if let s = a { // do some … } 安全解包，或者使用 guard。</p>
+  </li>
+</ul>
+:ET

@@ -1,0 +1,191 @@
+I"B<p>一个 app 通常会有很多类型的弹出窗口，但是当这些弹出窗口一起出现时候就会造成差用户体验。</p>
+
+<p>本章期望对这些弹窗做一个整理，寻找一种好的设计来整理这方面的代码。</p>
+
+<h3 id="场景">场景</h3>
+
+<p>副标题已经列出了常见的几种类型：</p>
+<ul>
+  <li><strong>HUD</strong>，通常用于请求成功或者失败的提醒</li>
+  <li><strong>Alert</strong>，通常用于用户退出、取消和其他动作的确认</li>
+  <li><strong>Sheet</strong>，通常用于给用户提供不同的选择，包含 <strong>分享弹出</strong></li>
+  <li><strong>权限申请</strong>，info.plist管理的权限弹窗</li>
+  <li><strong>活动</strong>、红包的弹出</li>
+  <li><strong>新消息</strong>、口令码，邀请用户跳转</li>
+</ul>
+
+<p>可以看出，<strong>除了 HUD 的提醒用户是不需要操作的，其他提醒都是用户需要交互的</strong> ，相应的，<strong>HUD 的层叠或者更新并不会影响用户的体验，而其他有用户交互的弹窗多个层叠，会严重影响用户体验</strong></p>
+
+<h3 id="hud">HUD</h3>
+
+<p>对于 HUD 类的，我们不需要担心相互影响的问题。我们只需要注意，<strong>HUD 可能在很多页面同时出现</strong>， <strong>HUD 会发生状态切换</strong>。例如很多页面会有一个 转圈的动作表示正在加载，加载完成会切换为成功的提醒。<strong>有一些含有加载状态的控件（例如按钮）也是如此</strong></p>
+
+<p>为此，我们定义一个通用协议</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">HUDProgressType</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">success</span>
+    <span class="k">case</span> <span class="n">failed</span>
+    <span class="k">case</span> <span class="n">progress</span>
+<span class="p">}</span>
+
+<span class="kd">protocol</span> <span class="kt">HUDProtocol</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">show</span><span class="p">()</span>
+    <span class="kd">func</span> <span class="nf">hide</span><span class="p">()</span>
+    <span class="kd">func</span> <span class="nf">changeTo</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">HUDProgressType</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>一个 <strong>HUD类的创建</strong> ，只需要 <strong>遵守这个协议，实现其中的方法</strong> 即可。例如 加载型页面和加载型按钮，就可以分别实现。</p>
+
+<p>对于一个对象，<strong>使用</strong> 时候通常 <strong>初始化一个 lazy 对象，在合适的时候调用 show()，hide(),changeTo(:) 即可</strong></p>
+
+<h3 id="交互弹窗">交互弹窗</h3>
+
+<p>交互弹窗通常定义为 <strong>打断或者影响当前的操作</strong>，所以多个打断的出现会造成错乱。常见的是 APP 首次安装启动时候弹出很多窗口，APP 启动时候用户弹窗和活动弹窗的影响，键盘输入和消息跳转的影响，正在进行分享操作受到消息提醒的影响等。</p>
+
+<p>为了解决这一问题我们同样使用一个简单的 <strong>协议来规范弹窗接口</strong> ，使用一个 <strong>队列来集中处理弹窗</strong>，只有当上一个弹窗小事，才会出现另外一个弹窗。</p>
+
+<p>大概是以下样式的：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">protocol</span> <span class="kt">AlertProtocol</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">didHide</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+    <span class="k">var</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">show</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">AlertManager</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">alerts</span> <span class="o">=</span> <span class="p">[</span><span class="kt">AlertProtocol</span><span class="p">]()</span>
+
+    <span class="kd">func</span> <span class="nf">showAlert</span><span class="p">(</span><span class="n">_</span> <span class="nv">alert</span><span class="p">:</span> <span class="kt">AlertProtocol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="协议和遵守协议的类">协议和遵守协议的类</h4>
+
+<p>协议由一个 <strong>show()</strong> 方法和 <strong>var priority</strong> 和 <strong>var didHide</strong> Closure 构成。</p>
+
+<p>通过开放这些个接口，他的管理者就可以适时的将窗口弹出。使用 priority 就可以控制弹窗弹出的顺序。</p>
+
+<p>重新提一句，遵守协议的类可能是以下这些类：</p>
+
+<ul>
+  <li><strong>Alert</strong>，通常用于用户退出、取消和其他动作的确认</li>
+  <li><strong>Sheet</strong>，通常用于给用户提供不同的选择，包含 <strong>分享弹出</strong></li>
+  <li><strong>权限申请</strong>，info.plist管理的权限弹窗</li>
+  <li><strong>活动</strong>、红包的弹出</li>
+  <li><strong>新消息</strong>、口令码，邀请用户跳转</li>
+</ul>
+
+<p>这样我们可以 <strong>分别创建这些类的父类，并且在父类遵守这些协议，实现通用的接口部分</strong>。</p>
+
+<p>通常我们还在父类中实现一些关于UI、动画的等基础操作，让整个 app 的格调更加相似。</p>
+
+<p><strong>Sheet 父类可以创建 back view，用于解决异形屏的底部视图</strong></p>
+
+<h5 id="整理对外开放的部分">整理对外开放的部分</h5>
+
+<p>每一个类型中的内容即可使用一个枚举来定义，这样最终添加类型就只需要在这里修改就可以了</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">AlertType</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">questionExit</span>
+    <span class="k">case</span> <span class="n">answerExit</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">AlertType</span><span class="p">:</span> <span class="kt">TargetXxxxxxType</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">questionExit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"确定放弃提问吗"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">answerExit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"确定放弃回答吗"</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"确定退出吗"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">cancleTitle</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="mangger-部分">Mangger 部分</h4>
+
+<p>Mangger 部分承担了大量的调剂工作，可以预料会比较复杂，包含很多参数。一个简略的 Manager 类应该是这样的：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">class</span> <span class="kt">AlertManager</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">timer</span><span class="p">:</span> <span class="kt">Timer</span><span class="p">?</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">isShow</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">alerts</span> <span class="o">=</span> <span class="p">[</span><span class="kt">AlertProtocol</span><span class="p">]()</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">didAddPrama</span> <span class="o">=</span> <span class="p">[</span><span class="kt">Int</span><span class="p">:</span> <span class="kt">Int</span><span class="p">]()</span>
+
+    <span class="kd">func</span> <span class="nf">showAlert</span><span class="p">(</span><span class="n">_</span> <span class="nv">alert</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">AlertProtocol</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">let</span> <span class="nv">value</span> <span class="o">=</span> <span class="n">didAddPrama</span><span class="p">[</span><span class="n">alert</span><span class="o">.</span><span class="n">priority</span><span class="p">]</span>
+        <span class="k">let</span> <span class="nv">newValue</span> <span class="o">=</span> <span class="n">value</span> <span class="p">??</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">didAddPrama</span><span class="p">[</span><span class="n">alert</span><span class="o">.</span><span class="n">priority</span><span class="p">]</span> <span class="o">=</span> <span class="n">newValue</span>
+        <span class="n">alert</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">alert</span><span class="o">.</span><span class="n">priority</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="n">newValue</span>
+
+        <span class="n">alerts</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nv">at</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts</span><span class="o">.</span><span class="nf">sorted</span><span class="p">(</span><span class="nv">by</span><span class="p">:</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">priority</span> <span class="o">&lt;</span> <span class="nv">$1</span><span class="o">.</span><span class="n">priority</span> <span class="p">})</span>
+        <span class="nf">timeRepeat</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="kt">Timer</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">timeInterval</span><span class="p">:</span> <span class="kt">Double</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">target</span><span class="p">:</span> <span class="k">self</span><span class="p">,</span> <span class="nv">selector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">timeRepeat</span><span class="kd">)</span><span class="p">,</span> <span class="nv">userInfo</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">repeats</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+        <span class="kt">RunLoop</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="n">timer</span><span class="o">!</span><span class="p">,</span> <span class="nv">forMode</span><span class="p">:</span> <span class="kt">RunLoop</span><span class="o">.</span><span class="kt">Mode</span><span class="o">.</span><span class="k">default</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">deinit</span> <span class="p">{</span>
+        <span class="n">timer</span><span class="p">?</span><span class="o">.</span><span class="nf">invalidate</span><span class="p">()</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+
+    <span class="kd">@objc</span> <span class="kd">func</span> <span class="nf">timeRepeat</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="n">alerts</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">!</span><span class="n">isShow</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+        <span class="k">guard</span> <span class="k">var</span> <span class="nv">alert</span> <span class="o">=</span> <span class="n">alerts</span><span class="o">.</span><span class="n">first</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+
+        <span class="n">alert</span><span class="o">.</span><span class="nf">show</span><span class="p">()</span>
+        <span class="n">alert</span><span class="o">.</span><span class="n">didHide</span> <span class="o">=</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="k">in</span>
+            <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="n">isShow</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="p">}</span>
+        <span class="n">isShow</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">alerts</span><span class="o">.</span><span class="nf">removeFirst</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>整体流程是从队伍中拿出一个 Alert 显示，让后当 Alert 显示结束时候，从队伍中拿出第一个继续显示。
+要点两点一是 <strong>队列调整</strong> 部分，和 <strong>轮询显示</strong> 部分。</p>
+
+<p><strong>队列部分</strong> ：为了遵循先来后到的队列方式，我使用了 didAddPrama 这个键值对用来记录已经添加的 priority 的个数，然后将下一个 priority 相同值的 标记，在数组重新排序时候排到相同值的最后一个。</p>
+
+<p><strong>轮询显示</strong> ：将计时器加入 RunLoop.Mode.default 模式，这样用户进行 table 滑动的时候就不会弹窗了</p>
+
+<p><strong>正在滑动等手势</strong> ： 通过将 time 加入 <strong>RunLoop.Mode.default</strong>，即可在用户交互时停止 timer</p>
+
+<p><strong>正在输入</strong> ： 如果需要控制在输入的时候不展示弹窗可以在 AlertManager 中开放一个 isEditing 的属性，并且在 time 方法中跳过显示即可。</p>
+
+<h5 id="其他">其他</h5>
+<p><strong>队列</strong> 的调整有很多解决方法，文中的方法应该是最懒的一种方法了。最速度最快的应该是遍历一遍，然后插入相应的位置，只是代码写起来参数多些，项目中也是推荐这样。还可以考虑跟时间戳挂钩，如果项目已经有全局运行的时间戳的话，这也不失为一个好方法。</p>
+
+<p><strong>输入</strong> 输入除了对外开放属性，另外一种方式是可以动态的查找正在编辑的窗口，只是这样效率就低了，不再展开。</p>
+
+<h3 id="总结">总结</h3>
+
+<p>整个框架搭下来项目的弹窗这一块就变的清晰了，同样一些东西可以以组件的形式复用和扩展，组件不一定是小颗粒，也可以是通用协议框架。</p>
+
+<p>而新加类型只需要添加一个枚举，并且实现相应的方法即可。最终版可以参考 Moya。</p>
+:ET

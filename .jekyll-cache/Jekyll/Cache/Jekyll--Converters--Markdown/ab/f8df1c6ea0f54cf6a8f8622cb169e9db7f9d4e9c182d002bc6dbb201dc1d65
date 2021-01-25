@@ -1,0 +1,164 @@
+I"G<h3 id="容器">容器</h3>
+
+<p><strong>是使用WKWebView还是UIWebView</strong></p>
+
+<p>使用 WKWebview，虽然他有诸多的坑，但是带来的优化是很多的：</p>
+
+<p><a href="https://www.jianshu.com/p/0530673f5d96">iOS WKWebView与UIWebView的比较替换</a></p>
+
+<p><a href="https://mp.weixin.qq.com/s/rhYKLIbXOsUJC_n6dt9UfA">WKWebView 那些坑</a></p>
+
+<p>虽然传说 WK 有很多坑，我碰到的都算是可以接受的。并且是可以通用的解决的，所以我们的项目中完全使用的是 WKWebview。</p>
+
+<h3 id="原生与-h5-交互的方式">原生与 H5 交互的方式</h3>
+
+<p>有两篇 <strong>味精</strong> 的博客介绍的非常清楚了</p>
+
+<p><a href="http://awhisper.github.io/2018/01/02/hybrid-jscomunication/">从零收拾一个hybrid框架（一）– 从选择JS通信方案开始</a></p>
+
+<p><a href="http://awhisper.github.io/2018/03/06/hybrid-webcontainer/">从零收拾一个hybrid框架（二）– WebView容器基础功能设计思路</a></p>
+
+<h4 id="选择js通信方案">选择JS通信方案</h4>
+
+<p>介绍各种通讯方式，最后作者提出建议的通讯方式为</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>聊了这么多这个方式，如果换做我们项目，我会选择啥？
+
+iOS：MessageHandler注入/Prompt弹框拦截(JSToNative) + evaluatingJavaScript
+(NativeToJS)
+经过修正，异步返回采用MessageHandler 同步返回采用Prompt弹框拦截(JSToNative)
+
+
+安卓: 拦截弹窗(JSToNative)+loadUrl(NativeToJS)
+
+</code></pre></div></div>
+
+<p>注意 js 注入 要在页面销毁时候 移除，否则会造成内存泄露。</p>
+
+<p><strong>一些不同</strong></p>
+
+<p>实际项目中，我们在 jump 页面这里通用了推送的 scheme 判断方式，并且保底提示更新至最新版。</p>
+
+<h3 id="容器基础功能设计思路">容器基础功能设计思路</h3>
+
+<p>第二篇介绍了很多部分的设计</p>
+
+<ul>
+  <li>
+    <p>调用和回调模块</p>
+  </li>
+  <li>
+    <p>业务扩展模块</p>
+  </li>
+  <li>
+    <p>UserAgent</p>
+  </li>
+  <li>
+    <p>Cookie</p>
+  </li>
+  <li>
+    <p>JS 脚本注入</p>
+  </li>
+  <li>
+    <p>常规扩展，比较多列举一下</p>
+  </li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Common 组件：我们的示例代码就是 Common 组件的一些基础操作
+  复制剪切板
+  获取设备信息
+  打客户端Log，上报日志
+  打客户端Crash追踪Log，随Crash上报
+  ……打开你的想象力
+
+CommonUI 组件：也有一些 Common 并且与 UI 相关的基础操作
+  showTips 展示客户端文字浮层
+  showDialog 展示客户端确认弹框，回调用户选择按钮
+  pullRefresh 采用客户端的下拉刷新，但配合 H5 进行数据加载
+  Router 跳转任意 App 内路由页面
+  NaviBarControl 可以让前端来定制客户端顶部 NaviBar
+  share Button 增加原生分享按钮，点击后出发原生分享
+  Other Button 增加任意原生按钮，点击后跳转任意 App 内路由页面
+  ……打开你的想象力
+
+NetWork 组件：判断浏览器调试环境下走 AJAX 网络请求，判断是客户端就通过客户端发起原生网络请求，请求结果回调 JS （为什么做？一般原生会封装网络请求，有更精细粒度的cache控制 ，和通用无痕日志埋点）
+  Get 不解释了
+  Post 不解释了
+  ……打开你的想象力
+
+Storage 组件：前端的存储只能使用 LocalStorage 和 Cookie 这二者都有很大的缺陷
+  Key - Value Plist Storage ： 可以让前端把 Key Value 发给客户端，让客户端通过本地Plist 存储/读取/删除
+  File Storage：可以让前端把大段需要存储的字符串，发给客户端，让客户端在App沙盒内开辟文件路径，saveToFile存储成文件，并且提供目录操作能力，创建目录/删除目录/创建文件/删除文件/读取文件
+  ……打开你的想象力
+
+Push组件：可以让前端有能力写本地Push闹铃到App 或者上报远程Push Token
+  本地 Push 设置
+  远程 Push 获取 Token
+
+</code></pre></div></div>
+
+<p>基本上是比较全面了，想象力灰常大。</p>
+
+<h3 id="项目实践">项目实践</h3>
+
+<p>项目实践时候才会看出真实需要的内容。</p>
+
+<h4 id="跳转的-scheme">跳转的 scheme</h4>
+
+<p>我们使用了的 scheme 模式，类似推送消息的跳转。然后在保底时候提示软件需要更新。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xx/jump/
+
+</code></pre></div></div>
+
+<p>理由：</p>
+
+<ol>
+  <li>方便</li>
+  <li>页面跳转本来就是一个单向的过程，且项目中一般都会有跳转路由类，对接即可</li>
+</ol>
+
+<h4 id="非单向的跳转或者动作">非单向的跳转，或者动作</h4>
+
+<p>使用上边的 同步/异步 交互方式，根据需要选择</p>
+
+<h4 id="添加通用的方法">添加通用的方法</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 刷新
+// 虽然有 系统方法，但是wk 时候不好用
+func reload()
+
+// 更新
+// 有些没有用户交互，但是需要版本更新，就可以使用这个
+func update()
+
+// Title
+// 从 html title 取还是fangfshez设置
+
+// Pop
+// 退出页面
+
+// 登录和成功传入用户信息
+
+// 仅允许白名单的 itunes 跳转
+
+// 仅允许白名单的网址添加 cookie
+
+</code></pre></div></div>
+
+<h3 id="总结">总结</h3>
+
+<p>总结几个要点</p>
+
+<ul>
+  <li>
+    <p>Hybrid 模块设计通常需要的是通用的解决方案，否则就会导致灵活性大大降低，版本依赖太强。</p>
+  </li>
+  <li>
+    <p>要有预见性，在早版本提前埋好相关的功能。</p>
+  </li>
+  <li>
+    <p>要使用交互的方式来提高用户体验，不要产生点击没反应的情况。</p>
+  </li>
+</ul>
+:ET

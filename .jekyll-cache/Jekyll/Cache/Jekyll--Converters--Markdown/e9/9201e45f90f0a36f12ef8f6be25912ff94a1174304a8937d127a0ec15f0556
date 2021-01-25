@@ -1,0 +1,309 @@
+I"9(<h3 id="pubspecyaml">pubspec.yaml</h3>
+
+<p>用于存放三方包的地方，可以在 <a href="https://pub.dartlang.org/flutter/packages">flutter/packages</a> 查询需要的插件；常用的插件如下：udid，cacheImage，上下拉，网络请求，bloc 设计模式（下边会单独说一下）， user_agent 获取，本地存储，分享，toasts，网络连接检查等</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  udid: ^0.0.2
+  cached_network_image: ^0.5.1
+  pull_to_refresh: ^1.2.0
+  dio: ^1.0.17
+  flutter_bloc: ^0.9.1
+  flutter_user_agent: ^1.0.1
+  shared_preferences: ^0.4.0
+  share: ^0.6.1
+  fluttertoast: ^3.0.3
+  connectivity: ^0.3.2
+
+  # user_agent: ^2.0.0
+  # flutter_webview_plugin: ^0.3.0+2
+  # objectdb: ^1.0.5
+  # url_launcher: ^4.0.3
+  # event_bus: ^1.0.1
+  # flutter_redux: ^0.5.2
+</code></pre></div></div>
+
+<h3 id="基于-bloc-的列表设计">基于 bloc 的列表设计</h3>
+
+<p>flutter_bloc: ^0.9.1</p>
+
+<blockquote>
+  <p>BlocBuilder is a Flutter widget which requires a Bloc and a builder function. BlocBuilder handles building the widget in response to new states. BlocBuilder is very similar to StreamBuilder but has a more simple API to reduce the amount of boilerplate code needed. The builder function will potentially be called many times and should be a pure function that returns a widget in response to the state.</p>
+</blockquote>
+
+<p>用于将用户交互从 Page Widget 拆分出来，类似于 MVP 的设计模式。例如我们有一个列表页面，有上下拉操作，再加上网络请求失败成功等，如果所有的逻辑写在一个页面，那么就会很不清晰，互相耦合不易测试。那我们就以这个例子展示一下 bloc 设计模式下的代码：</p>
+
+<h4 id="首先我们总结一下页面的用户操作">首先我们总结一下页面的用户操作</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// enmu
+enum ListPageEvent { initData, nextPage, refreshData }
+
+</code></pre></div></div>
+<h4 id="总结一下页面的状态">总结一下页面的状态</h4>
+
+<p>使用一个抽象类进行约束</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//state
+abstract class PagePostState {
+}
+
+class PagePostUninit extends PagePostState {
+//needed show loading
+}
+
+class PagePostError extends PagePostState {
+//needed show error
+}
+
+class PagePostLoaded extends PagePostState {
+//needed set data, show normal view
+}
+</code></pre></div></div>
+
+<p>通常的上边的代码是不用动的，如果需要使用就新创建一个类，然后 继承 PagePostLoaded 即可使用，同时又能够实现 PagePostLoaded 的通用性</p>
+
+<p>本例子中我使用了类似下边的方式，真实项目中内容更多，还有 tips，refreshEnd 等：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class HomePagePostLoaded extends PagePostLoaded {
+  final List&lt;NewsData&gt; list;
+  final int page;
+}
+</code></pre></div></div>
+<h4 id="创建-bloc-类并且在这个类将-event-处理-为-state">创建 bloc 类，并且在这个类将 event 处理 为 state</h4>
+
+<p>真实情况下并不像下边列的那么简单。例如成功之后的某次网络请求失败，应当返回 Loaded 并且附加 error tips。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ThoughtListPageBloc extends Bloc&lt;ListPageEvent, PagePostState&gt; {
+  @override
+  get initialState =&gt; PagePostUninit();
+
+  @override
+  Stream&lt;PagePostState&gt; mapEventToState(event) async* {
+    try {
+      if (event == ListPageEvent.initData) {
+        yield PagePostUninit();
+      }
+
+      //refresh -&gt; request &amp;&amp; set HomePagePostLoaded
+      //nextPage -&gt; request &amp;&amp; set HomePagePostLoaded &amp;&amp; append data
+
+      var eventToState =
+        await _eventToState(event);
+      yield eventToState;
+    } catch (e) {
+      yield PagePostError();
+
+    }
+  }
+}
+
+</code></pre></div></div>
+
+<h4 id="根据-state-响应不同的页面">根据 state ，响应不同的页面</h4>
+
+<p>当然真实请求同样不如写的这么简单，通常需要在 loadedWidget(state) 中处理上下拉的显示。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class HomePageWidget {
+
+// ...
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('xxx'),
+      ),
+      body: BlocBuilder(
+        bloc: _postBloc,
+        builder: (BuildContext context, PagePostState state) {
+          if (state is PagePostUninit) {
+            return LoadingWidget();
+          }
+          if (state is PagePostError) {
+            return LoadErrorWidget(() {
+              // tap to reinit
+            });
+          }
+          if (state is ThoughtListPostLoaded) {
+            // normal widget
+            return SafeArea(child: _loadedWidget(state));
+          }
+        },
+      ),
+    );
+  }
+</code></pre></div></div>
+
+<h4 id="关于-flutter_bloc-提供的其他工具类">关于 flutter_bloc 提供的其他工具类</h4>
+
+<ul>
+  <li>这个函数用于根据状态展示相应的 Widge，本例中主要用到了这个</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocBuilder(
+  bloc: BlocA(),
+  builder: (context, state) {
+    // return widget here based on BlocA's state
+  }
+)
+
+</code></pre></div></div>
+
+<ul>
+  <li>BlocProvider ，自定义一个 bloc 和 child，以便可以向子树内的多个小部件提供单个bloc实例</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocProvider(
+  bloc: BlocA(),
+  child: ChildA(),
+);
+
+//...
+BlocProvider.of&lt;BlocA&gt;(context)
+</code></pre></div></div>
+
+<ul>
+  <li>BlocProviderTree 是一个 Flutter 小部件，可将多个 BlocProvider 小部件合并为一个小部件</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocProvider&lt;BlocA&gt;(
+   bloc: BlocA(),
+   child: BlocProvider&lt;BlocB&gt;(
+     bloc: BlocB(),
+     child: BlocProvider&lt;BlocC&gt;(
+       value: BlocC(),
+       child: ChildA(),
+     )
+   )
+ )
+
+//...
+BlocProviderTree(
+  blocProviders: [
+    BlocProvider&lt;BlocA&gt;(bloc: BlocA()),
+    BlocProvider&lt;BlocB&gt;(bloc: BlocB()),
+    BlocProvider&lt;BlocC&gt;(bloc: BlocC()),
+  ],
+  child: ChildA(),
+)
+
+</code></pre></div></div>
+
+<ul>
+  <li>BlocListener是一个Flutter小部件，它接受a Bloc和a BlocWidgetListener并调用listener响应bloc中的状态变化。用于每个状态更改需要发生一次的功能。</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocListener(
+  bloc: _bloc,
+  listener: (context, state) {
+    if (state is Success) {
+      Navigator.of(context).pushNamed('/details');
+    }
+  },
+  child: BlocBuilder(
+    bloc: _bloc,
+    builder: (context, state) {
+      if (state is Initial) {
+        return Text('Press the Button');
+      }
+      if (state is Loading) {
+        return CircularProgressIndicator();
+      }
+      if (state is Success) {
+        return Text('Success');
+      }
+      if (state is Failure) {
+        return Text('Failure');
+      }
+    },
+  }
+)
+</code></pre></div></div>
+<h3 id="dart-model">dart model</h3>
+
+<p>模型解析通常可以用使用三方插件，或者代码生成器生成，我也查看了一些三方库，或者代码转换脚本，蓦然回首发现很久之前下载的 <strong>Paste JSON as Code · quicktvoe</strong> 竟然支持 dart 语言。</p>
+
+<p>借助 Dio 和 模型类 用起来还是方便的。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    var response = await Dio.get(url: _Api, params: params);
+    final thoughtList = modelFromJson(response.toString());
+</code></pre></div></div>
+
+<h3 id="其他">其他</h3>
+
+<h4 id="文件目录如下">文件目录如下</h4>
+
+<p>item 用于共享 Widget</p>
+
+<p>page 就是一种特殊的 Widget 了</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib
+|
+|- api
+|- bloc
+|- config
+|- item
+|- model
+|- page
+|- main.dart
+</code></pre></div></div>
+
+<h4 id="config">config</h4>
+
+<p>项目的 config 包含的类很多，引用的三方库也很多：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+class AppColor {
+  static const Color c_999999 = Color(0xff999999);
+}
+
+class AppTheme {
+  static const TextStyle fuzhu3 =
+      TextStyle(color: AppColor.c_999999, fontSize: 12);
+}
+
+class AppTime {
+  static String formatTime(int time) {
+  }
+}
+
+class AppData {
+  static String _userTokenKey = 'FlutterUserToken';
+  static Size screenSize = HAHA.window.physicalSize;
+
+  static String uuid() {
+  }
+
+  static Future&lt;String&gt; udid() {
+  }
+
+  static Future&lt;String&gt; userToken() async {
+  }
+
+  static void setUserToken(String token) async {
+  }
+}
+
+class AppAlert {
+}
+
+class AppShare {
+}
+
+</code></pre></div></div>
+
+<h3 id="写在最后">写在最后</h3>
+
+<p>拿 flutter 写项目的话还是不错的选择的。就上手来说，官网资料也有很多，遇到问题基本都能解决，最好找一个好项目学习上手2-3天。</p>
+
+<p>关于扩展，对于大多数常用的扩展是都有现成可以使用的。但是也是有一些是难以解决的，packages 没有提供的就需要写三方包来扩展了，这点比较麻烦。</p>
+
+<blockquote>
+  <p>Tips</p>
+</blockquote>
+
+<p>推荐一个 alibaba 的 帮助开发者快速上手 Flutter 的项目 <a href="https://github.com/alibaba/flutter-go">alibaba/flutter-go</a></p>
+
+<p><img src="https://camo.githubusercontent.com/b59e4856a54d720712862c763ac3fade321e9dc9/68747470733a2f2f696d672e616c6963646e2e636f6d2f7466732f5442313955616851517a6f4b31526a535a466c58586169345658612d313530302d313130362e706e67" alt="img" /></p>
+:ET

@@ -1,0 +1,199 @@
+I"C/<h2 id="常用的-widgets">常用的 Widgets</h2>
+
+<h3 id="布局-widgets">布局 Widgets</h3>
+
+<p><a href="https://flutterchina.club/tutorials/layout/">tutorials/layout</a></p>
+
+<h4 id="标准-widgets">标准 widgets</h4>
+<ul>
+  <li>Container
+添加 padding, margins, borders, background color, 或将其他装饰添加到widget.</li>
+  <li>GridView
+将 widgets 排列为可滚动的网格.</li>
+  <li>ListView
+将widget排列为可滚动列表</li>
+  <li>Stack
+将widget重叠在另一个widget之上.</li>
+</ul>
+
+<h4 id="material-components">Material Components</h4>
+<ul>
+  <li>Card
+将相关内容放到带圆角和投影的盒子中。</li>
+  <li>ListTile
+将最多3行文字，以及可选的行前和和行尾的图标排成一行</li>
+</ul>
+
+<h3 id="交互-widgets">交互 Widgets</h3>
+
+<p><a href="https://flutterchina.club/tutorials/interactive/">tutorials/interactive</a></p>
+
+<p>不再展开</p>
+
+<h4 id="标准-widgets-1">标准 widgets:</h4>
+<ul>
+  <li>Form</li>
+  <li>FormField
+    <h4 id="material-components-1">Material Components:</h4>
+  </li>
+  <li>Checkbox</li>
+  <li>DropdownButton</li>
+  <li>FlatButton</li>
+  <li>FloatingActionButton</li>
+  <li>IconButton</li>
+  <li>Radio</li>
+  <li>RaisedButton</li>
+  <li>Slider</li>
+  <li>Switch</li>
+  <li>TextField</li>
+</ul>
+
+<h3 id="其他-widget">其他 widget</h3>
+<p>Decoration  装饰</p>
+
+<p>Scaffold  脚手架，提供 navightion bar</p>
+
+<p>Stateful &lt;-&gt; Stateless  有无生命周期状态</p>
+
+<p>列 Column    	ListView</p>
+
+<p>行 Row  		ListTitle</p>
+
+<p><strong>两个页面写下来就基本掌握了使用方法，没达到效果就看一下 api 即可。</strong></p>
+
+<p><strong>flutter 写起来基本就是 widget 套 widget。一切皆是 widget。</strong></p>
+
+<h3 id="statefulwidgetstatelesswidget">StatefulWidget、StatelessWidget</h3>
+
+<p>区分要点是 <strong>是否需要用户交互</strong>。</p>
+
+<p>stateful widget 是指有状态变化的组件，例如系统提供的 Checkbox, Radio, Slider, InkWell, Form, TextField 都是 stateful widgets, 他们都是 StatefulWidget的子类。</p>
+
+<p>stateless widget 是没有内部状态变化的组件，例如 Icon、 IconButton, 和Text 都是无状态widget, 他们都是 StatelessWidget的子类。</p>
+
+<h4 id="实现方式">实现方式</h4>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">XXXX</span> <span class="kd">extends</span> <span class="n">StatefulWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="n">_XXXXState</span> <span class="n">createState</span><span class="o">()</span> <span class="o">=&gt;</span> <span class="n">_XXXXState</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">_XXXXState</span> <span class="kd">extends</span> <span class="n">State</span><span class="o">&lt;</span><span class="n">XXXX</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="n">Widget</span> <span class="n">build</span><span class="o">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Container</span><span class="o">(</span>
+      
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">LLLL</span> <span class="kd">extends</span> <span class="n">StatelessWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="n">Widget</span> <span class="n">build</span><span class="o">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Container</span><span class="o">(</span>
+      
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>实现方式也略微不一样，StatefulWidget 为了遵循私有变量的保密性，特别分了一个私有类来管理私有成员变量。</p>
+
+<h2 id="week-video">week video</h2>
+
+<p><a href="https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw">Flutter</a></p>
+
+<p>flutter 官网在 YouTube 上的 3-5 分钟小视频，介绍一些特殊的用法。</p>
+
+<h3 id="safearea">SafeArea</h3>
+<p>Flutter的SafeArea工具可以避免讨厌的消息通知栏和不规则的手机屏幕干扰您的应用程序的正常显示。 它使用MediaQuery来检查屏幕的尺寸，并使用一个子工具来匹配您的应用程序，确保它能在iOS和Android上都正常显示！</p>
+
+<h3 id="expanded">Expanded</h3>
+<p>使用Expanded小工具扩展您对Flutter的了解！ Flutter的Expanded将改变发送给行和列的子项的约束，指示它们填补可用的空间。因此，将您的子项包裹在Expanded小工具中，并观察它的增长！
+<a href="http://bit.ly/2vLeScd">了解更多有关Expanded→</a></p>
+
+<h3 id="wrap">Wrap</h3>
+<p>当你用完横向和纵向的布局空间时，试试Wrap吧！Wrap可以为小图标进行纵向或横向的布局，且当空间用完时，它便会新增一行。Direction属性、alignment属性和spacing属性，可以帮助你准确的获得你所需要的布局效果。</p>
+
+<h3 id="animatedcontainer">AnimatedContainer</h3>
+<p>你可以用显式动画来自己写出活动的变化，你也可以让Flutter帮你让它们动起来！利用AnimatedContainer微件，你只需用某个特定的属性（如色彩）来实施一次建造，再用另一个值来再次实施建造。Flutter会自动地让两个值之间的变化动起来！而且你可以指定动画长度和个性化曲线。</p>
+
+<h3 id="opacity">Opacity</h3>
+<p>如果你想让一个微件在屏幕中不可见，且原来的页面布局保持不变？那就请试一试我们的Opacity微件吧！你只要设置一个透明度的数值，它就能让你的子褪色以便匹配。你也可以用它来混合不同子部件，或是用AnimatedOpacity来创建动画。</p>
+
+<h3 id="futurebuilder">FutureBuilder</h3>
+<p>有一个Future并且需要一些小部件来显示其价值？试试FutureBuilder吧！给它一个Future和一个构建方法，它将根据未来的状态创建小部件，并在它发生变化时更新它们。</p>
+
+<h3 id="fadetransition">FadeTransition</h3>
+<p>当您只是寻找简单的转场并且不需要使用 Flutter 中更强大的动画时，请尝试使用FadeTransition 小部件！ FadeTransition 可让您轻松淡入淡出小部件，并且可以直接放入Flutter 应用程序。</p>
+
+<h3 id="floatingactionbar">FloatingActionBar</h3>
+<p>如果您想在底部的导航栏中嵌入一个按钮，Flutter可以帮助您！通过在您的脚手架中组合FloatingActionBar（FAB）和BottomAppBar，您可以轻松地将按钮嵌入导航栏中的任何位置。</p>
+
+<h3 id="pageview">PageView</h3>
+<p>如果你喜欢在 Flutter 上拥有好看的屏幕，想像一下拥有可滑动的屏幕会有多棒！使用 PageView 和 PageController 能更容易创建一系列使用者可以自由垂直向与水平向滑动的屏幕。现在就试一试！</p>
+
+<h3 id="table">table</h3>
+<p>表格非常适合创建您不想滑动的小部件网格，尤其是如果您拥有不同大小的小部件。嵌套的行和列可能会有点乱，但表格小部件提供了一致性并为您调整子窗口小部件的大小。试一试吧！</p>
+
+<h3 id="sliverappbar">SliverAppBar</h3>
+<p>当您的滚动时，会发生变化或消失的花哨动画标题十分流行！使用SliverAppBar，您可以轻松地在您的应用中使用它。与CustomScrollView一起使用，您可以在应用栏中获得自定义滚动行为！</p>
+
+<h3 id="sliverlist">SliverList</h3>
+<p>如果你想要同时滚动一个列表和一个网格，或想要一个很酷和复杂的滚动效果，SliverList和SliverGrid正是您需要的！ Slivers可以轻松滚动网格或列表中的大量子项，并允许您毫不费力地或提前构建子项。</p>
+
+<h3 id="fadeinimage">FadeInImage</h3>
+<p>为避免图像在加载时弹出到屏幕上的刺眼效果，请尝试使用FadeInImage！您可以指定本地占位符图像并设置高度和宽度参数，以确定图像加载后应占用的空间大小。</p>
+
+<h3 id="streambuilder">StreamBuilder</h3>
+<p>今日的应用程序是高度不同步的，飞镖靶串流是管理非同步数据的好方法。 如何构建可以跟上串流的连续数据串流的小部件？ 试试StreamBuilder吧！ 只需给它一个串流和一个构建器，它就会在串流发出新的数据事件时重建它的子节点。</p>
+
+<h3 id="inheritedmodel">InheritedModel</h3>
+<p>访问子子子子类的特定部分</p>
+
+<h3 id="cliprrect">ClipRRect</h3>
+<p>对于那些你希望你可以在应用程序中的方块内容上有圆角的时候，有ClipRRect（额外的R实际上代表圆形）！ 用剪刀包裹你的小部件，设置半径，剩下的就完成了！ 您甚至可以自定义外观并尝试使用类似小部件的不同形状。 试试看！</p>
+
+<h3 id="hero">Hero</h3>
+<p>“Hero过渡”是一种常见的UI模式。他们让用户知道他们改变了屏幕，同时让交互的焦点保持在前沿和中心。 Flutter 的 Hero微件将自动在两个导航路线之间创建一个Hero过渡。</p>
+
+<h3 id="custompaint">CustomPaint</h3>
+<p>想要自定义的用户界面吗？Flutter可以使你快速高效的访问低级别的绘画调用。绘制一切。</p>
+
+<h3 id="tooltips">ToolTips</h3>
+<p>应用程序通常使用图标来传达意思。使用工具提示包裹您的图标和图像，以附加提高可访问性和提供更多上下文的工具提示消息。</p>
+
+<h3 id="fittedbox">FittedBox</h3>
+<p>超出边界时如何适应。</p>
+
+<h3 id="layoutbuilder">LayoutBuilder</h3>
+<p>在您最终确定它的外观之前，LayoutBuilder可以帮助您了解小部件的大小。它的构建器函数具有构建上下文和传入框约束的参数。</p>
+
+<h3 id="absorbpointer">AbsorbPointer</h3>
+<p>AbsorbPointer为您的小部件提供了一种禁止输入的好方法。如果您有一个复杂的小部件子树，并且需要一种方法将它们全部从触摸事件中移除，请尝试使用AbsorbPointer。</p>
+
+<h3 id="transform">Transform</h3>
+<p>使用“Transform”小部件将Flutter应用程序转换为令人惊叹的东西。各种动画转场。
+<a href="https://bit.ly/2TYvc31">“Flutter的观点”文章→</a>
+[被旋转的菜单图标”由Raouf Rahiche提供→](https://bit.ly/2RE8fFC）
+[“折叠动画的过渡”，“有弹性的滚动”，“酷的卡菜单”由FaoB提供→](https://bit.ly/2Rzq1tE）
+[“3D透视动画”由Hung HD提供→ ](https://bit.ly/2sx6fjy）</p>
+
+<h3 id="backdropfilter">BackdropFilter</h3>
+<p>使用ImageFilter类和BackdropFilter微件将效果应用于Flutter应用程序支持的图像！
+<a href="https://bit.ly/2CQYGsR">BackdropFilter类文档→</a>
+<a href="https://bit.ly/2CMAbwO">ImageFilter类文档→</a></p>
+
+<h3 id="align">Align</h3>
+<p>Align 小部件能让你将小部件置放在其父小部件中的明确位置。你也可以用 Align 来将小部件叠起来。Align 是个小部件自定义组合的好工具！
+<a href="https://bit.ly/2UF1wZl">Align 课程记录 → </a></p>
+
+<h3 id="animatedbuilder">AnimatedBuilder</h3>
+<p>Flutter具有出色的动画支持 - 使用AnimatedBuilder小部件创建动画。您还可以使用StatefulWidget管理AnimatedController。
+<a href="https://bit.ly/2V9XVCB">AnimatedBuilder文档→</a>
+<a href="https://bit.ly/2XeATfO">动画和动态小部件→</a></p>
+
+<h3 id="dismissible">Dismissible</h3>
+<p>Dismissible小部件可通过向左或向右滑动来清除列表项。对于多方向滑动，它支持两种背景，如果您的UI需要用户垂直滑动，则有一个方向属性！
+<a href="https://bit.ly/2Cnhmki">从Dismissable课堂文档了解更多信息 → </a></p>
+:ET

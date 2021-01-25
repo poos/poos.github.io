@@ -1,0 +1,425 @@
+I"/�<blockquote>
+  <p>在了解到 leetcode 这个网站之后，也是去刷了几个算法题。网站功能强大，可以在线编写测试提交，更强大的是有最佳算法的排行，还有很多答案和解释，每一个问题都能找到很好的解题思路和更加优秀的答案。</p>
+</blockquote>
+
+<p>之前也在一些中文算法网站上做了一些算法题。最近起源于了解了一个 github 库，将算法以动画的方式呈现， <strong><a href="https://github.com/MisterBooo/LeetCodeAnimation">MisterBooo/LeetCodeAnimation</a></strong> ，我也是在这里了解到了 leetcode。网站上做了一些题，发现真的是非常活跃，建议有兴趣的一定去看看。</p>
+
+<p>网址在这里 ： <a href="https://leetcode.com/problems/two-sum/">https://leetcode.com</a></p>
+
+<p>不多说，从题目解题过程中来学习算法的知识吧。</p>
+
+<h3 id="two-sum">Two Sum</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Given</span> <span class="n">an</span> <span class="n">array</span> <span class="n">of</span> <span class="n">integers</span><span class="p">,</span> <span class="k">return</span> <span class="n">indices</span> <span class="n">of</span> <span class="n">the</span> <span class="n">two</span> <span class="n">numbers</span> <span class="n">such</span> <span class="n">that</span> <span class="n">they</span> <span class="n">add</span> <span class="n">up</span> <span class="n">to</span> <span class="n">a</span> <span class="n">specific</span> <span class="n">target</span><span class="o">.</span>
+
+<span class="kt">You</span> <span class="n">may</span> <span class="n">assume</span> <span class="n">that</span> <span class="n">each</span> <span class="n">input</span> <span class="n">would</span> <span class="n">have</span> <span class="n">exactly</span> <span class="n">one</span> <span class="n">solution</span><span class="p">,</span> <span class="n">and</span> <span class="n">you</span> <span class="n">may</span> <span class="n">not</span> <span class="n">use</span> <span class="n">the</span> <span class="n">same</span> <span class="n">element</span> <span class="n">twice</span><span class="o">.</span>
+
+<span class="kt">Example</span><span class="p">:</span>
+
+<span class="kt">Given</span> <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">target</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+
+<span class="kt">Because</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+<span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span>
+</code></pre></div></div>
+
+<p>这道题被标记为 easy</p>
+
+<p>解法1 ： 使用双层 for 循环来检测， 比较简单，不进行代码描写了</p>
+
+<p>复杂度为 O(n^2) ，处于 平方级别的复杂度。</p>
+
+<h4 id="最优解">最优解</h4>
+
+<p>解法二：</p>
+
+<p>利用一个 hash 表来存储另一半，在遍历的过程中找到另一半即结束。代码如下：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">twoSum</span><span class="p">(</span><span class="n">_</span> <span class="nv">nums</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">],</span> <span class="n">_</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">hash</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span> <span class="p">:</span> <span class="kt">Int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:]</span>
+    <span class="k">var</span> <span class="nv">resArray</span> <span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">in</span> <span class="n">nums</span><span class="o">.</span><span class="nf">enumerated</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">index</span> <span class="o">=</span> <span class="n">hash</span><span class="p">[</span><span class="n">target</span> <span class="o">-</span> <span class="n">j</span><span class="p">]{</span>
+            <span class="n">resArray</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">resArray</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">resArray</span>
+        <span class="p">}</span>
+        <span class="n">hash</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">resArray</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>事件复杂度可降为 O（n），瞬间释放压力。</p>
+
+<h4 id="时间和空间复杂度">时间和空间复杂度</h4>
+
+<p>复杂度通常取随着计数递增最为迅速的一个，常见的复杂度大小如下：</p>
+
+<p>常数阶Ο(1)＜对数阶Ο(logn)＜线性阶Ο(n)＜线性对数阶Ο(nlogn)＜平方Ο(n^2)＜立方阶Ο(n^3)＜…＜指数阶Ο(2^n)＜阶乘阶Ο(n!)。</p>
+
+<p>如果已经复杂度有些恍惚可以看一下下边的资料</p>
+
+<p>ps： <a href="http://www.cnblogs.com/songQQ/archive/2009/10/20/1587122.html">算法的时间复杂度和空间复杂度</a></p>
+
+<p><a href="https://blog.csdn.net/javatiger427/article/details/6070785">算法时间复杂度的计算</a></p>
+
+<h3 id="add-two-numbers">Add Two Numbers</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">You</span> <span class="n">are</span> <span class="n">given</span> <span class="n">two</span> <span class="n">non</span><span class="o">-</span><span class="n">empty</span> <span class="n">linked</span> <span class="n">lists</span> <span class="n">representing</span> <span class="n">two</span> <span class="n">non</span><span class="o">-</span><span class="n">negative</span> <span class="n">integers</span><span class="o">.</span> <span class="kt">The</span> <span class="n">digits</span> <span class="n">are</span> <span class="n">stored</span> <span class="k">in</span> <span class="n">reverse</span> <span class="n">order</span> <span class="n">and</span> <span class="n">each</span> <span class="n">of</span> <span class="n">their</span> <span class="n">nodes</span> <span class="n">contain</span> <span class="n">a</span> <span class="n">single</span> <span class="n">digit</span><span class="o">.</span> <span class="kt">Add</span> <span class="n">the</span> <span class="n">two</span> <span class="n">numbers</span> <span class="n">and</span> <span class="k">return</span> <span class="n">it</span> <span class="k">as</span> <span class="n">a</span> <span class="n">linked</span> <span class="n">list</span><span class="o">.</span>
+
+<span class="kt">You</span> <span class="n">may</span> <span class="n">assume</span> <span class="n">the</span> <span class="n">two</span> <span class="n">numbers</span> <span class="k">do</span> <span class="n">not</span> <span class="n">contain</span> <span class="n">any</span> <span class="n">leading</span> <span class="n">zero</span><span class="p">,</span> <span class="n">except</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">0</span> <span class="n">itself</span><span class="o">.</span>
+
+<span class="kt">Example</span><span class="p">:</span>
+
+<span class="kt">Input</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">5</span> <span class="o">-&gt;</span> <span class="mi">6</span> <span class="o">-&gt;</span> <span class="mi">4</span><span class="p">)</span>
+<span class="kt">Output</span><span class="p">:</span> <span class="mi">7</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">8</span>
+<span class="kt">Explanation</span><span class="p">:</span> <span class="mi">342</span> <span class="o">+</span> <span class="mi">465</span> <span class="o">=</span> <span class="mi">807</span><span class="o">.</span>
+</code></pre></div></div>
+
+<p>这段代码的难度为 中 ，主要是理解链表含有即可。代码中对应的链表节点模型如下：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ListNode</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">val</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">next</span><span class="p">:</span> <span class="kt">ListNode</span><span class="p">?</span>
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">val</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="最优解-1">最优解</h4>
+
+<p>为了解决相加超过 10，进一位的问题，可以提前创建 next 并确定值为 1，下次相加即可。（同样乘法也可以是这个思路了）。
+最终的解题代码如下：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addTwoNumbers</span><span class="p">(</span><span class="n">_</span> <span class="nv">l1</span><span class="p">:</span> <span class="kt">ListNode</span><span class="p">?,</span> <span class="n">_</span> <span class="nv">l2</span><span class="p">:</span> <span class="kt">ListNode</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">ListNode</span><span class="p">?</span> <span class="p">{</span>
+    <span class="k">guard</span> <span class="k">let</span> <span class="nv">n1</span> <span class="o">=</span> <span class="n">l1</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">l2</span>
+    <span class="p">}</span>
+    <span class="k">guard</span> <span class="k">let</span> <span class="nv">n2</span> <span class="o">=</span> <span class="n">l2</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+    <span class="k">var</span> <span class="nv">l1</span> <span class="o">=</span> <span class="n">n1</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">n2</span>
+    <span class="k">var</span> <span class="nv">sum</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">first</span> <span class="o">=</span> <span class="n">sum</span>
+    <span class="k">while</span> <span class="kc">true</span> <span class="p">{</span>
+        <span class="n">sum</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">sum</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">l1</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">l2</span><span class="o">.</span><span class="n">val</span>
+        <span class="k">if</span> <span class="n">sum</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">{</span>
+            <span class="n">sum</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">sum</span><span class="o">.</span><span class="n">val</span> <span class="o">-</span> <span class="mi">10</span>
+            <span class="n">sum</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">l1</span><span class="o">.</span><span class="n">next</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="n">l2</span><span class="o">.</span><span class="n">next</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span> <span class="k">break</span> <span class="p">}</span>
+            <span class="n">sum</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">l1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">next</span> <span class="p">??</span> <span class="kt">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="n">next</span> <span class="p">??</span> <span class="kt">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span><span class="o">.</span><span class="n">next</span> <span class="p">??</span> <span class="kt">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">first</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>测试时候可以用类似如下的代码进行测试</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">let</span> <span class="nv">two</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">four</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">three</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">two</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">four</span>
+<span class="n">four</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">three</span>
+
+<span class="k">let</span> <span class="nv">five</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">six</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">four2</span> <span class="o">=</span> <span class="kt">ListNode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">five</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">six</span>
+<span class="n">six</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">four2</span>
+
+<span class="k">let</span> <span class="nv">result2</span> <span class="o">=</span> <span class="kt">Solution</span><span class="p">()</span><span class="o">.</span><span class="nf">addTwoNumbers</span><span class="p">(</span><span class="n">two</span><span class="p">,</span> <span class="n">six</span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">result2</span><span class="p">?</span><span class="o">.</span><span class="n">val</span><span class="se">)</span><span class="s">-&gt;</span><span class="se">\(</span><span class="n">result2</span><span class="p">?</span><span class="o">.</span><span class="n">next</span><span class="p">?</span><span class="o">.</span><span class="n">val</span><span class="se">)</span><span class="s">-&gt;</span><span class="se">\(</span><span class="n">result2</span><span class="p">?</span><span class="o">.</span><span class="n">next</span><span class="p">?</span><span class="o">.</span><span class="n">next</span><span class="p">?</span><span class="o">.</span><span class="n">val</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="最长不重复子字符串">最长不重复子字符串</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">3</span><span class="o">.</span> <span class="kt">Longest</span> <span class="kt">Substring</span> <span class="kt">Without</span> <span class="kt">Repeating</span> <span class="kt">Characters</span>
+
+<span class="kt">Share</span>
+<span class="kt">Given</span> <span class="n">a</span> <span class="n">string</span><span class="p">,</span> <span class="n">find</span> <span class="n">the</span> <span class="n">length</span> <span class="n">of</span> <span class="n">the</span> <span class="n">longest</span> <span class="n">substring</span> <span class="n">without</span> <span class="n">repeating</span> <span class="n">characters</span><span class="o">.</span>
+
+<span class="kt">Example</span> <span class="mi">1</span><span class="p">:</span>
+
+<span class="kt">Input</span><span class="p">:</span> <span class="s">"abcabcbb"</span>
+<span class="kt">Output</span><span class="p">:</span> <span class="mi">3</span>
+<span class="kt">Explanation</span><span class="p">:</span> <span class="kt">The</span> <span class="n">answer</span> <span class="k">is</span> <span class="s">"abc"</span><span class="p">,</span> <span class="n">with</span> <span class="n">the</span> <span class="n">length</span> <span class="n">of</span> <span class="mi">3</span><span class="o">.</span>
+<span class="kt">Example</span> <span class="mi">2</span><span class="p">:</span>
+
+<span class="kt">Input</span><span class="p">:</span> <span class="s">"bbbbb"</span>
+<span class="kt">Output</span><span class="p">:</span> <span class="mi">1</span>
+<span class="kt">Explanation</span><span class="p">:</span> <span class="kt">The</span> <span class="n">answer</span> <span class="k">is</span> <span class="s">"b"</span><span class="p">,</span> <span class="n">with</span> <span class="n">the</span> <span class="n">length</span> <span class="n">of</span> <span class="mi">1</span><span class="o">.</span>
+<span class="kt">Example</span> <span class="mi">3</span><span class="p">:</span>
+
+<span class="kt">Input</span><span class="p">:</span> <span class="s">"pwwkew"</span>
+<span class="kt">Output</span><span class="p">:</span> <span class="mi">3</span>
+<span class="kt">Explanation</span><span class="p">:</span> <span class="kt">The</span> <span class="n">answer</span> <span class="k">is</span> <span class="s">"wke"</span><span class="p">,</span> <span class="n">with</span> <span class="n">the</span> <span class="n">length</span> <span class="n">of</span> <span class="mi">3</span><span class="o">.</span>
+             <span class="kt">Note</span> <span class="n">that</span> <span class="n">the</span> <span class="n">answer</span> <span class="n">must</span> <span class="n">be</span> <span class="n">a</span> <span class="n">substring</span><span class="p">,</span> <span class="s">"pwke"</span> <span class="k">is</span> <span class="n">a</span> <span class="n">subsequence</span> <span class="n">and</span> <span class="n">not</span> <span class="n">a</span> <span class="n">substring</span><span class="o">.</span>
+
+</code></pre></div></div>
+
+<p>难度被标记为 Medium</p>
+
+<h4 id="解题">解题</h4>
+
+<p>思路：遍历一遍，并且记录子字符串，如果有包含则去除包含的 prefix 部分；不包含追加一个字符。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">lengthOfLongestSubstring</span><span class="p">(</span><span class="n">_</span> <span class="nv">s</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">var</span> <span class="nv">subString</span> <span class="o">=</span> <span class="kt">String</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">in</span>
+            <span class="k">if</span> <span class="n">subString</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">num</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">subString</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="k">let</span> <span class="nv">index</span> <span class="o">=</span> <span class="n">subString</span><span class="o">.</span><span class="nf">firstIndex</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="n">element</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">subString</span> <span class="o">=</span> <span class="kt">String</span><span class="p">(</span><span class="n">subString</span><span class="o">.</span><span class="nf">suffix</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">index</span><span class="p">))</span>
+                    <span class="n">subString</span><span class="o">.</span><span class="nf">removeFirst</span><span class="p">()</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="n">subString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+            <span class="c1">//            print(subString)</span>
+        <span class="p">}</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">subString</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">num</span>
+    <span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="两个列表的中位数">两个列表的中位数</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Median</span> <span class="n">of</span> <span class="kt">Two</span> <span class="kt">Sorted</span> <span class="kt">Arrays</span>
+
+<span class="kt">There</span> <span class="n">are</span> <span class="n">two</span> <span class="n">sorted</span> <span class="n">arrays</span> <span class="n">nums1</span> <span class="n">and</span> <span class="n">nums2</span> <span class="n">of</span> <span class="n">size</span> <span class="n">m</span> <span class="n">and</span> <span class="n">n</span> <span class="n">respectively</span><span class="o">.</span>
+
+<span class="kt">Find</span> <span class="n">the</span> <span class="n">median</span> <span class="n">of</span> <span class="n">the</span> <span class="n">two</span> <span class="n">sorted</span> <span class="n">arrays</span><span class="o">.</span> <span class="kt">The</span> <span class="n">overall</span> <span class="n">run</span> <span class="n">time</span> <span class="n">complexity</span> <span class="n">should</span> <span class="n">be</span> <span class="kt">O</span><span class="p">(</span><span class="nf">log</span> <span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="n">n</span><span class="p">))</span><span class="o">.</span>
+
+<span class="kt">You</span> <span class="n">may</span> <span class="n">assume</span> <span class="n">nums1</span> <span class="n">and</span> <span class="n">nums2</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">both</span> <span class="n">empty</span><span class="o">.</span>
+
+<span class="kt">Example</span> <span class="mi">1</span><span class="p">:</span>
+
+<span class="n">nums1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">nums2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="kt">The</span> <span class="n">median</span> <span class="k">is</span> <span class="mf">2.0</span>
+<span class="kt">Example</span> <span class="mi">2</span><span class="p">:</span>
+
+<span class="n">nums1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">nums2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+
+<span class="kt">The</span> <span class="n">median</span> <span class="nf">is</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">=</span> <span class="mf">2.5</span>
+
+</code></pre></div></div>
+
+<h4 id="解法">解法</h4>
+
+<p>这道题目如果用单纯的思路去做，重新排序, 取中位数，将会有很高的代价。</p>
+
+<p>在讨论区 有一个超过 1.3k 点赞， 1.5k 收藏的解决方案： [
+Share my O(log(min(m,n)) solution with explanation](https://leetcode.com/problems/median-of-two-sorted-arrays/discuss/2481/Share-my-O(log(min(mn))-solution-with-explanation)</p>
+
+<p>甚至 还有对应的 youtube 视频 https://www.youtube.com/watch?v=LPFhl65R7ww</p>
+
+<p>这个算法大概如下：</p>
+
+<ol>
+  <li>
+    <p>将两个数组安装一定的规则拆分，并且将小端小端相组合，大端大端相组合 （初始值由一个公式计算出）</p>
+  </li>
+  <li>
+    <p>交叉判断（x）如果左侧小于右侧，即可使用两端的较小值和较大值取中位数得出结果。（如不符合将初始值加一，重新拆分）</p>
+  </li>
+</ol>
+
+<p>这个算法的效率极高，复杂度为O（log min（m,n）），是处于 O（log n）级别的算法。<strong>优于线性复杂度的。</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">func</span> <span class="nf">findMedianSortedArrays</span><span class="p">(</span><span class="n">_</span> <span class="nv">nums1</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">],</span> <span class="n">_</span> <span class="nv">nums2</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Double</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">nums1</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="n">nums2</span><span class="o">.</span><span class="n">count</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nf">findMedianSortedArrays</span><span class="p">(</span><span class="n">nums2</span><span class="p">,</span> <span class="n">nums1</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">x</span> <span class="o">=</span> <span class="n">nums1</span><span class="o">.</span><span class="n">count</span>
+        <span class="k">let</span> <span class="nv">y</span> <span class="o">=</span> <span class="n">nums2</span><span class="o">.</span><span class="n">count</span>
+
+        <span class="k">var</span> <span class="nv">low</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">var</span> <span class="nv">high</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="k">while</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">high</span> <span class="p">{</span>
+            <span class="c1">//计算拆分点</span>
+            <span class="k">let</span> <span class="nv">partx</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">let</span> <span class="nv">party</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">partx</span>
+
+            <span class="k">let</span> <span class="nv">maxLeftX</span> <span class="o">=</span> <span class="n">partx</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="kt">Int</span><span class="o">.</span><span class="nv">min</span> <span class="p">:</span> <span class="n">nums1</span><span class="p">[</span><span class="n">partx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">let</span> <span class="nv">minRightX</span> <span class="o">=</span> <span class="n">partx</span> <span class="o">==</span> <span class="n">x</span> <span class="p">?</span> <span class="kt">Int</span><span class="o">.</span><span class="nv">max</span> <span class="p">:</span> <span class="n">nums1</span><span class="p">[</span><span class="n">partx</span><span class="p">]</span>
+
+            <span class="k">let</span> <span class="nv">maxLeftY</span> <span class="o">=</span> <span class="n">party</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="kt">Int</span><span class="o">.</span><span class="nv">min</span> <span class="p">:</span> <span class="n">nums2</span><span class="p">[</span><span class="n">party</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">let</span> <span class="nv">minRightY</span> <span class="o">=</span> <span class="n">party</span> <span class="o">==</span> <span class="n">y</span> <span class="p">?</span> <span class="kt">Int</span><span class="o">.</span><span class="nv">max</span> <span class="p">:</span> <span class="n">nums2</span><span class="p">[</span><span class="n">party</span><span class="p">]</span>
+
+            <span class="c1">//符合结果即可计算得出结果</span>
+            <span class="k">if</span> <span class="n">maxLeftX</span> <span class="o">&lt;=</span> <span class="n">minRightY</span> <span class="o">&amp;&amp;</span> <span class="n">maxLeftY</span> <span class="o">&lt;=</span> <span class="n">minRightX</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="kt">Double</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">maxLeftX</span><span class="p">,</span> <span class="n">maxLeftY</span><span class="p">)</span> <span class="o">+</span> <span class="nf">min</span><span class="p">(</span><span class="n">minRightX</span><span class="p">,</span> <span class="n">minRightY</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="kt">Double</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">maxLeftX</span><span class="p">,</span> <span class="n">maxLeftY</span><span class="p">))</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">maxLeftX</span> <span class="o">&gt;</span> <span class="n">minRightY</span> <span class="p">{</span>
+                <span class="n">high</span> <span class="o">=</span> <span class="n">partx</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">low</span> <span class="o">=</span> <span class="n">partx</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="nf">fatalError</span><span class="p">(</span><span class="s">"not sorted"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="最长回文字符串">最长回文字符串</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Longest Palindromic Substring
+
+Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+
+Example 1:
+
+Input: "babad"
+Output: "bab"
+Note: "aba" is also a valid answer.
+Example 2:
+
+Input: "cbbd"
+Output: "bb"
+</code></pre></div></div>
+
+<h4 id="解题-1">解题</h4>
+
+<p>这道算法题也是有很多的解决方式和答案。</p>
+
+<p>一篇比较全的总结帖子如下：</p>
+
+<p><a href="https://articles.leetcode.com/longest-palindromic-substring-part-i/">Longest Palindromic Substring Part I</a></p>
+
+<p>第一部分介绍了事件复杂度O（n^2），空间复杂度分别为O（n^2）和 O（1）的两个解决方案。</p>
+
+<p><a href="https://articles.leetcode.com/longest-palindromic-substring-part-ii/">Longest Palindromic Substring Part II</a></p>
+
+<p>第二篇文章介绍了一个时间复杂度为 O（2n）的解决方案，非常巧妙</p>
+
+<p><strong>算法介绍</strong></p>
+
+<ol>
+  <li>
+    <p>在每个字符前后插入一个特殊字符（例如#）来解决单双组合的问题；</p>
+  </li>
+  <li>
+    <p>计算每个字符串的每一个字符的回文，从中心开始计算</p>
+  </li>
+  <li>
+    <p>对计算进行优化，利用回文左右相同特性进行下一个值的计算；最大值大于未计算的部分停止计算</p>
+  </li>
+</ol>
+
+<p>代码如下:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">longestPalindrome</span><span class="p">(</span><span class="n">_</span> <span class="nv">s</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">{</span>
+    <span class="k">guard</span> <span class="n">s</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span><span class="p">{</span>
+        <span class="k">return</span> <span class="s">""</span>
+    <span class="p">}</span>
+    <span class="k">guard</span> <span class="n">s</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span><span class="p">{</span>
+        <span class="k">return</span> <span class="n">s</span>
+    <span class="p">}</span>
+    <span class="k">var</span> <span class="nv">str_arr</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">"#"</span><span class="p">]</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="k">in</span>
+        <span class="n">str_arr</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+        <span class="n">str_arr</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"#"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">result_arr</span> <span class="o">=</span> <span class="p">[</span><span class="kt">Int</span><span class="p">](</span><span class="nv">repeating</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="n">str_arr</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+    <span class="k">var</span> <span class="nv">center</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">maxLen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">result_center</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span> <span class="o">..&lt;</span> <span class="n">str_arr</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">{</span>
+        <span class="c1">// calc mirror i = center-(i-center)</span>
+        <span class="k">let</span> <span class="nv">iMirror</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">center</span> <span class="o">-</span> <span class="n">i</span>
+        <span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundary</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="p">?</span> <span class="nf">min</span><span class="p">(</span><span class="n">boundary</span><span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="n">result_arr</span><span class="p">[</span><span class="n">iMirror</span><span class="p">])</span> <span class="p">:</span> <span class="mi">0</span>
+        <span class="c1">// Attempt to expand palindrome centered at i</span>
+        <span class="k">while</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">str_arr</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">str_arr</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">==</span> <span class="n">str_arr</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]]{</span>
+            <span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="p">}</span>
+        <span class="c1">// update center and boundary</span>
+        <span class="c1">// 用来记录的</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">boundary</span><span class="p">{</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">boundary</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="c1">// update result</span>
+        <span class="k">if</span> <span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxLen</span><span class="p">{</span>
+            <span class="n">maxLen</span> <span class="o">=</span> <span class="n">result_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">result_center</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="c1">//          let rawStr = String(str_arr[(result_center-maxLen)...(result_center+maxLen)])</span>
+<span class="c1">//          print("rawStr: \(rawStr)")</span>
+    <span class="c1">//  中心 + 边界， 算出左边， 算出右边</span>
+    <span class="c1">//  这里还有一个转换的运算</span>
+    <span class="k">let</span> <span class="nv">ans</span> <span class="o">=</span> <span class="kt">String</span><span class="p">(</span><span class="n">s</span><span class="p">[</span>
+        <span class="n">s</span><span class="o">.</span><span class="nf">index</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">startIndex</span><span class="p">,</span> <span class="nv">offsetBy</span><span class="p">:</span> <span class="p">(</span><span class="n">result_center</span><span class="o">-</span><span class="n">maxLen</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">..&lt;</span>
+            <span class="n">s</span><span class="o">.</span><span class="nf">index</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">startIndex</span><span class="p">,</span> <span class="nv">offsetBy</span><span class="p">:</span> <span class="p">(</span><span class="n">result_center</span><span class="o">+</span><span class="n">maxLen</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+
+    <span class="c1">// print("ans: \(ans)\n")</span>
+    <span class="k">return</span> <span class="n">ans</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="后缀树">后缀树</h4>
+
+<p>在解决这个问题的时候有 大佬提出了使用构建后缀树的解决方式，虽然构建的过程是个复杂的过程，但是一旦构建完成，往往能方便的处理字符串。</p>
+
+<blockquote>
+
+  <p>后缀树提出的目的是用来支持有效的字符串匹配和查询，例如上面的问题。后缀树（Suffix tree）是一种数据结构，能快速解决很多关于字符串的问题。后缀树的概念最早由Weiner 于1973年提出，既而由McCreight 在1976年和Ukkonen在1992年和1995年加以改进完善。 总结一句：一个给定的文本text的后缀树就是一个压缩的后缀字典树。</p>
+</blockquote>
+
+<p>单词查找树对某些情况非常实用。除了非常好地存储英文，它同样可以作为‘哈希表’的替代， 它有以下几个优势：</p>
+
+<ul>
+  <li>查找值时通常有一个更好的最坏的时间复杂度</li>
+  <li>不像哈希表，单词查找树不用担心键冲突问题</li>
+  <li>不需要哈希算法保证每个元素有一个独一无二的路径</li>
+  <li>单词树可以按照字母顺序排序</li>
+</ul>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/536129-d0a181ae2f8407ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/650/format/webp" alt="img" /></p>
+
+<p>构建过程和使用过程博客有太多的资料，就简单列举几个。</p>
+
+<p><a href="https://blog.csdn.net/g9yuayon/article/details/2574781">关于Suffix Tree</a></p>
+
+<p><a href="https://blog.csdn.net/SunnyYoona/article/details/43971087">算法系列之二十四 - 后缀树（Suffix Tree）</a></p>
+
+<p><a href="https://www.jianshu.com/p/3be5cbb4cf9b">Swift 算法俱乐部: Trie</a></p>
+
+<h3 id="总结">总结</h3>
+
+<blockquote>
+  <p>在自己的世界中很容易满足，看过外边的风景才会发现自己的狭隘。</p>
+</blockquote>
+
+<p>不断比较学习才能提高自己，尤其是在探寻的过程中找到的乐趣才是最有意思的。先暂时写这些算法了，等到有空时候自己再去探究更新下一个博客。</p>
+
+<p><strong><a href="https://github.com/poos/BlogDemo/LeetCode">本文所有 工具 和 代码 地址</a></strong></p>
+:ET

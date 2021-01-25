@@ -1,0 +1,453 @@
+I"�h<p>整理了一些资料用来分享给小伙伴们。分享内容大概4部分。</p>
+
+<ul>
+  <li>
+    <p>跨平台方案的简介</p>
+  </li>
+  <li>
+    <p>Flutter 和 Dart 的 简介</p>
+  </li>
+  <li>
+    <p>安装 和 Flutter Demo 简介</p>
+  </li>
+  <li>
+    <p>Stream 介绍</p>
+  </li>
+</ul>
+
+<h2 id="跨平台开发方案">跨平台开发方案</h2>
+
+<h4 id="为什么要跨平台开发">为什么要跨平台开发</h4>
+
+<p>因为原生开发有一些优劣：</p>
+
+<p><strong>优点：</strong></p>
+
+<p>1.可获取平台全部开放功能，比如摄像头，蓝牙等;</p>
+
+<p>2.用户访问应用的感受通常是速度快、性能高、体验好;</p>
+
+<p><strong>缺点：</strong></p>
+
+<p>1.为特定平台开发，综合成本高，不同平台维护需要人力成本;</p>
+
+<p>2.动态化能力弱，大多数情况下，新功能更新只能发版;</p>
+
+<p>如果使用跨平台开发就可以避免一些问题，同时往往能节省人力，节省开发时间。</p>
+
+<h4 id="有哪些跨平台开发方案">有哪些跨平台开发方案</h4>
+
+<p>可归为以下3个阶段</p>
+
+<ul>
+  <li>1.青铜时代。采用 WebView 容器(广义) + JavaScript Bridge ;</li>
+  <li>2.白银时代。用JavaScript开发，绘制交由 Native 接管（JavaScript VM + Native UI）;</li>
+  <li>3.黄金时代。某开发语言 + engine（每个平台单独的绘图引擎）。</li>
+</ul>
+
+<p>第一个阶段，Web与Native分离, 使用 JavaScript Bridge 协议桥接 WebView（具体来说就是在网页加载完成后插入 js 代码，实现网页与原生的通信）。这个阶段的跨平台只是伪命题，实际上就是 WebView。</p>
+
+<p>第二个阶段，使用虚拟机平台将 js 代码转换为原生控件。具体来说一版使用各个开发语言，（RN-javaScript，Weex-Vue）各种语言，打包成 JS 代码，根据提供的（framework，core，Bridge），最终映射成为操作系统原生库展现 app。</p>
+
+<p>第三个阶段，搞一个系统，对接操作系统 sdk 底层。具体来说是一个自绘引擎，使用开发语言（例如 dart）通过自绘引擎（针对不同的操作系统，开发专用的自绘引擎），直接在操作系统绘制图形界面。这样来实现顶层统一，产物不同。因为不使用系统 sdk 提供的组件，所以比较自由，官宣可以做到一个像素点可控。同时因为直接绘制界面，流畅性非常高。</p>
+
+<p>不过也有缺点：涉及到平台层时还是需要原生开发介入实现相应插件。</p>
+
+<h4 id="对比第二和第三方案">对比第二和第三方案</h4>
+
+<p><img src="https://poos.github.io/img/flutter01.png" alt="img" /></p>
+
+<p>虽然这是比较早的时候的对比，但是可以看出，第三方案跟第二方案对比还是很有优势的。</p>
+
+<h2 id="flutter-和-dart-方案介绍">Flutter 和 Dart 方案介绍</h2>
+
+<p>进入主题。</p>
+
+<h3 id="flutter">Flutter</h3>
+
+<h4 id="有多少产品在使用它">有多少产品在使用它</h4>
+
+<p>alibaba 闲鱼，  百老汇音乐剧，  tencent NOW Live直播项目，  Abbey Road的Topline（帮助艺术家录制歌曲），  JD 金融项目，  Google ad 等</p>
+
+<p>在官方宣传网址 <a href="https://itsallwidgets.com/">itsallwidgets.com</a> 上还有非常多的产品用到了Flutter。</p>
+
+<p>网站上还有很多开源的项目，例如 Sandwhich三明治 。</p>
+
+<p>在 github 上的项目个数大概如下：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>preject</th>
+      <th>个数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>flutter</td>
+      <td>3w</td>
+    </tr>
+    <tr>
+      <td>RN</td>
+      <td>10w</td>
+    </tr>
+    <tr>
+      <td>OC</td>
+      <td>12w</td>
+    </tr>
+    <tr>
+      <td>swfit</td>
+      <td>14w</td>
+    </tr>
+    <tr>
+      <td>iOS</td>
+      <td>27w</td>
+    </tr>
+    <tr>
+      <td>android</td>
+      <td>85w</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="社区如何">社区如何</h4>
+
+<p>这么多开发者使用，也反映了google 老大哥的带动力之大。有非常多的社区，来发展这个比较年轻的语言。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>flutter</th>
+      <th>社区</th>
+      <th> </th>
+      <th>flutter</th>
+      <th>社区</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>flutterchina.club</td>
+      <td>中文网站</td>
+      <td> </td>
+      <td>stackoverflow</td>
+      <td>Q A</td>
+    </tr>
+    <tr>
+      <td>GITT ER</td>
+      <td>github的即时聊天</td>
+      <td> </td>
+      <td>Google Groups</td>
+      <td>Google网上论坛</td>
+    </tr>
+    <tr>
+      <td>Medium</td>
+      <td>博客平台</td>
+      <td> </td>
+      <td>slack</td>
+      <td>协作聊天</td>
+    </tr>
+    <tr>
+      <td>YouTube</td>
+      <td>视频</td>
+      <td> </td>
+      <td>Discord</td>
+      <td>实时通话软件</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="历史">历史</h4>
+
+<p>当前规模的现状，Flutter 用了很长时间吗？</p>
+
+<ul>
+  <li>
+    <p>Flutter的第一个版本被称为“Sky”，运行在Android操作系统上。它是在2015年Dart开发者峰会上亮相的，其目的是能够以每秒120帧的速度持续渲染。</p>
+  </li>
+  <li>
+    <p><strong>Beta1版本于2018年2月27日在2018 世界移动大会公布。</strong></p>
+  </li>
+  <li>
+    <p><strong>1.0版本于2018年12月5日(北京时间)发布。</strong></p>
+  </li>
+  <li>
+    <p><strong>2019年2月发布1.2版本。目前最新为1.5版本。</strong></p>
+  </li>
+</ul>
+
+<p>Beta1版本是从2018年才开始发展，到现在，基本才只有一个多年头。如果从1.0版开始算起，正式版的话才半年，真的非常年轻。</p>
+
+<h4 id="发展---roadmap-2019">发展 - Roadmap 2019</h4>
+
+<p><strong>在 github 上，flutter 更新频率非常高，最新版已经到1.5+。对于2019年的 flutter 计划，官网上也做出了规划。</strong></p>
+
+<ul>
+  <li>
+    <p>Fundamentals 基本（bug，性能，测试，api文档）</p>
+  </li>
+  <li>
+    <p>Ease of Adoption （模板，文档，组件）</p>
+  </li>
+  <li>
+    <p>Ecosystem（C/C++，生态插件，通知，数据存储）</p>
+  </li>
+  <li>
+    <p><strong>Support for platforms beyond mobile（键鼠，Web，macOS，Windows）</strong></p>
+  </li>
+  <li>
+    <p>Tooling（开发工具的改进）</p>
+  </li>
+  <li>
+    <p><strong>Change（在2019年删除了对动态更新的支持）</strong></p>
+  </li>
+</ul>
+
+<p>最新的master 分支已经加入了macOS 的代码。</p>
+
+<p>有三个原因使得 flutter 对热更新暂时不准备付出太多的精力：因为系统平台（iOS、Android）对热更新的态度尚且不明确；因为热更新使用下发代码的方式更新，所以不可避免存在安全问题；第三是还没有一个统一平台来做代码下发这件事，如果实现不得不由各个项目开发团队自己搭建。</p>
+
+<h3 id="dart">Dart</h3>
+
+<p>Flutter 最终选择了 Dart 作为开发语言，Dart 是什么，为什么选择 Dart 呢？</p>
+
+<h4 id="dart简介">Dart简介</h4>
+
+<p><strong>时间线如下</strong></p>
+
+<ul>
+  <li>
+    <p>2011年10月 - Google Chrome（V8引擎）</p>
+  </li>
+  <li>
+    <p>2015年被移出 Chrome</p>
+  </li>
+  <li>
+    <p>Sky 诞生，服务器，前端全面发展</p>
+  </li>
+  <li>
+    <p>2018年8月 发布重构版 Dart 2.0</p>
+  </li>
+</ul>
+
+<p>Dart 的历史也是有波折的。Dart 最早在2011年被 Google Chrome（V8引擎）团队创立，使用于 Web 网页，立志要取代 JavaScript 这个繁重的 Web 应用。</p>
+
+<p>然而，2014-2105年，由 NodeJS 开源项目引领，诞生了一系列明星项目如React、React-Native、Vue 等基于 JS 的前端开发框架，当时还流行一句话，“凡是能被JS实现的，最终都要被JS实现”。</p>
+
+<p>于是 Dart 在2015年被移出 Chrome。</p>
+
+<p>同时在2015年Dart开发者峰会上，Sky 诞生，运行在Android操作系统上。其的的是能够以每秒120帧的速度持续渲染。它也是 Flutter 改名之前版本。像 Javascript 一样，Dart在服务端和浏览器前端也在不遗余力的发展：服务端可以编写命令行程序，前端可以编译成Javascript运行在浏览器中。Google的另一个前端大杀器Angular也有对应的Dart版本。在Google的未来操作系统Fuchsia中，Dart被指定为官方的开发语言。这些发生在2015-2017年。</p>
+
+<p>船小好调头，也正是使用者较少，没有历史包袱，Dart的创造者们总结了Dart1.0版本的优缺点，决定打造一个运行更快、更加安全的强类型语言Dart2.0。2018年8月正式发布 Dart 2.0 ，目前稳定版为 2.2(19年02月27发布)。</p>
+
+<p><strong>目前，Dart 在移动端有 Flutter，web 有 Dart for the web，服务端有 Server-side Dart。</strong></p>
+
+<h4 id="dart-适合移动端吗">Dart 适合移动端吗</h4>
+
+<p>目前看比较适合。</p>
+
+<ul>
+  <li>1) Dart是AOT (Ahead Of Time)编译的，可编译成快速、可预测的本地代码。</li>
+  <li>2) Dart也支持JIT (Just In Time)编译，开发周期快（状态热重载）;</li>
+  <li>3) Dart可以更轻松地创建以60fps运行的流畅动画和转场。它的启动速度也快得多。</li>
+  <li>4) Dart使Flutter不需要单独的声明式布局语言，如JSX或XML。</li>
+  <li>5) 开发人员发现Dart特别容易学习，因为它具有静态和动态语言用户都熟悉的特性。</li>
+</ul>
+
+<p><strong>Dart 支持两种编译模式，AOT 和 JIT</strong>。开发环境使用 JIT，借助虚拟机，随时修改代码，随时看到效果，可以实现亚秒级的热重载。发布环境使用 AOT，打包出经过各种编译优化的包，不论是在安装包安装速度，和包内程序运行速度都要很多优势。</p>
+
+<p>Dart 最初就被设计目标就是<strong>持续渲染，不卡顿</strong>。所以有很多设计上的优势保证fps。</p>
+<ul>
+  <li><strong>1）</strong> AOT 编译就像原生代码的 AOT 编译，与“JavaScript桥梁”方案相比，天然少了桥的过程。</li>
+  <li><strong>2）</strong> Dart 在 抢占式调度、时间分片和共享资源 方面权衡诸多条件，选用最适合界面特点的方案：单线程，程显式让出（使用 async/await、Future 和 Stream）CPU。</li>
+  <li><strong>3）</strong> 访问共享资源（内存）的情况下，在很多语言中都需要使用锁。但在回收可用内存时， 锁会阻止整个应用程序运行。Dart使用先进的 <strong>分代垃圾回收和对象分配方案</strong>，该方案对于分配许多短暂的对象（对于Flutter这样的反应式用户界面来说非常完美，Flutter为每帧重建不可变视图树）都特别快速。</li>
+</ul>
+
+<p>Dart的另一个好处是<strong>热重载</strong>，Flutter不需要从程序中拆分出额外的模板或布局语言，如JSX或XML，也不需要单独的可视布局工具。借助热重载，可视化编辑就不需要了。体验下来，开发中，<strong>从页面开始创建，到添加资源，请求，封装模型，修改 UI，添加事件，页面最终完成，你都不需要重新编译，一切都是所写即可见</strong>。</p>
+
+<h2 id="安装-和-flutter-demo-简介">安装 和 Flutter Demo 简介</h2>
+
+<p>这里就不多讲了，参考之前的博客。</p>
+
+<h4 id="安装-和--demo">安装 和  Demo</h4>
+
+<p><a href="https://poos.github.io/2019/03/25/FlutterInstall/">Flutter 《一》 安装和配置，QA</a>
+介绍了安装问题；一些官方的 QA。</p>
+
+<p><a href="https://poos.github.io/2019/03/27/FlutterDemo/">Flutter 《二》项目 Demo 运行，Dart 语言简单学习</a>
+几个简单的 Demo。速学 Dart 语法。</p>
+
+<h4 id="wdiget-和-布局">Wdiget 和 布局</h4>
+
+<p><a href="https://poos.github.io/2019/03/28/FlutterWidget/">Flutter 《三》常用组件 &amp; Week Video</a>
+一切皆是 Widget，Widget 认识和学习。</p>
+
+<p>布局方面跟之前用到的 Texture 盒式布局异曲同工，所以没有单独写博客。其实上手还是比较简单的，有兴趣参考<a href="https://poos.github.io/2018/08/08/Texture/">Texture(ASDK)的理解和使用</a>，理论还是相通的。</p>
+
+<h4 id="数据转-model">数据转 model</h4>
+
+<p>dart提供的库 <strong>dart-convert</strong> 可以实现将 json 转换为对象。样例的代码如下：</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
+    <span class="kt">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kt">String</span> <span class="n">avatar</span><span class="o">;</span>
+
+    <span class="n">User</span><span class="o">({</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">id</span><span class="o">,</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">,</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">avatar</span><span class="o">,</span>
+    <span class="o">});</span>
+
+    <span class="kd">factory</span> <span class="n">User</span><span class="o">.</span><span class="na">fromJson</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">,</span> <span class="kd">dynamic</span><span class="o">&gt;</span> <span class="n">json</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span>
+        <span class="nl">id:</span> <span class="n">json</span><span class="o">[</span><span class="s">"id"</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">json</span><span class="o">[</span><span class="s">"id"</span><span class="o">],</span>
+        <span class="nl">name:</span> <span class="n">json</span><span class="o">[</span><span class="s">"name"</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">json</span><span class="o">[</span><span class="s">"name"</span><span class="o">],</span>
+        <span class="nl">avatar:</span> <span class="n">json</span><span class="o">[</span><span class="s">"avatar"</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">json</span><span class="o">[</span><span class="s">"avatar"</span><span class="o">],</span>
+    <span class="o">);</span>
+
+    <span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">,</span> <span class="kd">dynamic</span><span class="o">&gt;</span> <span class="n">toJson</span><span class="o">()</span> <span class="o">=&gt;</span> <span class="o">{</span>
+        <span class="s">"id"</span><span class="o">:</span> <span class="n">id</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">id</span><span class="o">,</span>
+        <span class="s">"name"</span><span class="o">:</span> <span class="n">name</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">name</span><span class="o">,</span>
+        <span class="s">"avatar"</span><span class="o">:</span> <span class="n">avatar</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">avatar</span><span class="o">,</span>
+    <span class="o">};</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>同样有很多方案提供实时转换，但是我还是用了应用来转换。</strong> macOS 有一款应用 <strong>Paste JSON as Code • quicktype.app</strong> 可以轻松转换json 到各个常用语言的模型。</p>
+
+<h4 id="调试">调试</h4>
+
+<p>在 VS Code，使用 DevTools 可以 方便的调试页面。</p>
+
+<p>DevTools提供的功能：widget 树，debug paint，slow animation；timeline，memory，logging，Debugger 等。还可控制程序热重载喝热重新运行。</p>
+
+<h2 id="stream">Stream</h2>
+
+<p>顾名思义，Stream 就是流的意思，表示发出的一系列的异步数据。可以简单地认为 Stream 是一个异步数据源。它是 Dart 中处理异步事件流的统一 API。</p>
+
+<p>使用数据流可以更好管理项目代码，设计项目模式，节约设备资源(避免持有大文件)等。</p>
+
+<p>Dart 中，集合（Iterable或Collection）表示一系列的对象。而 Stream （也就是“流”）也表示一系列的对象，但区别在于 Stream 是异步的事件流。比如文件、套接字这种 IO 数据的非阻塞输入流（input data），或者用户界面上用户触发的动作（UI事件）。</p>
+
+<p>集合可以理解为“拉”模式，比如你有一个 List ，你可以主动地通过迭代获得其中的每个元素，想要就能拿出来。而 Stream 可以理解为“推”模式，这些异步产生的事件或数据会推送给你（并不是你想要就能立刻拿到）。这种模式下，你要做的是用一个 listener （即callback）做好数据接收的准备，数据可用时就通知你。</p>
+
+<h3 id="future">Future</h3>
+
+<p>第一个概念叫 Future。
+Future 表示稍后获得的一个数据，所有异步的操作的返回值都用 Future 来表示。但是 Future 只能表示一次异步获得的数据。
+而 Stream 表示多次异步获得的数据。</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">Future</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+  <span class="n">Stream</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h3 id="获得-stream">获得 Stream</h3>
+
+<p><strong>数据流的发出点</strong></p>
+
+<p>将集合（Iterable）包装为 Stream 
+Stream 有3个工厂构造函数：fromFuture、fromIterable 和 periodic，分别可以通过一个 Future、Iterable或定时触发动作作为 Stream 的事件源构造 Stream。</p>
+
+<p>使用 Stream 读文件 
+读文件的方式有多种，其中一种是使用 Stream 获得文件内容。</p>
+
+<p>下边示例一个集合转换为 steam 并进行后续操作的例子。</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">//获得 Stream</span>
+  <span class="kd">var</span> <span class="n">data</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">];</span>
+  <span class="kd">var</span> <span class="n">stream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stream</span><span class="o">.</span><span class="na">fromIterable</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h3 id="订阅-stream">订阅 Stream</h3>
+
+<p><strong>数据流的接受点</strong></p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//订阅</span>
+<span class="n">stream</span><span class="o">.</span><span class="na">listen</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="n">e</span><span class="o">));</span>
+</code></pre></div></div>
+
+<h4 id="订阅和高级订阅ondataonerror和ondone">订阅和高级订阅（onData、onError和onDone）</h4>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">//订阅 Stream</span>
+  <span class="n">stream</span><span class="o">.</span><span class="na">listen</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="n">e</span><span class="o">),</span> <span class="nl">onDone:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="s">'Done'</span><span class="o">));</span>
+  <span class="c1">//1 2 3 4 Done</span>
+
+  <span class="c1">//订阅管理 StreamSubscription</span>
+  <span class="kd">var</span> <span class="n">sub</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="na">listen</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+  <span class="n">sub</span><span class="o">.</span><span class="na">onData</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">)</span>
+      <span class="n">sub</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+    <span class="k">else</span>
+      <span class="n">print</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+  <span class="o">});</span>
+  <span class="n">sub</span><span class="o">.</span><span class="na">onDone</span><span class="o">(()</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="s">'done'</span><span class="o">));</span>
+  <span class="c1">//1 2</span>
+</code></pre></div></div>
+<p>区别在于高级订阅返回一个 <strong>StreamSubscription</strong> 的对象，这个对象有 <strong>onData，onDone，onError</strong> 方法。</p>
+
+<h4 id="单订阅模式-和-多订阅模式">单订阅模式 和 多订阅模式 </h4>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">//多订阅（broadcast）</span>
+  <span class="kd">var</span> <span class="n">bs</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="na">asBroadcastStream</span><span class="o">();</span>
+  <span class="k">assert</span><span class="o">(</span><span class="n">bs</span><span class="o">.</span><span class="na">isBroadcast</span> <span class="o">==</span> <span class="kc">true</span><span class="o">);</span>
+  <span class="n">bs</span><span class="o">.</span><span class="na">first</span><span class="o">.</span><span class="na">then</span><span class="o">(</span><span class="n">print</span><span class="o">);</span>
+  <span class="n">bs</span><span class="o">.</span><span class="na">last</span><span class="o">.</span><span class="na">then</span><span class="o">(</span><span class="n">print</span><span class="o">);</span>
+  <span class="c1">//1 4</span>
+</code></pre></div></div>
+<p>上边的 stream 只支持 一个数据流接受，接受完毕就监听不到数据流了。 可以使用 <strong>asBroadcastStream()</strong>方法返回一个同样类型（T）的 stream，这样就可以多次订阅了。</p>
+
+<h4 id="stream-的集合特性">Stream 的集合特性</h4>
+
+<p>Stream 和一般的集合类似，都是一组数据，只不过一个是异步推送，一个是同步拉取。所以他们都很多共同的方法。</p>
+
+<p>除了既有方法，如果需要自定制，Stream 还提供一些数据转换协议。继承 StreamEventTransformer 并且实现必有方法即可使用。</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  <span class="c1">//常见集合方法</span>
+  <span class="c1">//stream.first.then(print);</span>
+  <span class="c1">//stream.firstWhere((e) =&gt; e &gt; 3, orElse: () =&gt; 0).then(print);</span>
+  <span class="c1">//...</span>
+
+<span class="c1">//last, length, isEmpty, any, every, contains, elementAt, where, skip, take,</span>
+
+<span class="c1">//map, reduce, expand, toList, toSet</span>
+
+<span class="c1">//StreamTransformer</span>
+<span class="kd">class</span> <span class="nc">MyTransformer</span> <span class="kd">extends</span> <span class="n">StreamEventTransformer</span> <span class="o">{</span>
+<span class="o">...</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="最后">最后</h3>
+
+<p>这篇文章先到这里了。整理分享还是要注意些问题：既要广泛了解，让大家有个认识；又不能太过深入，否则大家不能理解，时间也不允许。不像编程，只要解决问题就好了。</p>
+
+<p>还有下一篇，包含 state 更新方案，原生项目和 Flutter 项目互调等精彩内容，不容错过。</p>
+
+<h3 id="参考">参考</h3>
+
+<p><a href="https://blog.csdn.net/chunqiuwei/article/details/87855312">Flutter之StatelessWidget StatefulWidget和Element关系浅析</a></p>
+
+<p><a href="https://www.kingwins.com.cn/content-4194.html">谷歌推出简化APP开发：Google Flutter的功能和优势</a></p>
+
+<p><a href="https://blog.csdn.net/u012995888/article/details/82740252">理解Dart 异步事件流 Stream</a></p>
+
+<p><a href="https://www.blackglory.me/straightforward-dart-3-2/">3.2 类的继承与重写 – 《简单易懂的Dart》</a></p>
+
+<p><a href="http://blog.sina.com.cn/s/blog_12d64892f0102vtk9.html">理解Dart 异步事件流 Stream </a></p>
+
+<p><a href="https://blog.csdn.net/h1130189083/article/details/78302502">AOT,JIT区别，各自优劣，混合编译</a></p>
+
+<p><a href="https://www.cnblogs.com/dzhanjie/archive/2011/07/07/2100340.html">编译型与解释型、动态语言与静态语言、强类型语言与弱类型语言的区别</a></p>
+
+<p><a href="https://www.jianshu.com/p/188c15064a1f">Flutter笔记(二)关于Dart和Weight</a></p>
+
+<p><a href="https://www.colabug.com/2475126.html">为什么Flutter会选择 Dart ？</a></p>
+
+<p><a href="https://www.yoytang.com/dart-intro.html">Dart 语言的介绍</a></p>
+
+<p><a href="https://medium.com/@ayushpguptaapg/using-streams-in-flutter-62fed41662e4">using-streams-in-flutter</a></p>
+
+<p><a href="https://www.dartlang.org/tutorials/language/streams">官网 API 介绍</a></p>
+
+<p><a href="http://blog.sina.com.cn/s/blog_12d64892f0102vtk9.html">理解Dart 异步事件流 Stream</a></p>
+:ET

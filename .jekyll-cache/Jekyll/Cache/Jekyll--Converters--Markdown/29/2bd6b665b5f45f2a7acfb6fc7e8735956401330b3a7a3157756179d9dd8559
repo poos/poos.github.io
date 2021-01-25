@@ -1,0 +1,217 @@
+I"(]<p><strong><a href="https://github.com/poos/BlogDemo">本文所有代码 Demo 地址</a></strong></p>
+
+<p>Swift 是一门有着合适的语言特性来适配函数式编程方法的优秀语言。函数在 Swift 中是一等公民，意味着我们可以将函数作为各种变量，参数，返回值等使用，这种特性使得 Swift 可以完美的支持函数式编程思想。</p>
+
+<h2 id="什么是函数式">什么是函数式</h2>
+
+<p>避免使用程序状态和可变对象，是降低程序复杂度的有效方式之一，而这也正是函数式编程的精髓。</p>
+
+<p>摘自 <a href="https://objccn.io/products/functional-swift/preview/">swift 函数式 引言篇章</a></p>
+
+<p>很难给出函数式的准确定义 — 其实同样地，我们也很难给出面向对象编程，亦或是其它编程范式的准确定义。因此，我们会尽量把重点放在我们认为设计良好的 Swift 函数式程序应该具有的一些特质上：</p>
+
+<p><strong>模块化</strong>： 相较于把程序认为是一系列赋值和方法调用，函数式开发者更倾向于强调每个程序都能够被反复分解为越来越小的模块单元，而所有这些块可以通过函数装配起来，以定义一个完整的程序。当然，只有当我们能够避免在两个独立组件之间共享状态时，才能将一个大型程序分解为更小的单元。这引出我们的下一个关注特质。</p>
+
+<p><strong>对可变状态的谨慎处理</strong>： 函数式编程有时候 (被半开玩笑地) 称为“面向值编程”。面向对象编程专注于类和对象的设计，每个类和对象都有它们自己的封装状态。然而，函数式编程强调基于值编程的重要性，这能使我们免受可变状态或其他一些副作用的困扰。通过避免可变状态，函数式程序比其对应的命令式或者面向对象的程序更容易组合。</p>
+
+<p><strong>类型</strong>： 最后，一个设计良好的函数式程序在使用类型时应该相当谨慎。精心选择你的数据和函数的类型，将会有助于构建你的代码，这比其他东西都重要。Swift 有一个强大的类型系统，使用得当的话，它能够让你的代码更加安全和健壮。</p>
+
+<h2 id="函数式思想">函数式思想</h2>
+
+<p>“函数在 Swift 中是一等值 (first-class-values)，换句话说，函数可以作为参数被传递到其它函数，也可以作为其它函数的返回值。如果你习惯了使用像是整型，布尔型或是结构体这样的简单类型来编程，那么这个理念可能看来非常奇怪。”</p>
+
+<p>上面一段话再次强调了，你可以使用函数类型就像一个简单类型一样</p>
+
+<h2 id="学习使用">学习使用</h2>
+
+<p>书籍中介绍了一个 <strong>战舰类游戏</strong> 的 可攻击计算函数，危险（可被攻击）函数，友军危险 等函数。有兴趣的同学可以到上边书籍链接查看。</p>
+
+<p>在书的下一个章节作者更进一步，实现了 CoreImage 的函数式封装，我也同步尝试对大家最常用的 NSMutableAttributeString 进行封装。先贴出 <a href="https://github.com/poos/BlogDemo">Demo 地址</a></p>
+
+<h3 id="nsmutableattributestring-封装函数式实践">NSMutableAttributeString 封装（函数式实践）</h3>
+
+<p>NSMutableAttributeString 是 Foundation 中处理属性字符串的一个类。设置属性通过 [NSAttributedStringKey: Any] 来进行设置。那么使用方便期间，我们进行封装。</p>
+
+<p><strong>封装结果</strong></p>
+
+<p>封装了不同 label 使用的样式，在使用的时候直接讲变量作为函数使用即可</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 组合函数</span>
+<span class="c1">//titleone 是13，red</span>
+<span class="k">let</span> <span class="nv">titleOne</span> <span class="o">=</span> <span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="nf">systemFont</span><span class="p">(</span><span class="nv">ofSize</span><span class="p">:</span> <span class="mi">13</span><span class="p">))</span> <span class="o">&gt;&gt;&gt;</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+
+<span class="c1">//titletwo 是13，black</span>
+<span class="k">let</span> <span class="nv">titleTwo</span> <span class="o">=</span> <span class="n">titleOne</span> <span class="o">&gt;&gt;&gt;</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
+
+<span class="c1">//contentOne 是11，red，居中，蓝色</span>
+<span class="k">let</span> <span class="nv">contentOne</span> <span class="o">=</span> <span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="nf">systemFont</span><span class="p">(</span><span class="nv">ofSize</span><span class="p">:</span> <span class="mi">11</span><span class="p">))</span> <span class="o">&gt;&gt;&gt;</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">red</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span>  <span class="nf">alignment</span><span class="p">(</span><span class="o">.</span><span class="n">center</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">blue</span><span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="c1">// 函数使用</span>
+<span class="k">let</span> <span class="nv">attS</span> <span class="o">=</span> <span class="kt">NSMutableAttributedString</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"title content"</span><span class="p">)</span>
+
+<span class="n">label</span><span class="o">.</span><span class="n">attributedText</span> <span class="o">=</span> <span class="nf">titleOne</span><span class="p">(</span><span class="n">attS</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>当然创建 atts 可以写一个函数，这样调用就更加方便了：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">label</span><span class="o">.</span><span class="n">attributedText</span> <span class="o">=</span> <span class="nf">titleOne</span><span class="p">(</span><span class="nf">newAttS</span><span class="p">(</span><span class="s">""</span><span class="n">title</span> <span class="n">content</span><span class="s">""</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="函数实现">函数实现</h4>
+
+<h4 id="实现各个组合的单个函数">实现各个组合的单个函数</h4>
+
+<p>定义一个函数类型，并不是必须的。但是定义之后代码会更加清晰。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typealias MutableAttributeFunc = (NSMutableAttributedString) -&gt; NSMutableAttributedString
+
+</code></pre></div></div>
+
+<p><strong>实现第一个 font 函数</strong></p>
+
+<p>函数传入一个 font， 返回一个函数类型。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">font</span><span class="p">(</span><span class="n">_</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MutableAttributeFunc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">attString</span> <span class="k">in</span>
+        <span class="n">attString</span><span class="o">.</span><span class="nf">addAttribute</span><span class="p">(</span><span class="o">.</span><span class="n">font</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">font</span><span class="p">,</span> <span class="nv">range</span><span class="p">:</span> <span class="kt">NSRange</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">location</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="n">attString</span><span class="o">.</span><span class="n">length</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">attString</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>事实上实现这个 函数 之后，我们就可以安装如下方式调用了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//通过调用上边的函数，生成一个函数</span>
+<span class="k">let</span> <span class="nv">font</span> <span class="o">=</span> <span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="nf">systemFont</span><span class="p">(</span><span class="nv">ofSize</span><span class="p">:</span> <span class="mi">12</span><span class="p">))</span>
+
+<span class="c1">//使用 font 函数处理字符串。</span>
+<span class="k">let</span> <span class="nv">attS</span> <span class="o">=</span> <span class="kt">NSMutableAttributedString</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"title content"</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">titleOne</span> <span class="o">=</span> <span class="nf">font</span><span class="p">(</span><span class="n">attS</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>继续实现其他函数</strong></p>
+
+<p>作为例子示例了 color 和 alignment 的实现</p>
+
+<p>更多的 lineSpace, 插入 image, underLine, 大小字符串等，本文作为例子暂时没有实现。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">color</span><span class="p">(</span><span class="n">_</span> <span class="nv">color</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MutableAttributeFunc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">attString</span> <span class="k">in</span>
+        <span class="n">attString</span><span class="o">.</span><span class="nf">addAttribute</span><span class="p">(</span><span class="o">.</span><span class="n">foregroundColor</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span> <span class="nv">range</span><span class="p">:</span> <span class="kt">NSRange</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">location</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="n">attString</span><span class="o">.</span><span class="n">length</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">attString</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">func</span> <span class="nf">alignment</span><span class="p">(</span><span class="n">_</span> <span class="nv">align</span><span class="p">:</span> <span class="kt">NSTextAlignment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MutableAttributeFunc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">attString</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">paragraphStyle</span> <span class="o">=</span> <span class="n">attString</span><span class="o">.</span><span class="nf">attribute</span><span class="p">(</span><span class="o">.</span><span class="n">paragraphStyle</span><span class="p">,</span> <span class="nv">at</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">effectiveRange</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">??</span> <span class="kt">NSMutableParagraphStyle</span><span class="p">()</span>
+        <span class="p">(</span><span class="n">paragraphStyle</span> <span class="k">as!</span> <span class="kt">NSMutableParagraphStyle</span><span class="p">)</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">align</span>
+        <span class="n">attString</span><span class="o">.</span><span class="nf">addAttribute</span><span class="p">(</span><span class="o">.</span><span class="n">paragraphStyle</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">paragraphStyle</span><span class="p">,</span> <span class="nv">range</span><span class="p">:</span> <span class="kt">NSRange</span><span class="p">(</span><span class="nv">location</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="n">attString</span><span class="o">.</span><span class="n">length</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">attString</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="函数进行组合">函数进行组合</h4>
+
+<p>如果简单调用是这个样子的</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//     color(      font   (attS)      )</span>
+<span class="k">let</span> <span class="nv">title</span> <span class="o">=</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">black</span><span class="p">)(</span><span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="nf">boldSystemFont</span><span class="p">(</span><span class="nv">ofSize</span><span class="p">:</span> <span class="mi">14</span><span class="p">))(</span><span class="n">attS</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<p>显然有太多的括号，太多的嵌套，已经严重影响阅读和书写代码了</p>
+
+<p><strong>创建一个复合函数</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span>  <span class="nf">composeFilters</span><span class="p">(</span><span class="n">_</span> <span class="nv">filter1</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">MutableAttributeFunc</span><span class="p">,</span> <span class="n">_</span> <span class="nv">filter2</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">MutableAttributeFunc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MutableAttributeFunc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">attString</span> <span class="k">in</span> <span class="nf">filter2</span><span class="p">(</span><span class="nf">filter1</span><span class="p">(</span><span class="n">attString</span><span class="p">))</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用上边的组合函数之后</span>
+
+<span class="k">let</span> <span class="nv">colorAndFont</span> <span class="o">=</span> <span class="nf">composeFilters</span><span class="p">(</span><span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">black</span><span class="p">),</span> <span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="nf">boldSystemFont</span><span class="p">(</span><span class="nv">ofSize</span><span class="p">:</span> <span class="mi">14</span><span class="p">)))</span>
+
+<span class="k">let</span> <span class="nv">title</span> <span class="o">=</span> <span class="nf">colorAndFont</span><span class="p">(</span><span class="n">attS</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p><strong>复合函数符号化</strong></p>
+
+<p><a href="https://www.jianshu.com/p/4f025476701a">资料</a></p>
+
+<p>上边已经能够明显提示代码清晰度了，但是还有更好的方式，那就是引入运算符：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">precedencegroup</span> <span class="kt">ATPrecedence</span> <span class="p">{</span>
+    <span class="nv">associativity</span><span class="p">:</span> <span class="n">left</span>
+    <span class="nv">higherThan</span><span class="p">:</span> <span class="kt">AdditionPrecedence</span>
+    <span class="nv">lowerThan</span><span class="p">:</span> <span class="kt">MultiplicationPrecedence</span>
+<span class="p">}</span>
+
+<span class="k">infix</span> <span class="k">operator</span> <span class="o">&gt;&gt;&gt;</span> <span class="p">:</span> <span class="kt">ATPrecedence</span>
+
+<span class="kd">func</span> <span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="nv">filter1</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">MutableAttributeFunc</span><span class="p">,</span> <span class="nv">filter2</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">MutableAttributeFunc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MutableAttributeFunc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">attString</span> <span class="k">in</span> <span class="nf">filter2</span><span class="p">(</span><span class="nf">filter1</span><span class="p">(</span><span class="n">attString</span><span class="p">))</span> <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>定义了运算符之后，就可以通过运算符进行组合了。到这一步，已经能实现本文开头的功能了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">titleTheme</span> <span class="o">=</span> <span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="nf">systemFont</span><span class="p">(</span><span class="nv">ofSize</span><span class="p">:</span> <span class="mi">13</span><span class="p">))</span> <span class="o">&gt;&gt;&gt;</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+
+<span class="k">let</span> <span class="nv">title</span> <span class="o">=</span> <span class="nf">colorAndFont</span><span class="p">(</span><span class="n">attS</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>其实我们完全可以更进一步</strong></p>
+
+<p>用泛型实现 »&gt; 的符号化</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="kt">A</span><span class="p">,</span> <span class="kt">B</span><span class="p">,</span> <span class="kt">C</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">f</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">B</span><span class="p">,</span> <span class="nv">g</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">B</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">C</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">C</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">x</span> <span class="k">in</span> <span class="nf">g</span><span class="p">(</span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这样只要是函数 <strong>返回类型一致</strong> 的，我们都可以拼接这些函数，而不限于是 MutableAttributeFunc 类型。</p>
+
+<h3 id="理论背景柯里化currying">理论背景：柯里化（Currying）</h3>
+
+<p>“将一个接受多参数的函数变换为一系列只接受单个参数的函数，这个过程被称为柯里化 (Currying)，它得名于逻辑学家 Haskell Curry。”</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">add1</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">_</span> <span class="nv">y</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">add2</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">y</span> <span class="k">in</span> <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nf">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="nf">add2</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)</span>
+
+</code></pre></div></div>
+<p>上述代码 add2 就是 add1 的 Currying 版本。</p>
+
+<p>优点就是可以单独调用，所以支持各种组合。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>Swift 下的很多高阶函数都是，例如 Map，Fliter，Reduce等。</p>
+
+<p>本文只是仿照跟书中对 Core Image 的封装，简单的实践和体验一下。区别于分类，直接用 函数式 思想封装组合，以后在使用 NSMutableAttributeString 又有了一个新的选择。更进一步，如果用于 APP 的 Theme 模块，函数组合无论是直接使用，还是动态切换都可以十分方便，这个方案都可以完美的支持。</p>
+
+<p>函数式提供了区别于面向对象的面向函数编程，这个新大陆有无限可能，记着 <strong>函数是一等公民</strong> 就好。</p>
+
+<h4 id="资料">资料：</h4>
+
+<p><a href="https://baike.baidu.com/item/Haskell/1152799?fr=aladdin">Haskell 纯函数式编程语言</a></p>
+
+<p><a href="https://www.pointfree.co/episodes/ep1-functions">ep1-functions</a></p>
+:ET

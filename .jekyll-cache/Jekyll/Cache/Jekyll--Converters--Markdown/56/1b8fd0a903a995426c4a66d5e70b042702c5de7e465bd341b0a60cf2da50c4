@@ -1,0 +1,339 @@
+I"��<blockquote>
+  <p>当一个类包含了太多的太杂的内容，它就变得复杂了，把其中的内容抽出来，用协议管理约束，项目才会更清晰。</p>
+</blockquote>
+
+<h2 id="分享调用的设计方案-protocol-class">分享调用的设计方案 Protocol-Class</h2>
+
+<p>某种意义上，不同页面调用分享也可以理解为继承重载的关系—&gt;而继承重载可以用协议完美解决</p>
+
+<h4 id="协议-类结构体和枚举">协议 类、结构体和枚举</h4>
+<p><a href="https://blog.csdn.net/Lirx_Tech/article/details/41724185">参考资料</a></p>
+
+<ul>
+  <li>
+    <p>其实就是Java中的接口，Swift的遵守协议就是Java中的实现接口，如果放在C++中就是纯虚类的概念，即协议就是一种高度抽象的抽象类，里面值规定了方法、属性等内容，但没有提供任何实现，所有遵守该协议的类、结构体或枚举都必须实现协议中规定的内容，只不过C++没有接口而只能通过继承虚基类来实现其中的内容而已；</p>
+  </li>
+  <li>
+    <p>协议是面向接口编程的必不可少的机制，其要求定义与实现分离，在Java和Swift中都可以将协议作为数据类型（就和其它普通的数据类型Int、Array等）暴露给使用者，而使用者不用关心具体的实现细节；</p>
+  </li>
+  <li>
+    <p>协议中可以定义的内容：计算属性（实例/静态）、方法（实例/静态）和下标</p>
+  </li>
+</ul>
+
+<h4 id="实现">实现</h4>
+
+<p>这里实例调用分享的几个地方</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//可能是 VC</span>
+<span class="c1">//可能是 View</span>
+<span class="c1">//可能是 WebView</span>
+<span class="c1">//可以是 任何类</span>
+<span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">xx</span> <span class="p">{</span>
+        <span class="nf">share</span><span class="p">()</span><span class="c1">//调用协议方法</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">jsShare</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">share</span><span class="p">()</span><span class="c1">//调用协议方法</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">jsShareMoment</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">shareMoment</span><span class="p">()</span><span class="c1">//调用协议方法</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里是协议分发管理的 protocol类, 在这里实现分享的方法</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 定义统一的协议</span>
+<span class="kd">extension</span> <span class="kt">A</span><span class="p">:</span> <span class="kt">ShareProtocol</span><span class="p">,</span> <span class="kt">ShareProtocol2</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">share</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">shareMoment</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="总结">总结</h4>
+
+<p>通过这种设计，ShareManager更加彻底的负责所有的分享事宜；VC 只是简单调用，页面结构更简单了。</p>
+
+<hr />
+<blockquote>
+
+  <hr />
+</blockquote>
+
+<h2 id="分享功能实现的框架">分享功能实现的框架</h2>
+
+<h2 id="分享框架">分享框架</h2>
+
+<p>分享的具体实现就不必细说了</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Model</td>
+      <td>分享模型</td>
+    </tr>
+    <tr>
+      <td>View</td>
+      <td>分享视图</td>
+    </tr>
+    <tr>
+      <td>ViewControl</td>
+      <td>处理弹出动画; 分流选定后的操作</td>
+    </tr>
+    <tr>
+      <td>Manager</td>
+      <td>封装各个SDK分享方法</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func present() {
+let model = ShareModel()
+...
+    AppShareViewControl.present(model) }
+</code></pre></div>  </div>
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<h2 id="model">Model</h2>
+
+<blockquote>
+  <p>略去</p>
+</blockquote>
+
+<h2 id="view">View</h2>
+<blockquote>
+  <p>skip</p>
+</blockquote>
+
+<h2 id="viewcontrol">ViewControl</h2>
+
+<p>view 的一些动画，大部分简单的动画就不再介绍。</p>
+
+<p><strong>设置按顺序弹出动画,layout位移动画</strong></p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+    <span class="kd">static</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">buttonsAnimation</span><span class="p">(</span><span class="nv">buttons</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIView</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">button</span><span class="p">)</span> <span class="k">in</span> <span class="n">buttons</span><span class="o">.</span><span class="nf">enumerated</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">button</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="nf">setValue</span><span class="p">(</span><span class="mi">375</span><span class="p">,</span> <span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"transform.translation.y"</span><span class="p">)</span>
+            <span class="n">button</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="kt">UIView</span><span class="o">.</span><span class="nf">animate</span><span class="p">(</span><span class="nv">withDuration</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                           <span class="nv">delay</span><span class="p">:</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="kt">Double</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span>
+                           <span class="nv">usingSpringWithDamping</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+                           <span class="nv">initialSpringVelocity</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+                           <span class="nv">options</span><span class="p">:</span> <span class="o">.</span><span class="n">curveEaseInOut</span><span class="p">,</span>
+                           <span class="nv">animations</span><span class="p">:</span> <span class="p">{</span>
+                           <span class="n">button</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
+                           <span class="n">button</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="nf">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"transform.translation.y"</span><span class="p">)</span>
+                           <span class="p">})</span>
+    <span class="p">}</span>
+
+</code></pre></div></div>
+
+<h2 id="manager">Manager</h2>
+
+<h4 id="调用系统分享">调用系统分享</h4>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - 系统</span>
+    <span class="c1">//系统分享传入[String, UIImage, URL]</span>
+    <span class="c1">//注意:系统分享qq会调用URL 对应的web更新数据,若没有对应web页（非 H5页）会显示异常</span>
+    <span class="kd">func</span> <span class="nf">shareSystem</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">content</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">link</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">title</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">256</span> <span class="p">{</span>
+            <span class="n">items</span><span class="o">.</span><span class="nf">append</span><span class="p">((</span><span class="n">title</span> <span class="k">as</span> <span class="kt">NSString</span><span class="p">)</span><span class="o">.</span><span class="nf">substring</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="mi">255</span><span class="p">))</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">items</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">var</span> <span class="nv">thumbimage</span> <span class="o">=</span> <span class="n">image</span>
+        <span class="k">if</span> <span class="n">image</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="n">thumbimage</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"AppIconSmall"</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">thumbimage</span><span class="o">!.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="mi">70</span> <span class="p">{</span>
+            <span class="n">thumbimage</span> <span class="o">=</span> <span class="nf">imageCompressSize</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">thumbimage</span><span class="o">!</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">70</span><span class="p">))</span>
+        <span class="p">}</span>
+        <span class="n">items</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">thumbimage</span><span class="o">!</span> <span class="k">as</span> <span class="kt">Any</span><span class="p">)</span>
+        <span class="n">items</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="kt">URL</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">link</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">activity</span> <span class="o">=</span> <span class="kt">UIActivityViewController</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">activityItems</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="nv">applicationActivities</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+        <span class="kt">UIViewController</span><span class="o">.</span><span class="nf">currentViewController</span><span class="p">()</span><span class="o">.</span><span class="nf">presentVC</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="调用微信分享建议优化使用-model">调用微信分享(建议优化使用 model)</h4>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+    <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">share</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">content</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="o">!</span><span class="kt">WXApi</span><span class="o">.</span><span class="nf">isWXAppInstalled</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">popview</span> <span class="o">=</span> <span class="kt">PopupView</span><span class="p">()</span>
+            <span class="n">popview</span><span class="o">.</span><span class="nf">popupText</span><span class="p">(</span><span class="o">.</span><span class="n">noWechat</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">message</span> <span class="o">=</span> <span class="kt">WXMediaMessage</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">title</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">256</span> <span class="p">{</span>
+            <span class="n">message</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="p">(</span><span class="n">title</span> <span class="k">as</span> <span class="kt">NSString</span><span class="p">)</span><span class="o">.</span><span class="nf">substring</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="mi">255</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">message</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">description</span> <span class="o">=</span> <span class="n">content</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">description</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">512</span> <span class="p">{</span>
+                <span class="n">message</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="p">(</span><span class="n">description</span> <span class="k">as</span> <span class="kt">NSString</span><span class="p">)</span><span class="o">.</span><span class="nf">substring</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="mi">511</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">message</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">var</span> <span class="nv">thumbimage</span> <span class="o">=</span> <span class="n">image</span>
+        <span class="k">if</span> <span class="n">image</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="n">thumbimage</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"AppIconSmall"</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">thumbimage</span><span class="o">!.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="mi">70</span> <span class="p">{</span>
+            <span class="n">thumbimage</span> <span class="o">=</span> <span class="nf">imageCompressSize</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">thumbimage</span><span class="o">!</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">70</span><span class="p">))</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span> <span class="o">=</span> <span class="nf">imageCompressData</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">thumbimage</span><span class="o">!</span><span class="p">,</span> <span class="nv">max</span><span class="p">:</span> <span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">message</span><span class="o">.</span><span class="n">thumbData</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">webpage</span> <span class="o">=</span> <span class="kt">WXWebpageObject</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+        <span class="n">webpage</span><span class="o">.</span><span class="n">webpageUrl</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">mediaObject</span> <span class="o">=</span> <span class="n">webpage</span>
+
+        <span class="k">let</span> <span class="nv">send</span> <span class="o">=</span> <span class="kt">SendMessageToWXReq</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+        <span class="n">send</span><span class="o">.</span><span class="n">bText</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="n">send</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">let</span> <span class="nv">scene</span> <span class="o">=</span> <span class="n">type</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="kt">WXSceneSession</span> <span class="p">:</span> <span class="kt">WXSceneTimeline</span>
+        <span class="n">send</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="kt">Int32</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">rawValue</span><span class="p">)</span>
+
+        <span class="kt">WXApi</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="n">send</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">share</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="o">!</span><span class="kt">WXApi</span><span class="o">.</span><span class="nf">isWXAppInstalled</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">popview</span> <span class="o">=</span> <span class="kt">PopupView</span><span class="p">()</span>
+            <span class="n">popview</span><span class="o">.</span><span class="nf">popupText</span><span class="p">(</span><span class="o">.</span><span class="n">noWechat</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">message</span> <span class="o">=</span> <span class="kt">WXMediaMessage</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+
+        <span class="c1">// image最大10M</span>
+        <span class="k">let</span> <span class="nv">wxImage</span> <span class="o">=</span> <span class="kt">WXImageObject</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span> <span class="o">=</span> <span class="nf">imageCompressData</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="nv">max</span><span class="p">:</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">wxImage</span><span class="o">.</span><span class="n">imageData</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="p">}</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">mediaObject</span> <span class="o">=</span> <span class="n">wxImage</span>
+
+        <span class="k">let</span> <span class="nv">send</span> <span class="o">=</span> <span class="kt">SendMessageToWXReq</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+        <span class="n">send</span><span class="o">.</span><span class="n">bText</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="n">send</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="n">send</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="kt">Int32</span><span class="p">(</span><span class="kt">WXSceneSession</span><span class="o">.</span><span class="n">rawValue</span><span class="p">)</span>
+
+        <span class="kt">WXApi</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="n">send</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="压缩图片等方法">压缩图片等方法</h4>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - 通用</span>
+    <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">imageCompressSize</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="n">size</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="n">length</span> <span class="o">||</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="n">length</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="n">image</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span>
+        <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">&lt;</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">calc</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">rect</span> <span class="o">=</span> <span class="kt">CGRect</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="n">calc</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">calc</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">rect</span> <span class="o">=</span> <span class="kt">CGRect</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="n">calc</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">cgImage</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">cgImage</span><span class="p">,</span>
+            <span class="k">let</span> <span class="nv">newCgImage</span> <span class="o">=</span> <span class="n">cgImage</span><span class="o">.</span><span class="nf">cropping</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="n">rect</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="n">image</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">newImage</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">cgImage</span><span class="p">:</span> <span class="n">newCgImage</span><span class="p">)</span>
+
+        <span class="k">var</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">newImage</span>
+        <span class="kt">UIGraphicsBeginImageContext</span><span class="p">(</span><span class="kt">CGSize</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="n">length</span><span class="p">))</span>
+        <span class="n">result</span><span class="o">.</span><span class="nf">draw</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="kt">CGRect</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="n">length</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kt">UIGraphicsGetImageFromCurrentImageContext</span><span class="p">()</span> <span class="p">??</span> <span class="n">image</span>
+        <span class="kt">UIGraphicsEndImageContext</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="p">}</span>
+
+    <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">imageCompressData</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="nv">max</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">strength</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mf">0.99</span>
+        <span class="k">var</span> <span class="nv">data</span> <span class="o">=</span> <span class="kt">UIImageJPEGRepresentation</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="k">while</span> <span class="n">data</span><span class="o">!.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="n">max</span> <span class="o">*</span> <span class="mi">1024</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">strength</span> <span class="o">&lt;</span> <span class="mf">0.4</span> <span class="p">{</span>
+                <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"AppIconSmall"</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="kt">UIImageJPEGRepresentation</span><span class="p">(</span><span class="n">image</span><span class="o">!</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="p">}</span>
+            <span class="n">strength</span> <span class="o">-=</span> <span class="mf">0.1</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="kt">UIImageJPEGRepresentation</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="分享回调">分享回调</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - SDK回调</span>
+    <span class="kd">extension</span> <span class="kt">AppDelegate</span><span class="p">:</span> <span class="kt">WXApiDelegate</span> <span class="p">{</span>
+
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span><span class="p">,</span> <span class="nv">obsoleted</span><span class="p">:</span> <span class="mf">9.0</span><span class="p">)</span>
+    <span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">application</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="n">openURL</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">NSURL</span><span class="p">,</span> <span class="nv">sourceApplication</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">annotation</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">sourceApp</span> <span class="o">=</span> <span class="n">sourceApplication</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">sourceApp</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"tencent.xin"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">WXApi</span><span class="o">.</span><span class="nf">handleOpen</span><span class="p">(</span><span class="n">url</span> <span class="k">as</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">sourceApp</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"xxx"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">WKAuth</span><span class="o">.</span><span class="nf">handleOpen</span><span class="p">(</span><span class="n">url</span> <span class="k">as</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt">WifiService</span><span class="o">.</span><span class="n">shared</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">}</span>
+
+    <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">9.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+    <span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">app</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="kd">open</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIApplicationOpenURLOptionsKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">appName</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="kt">UIApplicationOpenURLOptionsKey</span><span class="o">.</span><span class="n">sourceApplication</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">String</span>
+        <span class="k">if</span> <span class="n">appName</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"tencent.xin"</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kt">WXApi</span><span class="o">.</span><span class="nf">handleOpen</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">appName</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"xxx"</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kt">WKAuth</span><span class="o">.</span><span class="nf">handleOpen</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt">WifiService</span><span class="o">.</span><span class="n">shared</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">}</span>
+
+    <span class="c1">//未使用</span>
+    <span class="kd">func</span> <span class="nf">onReq</span><span class="p">(</span><span class="n">_</span> <span class="nv">req</span><span class="p">:</span> <span class="kt">BaseReq</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">req</span> <span class="o">.</span><span class="nf">isKind</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="kt">GetMessageFromWXReq</span><span class="o">.</span><span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//微信请求App提供内容， 需要app提供内容后使用sendRsp返回</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">req</span> <span class="o">.</span><span class="nf">isKind</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="kt">ShowMessageFromWXReq</span><span class="o">.</span><span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//显示微信传过来的内容</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">req</span> <span class="o">.</span><span class="nf">isKind</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="kt">LaunchFromWXReq</span><span class="o">.</span><span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//从微信启动App</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">onResp</span><span class="p">(</span><span class="n">_</span> <span class="nv">resp</span><span class="p">:</span> <span class="kt">BaseResp</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">popview</span> <span class="o">=</span> <span class="kt">PopupView</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">errCode</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="n">popview</span><span class="o">.</span><span class="nf">popupType</span><span class="p">(</span><span class="o">.</span><span class="n">success</span><span class="p">,</span> <span class="o">.</span><span class="n">shareSuccess</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">popview</span><span class="o">.</span><span class="nf">popupType</span><span class="p">(</span><span class="o">.</span><span class="n">failed</span><span class="p">,</span> <span class="o">.</span><span class="n">shareFailed</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

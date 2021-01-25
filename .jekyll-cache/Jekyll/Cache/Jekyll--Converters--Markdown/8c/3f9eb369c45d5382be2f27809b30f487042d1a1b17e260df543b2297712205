@@ -1,0 +1,146 @@
+I"|X<p>处理界面专场动画已经有很多库，究其根本就是继承专场动画的协议，然后实现动画的实现即可。</p>
+
+<h3 id="一个优秀的框架-transitiontreasury">一个优秀的框架： <a href="https://transitiontreasury.com/">transitiontreasury</a></h3>
+
+<p><a href="https://github.com/DianQK/TransitionTreasury">github项目地址：DianQK/TransitionTreasury</a></p>
+
+<p>我在 <a href="https://blog.dianqk.org/2016/03/07/TransitionTreasury%20%E4%BD%BF%E7%94%A8%20Tip%20%EF%BC%9A%20TabBar%20%E7%9A%84%E6%BB%91%E5%8A%A8%E5%88%87%E6%8D%A2%E6%95%88%E6%9E%9C/">使用 Tip ： TabBar 的滑动切换效果</a> 这篇博客了解到了这个库，另外提一下，作者有很多优秀的博客文章，我也是爬着读了很多。以为最近在使用 RxSwift 开发项目，所以爬到了作者的文章。</p>
+
+<blockquote>
+  <p>因为博客文章是讨论 TabBar 滑动转场的，所以提到了 <strong>WXTabBarController</strong>。我也看了看，但是因为自己项目的 TabBar 前两个都有多个tag，而且那个项目已经多年没有更新了， 所以就暂时放弃没有深入探究了。还有 wxtabbar 作者的 <a href="https://github.com/leichunfeng/MVVMReactiveCocoa">MVVMReactiveCocoa</a> ，OC 的 Reactive 项目，相当全面完整的教程。</p>
+</blockquote>
+
+<p>TransitionTreasury 是一个开放的项目，有一些作者提供了一些更多的动画，所有的动画都可以在 <a href="https://transitiontreasury.com/">transitiontreasury</a> 上查看。</p>
+
+<p>如果项目使用了自定义的 专场动画，这个框架会是一个不错的选择</p>
+
+<h3 id="轻量级自定制">轻量级，自定制</h3>
+
+<p><strong>我们在项目中使用了原生的 navBar，和原生的 tabBar，并且希望有一个好的跳转动画</strong></p>
+
+<p>我的项目中用到了异形的 NavigationBar ，这样在跳转界面的就会有撕裂的感觉，对此进行了优化，使用自定制的跳转动画。</p>
+
+<p>为了项目的通用性，我封装了这个动画，这样在需要使用的时候调用即可。先看一下代码</p>
+
+<p>继承 UINavigationController 然后重写 push 和 pop 的方法。在代理中使用自己的动画。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">class</span> <span class="kt">NavigationViewController</span><span class="p">:</span> <span class="kt">UINavigationController</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">navigationAnimatedTransitioning</span> <span class="o">=</span> <span class="kt">NavigationAnimatedTransitioning</span><span class="p">()</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="n">nibName</span> <span class="nv">nibNameOrNil</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="n">bundle</span> <span class="nv">nibBundleOrNil</span><span class="p">:</span> <span class="kt">Bundle</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="n">nibNameOrNil</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="n">nibBundleOrNil</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="nv">rootViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">rootViewController</span><span class="p">:</span> <span class="n">rootViewController</span><span class="p">)</span>
+        <span class="n">interactivePopGestureRecognizer</span><span class="p">?</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+        <span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+    <span class="p">}</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">fatalError</span><span class="p">(</span><span class="s">"init(coder:) has not been implemented"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">pushViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">navigationAnimatedTransitioning</span><span class="o">.</span><span class="n">isPush</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="k">if</span> <span class="n">viewControllers</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="n">viewController</span><span class="o">.</span><span class="n">hidesBottomBarWhenPushed</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="p">}</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">pushViewController</span><span class="p">(</span><span class="n">viewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="n">animated</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">popViewController</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">vc</span> <span class="o">=</span> <span class="k">super</span><span class="o">.</span><span class="nf">popViewController</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="n">animated</span><span class="p">)</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">navigationAnimatedTransitioning</span><span class="o">.</span><span class="n">isPush</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="k">return</span> <span class="n">vc</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">didReceiveMemoryWarning</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">didReceiveMemoryWarning</span><span class="p">()</span>
+        <span class="c1">// Dispose of any resources that can be recreated.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">NavigationViewController</span><span class="p">:</span> <span class="kt">UINavigationControllerDelegate</span><span class="p">,</span> <span class="kt">UIGestureRecognizerDelegate</span> <span class="p">{</span>
+
+    <span class="kd">func</span> <span class="nf">navigationController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationController</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="p">,</span> <span class="n">animationControllerFor</span> <span class="nv">operation</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="o">.</span><span class="kt">Operation</span><span class="p">,</span> <span class="n">from</span> <span class="nv">fromVC</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">to</span> <span class="nv">toVC</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">?</span> <span class="p">{</span>
+        <span class="c1">//按需调用</span>
+        <span class="k">if</span> <span class="n">fromVC</span><span class="o">.</span><span class="nf">isKind</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="o">.</span><span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="n">navigationAnimatedTransitioning</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//模仿系统的push,处理了状态栏的问题</span>
+<span class="kd">class</span> <span class="kt">NavigationAnimatedTransitioning</span><span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">UIViewControllerAnimatedTransitioning</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">isPush</span> <span class="o">=</span> <span class="kc">true</span>
+
+    <span class="kd">func</span> <span class="nf">transitionDuration</span><span class="p">(</span><span class="n">using</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mf">0.25</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">animateTransition</span><span class="p">(</span><span class="n">using</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">width</span> <span class="o">=</span> <span class="kt">UIScreen</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span>
+        <span class="k">let</span> <span class="nv">height</span> <span class="o">=</span> <span class="kt">UIScreen</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">let</span> <span class="nv">vc</span> <span class="o">=</span> <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">keyWindow</span><span class="p">?</span><span class="o">.</span><span class="nf">topMostWindowController</span><span class="p">()</span>
+        <span class="c1">//截图</span>
+        <span class="k">let</span> <span class="nv">screenView</span> <span class="o">=</span> <span class="n">vc</span><span class="p">?</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="nf">snapshotView</span><span class="p">(</span><span class="nv">afterScreenUpdates</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span> <span class="p">??</span> <span class="kt">UIView</span><span class="p">()</span>
+
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">fromVC</span> <span class="o">=</span> <span class="n">transitionContext</span><span class="o">.</span><span class="nf">viewController</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="o">.</span><span class="n">from</span><span class="p">),</span>
+            <span class="k">let</span> <span class="nv">toView</span> <span class="o">=</span> <span class="n">transitionContext</span><span class="o">.</span><span class="nf">view</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="o">.</span><span class="n">to</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+
+        <span class="n">transitionContext</span><span class="o">.</span><span class="n">containerView</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">toView</span><span class="p">)</span>
+
+        <span class="kd">func</span> <span class="nf">setAnimationAndFire</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">self</span><span class="o">.</span><span class="n">isPush</span> <span class="p">{</span>
+                <span class="n">fromVC</span><span class="o">.</span><span class="n">navigationController</span><span class="p">?</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="nf">insertSubview</span><span class="p">(</span><span class="n">screenView</span><span class="p">,</span> <span class="nv">at</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">fromVC</span><span class="o">.</span><span class="n">navigationController</span><span class="p">?</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="kt">CGAffineTransform</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">translationX</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">screenView</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="kt">CGPoint</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="o">-</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">fromVC</span><span class="o">.</span><span class="n">navigationController</span><span class="p">?</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">screenView</span><span class="p">)</span>
+                <span class="n">fromVC</span><span class="o">.</span><span class="n">navigationController</span><span class="p">?</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="kt">CGAffineTransform</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">translationX</span><span class="p">:</span> <span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">screenView</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="kt">CGPoint</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="n">width</span> <span class="o">-</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="kt">UIView</span><span class="o">.</span><span class="nf">animate</span><span class="p">(</span><span class="nv">withDuration</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span> <span class="nv">delay</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="o">.</span><span class="n">curveEaseOut</span><span class="p">,</span> <span class="nv">animations</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">fromVC</span><span class="o">.</span><span class="n">navigationController</span><span class="p">?</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="kt">CGAffineTransform</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">translationX</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">screenView</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="kt">CGPoint</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">isPush</span> <span class="p">?</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">4</span> <span class="p">:</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">},</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">in</span>
+                <span class="n">screenView</span><span class="o">.</span><span class="nf">removeFromSuperview</span><span class="p">()</span>
+            <span class="p">})</span>
+        <span class="p">}</span>
+        <span class="kt">UIView</span><span class="o">.</span><span class="nf">animate</span><span class="p">(</span><span class="nv">withDuration</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">animations</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">transitionContext</span><span class="o">.</span><span class="nf">completeTransition</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+        <span class="p">},</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">in</span>
+            <span class="nf">setAnimationAndFire</span><span class="p">()</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/** 摘自IQKeyboardManager-IQUIWindow+Hierarchy.swift */</span>
+<span class="kd">public</span> <span class="kd">extension</span> <span class="kt">UIWindow</span> <span class="p">{</span>
+    <span class="cm">/** @return Returns the current Top Most ViewController in hierarchy.   */</span>
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">topMostWindowController</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">topController</span> <span class="o">=</span> <span class="n">rootViewController</span>
+        <span class="k">while</span> <span class="k">let</span> <span class="nv">presentedController</span> <span class="o">=</span> <span class="n">topController</span><span class="p">?</span><span class="o">.</span><span class="n">presentedViewController</span> <span class="p">{</span>
+            <span class="n">topController</span> <span class="o">=</span> <span class="n">presentedController</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">topController</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>可以看到 实现的方式是 用了 截图 + Window 动画的方式，这是因为需要处理 tabbar 的情况，而 tabbar 在不同的 iOS 版本还是有不同的实现方法，所有为了统一就直接使用 window 实现动画。</p>
+
+<h3 id="最后">最后</h3>
+
+<p>这个是 Swift 下好用的转场解决方案，如果在 OC 下有更多的选择，在 Swift 下建议尝试一下本文的方法。</p>
+
+<p>如果碰到问题，去 github 上找一找，有很多前辈已经有了好的通用解决方案。</p>
+:ET

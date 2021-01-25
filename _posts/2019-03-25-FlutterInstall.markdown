@@ -10,7 +10,7 @@ tags:                                #标签
 - Flutter
 ---
 
-![flutter](https://github.com/dart-lang/site-shared/raw/master/src/_assets/image/flutter/icon/64.png?raw=1)
+![img](https://github.com/dart-lang/site-shared/raw/master/src/_assets/image/flutter/icon/64.png?raw=1)
 
 ### 安装
 

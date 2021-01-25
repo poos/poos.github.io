@@ -1,0 +1,368 @@
+I"o]<h2 id="demo">Demo</h2>
+
+<p><strong><a href="https://github.com/poos/BlogDemo">本文所有代码 Demo 地址</a></strong></p>
+
+<p>系列一共2篇，第一篇在这里
+<a href="https://poos.github.io/2019/04/29/FlutterShare/">Flutter 技术分享 - 跨平台开发方案，Flutter，Dart，Widget，Stream </a>
+，第一篇属于大家都可以听听的，第二篇就比较深入一些，讲一讲前端的设计模式，Flutter与原生项目的互相调用。</p>
+
+<ul>
+  <li>
+    <p>State Manage 五大方案</p>
+  </li>
+  <li>
+    <p>打包和自动化</p>
+  </li>
+  <li>
+    <p>与原生项目互嵌</p>
+  </li>
+</ul>
+
+<h2 id="state-manage-五大方案">State Manage 五大方案</h2>
+
+<p>State Manage 是 Flutter 中 UI 更新的独有方案，但是同样可以类比到其他移动端，前端等方面。其实也是对应界面更新的几个方案。</p>
+
+<ul>
+  <li>setState</li>
+  <li>inheritedWidget &amp; Scoped model</li>
+  <li>redux</li>
+  <li>Bloc / Rx</li>
+  <li>MobX</li>
+</ul>
+
+<p>简略来说：从上到下方案分别是：直接更新；根节点存储；独立 Reducer 中心处理；明显分层, 使用 Bloc 中心处理信息流；事件影响状态，状态改变一切。</p>
+
+<p><strong>其实除了前两种方案，三四五 的方案都是使用了分层。</strong></p>
+
+<h4 id="setstate">setState</h4>
+
+<p>点击直接更新。</p>
+
+<p>第一个使用 setState 某个点的更新。缺点是如果相隔的层比较多，需要操作多个节点，那就没法使用。</p>
+
+<p><img src="https://poos.github.io/img/flutter_state_1.png" alt="img" /></p>
+
+<h4 id="inheritedwidget--scoped-model">inheritedWidget &amp; Scoped model</h4>
+
+<p>根视图节点存储。</p>
+
+<p>针对一的问题，解决方案之一是在顶级节点保存共有数据，所有需要数据的节点就去顶级节点拿。</p>
+
+<p>其实 Flutter 中全局 Theme 的样式就是使用这种方式存储的。</p>
+
+<p><img src="https://poos.github.io/img/flutter_state_2.png" alt="img" /></p>
+
+<h4 id="redux">redux</h4>
+
+<p>独立 Reducer 中心处理。只读 State 存储。</p>
+
+<p>Reducer 中心只是一些纯函数，它接收先前的 state 和 action，并返回新的 state。刚开始你可以只有一个 reducer，随着应用变大，你可以把它拆成多个小的 reducers。</p>
+
+<p>整个应用的 state 被储存在一棵 state tree 中。好处是 state 可以从服务端读取；还有就是方便依托于 State 事情都会很容易，例如查询之前的状态等。</p>
+
+<p><a href="https://www.redux.org.cn/docs/introduction/ThreePrinciples.html">redux 的三大原则</a> ：单一数据源，State 是只读的，使用纯函数来执行修改。</p>
+
+<p>redux 讲究独立出一个类来保存状态，提供入口事件来更新状态。</p>
+
+<p><img src="https://poos.github.io/img/flutter_state_3.png" alt="img" /></p>
+
+<h4 id="bloc--rx">Bloc / Rx</h4>
+
+<p>明显分层, 使用 Bloc 中心处理信息流。</p>
+
+<p>事件流通过 Bloc 中心，会产出 状态流。 UI 监听状态流更新。</p>
+
+<p>首先定义事件和状态的枚举； 单个状态的转变是通过 Bloc 定义一些协议，在协议方法中处理状态的转变，异步返回新状态。</p>
+
+<p><a href="https://felangel.github.io/bloc/#/coreconcepts">bloc 核心概念</a> ：事件，状态，转变，流，Bloc 中心和代理。</p>
+
+<p><img src="https://poos.github.io/img/flutter_state_4.png" alt="img" /></p>
+
+<h4 id="mobx">MobX</h4>
+
+<p>事件影响状态，状态改变一切。</p>
+
+<p>MobX 讲究  <strong>任何源自应用状态的东西都应该自动地获得。</strong></p>
+
+<p>事件去修改 state，导致 state 的更新。state 更新会影响所有相关的细小的事件，会产生一系列事件。</p>
+
+<p>MobX 提出 <strong>Derivations(衍生)</strong> 的概念，用来描述 State 改变产出的一系列影响。（定义是，源自状态并且不会继续可变的东西都是衍生。例如: 用户界面；衍生数据，比如剩下的待办事项的数量；后端集成，比如把变化发送到服务器端。）</p>
+
+<p>MobX 区也分了两种类型的衍生，并且提出了黄金法则: 如果你想创建一个基于当前状态的值时，请使用 computed。</p>
+
+<ul>
+  <li>
+    <p><strong>Computed values(计算值)</strong> - 它们是永远可以使用纯函数(pure function)从当前可观察状态中衍生出的值。</p>
+  </li>
+  <li>
+    <p><strong>Reactions(反应)</strong> - Reactions 是当状态改变时需要自动发生的副作用。需要有一个桥梁来连接命令式编程(imperative programming)和响应式编程(reactive programming)。或者说得更明确一些，它们最终都需要实现I / O 操作。</p>
+  </li>
+</ul>
+
+<p>使用上通常三步走：<strong>定义状态并使其可观察，创建视图以响应状态的变化，更改状态</strong>。</p>
+
+<p><a href="https://cn.mobx.js.org/intro/concepts.html">MobX 概念与原则</a> ：State(状态)，Derivations(衍生)，Actions(动作)。</p>
+
+<p><img src="https://poos.github.io/img/flutter_state_5.png" alt="img" /></p>
+
+<h3 id="总结一下">总结一下</h3>
+
+<p>做非常简单的变化就使用 setState；</p>
+
+<p>依赖顶级节点，或者单一的的数据源，就使用 inheritedWidget &amp; Scoped model；</p>
+
+<p>redux 更适合用户数据中心等设计；</p>
+
+<p>Bloc / Rx 更适合页面设计；</p>
+
+<p>MobX 是一种比 Bloc / Rx 消耗资源更小的设计，不过意味着更多的代码和逻辑。适合页面，更适合点一个按钮，触发 n 多事件的场景。</p>
+
+<h2 id="打包和自动化">打包和自动化</h2>
+
+<h4 id="打包">打包</h4>
+<p>打包非常简单，但是还是提一下。</p>
+
+<p>分别给 iOS 和 Android 配置相应的 icon，启动图（在各自应用文件中）。iOS 设置好证书，Android 设置好签名就可以打包了。</p>
+
+<ul>
+  <li>
+    <p>iOS 进入 Xode，打包。</p>
+  </li>
+  <li>
+    <p>Android 使用命令行 <strong><em>flutter build apk</em></strong> 即可。</p>
+  </li>
+</ul>
+
+<h4 id="自动化">自动化</h4>
+
+<p>Flutter 可以使用 fastlane 进行持续交付。文档中介绍了本地和服务端部署的方法，就不多说了。</p>
+
+<p><a href="https://flutter.dev/docs/deployment/fastlane-cd">使用带有Flutter的fastlane进行持续交付</a></p>
+
+<h2 id="与原生项目互嵌">与原生项目互嵌</h2>
+
+<p>主要是 flutter 使用原生包；原生应用插入 Flutter 页面。</p>
+
+<h3 id="现有-flutter-项目接入原生包">现有 Flutter 项目接入原生包</h3>
+
+<p>等价于，开发和使用本地 flutter package。</p>
+
+<p><a href="https://flutter.dev/docs/development/packages-and-plugins/developing-packages">开发包和插件</a></p>
+
+<p>以 iOS 为例，分为3步。</p>
+
+<ul>
+  <li>创建 适用于 Flutter 的 package 包。使用命令行创建，会生成相应的文件目录，iOS 和 Android 的 package 文件在不同的地方，第二步制作好之后放到相应的地方即可。</li>
+  <li>制作 iOS cocoaPod 库，验证在原生项目是正常运行，然后可以放到指定位置。</li>
+  <li>发布 package 库，或者引用本地 package。</li>
+</ul>
+
+<p><a href="https://www.jianshu.com/p/9096a2eb2804">使用cocoapods打包静态库</a></p>
+
+<p><strong>对于 Android 第二步相应调整即可。</strong></p>
+
+<h4 id="包示例">包示例</h4>
+
+<p><strong>互嵌使用不同的消息通知的方式来区分调用的内容，示例如下</strong></p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//package lib/package.dart</span>
+
+<span class="kn">import</span> <span class="s">'dart:async'</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="s">'package:flutter/services.dart'</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Package</span> <span class="o">{</span>
+  <span class="kd">static</span> <span class="kd">const</span> <span class="n">MethodChannel</span> <span class="n">_channel</span> <span class="o">=</span>
+      <span class="kd">const</span> <span class="n">MethodChannel</span><span class="o">(</span><span class="s">'package'</span><span class="o">);</span>
+
+  <span class="kd">static</span> <span class="n">Future</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="kd">get</span> <span class="n">platformVersion</span> <span class="n">async</span> <span class="o">{</span>
+    <span class="c1">//调用方法并且等待返回</span>
+    <span class="kd">final</span> <span class="kt">String</span> <span class="n">version</span> <span class="o">=</span> <span class="n">await</span> <span class="n">_channel</span><span class="o">.</span><span class="na">invokeMethod</span><span class="o">(</span><span class="s">'getPlatformVersion'</span><span class="o">);</span>
+    <span class="k">return</span> <span class="n">version</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//package ios/Classes/Plugin.m</span>
+
+<span class="ss">#import</span> <span class="s">"LoginPlugin.h"</span>
+
+<span class="nd">@implementation</span> <span class="n">LoginPlugin</span>
+<span class="o">+</span> <span class="o">(</span><span class="kt">void</span><span class="o">)</span><span class="nl">registerWithRegistrar:</span><span class="o">(</span><span class="n">NSObject</span><span class="o">&lt;</span><span class="n">FlutterPluginRegistrar</span><span class="o">&gt;*)</span><span class="n">registrar</span> <span class="o">{</span>
+  <span class="n">FlutterMethodChannel</span><span class="o">*</span> <span class="n">channel</span> <span class="o">=</span> <span class="o">[</span><span class="n">FlutterMethodChannel</span>
+      <span class="nl">methodChannelWithName:</span><span class="err">@</span><span class="s">"login"</span>
+            <span class="nl">binaryMessenger:</span><span class="o">[</span><span class="n">registrar</span> <span class="n">messenger</span><span class="o">]];</span>
+  <span class="n">LoginPlugin</span><span class="o">*</span> <span class="n">instance</span> <span class="o">=</span> <span class="o">[[</span><span class="n">LoginPlugin</span> <span class="n">alloc</span><span class="o">]</span> <span class="n">init</span><span class="o">];</span>
+  <span class="o">[</span><span class="n">registrar</span> <span class="nl">addMethodCallDelegate:</span><span class="n">instance</span> <span class="nl">channel:</span><span class="n">channel</span><span class="o">];</span>
+<span class="o">}</span>
+
+<span class="o">-</span> <span class="o">(</span><span class="kt">void</span><span class="o">)</span><span class="nl">handleMethodCall:</span><span class="o">(</span><span class="n">FlutterMethodCall</span><span class="o">*)</span><span class="n">call</span> <span class="nl">result:</span><span class="o">(</span><span class="n">FlutterResult</span><span class="o">)</span><span class="n">result</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">([</span><span class="err">@</span><span class="s">"getPlatformVersion"</span> <span class="nl">isEqualToString:</span><span class="n">call</span><span class="o">.</span><span class="na">method</span><span class="o">])</span> <span class="o">{</span>
+        <span class="c1">//调用你需要调用的原生方法</span>
+        <span class="c1">//resulut 返回你需要返回的信息</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="n">result</span><span class="o">(</span><span class="n">FlutterMethodNotImplemented</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+<span class="nd">@end</span>
+</code></pre></div></div>
+
+<h4 id="调用示例">调用示例</h4>
+
+<p>首先引用这个包。使用本地包时候注意路径正确。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># pubspec.yaml</span>
+dependencies:
+  package_name:
+    path: ../package_name/
+</code></pre></div></div>
+<p>然后即可调用。</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//some file</span>
+<span class="kt">void</span> <span class="nf">_onPressed</span><span class="p">(</span><span class="o">)</span> <span class="n">async</span> <span class="o">{</span>
+    <span class="kd">var</span> <span class="n">batter</span> <span class="o">=</span> <span class="n">await</span> <span class="n">Login</span><span class="o">.</span><span class="na">getBatteryLevel</span><span class="o">;</span>
+    <span class="n">print</span><span class="o">(</span><span class="n">batter</span><span class="o">);</span>
+  <span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="现有原生项目嵌入-flutter">现有原生项目嵌入 Flutter</h3>
+
+<p><a href="https://github.com/flutter/flutter/wiki/Add-Flutter-to-existing-apps">flutter/wiki/Add-Flutter-to-existing-apps</a></p>
+
+<h4 id="android">Android</h4>
+
+<ul>
+  <li>
+    <p>创建 Flutter 包</p>
+  </li>
+  <li>
+    <p>Host app requirements，即设置 compileOptions</p>
+  </li>
+  <li>
+    <p>设置 settings.gradle</p>
+  </li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>some/path/
+flutter create <span class="nt">-t</span> module my_flutter
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compileOptions {
+  sourceCompatibility 1.8
+  targetCompatibility 1.8
+}
+</code></pre></div></div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// MyApp/settings.gradle
+include <span class="s1">':app'</span>                                     // assumed existing content
+setBinding<span class="o">(</span>new Binding<span class="o">([</span>gradle: this]<span class="o">))</span>                                 // new
+evaluate<span class="o">(</span>new File<span class="o">(</span>                                                      // new
+  settingsDir.parentFile,                                               // new
+  <span class="s1">'my_flutter/.android/include_flutter.groovy'</span>                          // new
+<span class="o">))</span>      
+</code></pre></div></div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// MyApp/app/build.gradle
+:
+dependencies <span class="o">{</span>
+  implementation project<span class="o">(</span><span class="s1">':flutter'</span><span class="o">)</span>
+  :
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="ios">iOS</h4>
+
+<ul>
+  <li>
+    <p>创建 Flutter 包</p>
+  </li>
+  <li>
+    <p>将包配置进入 Podfile，导入</p>
+  </li>
+  <li>
+    <p>设置项目 bitcode，项目 shell 命令</p>
+  </li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>some/path/
+flutter create <span class="nt">-t</span> module my_flutter
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#Podfile, install</span>
+flutter_application_path <span class="o">=</span> <span class="s1">'path/to/my_flutter/'</span>
+  <span class="nb">eval</span><span class="o">(</span>File.read<span class="o">(</span>File.join<span class="o">(</span>flutter_application_path, <span class="s1">'.ios'</span>, <span class="s1">'Flutter'</span>, <span class="s1">'podhelper.rb'</span><span class="o">))</span>, binding<span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#TARGET -&gt; Build Phases -&gt; New Run Script Phase</span>
+<span class="s2">"</span><span class="nv">$FLUTTER_ROOT</span><span class="s2">/packages/flutter_tools/bin/xcode_backend.sh"</span> build
+<span class="s2">"</span><span class="nv">$FLUTTER_ROOT</span><span class="s2">/packages/flutter_tools/bin/xcode_backend.sh"</span> embed
+</code></pre></div></div>
+
+<h4 id="通信方式">通信方式</h4>
+
+<p><strong>Flutter 包的 main 入口通过传入的 message 区分调用不同的函数，返回不同的 widget。</strong></p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="s">'dart:ui'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="s">'package:flutter/material.dart'</span><span class="o">;</span>
+
+<span class="c1">// void main() =&gt; runApp(MyApp());</span>
+
+<span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">runApp</span><span class="o">(</span><span class="n">_widgetForRoute</span><span class="o">(</span><span class="n">window</span><span class="o">.</span><span class="na">defaultRouteName</span><span class="o">));</span>
+
+<span class="n">Widget</span> <span class="nf">_widgetForRoute</span><span class="p">(</span><span class="kt">String</span> <span class="n">route</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">switch</span> <span class="o">(</span><span class="n">route</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="s">'route1'</span><span class="o">:</span>
+      <span class="k">return</span> <span class="n">MyApp</span><span class="o">();</span>
+    <span class="k">case</span> <span class="s">'route2'</span><span class="o">:</span>
+      <span class="k">return</span> <span class="n">Container</span><span class="o">(</span><span class="nl">color:</span> <span class="n">Colors</span><span class="o">.</span><span class="na">red</span><span class="o">,</span> <span class="nl">width:</span> <span class="mi">100</span><span class="o">,</span> <span class="nl">height:</span> <span class="mi">100</span><span class="o">,);</span>
+    <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="n">Center</span><span class="o">(</span>
+        <span class="nl">child:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'Unknown route: </span><span class="si">$route</span><span class="s">'</span><span class="o">,</span> <span class="nl">textDirection:</span> <span class="n">TextDirection</span><span class="o">.</span><span class="na">ltr</span><span class="o">),</span>
+      <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>原生调用如下：</strong></p>
+
+<p>Android</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MyApp/app/src/main/java/some/package/MainActivity.java</span>
+<span class="n">fab</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="nc">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="nc">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">View</span> <span class="n">flutterView</span> <span class="o">=</span> <span class="nc">Flutter</span><span class="o">.</span><span class="na">createView</span><span class="o">(</span>
+      <span class="nc">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span>
+      <span class="n">getLifecycle</span><span class="o">(),</span>
+      <span class="s">"route1"</span>
+    <span class="o">);</span>
+    <span class="nc">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span> <span class="n">layout</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">(</span><span class="mi">600</span><span class="o">,</span> <span class="mi">800</span><span class="o">);</span>
+    <span class="n">layout</span><span class="o">.</span><span class="na">leftMargin</span> <span class="o">=</span> <span class="mi">100</span><span class="o">;</span>
+    <span class="n">layout</span><span class="o">.</span><span class="na">topMargin</span> <span class="o">=</span> <span class="mi">200</span><span class="o">;</span>
+    <span class="n">addContentView</span><span class="o">(</span><span class="n">flutterView</span><span class="o">,</span> <span class="n">layout</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">});</span>
+</code></pre></div></div>
+
+<p>iOS - swift</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">@objc</span> <span class="kd">func</span> <span class="nf">handleButtonAction</span><span class="p">()</span> <span class="p">{</span>
+<span class="c1">//        let flutterEngine = (UIApplication.shared.delegate as? AppDelegate)?.flutterEngine;</span>
+<span class="c1">//        let flutterViewController = FlutterViewController(engine: flutterEngine, nibName: nil, bundle: nil)!;</span>
+        <span class="k">let</span> <span class="nv">flutterViewController</span> <span class="o">=</span> <span class="kt">FlutterViewController</span><span class="o">.</span><span class="nf">init</span><span class="p">();</span>
+        <span class="n">flutterViewController</span><span class="o">.</span><span class="nf">setInitialRoute</span><span class="p">(</span><span class="s">"route1"</span><span class="p">)</span>
+<span class="c1">//        self.present(flutterViewController, animated: false, completion: nil)</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">view</span> <span class="o">=</span> <span class="n">flutterViewController</span><span class="o">.</span><span class="n">view</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        <span class="n">view</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRect</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="mi">414</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">500</span><span class="p">)</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="p">?</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">view</span><span class="p">)</span>
+        
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="最后">最后</h2>
+
+<p>第一部分内容比较广泛，理解起来也能加深对状态处理的认识。第二部分和第三部分涉及编码，最好能够结合项目来看。</p>
+
+<p>推荐一篇闲鱼的嵌入分享：<a href="https://www.infoq.cn/article/xianyu-cross-platform-based-on-flutter">闲鱼基于 Flutter 的移动端跨平台应用实践</a></p>
+:ET

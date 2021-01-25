@@ -1,0 +1,245 @@
+I"�1<p>12.25 补充一下：</p>
+
+<p>在找学习资料时候找了以为非常优秀的大神的文章：https://blog.dianqk.org , 将作者的博客几乎爬了一遍，受益良多。</p>
+
+<p>通常使用的操作符是 map 和 flatmap，一篇文章详细分析了两种区别： <a href="https://medium.com/@DianQK/rxswift-%E4%B8%8B%E7%9A%84-map-%E4%B8%8E-flatmap-d0b319aef819">RxSwift 下的 map 与 flatMap</a></p>
+
+<p>另外记住一句话：<strong>rx 最大的好处就是不需要嵌套闭包</strong></p>
+
+<p>https://rxswift.slack.com/ 是一个很好的交流学习地方</p>
+
+<h3 id="使用">使用</h3>
+
+<p>跟其他 Reactive 框架一样，RxSwift 将各个事件以事件流的方式依次输出。通过绑定事件流即可。</p>
+
+<p>RX 上传手之后需要多查文档才能发现好的用法，另外多看看 Rx 下的设计模式和框架会有很大益处。本章从下边的文档中摘抄，供大家了解和查询使用。</p>
+
+<h4 id="中文文档-rxswift-reactivex-for-swift"><a href="https://beeth0ven.github.io/RxSwift-Chinese-Documentation/">中文文档 ：RxSwift: ReactiveX for Swift</a></h4>
+
+<p>ps： <a href="http://reactivex.io/documentation/operators.html">reactivex.io</a>
+可以看到系列包含很多语言的</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RxJava
+C
+RxJSc
+Rx.NETC
+RxScala
+RxClojure
+RxSwift
+Others
+</code></pre></div></div>
+
+<h4 id="核心">核心</h4>
+<p>Observable - 产生事件
+Observer - 响应事件
+Operator - 创建变化组合事件
+Disposable - 管理绑定（订阅）的生命周期
+Schedulers - 线程队列调配</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// Observable&lt;String&gt;</span>
+<span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="n">usernameOutlet</span><span class="o">.</span><span class="n">rx</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">orEmpty</span><span class="o">.</span><span class="nf">asObservable</span><span class="p">()</span>
+
+<span class="c1">// Observable&lt;Bool&gt;</span>
+<span class="k">let</span> <span class="nv">passwordValid</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="c1">// Operator</span>
+    <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">characters</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="n">minimalUsernameLength</span> <span class="p">}</span>
+
+<span class="c1">// Observer&lt;Bool&gt;</span>
+<span class="k">let</span> <span class="nv">observer</span> <span class="o">=</span> <span class="n">passwordValidOutlet</span><span class="o">.</span><span class="n">rx</span><span class="o">.</span><span class="n">isHidden</span>
+
+<span class="c1">// Disposable</span>
+<span class="k">let</span> <span class="nv">disposable</span> <span class="o">=</span> <span class="n">passwordValid</span>
+    <span class="c1">// Scheduler 用于控制任务在那个线程队列运行</span>
+    <span class="o">.</span><span class="nf">subscribeOn</span><span class="p">(</span><span class="kt">MainScheduler</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+    <span class="o">.</span><span class="nf">observeOn</span><span class="p">(</span><span class="kt">MainScheduler</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+    <span class="o">.</span><span class="nf">bind</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="n">observer</span><span class="p">)</span>
+
+
+<span class="o">...</span>
+
+<span class="c1">// 取消绑定，你可以在退出页面（或者需要取消监听的时候）进行取消绑定操作。</span>
+<span class="n">disposable</span><span class="o">.</span><span class="nf">dispose</span><span class="p">()</span>
+<span class="n">下面几节会详细介绍这几个组件的功能和用法</span><span class="err">。</span>
+
+</code></pre></div></div>
+
+<h4 id="操作符">操作符</h4>
+
+<h5 id="我想要创建一个-observable">我想要创建一个 Observable</h5>
+
+<ul>
+  <li>产生特定的一个元素：just</li>
+  <li>从一个序列拉取元素：from</li>
+  <li>重复的产生某一个元素：repeatElement</li>
+  <li>存在自定义逻辑：create</li>
+  <li>每次订阅时产生：deferred</li>
+  <li>每隔一段时间，发出一个元素：interval</li>
+  <li>在一段延时后：timer</li>
+  <li>一个任何事件都没有产生的序列：never</li>
+</ul>
+
+<h5 id="我想要创建一个-observable-通过组合其他的-observables">我想要创建一个 Observable 通过组合其他的 Observables</h5>
+
+<ul>
+  <li>任意一个 Observable 产生了元素，就发出这个元素：merge</li>
+  <li>让这些 Observables 一个接一个的发出元素，当上一个 Observable 元- 素发送完毕后，下一个 Observable 才能开始发出元素：concat</li>
+  <li>组合多个 Observables 的元素</li>
+  <li>当每一个 Observable 都发出一个新的元素：zip</li>
+  <li>当任意一个 Observable 发出一个新的元素：combineLatest</li>
+</ul>
+
+<h5 id="我想要转换-observable-的元素后再将它们发出来">我想要转换 Observable 的元素后，再将它们发出来</h5>
+
+<ul>
+  <li>对每个元素直接转换：map</li>
+  <li>
+    <p>转换到另一个 Observable：flatMap</p>
+  </li>
+  <li>只接收最新的元素转换的 Observable 所产生的元素：flatMapLatest</li>
+  <li>
+    <p>每一个元素转换的 Observable 按顺序产生元素：concatMap</p>
+  </li>
+  <li>基于所有遍历过的元素： scan</li>
+</ul>
+
+<h5 id="我想要将产生的每一个元素拖延一段时间后再发出delay">我想要将产生的每一个元素，拖延一段时间后再发出：delay</h5>
+
+<h5 id="我想要将产生的事件封装成元素发送出来">我想要将产生的事件封装成元素发送出来</h5>
+
+<ul>
+  <li>将他们封装成 Event<Element>：materialize</Element></li>
+  <li>然后解封出来：dematerialize
+    <h5 id="我想要忽略掉所有的-next-事件只接收-completed-和-error-事件ignoreelements">我想要忽略掉所有的 next 事件，只接收 completed 和 error 事件：ignoreElements</h5>
+  </li>
+</ul>
+
+<h5 id="我想创建一个新的-observable-在原有的序列前面加入一些元素startwith">我想创建一个新的 Observable 在原有的序列前面加入一些元素：startWith</h5>
+
+<h5 id="我想从-observable-中收集元素缓存这些元素之后在发出buffer">我想从 Observable 中收集元素，缓存这些元素之后在发出：buffer</h5>
+
+<h5 id="我想将-observable-拆分成多个-observableswindow">我想将 Observable 拆分成多个 Observables：window</h5>
+
+<ul>
+  <li>基于元素的共同特征：groupBy
+    <h5 id="我想只接收-observable-中特定的元素">我想只接收 Observable 中特定的元素</h5>
+  </li>
+  <li>发出唯一的元素：single
+    <h5 id="我想重新从-observable-中发出某些元素">我想重新从 Observable 中发出某些元素</h5>
+  </li>
+  <li>通过判定条件过滤出一些元素：filter</li>
+  <li>仅仅发出头几个元素：take</li>
+  <li>仅仅发出尾部的几个元素：takeLast</li>
+  <li>仅仅发出第 n 个元素：elementAt</li>
+  <li>跳过头几个元素</li>
+  <li>跳过头 n 个元素：skip</li>
+  <li>跳过头几个满足判定的元素：skipWhile，skipWhileWithIndex</li>
+  <li>跳过某段时间内产生的头几个元素：skip</li>
+  <li>跳过头几个元素直到另一个 Observable 发出一个元素：skipUntil</li>
+  <li>只取头几个元素</li>
+  <li>只取头几个满足判定的元素：takeWhile，takeWhileWithIndex</li>
+  <li>只取某段时间内产生的头几个元素：take</li>
+  <li>只取头几个元素直到另一个 Observable 发出一个元素：takeUntil</li>
+  <li>周期性的对 Observable 抽样：sample</li>
+  <li>发出那些元素，这些元素产生后的特定的时间内，没有新的元素产生：debounce</li>
+  <li>直到元素的值发生变化，才发出新的元素：distinctUntilChanged</li>
+  <li>并提供元素是否相等的判定函数：distinctUntilChanged</li>
+  <li>在开始发出元素时，延时后进行订阅：delaySubscription
+    <h5 id="我想要从一些-observables-中只取第一个产生元素的-observableamb">我想要从一些 Observables 中，只取第一个产生元素的 Observable：amb</h5>
+  </li>
+</ul>
+
+<h5 id="我想评估-observable-的全部元素">我想评估 Observable 的全部元素</h5>
+
+<ul>
+  <li>并且对每个元素应用聚合方法，待所有元素都应用聚合方法后，发出结果：reduce</li>
+  <li>并且对每个元素应用聚合方法，每次应用聚合方法后，发出结果：scan</li>
+</ul>
+
+<h5 id="我想把-observable-转换为其他的数据结构as">我想把 Observable 转换为其他的数据结构：as…</h5>
+
+<h5 id="我想在某个-scheduler-应用操作符subscribeon">我想在某个 Scheduler 应用操作符：subscribeOn</h5>
+
+<ul>
+  <li>在某个 Scheduler 监听：observeOn
+    <h5 id="我想要-observable-发生某个事件时-采取某个行动do">我想要 Observable 发生某个事件时, 采取某个行动：do</h5>
+  </li>
+</ul>
+
+<h5 id="我想要-observable-发出一个-error-事件error">我想要 Observable 发出一个 error 事件：error</h5>
+
+<ul>
+  <li>如果规定时间内没有产生元素：timeout
+    <h5 id="我想要-observable-发生错误时优雅的恢复">我想要 Observable 发生错误时，优雅的恢复</h5>
+  </li>
+  <li>如果规定时间内没有产生元素，就切换到备选 Observable ：timeout</li>
+  <li>如果产生错误，将错误替换成某个元素 ：catchErrorJustReturn</li>
+  <li>如果产生错误，就切换到备选 Observable ：catchError</li>
+  <li>如果产生错误，就重试 ：retry</li>
+</ul>
+
+<h5 id="我创建一个-disposable-资源使它与-observable-具有相同的寿命using">我创建一个 Disposable 资源，使它与 Observable 具有相同的寿命：using</h5>
+
+<h5 id="我创建一个-observable直到我通知它可以产生元素后才能产生元素publish">我创建一个 Observable，直到我通知它可以产生元素后，才能产生元素：publish</h5>
+
+<ul>
+  <li>并且，就算是在产生元素后订阅，也要发出全部元素：replay</li>
+  <li>并且，一旦所有观察者取消观察，他就被释放掉：refCount</li>
+  <li>通知它可以产生元素了：connect</li>
+</ul>
+
+<h3 id="框架">框架</h3>
+<p>RxSwift 是一个响应式编程的基础框架，它并不会强制要求你使用某种架构。它和多个应用程序架构完美适配，这一章将介绍几个常用的架构：</p>
+
+<p>MVVM - 当今非常流行的 MVVM 设计模式</p>
+
+<p>RxFeedback - 由 RxSwift 创始人（Krunoslav Zaher） 提供的一个反馈循环架构</p>
+
+<p>ReactorKit - 结合了 Flux 和响应式编程的架构</p>
+
+<h3 id="生态">生态</h3>
+
+<p>RxCocoa 给 UI框架 提供了 Rx 支持，让我们能够使用按钮点击序列，输入框当前文本序列等。不过 RxCocoa 也只是 RxSwift 生态系统 中的一员。RxSwift 生态系统还给其他框架提供了 Rx 支持：</p>
+
+<ul>
+  <li>RxDataSources - UITableView 和 UICollectionView 数据源</li>
+  <li>RxGesture - 页面手势</li>
+  <li>RxMKMapView - 地图</li>
+  <li>RxCoreMotion - 陀螺仪</li>
+  <li>RxAlamofire - 网络请求</li>
+  <li>RxCoreData - CoreData 数据库</li>
+  <li>RxRealm - Realm 数据库</li>
+  <li>RxMediaPicker - 图片选择器</li>
+  <li>Action - 行为</li>
+  <li>RxWebKit - WebView</li>
+  <li>RxEventHub - 全局通知</li>
+  <li>RxSwiftExt - 添加一些有用的操作符</li>
+  <li>…</li>
+</ul>
+
+<h3 id="内存泄露">内存泄露</h3>
+
+<p>本来已经写了一些，但是网上找到了一些更好的资料，所以就删掉了。</p>
+
+<h4 id="rxswift-内存泄漏与资源释放管理"><a href="https://blog.dianqk.org/2016/08/21/memory-leak-in-rxswift/">RxSwift 内存泄漏与资源释放/管理</a></h4>
+
+<ol>
+  <li>
+    <p>未调用 onCompleted</p>
+  </li>
+  <li>
+    <p>闭包持有</p>
+  </li>
+  <li>
+    <p>func 持有</p>
+  </li>
+  <li>
+    <p>资源释放/管理</p>
+  </li>
+</ol>
+
+<h3 id="最后">最后</h3>
+
+<p>自己用的还是太过简单。现在看来在一个 vc 中使用 rx 并且完整的实现这个页面恩功能是比较好的。</p>
+
+<p>即是，组件内 设计模式， 项目框架 组件。</p>
+:ET

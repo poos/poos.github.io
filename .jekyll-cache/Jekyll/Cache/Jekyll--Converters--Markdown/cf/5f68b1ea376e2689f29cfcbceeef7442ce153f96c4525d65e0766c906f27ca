@@ -1,0 +1,140 @@
+I"�)<h3 id="相关链接">相关链接</h3>
+
+<h4 id="httpsswiftorg"><a href="https://swift.org/">https://swift.org/</a></h4>
+<h5 id="swift-中枚举高级用法及实践"><a href="https://swift.gg/2015/11/20/advanced-practical-enum-examples/">Swift 中枚举高级用法及实践</a></h5>
+
+<p>swift 中的枚举有很强大的功能：</p>
+
+<ul>
+  <li>
+    <p>可以指定枚举类型，int，string，甚至是 class 类型（需要通过 String 遵守协议转换）</p>
+  </li>
+  <li>
+    <p>枚举可以嵌套使用，这在定义宏往往很有用</p>
+  </li>
+  <li>
+    <p>枚举可以关联值，也就是可以带参数，所以有广泛使用的 <a href="https://github.com/Moya/Moya">github.com/Moya</a> 库的出现</p>
+  </li>
+  <li>
+    <p>枚举可以添加方法和属性，包含静态方法，可变方法（能够改变self）</p>
+  </li>
+  <li>
+    <p>因为枚举可以添加方法和属性，所有枚举甚至可以遵守协议，这又给了枚举以无限可能</p>
+  </li>
+  <li>
+    <p>使用字符串赋值枚举等神奇操作</p>
+  </li>
+</ul>
+
+<p>Swift 中枚举被用作网络框架，统计打点框架，Router框架，Theme框架等等。当然除了框架以外，用在一些业务也是非常贴切，本文就是一个简单的栗子～</p>
+
+<h5 id="swift-pattern-matching详细信息"><a href="http://appventure.me/2015/08/20/swift-pattern-matching-in-detail/">Swift Pattern Matching详细信息</a></h5>
+
+<p>swift 中的模式匹配，switch case：</p>
+
+<ul>
+  <li>
+    <p>与枚举配合使用，方便区分。特别是关联了值的枚举，会非常有用</p>
+  </li>
+  <li>
+    <p>可以使用元组，通配符 ‘_‘，所以在匹配时候会更强大</p>
+  </li>
+  <li>
+    <p>配合 swift 的表达式，可以实现判断 self 或者筛选 case 的功能</p>
+  </li>
+</ul>
+
+<p><a href="https://swift.gg/2015/10/27/swift-pattern-matching-in-detail/">详解 Swift 模式匹配</a></p>
+
+<h3 id="使用范围">使用范围</h3>
+
+<p>因为 swift 的这些特性，enum 的使用范围会非常广：</p>
+
+<p><strong>带参枚举，方法属性，可选值，类型匹配，范围匹配，遍历匹配，Api 规法化，宏定义，类簇，模型解析…</strong></p>
+
+<h3 id="例子">例子</h3>
+
+<p>下边是一个真实的例子，需求是展现一个个页面情景，根据不同的选择，产出最终产出结果，有点像情景交互游戏，或者年度账单之类：</p>
+
+<p><strong>利用枚举实现类簇，保证项目风格，且容易调试</strong>：</p>
+
+<p>CView定义了当前页面的所有元素，背景色或view，前景view，焦点，可选按钮等…</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">CView</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">back</span>
+    <span class="k">case</span> <span class="n">black</span>
+    <span class="k">case</span> <span class="nf">eye</span><span class="p">(</span><span class="nv">position</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">ground</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">button</span><span class="p">(</span><span class="nv">position</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">)</span>
+
+    <span class="k">var</span> <span class="nv">node</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">back</span><span class="p">:</span>
+            <span class="k">let</span> <span class="nv">back</span> <span class="o">=</span> <span class="kt">UIView</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">color</span><span class="p">:</span> <span class="kt">UIColor</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+            <span class="c1">//...</span>
+            <span class="k">return</span> <span class="n">back</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">ground</span><span class="p">(</span><span class="k">let</span> <span class="nv">image</span><span class="p">):</span>
+            <span class="c1">//...</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">button</span><span class="p">(</span><span class="k">let</span> <span class="nv">position</span><span class="p">,</span> <span class="k">let</span> <span class="nv">size</span><span class="p">):</span>
+            <span class="c1">//...</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">black</span><span class="p">:</span>
+            <span class="c1">//...</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">eye</span><span class="p">(</span><span class="k">let</span> <span class="nv">position</span><span class="p">):</span>
+            <span class="c1">//...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>利用枚举定义关卡，利用方法返回关卡的背景音乐，同时返回需要添加的view，和 view 对应的事件（使用元组的方式）</strong>：</p>
+
+<p>如果说第一个枚举只是当前场景的所有view列举的话，第二个就是枚举场景并且提供场景转换…</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">Level</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">welocme</span>
+    <span class="k">case</span> <span class="n">start</span>
+    <span class="k">case</span> <span class="n">choose</span>
+    <span class="k">case</span> <span class="n">levelSelf</span>
+    <span class="k">case</span> <span class="n">pay</span>
+    <span class="k">case</span> <span class="n">copyright</span>
+
+
+    <span class="c1">//初始化界面，返回</span>
+    <span class="k">var</span> <span class="nv">music</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="o">.</span><span class="nv">levelSelf</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"start"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">pay</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"pay"</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">//初始化界面，返回</span>
+    <span class="kd">func</span> <span class="nf">nodes</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">([</span><span class="kt">UIView</span><span class="p">],</span> <span class="p">[(</span><span class="kt">UIView</span><span class="p">,</span> <span class="kt">Level</span><span class="p">)])</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">name</span><span class="p">:</span>
+            <span class="k">let</span> <span class="nv">ground</span> <span class="o">=</span> <span class="kt">CView</span><span class="o">.</span><span class="nf">ground</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="s">"name"</span><span class="p">)</span><span class="o">.</span><span class="n">node</span>
+            <span class="k">let</span> <span class="nv">button0</span> <span class="o">=</span> <span class="kt">CView</span><span class="o">.</span><span class="nf">button</span><span class="p">(</span><span class="nv">position</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="o">-</span><span class="mi">70</span><span class="p">),</span>
+                                      <span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">450</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">node</span>
+            <span class="nf">return</span> <span class="p">([</span><span class="n">ground</span><span class="p">,</span> <span class="n">button0</span><span class="p">],</span> <span class="p">[(</span><span class="n">button0</span><span class="p">,</span> <span class="o">.</span><span class="n">changeName</span><span class="p">)])</span>
+
+            <span class="c1">//...</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="nf">return</span> <span class="p">([],</span> <span class="p">[])</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>可以看到通过这个几个枚举的创建，一个个页面的选择和选择之后的结果都十分明显的确定了。很明显在调试应用的时候能够避免很多的错误。</p>
+
+<p>写完框架之后，需要的只是添加和修改 enum 这一块了，这种方式在情景对话中非常适合。当然可以更加具体的扩展枚举提供更多的功能。</p>
+
+<h3 id="总结">总结</h3>
+
+<p>枚举在 swift 中得到了重大的提升，如果你使用 swift 开发，一定不要错过这个特性。相信掌握了这个技能之后，你的 level 更上一步。</p>
+:ET
