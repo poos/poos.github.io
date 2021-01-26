@@ -4,7 +4,7 @@
 
 ## [我的博客在这里 &rarr;](https://poos.github.io)
 
-![img](img/readme-home.png)
+![img](https://poos.github.io/img/readme-home.png)
 
 ---
 ---
@@ -12,7 +12,7 @@
 ## 一些放在gitee的项目，开源的项目部分得到了推荐，，[点击链接进入>>>>](https://gitee.com/poos)
 
 
-![img](img/readme-gitee.png)
+![img](https://poos.github.io/img/readme-gitee.png)
 
 
 ---
@@ -22,7 +22,7 @@
 
 进入链接可查看
 
-![img](img/readme-github.png)
+![img](https://poos.github.io/img/readme-github.png)
 
 
 ---
@@ -30,9 +30,9 @@
 ## 之前[oschina/bieshixuan](https://my.oschina.net/bieshixuan/blog/2236855)没有搬家时候的一些有趣的文章，列表在下边列出，[点击链接进入>>>>](https://poos.github.io/2018/06/06/Begin/)
 
 
-![img](img/readme-osb1.jpeg)
+![img](https://poos.github.io/img/readme-osb1.jpeg)
 
-![img](img/readme-osb2.jpeg)
+![img](https://poos.github.io/img/readme-osb2.jpeg)
 
 
 
