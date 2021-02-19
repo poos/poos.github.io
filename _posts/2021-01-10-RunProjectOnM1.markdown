@@ -39,7 +39,6 @@ tags:                                #标签
 
 [Other Documents](https://www.theverge.com/2020/11/18/21574207/how-to-install-run-any-iphone-ipad-app-m1-mac)
 
-
 ### 项目迁移到 Xcode 12
 
 迁移方面，除了一些配置的修改，更多的是跟 framework 相关。如果使用了 framwork，那么就会出现打包的 frame 架构的交叉重叠的问题。

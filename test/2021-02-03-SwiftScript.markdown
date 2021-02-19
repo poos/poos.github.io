@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      "使用Swift编写脚本" # #重回 Layout                  # 标题
+title:      "test" #"使用Swift编写脚本" # #重回 Layout                  # 标题
 subtitle:   oss 项目借鉴, 脚本生成代码, 脚本下载依赖, 脚本放到 /usr/bin..       #副标题
 date:       2021-02-03                 # 时间
 author:     poos                         # 作者
