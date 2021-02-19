@@ -92,6 +92,9 @@ find . -name '*.png' | xargs pngquant --quality=10-50
 
 ##### 附赠一个 Compression & Convert
 
+脚本集合了**压缩图片，生成合并图片**的功能。
+
+使用`sh xx.sh`或者`cd x`运行。
 
 ```
 echo "re-mkdir new/"
