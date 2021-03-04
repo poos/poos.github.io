@@ -111,7 +111,7 @@ extension UILayoutPriority {
 
 直接上图吧，看一下它的魅力：
 
-![img](https://poos.github.io/img/storyboard1.png]
+![img](https://poos.github.io/img/storyboard_1.png]
 
 #### Table-Cell
 
@@ -178,7 +178,7 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 除了直接跳转，还有一种方式是引用 vc（其他的 Storyboard 上） 的 view。
 
-![img](https://poos.github.io/img/storyboard2.png]
+![img](https://poos.github.io/img/storyboard_2.png]
 
 ##### 使用 ViewController
 
@@ -195,7 +195,36 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 这样就会默认创建一个引用 Storyboard View 的 Embed segues。
 
 
-![img]()
+##### 使用 `@IBDesignable`
+
+当一个UI类添加了 `@IBDesignable` 标记之后就可以在 storyboard 上使用了，通过给添加 `class name` 即可。
+
+PS： 这个UI类如果添加了`@IBDesignable`标志，就需要提供相应的 initializer 方法：
+
+```
+//MARK: - Initializers -
+public override init(frame: CGRect) {
+      super.init(frame: frame)
+      setupUI()
+  }
+
+  public required init?(coder aDecoder: NSCoder) {
+      super.init(coder: aDecoder)
+      setupUI()
+  }
+```
+
+##### 使用工具栏
+
+![img](https://poos.github.io/img/storyboard_3.png]
+
+工具栏提供了很多方法，从左到右依次是：
+
+- 更新 frame 到约束
+- 添加两个或者多个View的相对约束
+- 修改一个View的约束
+- 将 View 放置到其他容器中，View（Scroll，View，Stack）VC（Nav，Tabbar）
+
 
 ### 总结
 

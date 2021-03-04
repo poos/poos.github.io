@@ -66,15 +66,33 @@ https://developer.apple.com/forums/thread/652941
 ```
 
 
+#### Universal Framework
+
+进入到 Xcode 12 时代之后，iphone simulator 的打包也会提供 arm64 的编码了，且 arm64 不通用，所以使用原来的合并 framework 的时候就会出现问题。虽然可以在合并之前去掉模拟器的 arm64 符号，但是如果到了 Xcode 12.2 新的隐患就会出现。
+
+Xcode 12.2 是最后一个默认支持 Universal Framework 的版本，如果**使用 >= Xcode12.3 在模拟器运行就会抛出错误**：
+
+```
+Building for iOS Simulator, but the linked and embedded framework 'My.framework' was built for iOS + iOS Simulator.
+```
+
+那解决这个问题的终极方法就是使用新的 xcframework，稍后介绍如果打包和使用。
+
+但是还有一种改变 error 到 warning 的方式，就是去 `BuildSettings` -> `Validate Workspace` 设置 `Yes`。
+
+
+[Xcode 12.3: Building for iOS Simulator, but the linked and embedded framework was built for iOS + iOS Simulator [duplicate]
+](https://stackoverflow.com/questions/65303304/xcode-12-3-building-for-ios-simulator-but-the-linked-and-embedded-framework-wa)
+
+
+
 #### XCFramework
 
-这个跟 Xcode 12 息息相关。
+使用 xcframework 一个是因为 `使用 >= Xcode12.3 在模拟器运行`, 还有一个是`M1电脑只能用 Xcode12+，且要支持模拟器运行必须打包arm64符号`。虽然这两个都有解决方法，但都不是最终的完美解决。
 
-进入到 Xcode 12 时代之后，iphone simulator 的打包也会提供 arm64 的编码了，且 arm64 不通用，所以使用原来的合并 framework 的时候就会出现问题。
+完美解决就是使用 xcframework ：
 
-但是使用 xcframework 就不会有这个问题。
-
-https://medium.com/trueengineering/xcode-and-xcframeworks-new-format-of-packing-frameworks-ca15db2381d3
+[xcode-xcframeworks](https://medium.com/trueengineering/xcode-and-xcframeworks-new-format-of-packing-frameworks-ca15db2381d3)
 
 
 xcfamework 使用文件夹直接区分了framework。
@@ -107,9 +125,6 @@ xcodebuild -create-xcframework -framework build/iphoneos.xcarchive/Products/Fram
 ##### 在项目的使用
 
 有可能需要设置 `General` -> `Frameworks, Libraries, and Embedded Content` 到 `Embed and Sign`。
-
-
-
 
 ### 最后
 
