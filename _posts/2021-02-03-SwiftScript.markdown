@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      使用Swift编写脚本" # #重回 Layout                  # 标题
+title:      使用Swift编写脚本 # #重回 Layout                  # 标题
 subtitle:   oss 项目借鉴, 脚本生成代码, 脚本下载依赖, 脚本放到 /usr/bin..       #副标题
 date:       2021-02-03                 # 时间
 author:     poos                         # 作者
@@ -96,11 +96,11 @@ extension UIFont {
 
 `New -> macOS -> Command Line Tool` 即可创建一个 Command Line Tool，创建完成大概是这样：
 
-![img](https://poos.github.io/img/swiftscript_1.png]
+![img](https://poos.github.io/img/swiftscript_1.png)
 
 而 build 完成最终生成的文件是像 `/bin/` 的所有可执行文件一样：
 
-![img](https://poos.github.io/img/swiftscript_2.png]
+![img](https://poos.github.io/img/swiftscript_2.png)
 
 
 ##### 关于 achieve

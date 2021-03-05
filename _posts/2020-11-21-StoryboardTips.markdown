@@ -111,7 +111,7 @@ extension UILayoutPriority {
 
 直接上图吧，看一下它的魅力：
 
-![img](https://poos.github.io/img/storyboard_1.png]
+![img](https://poos.github.io/img/storyboard_1.png)Status
 
 #### Table-Cell
 
@@ -178,7 +178,7 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 除了直接跳转，还有一种方式是引用 vc（其他的 Storyboard 上） 的 view。
 
-![img](https://poos.github.io/img/storyboard_2.png]
+![img](https://poos.github.io/img/storyboard_2.png)
 
 ##### 使用 ViewController
 
@@ -216,7 +216,7 @@ public override init(frame: CGRect) {
 
 ##### 使用工具栏
 
-![img](https://poos.github.io/img/storyboard_3.png]
+![img](https://poos.github.io/img/storyboard_3.png)
 
 工具栏提供了很多方法，从左到右依次是：
 

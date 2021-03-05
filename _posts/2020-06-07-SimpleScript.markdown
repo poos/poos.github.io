@@ -1,6 +1,6 @@
 ---
 layout:     post                       # 使用的布局（不需要改）
-title:      "Terminal"                   # 标题
+title:      Terminal                   # 标题
 subtitle:   FileMode, Mov->Mp4, Image compression and convert...             #副标题
 date:       2020-06-07                 # 时间
 author:     poos                         # 作者
