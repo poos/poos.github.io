@@ -68,7 +68,7 @@ NotificationCenter.default.post(name: NSNotification.Name.init("haha"), object: 
 
 关于本文章的背景，对于 Event 的线程冲突，最小模型和解决方法应该是下边这样：
 
-采用并发队列解决上面提到的多个读操作的性能问题，然后共享互斥锁来解决写操作的数据竞争问题。对于 iOS 来说它就是 GCD 中的写栏栅 barrier 机制。
+采用并发队列解决多个读操作的性能问题，然后共享互斥锁来解决写操作的数据竞争问题。对于 iOS 来说它就是 GCD 中的写栏栅 barrier 机制。
 
 ```swift
 class Dic {
