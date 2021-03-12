@@ -70,6 +70,10 @@ public class SafeArray<T> {
 > Summary The queue schedules tasks concurrently.
 Declaration static let concurrent: DispatchQueue.AttributesIf this attribute is not present, the queue schedules tasks serially in first-in, first-out (FIFO) order.
 
+
+#### Struct 和 Class
+
+
 可能有人发现了其中一个使用的的是 `struct`, 另一个是 `class`，这并不是笔误，因为 `async` 是逃逸闭包，`struct` 是 **值类型**。
 
 然后在闭包中修改 `self` 又需要 `mutating` ，可是现行语法不支持，所以编译器报错了。虽然有各种曲线救国的方法，但是最简单的修改就是改为 `class` 了。
@@ -78,7 +82,24 @@ Declaration static let concurrent: DispatchQueue.AttributesIf this attribute is 
 
 > 另外一种就是尝试使用指针操作，个人觉得还是不要对栈内存的数据进行指针操作了，本来使用栈就是为了轻松愉快的，搞得太复杂了多不好。
 
-其实使用 `class` 并没有太大的问题，因为存储数据本质上还是在一个 `var Array` 里面放着，上层封装只是为了解决线程问题。
+顺便再看下 Struct 和 Class 的区别吧：[Swift中的Class和Struct](https://juejin.cn/post/6844903775816155144)
+
+
+**相同点**
+
+- 都能定义 property、method、initializers
+- 都支持 protocol、extension
+
+**不同点**
+
+- class 是引用类型；struct 是值类型
+- class 支持继承；struct不支持继承
+- class 声明的方法修改属性不需要 mutating 关键字；struct 需要
+- class 没有提供默认的 memberwise initializer；struct 提供默认的 memberwise initializer
+- class 支持引用计数(Reference counting)；struct不支持
+- class 支持 Type casting；struct不支持
+- class 支持 Deinitializers；struct不支持
+
 
 ### 为 SafeDictionary 类添加其他函数
 
