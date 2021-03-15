@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      "在 M1 电脑上运行，调试项目和打包ipa" # #重回 Layout                  # 标题
-subtitle:   项目运行, xcframework, PackageApplication, 打包 ipa 给 M1           #副标题
-date:       2021-01-10                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      "在 M1 电脑上运行，调试项目和打包ipa"
+subtitle:   项目运行, xcframework, PackageApplication, 打包 ipa 给 M1
+date:       2021-01-10
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 总结
 - 测试
 ---

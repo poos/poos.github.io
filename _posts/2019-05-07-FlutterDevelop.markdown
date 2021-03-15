@@ -1,12 +1,12 @@
 ---
-layout:     post                          # 使用的布局（不需要改）
-title:      Flutter 技术分享 - 深入            # 标题
-subtitle:   State Manage 五大方案，打包和自动化，与原生项目互嵌    #副标题
-date:       2019-05-07                # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Flutter 技术分享 - 深入
+subtitle:   State Manage 五大方案，打包和自动化，与原生项目互嵌
+date:       2019-05-07
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - Flutter
 - 总结
 ---

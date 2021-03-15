@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      Swift基础中需要注意的点                 # 标题
-subtitle:   列举了基础点，重点介绍注意点              #副标题
-date:       2018-09-09                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Swift基础中需要注意的点
+subtitle:   列举了基础点，重点介绍注意点
+date:       2018-09-09
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 语法
 ---
 

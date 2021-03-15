@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      "记录一次 WebView 迁移的过程" # 重回 Layout                  # 标题
-subtitle:   协议制定，Storybaord 修改，类修改         #副标题
-date:       2020-10-21                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      "记录一次 WebView 迁移的过程"
+subtitle:   协议制定，Storybaord 修改，类修改
+date:       2020-10-21
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 语法
 - Code
 ---

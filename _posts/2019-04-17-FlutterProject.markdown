@@ -1,12 +1,12 @@
 ---
-layout:     post                          # 使用的布局（不需要改）
-title:      Flutter 《四》 项目           # 标题
-subtitle:   一个 flutter 项目的文件框架，基于 bloc 页面设计，模型代码     #副标题
-date:       2019-04-17                # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Flutter 《四》 项目
+subtitle:   一个 flutter 项目的文件框架，基于 bloc 页面设计，模型代码
+date:       2019-04-17
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - Flutter
 ---
 

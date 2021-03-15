@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      Swift 的 Array 和 Dictionary 源码欣赏，和创建一个线程安全的 Array 和 Dictionary #重回 Layout                  # 标题
-subtitle:   Array 源码, 线程安全, Collection, ExpressibleByDictionaryLiteral, RangeReplaceableCollection 等协议         #副标题
-date:       2019-09-13                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Swift 的 Array 和 Dictionary 源码欣赏，和创建一个线程安全的 Array 和 Dictionary
+subtitle:   Array 源码, 线程安全, Collection, ExpressibleByDictionaryLiteral, RangeReplaceableCollection 等协议
+date:       2019-09-13
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 总结
 - Code
 ---

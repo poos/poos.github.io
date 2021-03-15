@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      iOS 的 Bug 分析和解决            # 标题
-subtitle:   IDE 调试，测试设备崩溃日志，dsym 分析，apple crash report ，代码获取 crash 日志上传            #副标题
-date:       2018-06-26                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      iOS 的 Bug 分析和解决
+subtitle:   IDE 调试，测试设备崩溃日志，dsym 分析，apple crash report ，代码获取 crash 日志上传
+date:       2018-06-26
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - Debug
 ---
 

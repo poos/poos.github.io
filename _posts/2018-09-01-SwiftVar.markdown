@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      Swift中的 let，var，optional（可选值的）性能比较                 # 标题
-subtitle:   测试性能              #副标题
-date:       2018-09-01                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Swift中的 let，var，optional（可选值的）性能比较
+subtitle:   测试性能
+date:       2018-09-01
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 语法
 ---
 

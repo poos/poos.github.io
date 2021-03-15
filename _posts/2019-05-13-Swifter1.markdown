@@ -1,12 +1,12 @@
 ---
-layout:     post                          # 使用的布局（不需要改）
-title:      Swift 开发必备 tips 阅读笔记 第二篇           # 标题 
-subtitle:   从Objective-C/C到Swift  #副标题
-date:       2019-05-13                # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Swift 开发必备 tips 阅读笔记 第二篇
+subtitle:   从Objective-C/C到Swift
+date:       2019-05-13
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 语法
 - Swifter Tips
 ---

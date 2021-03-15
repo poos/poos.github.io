@@ -1,12 +1,12 @@
 ---
-layout:     post                          # 使用的布局（不需要改）
-title:      Flutter 嵌入原生的一些坑           # 标题
-subtitle:   运行错误或者白屏   #副标题
-date:       2019-05-30              # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Flutter 嵌入原生的一些坑
+subtitle:   运行错误或者白屏
+date:       2019-05-30
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - Flutter
 - 总结
 ---

@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      使用 Sourcery 进行模板编程（meta编程）              # 标题
-subtitle:   ObjectMapper 自动生成 model 解析代码， 为一些类生成相同的代码，继续填坑             #副标题
-date:       2018-12-27                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      使用 Sourcery 进行模板编程（meta编程）
+subtitle:   ObjectMapper 自动生成 model 解析代码， 为一些类生成相同的代码，继续填坑
+date:       2018-12-27
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - Code
 ---
 

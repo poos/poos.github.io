@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      LeetCode 上的算法题 （两数之和，链表数字相加，最长不重复子字符串，两个数组的中位数，最长回文字符串）              # 标题
-subtitle:   时间/空间 复杂度，链表，后缀二叉树，中位数算法，回文算法            #副标题
-date:       2018-12-01                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      LeetCode 上的算法题 （两数之和，链表数字相加，最长不重复子字符串，两个数组的中位数，最长回文字符串）
+subtitle:   时间/空间 复杂度，链表，后缀二叉树，中位数算法，回文算法
+date:       2018-12-01
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 算法
 ---
 

@@ -1,12 +1,12 @@
 ---
-layout:     post                          # 使用的布局（不需要改）
-title:      Flutter 《三》常用组件 & Week Video           # 标题
-subtitle:   官方 Widget 介绍，Week Video 特殊用途的 Widget     #副标题
-date:       2019-03-28                # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Flutter 《三》常用组件 & Week Video
+subtitle:   官方 Widget 介绍，Week Video 特殊用途的 Widget
+date:       2019-03-28
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - Flutter
 - 语法
 ---

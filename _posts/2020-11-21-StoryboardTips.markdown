@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      "Stroyboard Tips" # 重回 Layout                  # 标题
-subtitle:   约束优先级(键盘处理), Content 适应, StackView, ScrollView, Table-Cell, Segue, Container View         #副标题
-date:       2020-11-21                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      "Stroyboard Tips"
+subtitle:   约束优先级(键盘处理), Content 适应, StackView, ScrollView, Table-Cell, Segue, Container View
+date:       2020-11-21
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 语法
 - Code
 ---

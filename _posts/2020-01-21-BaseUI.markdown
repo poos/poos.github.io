@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      BaseUI                  # 标题
-subtitle:   关于 Theme 动态切换的一些研究            #副标题
-date:       2020-01-21                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      BaseUI
+subtitle:   关于 Theme 动态切换的一些研究
+date:       2020-01-21
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 总结
 ---
 

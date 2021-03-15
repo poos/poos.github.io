@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      UI automated testing.                 # 标题
-subtitle:   Frame, UIViewAutoresizing, NSLayoutAnchor, Flexbox, SwiftUI, FlutterUI, VFL            #副标题
-date:       2019-10-23                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      UI automated testing.
+subtitle:   Frame, UIViewAutoresizing, NSLayoutAnchor, Flexbox, SwiftUI, FlutterUI, VFL
+date:       2019-10-23
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 总结
 ---
 

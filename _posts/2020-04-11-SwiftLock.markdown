@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      Swift 中的锁和线程安全                   # 标题
-subtitle:   再次认识一下各种锁, 线程理解, 场景解析           #副标题
-date:       2020-04-11                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Swift 中的锁和线程安全
+subtitle:   再次认识一下各种锁, 线程理解, 场景解析
+date:       2020-04-11
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 语法
 - Code
 ---

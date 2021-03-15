@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      客户端的 动态界面 如何实现            # 标题
-subtitle:   动态组件化方案，Tangram，JASONETTE ？            #副标题
-date:       2018-12-25                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      客户端的 动态界面 如何实现
+subtitle:   动态组件化方案，Tangram，JASONETTE ？
+date:       2018-12-25
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 架构
 ---
 

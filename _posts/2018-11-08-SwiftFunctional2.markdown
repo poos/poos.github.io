@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      Swift 函数式编程（2）                # 标题
-subtitle:   Swift 中的高阶函数探究和使用           #副标题
-date:       2018-11-08                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog:    true                        # 是否归档
-tags:                                #标签
+layout:     post
+title:      Swift 函数式编程（2）
+subtitle:   Swift 中的高阶函数探究和使用
+date:       2018-11-08
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog:    true
+tags:
 - 语法
 ---
 

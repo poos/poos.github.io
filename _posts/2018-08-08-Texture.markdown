@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      Texture(ASDK)的理解和使用                # 标题
-subtitle:   主要是使用方面：包含详细的使用方法，UI 类（ASTableCellNode，ASScollNode），布局（FlexBox布局），优化（ASImageNode，对接本地Kingfisher图片下载）等              #副标题
-date:       2018-08-08                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      Texture(ASDK)的理解和使用
+subtitle:   主要是使用方面：包含详细的使用方法，UI 类（ASTableCellNode，ASScollNode），布局（FlexBox布局），优化（ASImageNode，对接本地Kingfisher图片下载）等
+date:       2018-08-08
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 优化
 ---
 

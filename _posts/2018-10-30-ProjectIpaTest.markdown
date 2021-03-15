@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      局域网/公网 发布ipa （类似蒲公英，fir 等）                # 标题
-subtitle:   借用 github存储 manifest.plist; Build/xx.app 脚本导出 ipa; 借用博客在局域网发布...             #副标题
-date:       2018-10-30                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      局域网/公网 发布ipa （类似蒲公英，fir 等）
+subtitle:   借用 github存储 manifest.plist; Build/xx.app 脚本导出 ipa; 借用博客在局域网发布...
+date:       2018-10-30
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 工具
 ---
 

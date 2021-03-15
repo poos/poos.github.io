@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      客户端的外部调试：JS 调试，应用互调调试，抓包和代理调试                 # 标题
-subtitle:   App web 调试，Other web 调试，Universal Links 和 App scheme 配置和测试，Charles https 抓包 和 代码中设置 https Proxy           #副标题
-date:       2018-11-12                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      客户端的外部调试：JS 调试，应用互调调试，抓包和代理调试
+subtitle:   App web 调试，Other web 调试，Universal Links 和 App scheme 配置和测试，Charles https 抓包 和 代码中设置 https Proxy
+date:       2018-11-12
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 工具
 ---
 

@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      多 Target 工程                  # 标题
-subtitle:   配置，资源（图片，字符串），Code，Build            #副标题
-date:       2019-09-30                 # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      多 Target 工程
+subtitle:   配置，资源（图片，字符串），Code，Build
+date:       2019-09-30
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 总结
 ---
 

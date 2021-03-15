@@ -1,12 +1,12 @@
 ---
-layout:     post                       # 使用的布局（不需要改）
-title:      华容道搜索算法实现             # 标题
-subtitle:   通用协议，路径查询，多叉树节点，比特位的使用，优化            #副标题
-date:       2019-01-20                # 时间
-author:     poos                         # 作者
-header-img: img/post-bg-2015.jpg     #这篇文章标题背景图片
-catalog: true                         # 是否归档
-tags:                                #标签
+layout:     post
+title:      华容道搜索算法实现
+subtitle:   通用协议，路径查询，多叉树节点，比特位的使用，优化
+date:       2019-01-20
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
 - 算法
 ---
 
