@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "在 M1 电脑上运行，调试项目和打包ipa"
+title:      在 M1 电脑上运行，调试项目和打包ipa
 subtitle:   项目运行, xcframework, PackageApplication, 打包 ipa 给 M1
 date:       2021-01-10
 author:     poos
