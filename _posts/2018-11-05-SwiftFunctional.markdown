@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Swift 函数式编程（1）
-subtitle:   《函数式 Swift》书籍学习，函数式编程介绍，实现，应用； NSMutableAttributeString 封装函数式
+subtitle:   《函数式 Swift》书籍学习, 函数式编程介绍, 实现, 应用, NSMutableAttributeString 封装函数式
 date:       2018-11-05
 author:     poos
 header-img: img/post-bg-2015.jpg

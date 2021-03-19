@@ -13,6 +13,15 @@ tags:
 
 ### 简介
 
+除了之前看过的书，记录下了 Swifter tips，现阶段对 Storyboard 使用也比较深入了，记录一些 Storyboard 的 Tips。
+
+[Swift 开发必备 tips 阅读笔记  第一篇](https://poos.github.io/2019/02/26/Swifter/)，Swift 语言的新特性。
+
+[Swift 开发必备 tips 阅读笔记 第二篇](https://poos.github.io/2019/05/13/Swifter1/)，Objective-C 与 Swift 的一些特性过渡。
+
+[Swift 开发必备 tips 阅读笔记 三 最后一篇](https://poos.github.io/2019/05/18/Swifter2/)，Swift与开发环境及一些实践。
+
+
 使用了一段时间的 Storyboard，记录一些使用，方便以后查阅。
 
 >本文就不讨论优劣好坏，只是多一些实用的技巧。

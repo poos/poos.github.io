@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "记录一次 WebView 迁移的过程"
-subtitle:   协议制定，Storybaord 修改，类修改
+subtitle:   协议制定, Storybaord 修改, 类修改
 date:       2020-10-21
 author:     poos
 header-img: img/post-bg-2015.jpg

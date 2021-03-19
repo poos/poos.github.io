@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Texture(ASDK)自定义 Node 和 优化 Tab 框架
-subtitle:   自定义 ASDisplayNode ；拆分复杂的 Node 为简单的 Node 组件 等
+subtitle:   自定义 ASDisplayNode, 拆分复杂的 Node 为简单的 Node 组件等
 date:       2018-08-18
 author:     poos
 header-img: img/post-bg-2015.jpg

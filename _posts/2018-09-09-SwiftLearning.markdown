@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Swift基础中需要注意的点
-subtitle:   列举了基础点，重点介绍注意点
+subtitle:   列举了基础点, 重点介绍注意点
 date:       2018-09-09
 author:     poos
 header-img: img/post-bg-2015.jpg

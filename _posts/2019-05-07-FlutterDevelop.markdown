@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Flutter 技术分享 - 深入
-subtitle:   State Manage 五大方案，打包和自动化，与原生项目互嵌
+subtitle:   State Manage 五大方案, 打包和自动化, 与原生项目互嵌
 date:       2019-05-07
 author:     poos
 header-img: img/post-bg-2015.jpg

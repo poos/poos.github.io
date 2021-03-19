@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Swift 中 高级枚举使用，模式匹配
-subtitle:   Swift GG 关于模式匹配的资料，实践枚举和模式匹配的开发
+subtitle:   Swift GG 关于模式匹配的资料, 实践枚举和模式匹配的开发
 date:       2019-06-13
 author:     poos
 header-img: img/post-bg-2015.jpg

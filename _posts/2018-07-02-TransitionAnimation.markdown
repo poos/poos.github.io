@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      swift下封装转场动画，三方库解决方案
-subtitle:   TabBar ，异形 NavigationBar，特殊界面的跳转方案
+subtitle:   TabBar, 异形 NavigationBar, 特殊界面的跳转方案
 date:       2018-07-02
 author:     poos
 header-img: img/post-bg-2015.jpg

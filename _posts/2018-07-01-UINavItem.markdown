@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      通过swizzleMethod无痕处理NavItem的点击范围
-subtitle:   方便的扩大按钮的点击范围，将文件放入工程即可
+subtitle:   方便的扩大按钮的点击范围, 将文件放入工程即可
 date:       2018-07-01
 author:     poos
 header-img: img/post-bg-2015.jpg

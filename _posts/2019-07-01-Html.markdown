@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      深度使用 HTML
-subtitle:   图片缓存，数据传输，UI适配等～
+subtitle:   图片缓存, 数据传输, UI适配等～
 date:       2019-07-01
 author:     poos
 header-img: img/post-bg-2015.jpg

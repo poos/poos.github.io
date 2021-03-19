@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      项目优化-瘦身
-subtitle:   图片，库，代码，项目设置，多方面优化项目
+subtitle:   图片, 库, 代码, 项目设置, 多方面优化项目
 date:       2018-06-16
 author:     poos
 header-img: img/post-bg-2015.jpg

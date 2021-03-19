@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      RxSwift 的 MVVM 框架理解使用
-subtitle:   适用于 RxSwift 的 各个框架， 常用框架的分析 ，“架构什么的都是浮云”
+subtitle:   适用于 RxSwift 的 各个框架, 常用框架的分析, “架构什么的都是浮云”
 date:       2018-11-21
 author:     poos
 header-img: img/post-bg-2015.jpg

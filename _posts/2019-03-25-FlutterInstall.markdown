@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Flutter 《一》 安装和配置，QA
-subtitle:   macOS 配置 Flutter 环境，一些值得注意的 QA
+subtitle:   macOS 配置 Flutter 环境, 一些值得注意的 QA
 date:       2019-03-25
 author:     poos
 header-img: img/post-bg-2015.jpg

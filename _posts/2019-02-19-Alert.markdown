@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      app 公共弹窗的控制
-subtitle:   HUD，Alert，Sheet，权限申请弹窗，消息页面跳转等
+subtitle:   HUD, Alert, Sheet, 权限申请弹窗, 消息页面跳转等
 date:       2019-02-19
 author:     poos
 header-img: img/post-bg-2015.jpg

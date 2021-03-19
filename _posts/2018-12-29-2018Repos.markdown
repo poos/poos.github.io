@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      18系列-三方库，学习项目，开发工具
-subtitle:   Rx，Texture等三方，项目基础扩展必备，一些好的项目总结，开发工具总结
+subtitle:   Rx, Texture等三方, 项目基础扩展必备, 一些好的项目总结, 开发工具总结
 date:       2018-12-29
 author:     poos
 header-img: img/post-bg-2015.jpg

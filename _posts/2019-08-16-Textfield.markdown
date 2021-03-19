@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Textfield +
-subtitle:   错误UI，可输入字符，最大字符，正则匹配等
+subtitle:   错误UI, 可输入字符, 最大字符, 正则匹配等
 date:       2019-08-16
 author:     poos
 header-img: img/post-bg-2015.jpg

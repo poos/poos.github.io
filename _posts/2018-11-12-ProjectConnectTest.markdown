@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      客户端的外部调试：JS 调试，应用互调调试，抓包和代理调试
-subtitle:   App web 调试，Other web 调试，Universal Links 和 App scheme 配置和测试，Charles https 抓包 和 代码中设置 https Proxy
+subtitle:   App web 调试, Other web 调试, Universal Links 和 App scheme 配置和测试, Charles https 抓包 和 代码中设置 https Proxy
 date:       2018-11-12
 author:     poos
 header-img: img/post-bg-2015.jpg

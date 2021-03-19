@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Flutter 《三》常用组件 & Week Video
-subtitle:   官方 Widget 介绍，Week Video 特殊用途的 Widget
+subtitle:   官方 Widget 介绍, Week Video 特殊用途的 Widget
 date:       2019-03-28
 author:     poos
 header-img: img/post-bg-2015.jpg

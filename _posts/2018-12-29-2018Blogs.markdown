@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      18系列-博客总结
-subtitle:   各种架构，设计，优化，响应编程，函数式，Codable，Reacnative，编译速度，SSH，sh 命令，swiftlint，TestFlight
+subtitle:   各种架构, 设计, 优化, 响应编程, 函数式, Codable, Reacnative, 编译速度, SSH, sh 命令, swiftlint, TestFlight
 date:       2018-12-29
 author:     poos
 header-img: img/post-bg-2015.jpg

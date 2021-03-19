@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      华容道搜索算法实现
-subtitle:   通用协议，路径查询，多叉树节点，比特位的使用，优化
+subtitle:   通用协议, 路径查询, 多叉树节点, 比特位的使用, 优化
 date:       2019-01-20
 author:     poos
 header-img: img/post-bg-2015.jpg

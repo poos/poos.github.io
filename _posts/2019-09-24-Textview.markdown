@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Textview 相关
-subtitle:   加载 html，事件响应
+subtitle:   加载 html, 事件响应
 date:       2019-09-24
 author:     poos
 header-img: img/post-bg-2015.jpg

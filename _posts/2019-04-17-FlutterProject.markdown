@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Flutter 《四》 项目
-subtitle:   一个 flutter 项目的文件框架，基于 bloc 页面设计，模型代码
+subtitle:   一个 flutter 项目的文件框架, 基于 bloc 页面设计, 模型代码
 date:       2019-04-17
 author:     poos
 header-img: img/post-bg-2015.jpg

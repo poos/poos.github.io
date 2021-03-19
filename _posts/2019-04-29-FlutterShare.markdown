@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Flutter 技术分享 - 了解
-subtitle:   跨平台开发方案介绍，Flutter，Dart，Widget，Stream
+subtitle:   跨平台开发方案介绍, Flutter, Dart, Widget, Stream
 date:       2019-04-29
 author:     poos
 header-img: img/post-bg-2015.jpg

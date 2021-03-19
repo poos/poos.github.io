@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      项目中 Hybrid 部分的设计
-subtitle:   交互方式选择，通用 API，基础&全面 API，cookie， scheme，itunes 白名单
+subtitle:   交互方式选择, 通用 API, 基础&全面 API, cookie, scheme, itunes 白名单
 date:       2018-12-11
 author:     poos
 header-img: img/post-bg-2015.jpg

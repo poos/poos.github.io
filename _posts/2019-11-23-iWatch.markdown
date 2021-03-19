@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      iWatch
-subtitle:   介绍，界面，Icon，独立App
+subtitle:   介绍, 界面, Icon, 独立App
 date:       2019-11-23
 author:     poos
 header-img: img/post-bg-2015.jpg

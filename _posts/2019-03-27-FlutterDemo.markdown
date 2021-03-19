@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Flutter 《二》项目 Demo 运行，Dart 语言简单学习
-subtitle:   列表，页面跳转，请求数据 Demo；Dart 语法
+subtitle:   列表, 页面跳转, 请求数据 Demo, Dart 语法
 date:       2019-03-27
 author:     poos
 header-img: img/post-bg-2015.jpg

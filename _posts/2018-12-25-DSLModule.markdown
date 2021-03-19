@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      客户端的 动态界面 如何实现
-subtitle:   动态组件化方案，Tangram，JASONETTE ？
+subtitle:   动态组件化方案, Tangram, JASONETTE ？
 date:       2018-12-25
 author:     poos
 header-img: img/post-bg-2015.jpg

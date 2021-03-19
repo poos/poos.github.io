@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      使用WebDriverAgent学习其他app布局,自动化测试
-subtitle:   通过脚本化启动 WebDriverAgent， 使用ATX自动化测试 ； 自动微信跳一跳等
+subtitle:   通过脚本化启动 WebDriverAgent, 使用ATX自动化测试, 自动微信跳一跳等
 date:       2018-07-07
 author:     poos
 header-img: img/post-bg-2015.jpg

@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Router
-subtitle:   方案比较，新项目，想法
+subtitle:   方案比较, 新项目, 想法
 date:       2019-10-16
 author:     poos
 header-img: img/post-bg-2015.jpg

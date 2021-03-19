@@ -271,4 +271,9 @@ key 用来记录当前的 theme 的名字。
 - 用脚本进行项目依赖下载
 - 用脚本进行新电脑的配置，下载安装软件，环境配置等
 
+例如写了一个专门 format 博客文章的脚本，后续可以加入创建博客 init post之类的入口。
+
+[DeleteAllComments](https://gitee.com/poos/SomeDemo/tree/master/Z_DeleteAllComments)
+> 为了修正博文源码中的注释和其他的脚本
+
 希望能给大家一点启示。觉得好的可以去 github 赞一个。

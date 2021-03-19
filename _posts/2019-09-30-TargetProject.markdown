@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      多 Target 工程
-subtitle:   配置，资源（图片，字符串），Code，Build
+subtitle:   配置, 资源 (图片, 字符串), Code, Build
 date:       2019-09-30
 author:     poos
 header-img: img/post-bg-2015.jpg

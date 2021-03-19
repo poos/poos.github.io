@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      TableView 的终极优化：滑动，布局，事件，更新
-subtitle:   图片和视图优化，数据处理优化，自动布局和异步加载 Texture（ASDK），复杂 table 和人性化 UI，cell 事件哪里响应，数据如何保证同步更新
+subtitle:   图片和视图优化, 数据处理优化, 自动布局和异步加载 Texture (ASDK), 复杂 table 和人性化 UI, cell 事件哪里响应, 数据如何保证同步更新
 date:       2018-11-20
 author:     poos
 header-img: img/post-bg-2015.jpg
