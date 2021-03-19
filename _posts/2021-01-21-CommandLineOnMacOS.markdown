@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      归纳总结一下最近常用的命令行
-subtitle:   brew, Cocoapods...
+subtitle:   Jekyll, Git, Convert mov to mp4, imagemagick, compression, HostName
 date:       2020-12-31
 author:     poos
 header-img: img/post-bg-2015.jpg
