@@ -14,13 +14,13 @@ description: "No time to waste."
             {{ post.subtitle }}
         </h3>
         {% endif %}
-        <div class="post-content-preview">
+        <!-- <div class="post-content-preview">
             {% if post.lang == 'en' %}
                 {{ post.content | strip_html | truncate:300 }}
             {% else %}
                 {{ post.content | strip_html | truncate:200 }}
             {% endif %}
-        </div>
+        </div> -->
     </a>
     <p class="post-meta">
         Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
