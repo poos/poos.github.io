@@ -1,4 +1,4 @@
-I"B<p>一个 app 通常会有很多类型的弹出窗口，但是当这些弹出窗口一起出现时候就会造成差用户体验。</p>
+I"rE<p>一个 app 通常会有很多类型的弹出窗口，但是当这些弹出窗口一起出现时候就会造成差用户体验。</p>
 
 <p>本章期望对这些弹窗做一个整理，寻找一种好的设计来整理这方面的代码。</p>
 
@@ -22,7 +22,19 @@
 
 <p>为此，我们定义一个通用协议</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">HUDProgressType</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre><span class="kd">enum</span> <span class="kt">HUDProgressType</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">success</span>
     <span class="k">case</span> <span class="n">failed</span>
     <span class="k">case</span> <span class="n">progress</span>
@@ -34,7 +46,7 @@
     <span class="kd">func</span> <span class="nf">changeTo</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">HUDProgressType</span><span class="p">)</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>一个 <strong>HUD类的创建</strong> ，只需要 <strong>遵守这个协议，实现其中的方法</strong> 即可。例如 加载型页面和加载型按钮，就可以分别实现。</p>
 
@@ -48,7 +60,23 @@
 
 <p>大概是以下样式的：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="rouge-code"><pre>
 <span class="kd">protocol</span> <span class="kt">AlertProtocol</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">didHide</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
     <span class="k">var</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
@@ -64,7 +92,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="协议和遵守协议的类">协议和遵守协议的类</h4>
 
@@ -92,7 +120,29 @@
 
 <p>每一个类型中的内容即可使用一个枚举来定义，这样最终添加类型就只需要在这里修改就可以了</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">AlertType</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="rouge-code"><pre><span class="kd">enum</span> <span class="kt">AlertType</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">questionExit</span>
     <span class="k">case</span> <span class="n">answerExit</span>
 <span class="p">}</span>
@@ -114,13 +164,58 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="mangger-部分">Mangger 部分</h4>
 
 <p>Mangger 部分承担了大量的调剂工作，可以预料会比较复杂，包含很多参数。一个简略的 Manager 类应该是这样的：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+</pre></td><td class="rouge-code"><pre>
 <span class="kd">class</span> <span class="kt">AlertManager</span> <span class="p">{</span>
 
     <span class="kd">private</span> <span class="k">var</span> <span class="nv">timer</span><span class="p">:</span> <span class="kt">Timer</span><span class="p">?</span>
@@ -165,7 +260,7 @@
         <span class="k">self</span><span class="o">.</span><span class="n">alerts</span><span class="o">.</span><span class="nf">removeFirst</span><span class="p">()</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>整体流程是从队伍中拿出一个 Alert 显示，让后当 Alert 显示结束时候，从队伍中拿出第一个继续显示。
 要点两点一是 <strong>队列调整</strong> 部分，和 <strong>轮询显示</strong> 部分。</p>

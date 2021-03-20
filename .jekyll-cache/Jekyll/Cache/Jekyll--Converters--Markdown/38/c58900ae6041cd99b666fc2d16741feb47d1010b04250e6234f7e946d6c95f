@@ -1,4 +1,4 @@
-I"�L<h3 id="背景">背景</h3>
+I"fR<h3 id="背景">背景</h3>
 
 <p>在5个月之前就有收到相关的消息，要更新 UIWebview 到 WKWebview。虽然苹果的最后期限一直往后推，但是不可避免的项目修改终于来了。</p>
 
@@ -35,7 +35,17 @@
   <p>还能看到其他的参数，delegate 之类…</p>
 </blockquote>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 ...
 <span class="nt">&lt;webView</span> <span class="na">translatesAutoresizingMaskIntoConstraints=</span><span class="s">"NO"</span> <span class="na">contentMode=</span><span class="s">"scaleToFill"</span> <span class="na">id=</span><span class="s">"4sF-t2-MpG"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;rect</span> <span class="na">key=</span><span class="s">"frame"</span> <span class="na">x=</span><span class="s">"5"</span> <span class="na">y=</span><span class="s">"0.0"</span> <span class="na">width=</span><span class="s">"310"</span> <span class="na">height=</span><span class="s">"500"</span><span class="nt">/&gt;</span>
@@ -45,7 +55,7 @@
     <span class="nt">&lt;/connections&gt;</span>
 <span class="nt">&lt;/webView&gt;</span>
 ...
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="contentlayoutguide-和-framelayoutguide">contentLayoutGuide 和 frameLayoutGuide</h4>
 
@@ -63,16 +73,32 @@
 
 <p>其实最终就是在 storyboard 去掉 contentLayoutGuide 和 frameLayoutGuide 的相关属性描述。</p>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;viewLayoutGuide</span> <span class="na">key=</span><span class="s">"contentLayoutGuide"</span> <span class="na">id=</span><span class="s">"39H-sL-yCR"</span><span class="nt">/&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;viewLayoutGuide</span> <span class="na">key=</span><span class="s">"contentLayoutGuide"</span> <span class="na">id=</span><span class="s">"39H-sL-yCR"</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;viewLayoutGuide</span> <span class="na">key=</span><span class="s">"frameLayoutGuide"</span> <span class="na">id=</span><span class="s">"1kj-R0-kSP"</span><span class="nt">/&gt;</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="创建通用的协议--view">创建通用的协议 / View</h4>
 
 <p>这段属于精髓之一了。为了能让代码有最小的修改，创建了一个继承 WKWebView 的类，用于桥接旧的 Webview delegate。</p>
 
 <p>很简单， 仿照 UIWebView 的代理方法进行一层封装，然后提供一个替换 UIWebview 的 UI 类。</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
 <span class="cp">#import &lt;WebKit/WebKit.h&gt;</span>
 <span class="kt">NS_ASSUME_NONNULL_BEGIN</span>
 <span class="kd">@protocol</span> <span class="kt">SXWebViewDelegate</span> <span class="o">&lt;</span><span class="kt">NSObject</span><span class="o">&gt;</span>
@@ -86,9 +112,41 @@
 <span class="kd">@property</span> <span class="p">(</span><span class="k">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="kt">SXWebViewDelegate</span><span class="o">&gt;</span> <span class="n">delegate</span><span class="p">;</span>
 <span class="kd">@end</span>
 <span class="kt">NS_ASSUME_NONNULL_END</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import "SXWKWebView.h"</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre></td><td class="rouge-code"><pre><span class="cp">#import "SXWKWebView.h"</span>
 <span class="cp">#import &lt;WebKit/WebKit.h&gt;</span>
 <span class="kd">@interface</span> <span class="kt">SXWKWebView</span> <span class="p">()</span> <span class="o">&lt;</span><span class="kt">WKNavigationDelegate</span><span class="o">&gt;</span>
 <span class="kd">@end</span>
@@ -120,7 +178,7 @@
     <span class="p">[</span><span class="n">_delegate</span> <span class="nv">webView</span><span class="p">:</span><span class="n">webView</span> <span class="nv">didFailLoadWithError</span><span class="p">:</span> <span class="n">error</span><span class="p">];</span>
 <span class="p">}</span>
 <span class="kd">@end</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="修改-sxwkwebview-以支持-storyboard-拖入-delegate">修改 SXWKWebView 以支持 Storyboard 拖入 delegate</h4>
 
@@ -138,11 +196,15 @@
   <li>实现 Set 方法</li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)setDelegate:(id&lt;RSHWebViewDelegate&gt;)delegate {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>- (void)setDelegate:(id&lt;RSHWebViewDelegate&gt;)delegate {
     _delegate = delegate;
     self.navigationDelegate = self;
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="修改-storyboard-和-code">修改 Storyboard 和 Code</h4>
 
@@ -150,7 +212,17 @@
   <li>Storyboard 只需要修改标签到<code class="language-plaintext highlighter-rouge">&lt;webView ...&gt; &lt;/webView&gt;</code> 到 <code class="language-plaintext highlighter-rouge">&lt;view ...&gt; &lt;/view&gt;</code> 即可。</li>
 </ol>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 ...
 <span class="nt">&lt;view</span> <span class="na">translatesAutoresizingMaskIntoConstraints=</span><span class="s">"NO"</span> <span class="na">contentMode=</span><span class="s">"scaleToFill"</span> <span class="na">id=</span><span class="s">"4sF-t2-MpG"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;rect</span> <span class="na">key=</span><span class="s">"frame"</span> <span class="na">x=</span><span class="s">"5"</span> <span class="na">y=</span><span class="s">"0.0"</span> <span class="na">width=</span><span class="s">"310"</span> <span class="na">height=</span><span class="s">"500"</span><span class="nt">/&gt;</span>
@@ -160,20 +232,27 @@
     <span class="nt">&lt;/connections&gt;</span>
 <span class="nt">&lt;/view&gt;</span>
 ...
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ol>
   <li>代码只需要修改<code class="language-plaintext highlighter-rouge">UIWebView</code> 到 <code class="language-plaintext highlighter-rouge">WKWebView</code> 即可。</li>
 </ol>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webViewDidStartLoad</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span><span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webViewDidStartLoad</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span><span class="p">{</span>
     <span class="p">[</span><span class="n">_progressService</span> <span class="n">presentBusyIndicator</span><span class="p">];</span>
 <span class="p">}</span>
 <span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webViewDidFinishLoad</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span>
 <span class="p">{</span>
     <span class="p">[</span><span class="n">_progressService</span> <span class="n">dismissBusyIndicator</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>至此，项目就可以愉快的跑起来了。给 QA 出一个测试包吧～</p>
 
@@ -188,11 +267,15 @@
 
 <p>不过，为了缩放正常，我们可以添加 <code class="language-plaintext highlighter-rouge">initial-scale=1.0</code> 来进行控制。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">didCommitNavigation</span><span class="p">:(</span><span class="kt">WKNavigation</span> <span class="o">*</span><span class="p">)</span><span class="n">navigation</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">webView</span><span class="p">:(</span><span class="kt">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="nv">didCommitNavigation</span><span class="p">:(</span><span class="kt">WKNavigation</span> <span class="o">*</span><span class="p">)</span><span class="n">navigation</span> <span class="p">{</span>
     <span class="kt">NSString</span> <span class="o">*</span><span class="n">javascript</span> <span class="o">=</span> <span class="s">@"var meta = document.createElement('meta');meta.setAttribute('name', 'viewport');meta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');document.getElementsByTagName('head')[0].appendChild(meta);"</span><span class="p">;</span>
     <span class="p">[</span><span class="n">webView</span> <span class="nv">evaluateJavaScript</span><span class="p">:</span><span class="n">javascript</span> <span class="nv">completionHandler</span><span class="p">:</span><span class="kc">nil</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="总结">总结</h3>
 

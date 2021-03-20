@@ -1,15 +1,22 @@
-I"�A<h3 id="背景">背景</h3>
+I"CG<h3 id="背景">背景</h3>
 
 <p>在一些类中经常会见到这样的写法：虽然使用的 var 修饰变量，但是只是在 init 方法中修改了一次，其他时候都是 get并没有重新 set。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">a</span> <span class="o">=</span> <span class="s">""</span>
 
     <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
         <span class="n">a</span> <span class="o">=</span> <span class="s">"hahah"</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>通过资料查阅和文档查看，区别在于：<strong>var 修饰的变量锁指向的指针是可变的</strong>。但是官方仍然建议尽量多的使用 let。</p>
 
@@ -19,7 +26,39 @@
 
 <p>首先是3种定义方式</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">a</span> <span class="o">=</span> <span class="s">""</span>
 
     <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
@@ -51,11 +90,67 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>接下来对3种方式生成的对象进行 init 和 get 测试</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//分别返回 a，b，c 强制解包方式和 c 非强制解包的测试时间（1000次）</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+</pre></td><td class="rouge-code"><pre>    <span class="c1">//分别返回 a，b，c 强制解包方式和 c 非强制解包的测试时间（1000次）</span>
     <span class="kd">func</span> <span class="nf">once</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="p">{</span>
 
           <span class="k">let</span> <span class="nv">timea</span> <span class="o">=</span> <span class="kt">Date</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span><span class="o">.</span><span class="n">timeIntervalSince1970</span>
@@ -111,11 +206,38 @@
           <span class="nf">return</span><span class="p">(</span><span class="n">timeb</span> <span class="o">-</span> <span class="n">timea</span><span class="p">,</span> <span class="n">timec</span> <span class="o">-</span> <span class="n">timeb</span><span class="p">,</span> <span class="n">timed</span> <span class="o">-</span> <span class="n">timec</span><span class="p">,</span> <span class="n">timee</span> <span class="o">-</span> <span class="n">timed</span><span class="p">,</span> <span class="n">timef</span> <span class="o">-</span> <span class="n">timee</span><span class="p">,</span> <span class="n">timeg</span> <span class="o">-</span> <span class="n">timef</span><span class="p">)</span>
 
       <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>对上边的 1000 次测试运行 10 次取平均值</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">func</span> <span class="nf">check</span><span class="p">()</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="rouge-code"><pre>    <span class="kd">func</span> <span class="nf">check</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">var</span> <span class="nv">ats</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">var</span> <span class="nv">bts</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">var</span> <span class="nv">cts</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span>
@@ -142,13 +264,45 @@
         <span class="nf">print</span><span class="p">(</span><span class="n">fts</span><span class="p">)</span>
         <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
     <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="结果">结果</h4>
 
 <p>我进行了4次 check()，每次都是重新运行工程，手动点击开始测试，结果如下：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre></td><td class="rouge-code"><pre>
 //6    0.009955167770385742
 //1   0.007562875747680664
 //5    0.008865833282470703
@@ -180,17 +334,23 @@
 //2    0.007562398910522461
 //4    0.008209466934204102
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>结果为</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>24
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>24
 6
 16
 14
 9
 15
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="结果分析">结果分析</h4>
 

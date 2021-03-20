@@ -1,4 +1,4 @@
-I"�p<h2 id="demo">Demo</h2>
+I"�y<h2 id="demo">Demo</h2>
 
 <p><strong><a href="https://github.com/poos/BlogDemo">本文所有代码 Demo 地址</a></strong></p>
 
@@ -6,7 +6,22 @@
 
 <p>项目代码主要是在 <strong>lib/</strong> 文件夹，在 main.dart 中导入相应的文件包即可调用跑起来。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.dart</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="c1">// main.dart</span>
 
 <span class="kd">import</span> <span class="err">'</span><span class="nv">package</span><span class="p">:</span><span class="n">flutter</span><span class="o">/</span><span class="n">material</span><span class="o">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
 
@@ -21,11 +36,91 @@
 <span class="c1">//void main() =&gt; runApp(NetJsonApp());</span>
 
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>然后 分别创建其他 demo 文件；单独编写测试即可。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//net_json.dart</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+</pre></td><td class="rouge-code"><pre><span class="c1">//net_json.dart</span>
 
 <span class="kd">import</span> <span class="err">'</span><span class="nv">dart</span><span class="p">:</span><span class="n">async</span><span class="err">'</span><span class="p">;</span>
 <span class="kd">import</span> <span class="err">'</span><span class="nv">dart</span><span class="p">:</span><span class="n">convert</span><span class="err">'</span><span class="p">;</span>
@@ -105,13 +200,24 @@
 
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="pubspecyaml">pubspec.yaml</h4>
 
 <p>项目的第三方包配置页，例如上边的 <strong>http</strong> 和 <strong>Dio</strong> 即需要导入包方可使用。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">dependencies</span><span class="p">:</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre><span class="nv">dependencies</span><span class="p">:</span>
   <span class="nv">flutter</span><span class="p">:</span>
     <span class="nv">sdk</span><span class="p">:</span> <span class="n">flutter</span>
 
@@ -122,7 +228,7 @@
   <span class="nv">http</span><span class="p">:</span> <span class="n">any</span>
   <span class="nv">dio</span><span class="p">:</span> <span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h2 id="学习-dart-语法">学习 Dart 语法</h2>
 
@@ -206,9 +312,11 @@
 
 <p>值得一提的是 字符串支持 单引号 ’ 和 双引号 “ 两种，好处如下：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var s3 = 'It\'s easy to escape the string delimiter.';
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>var s3 = 'It\'s easy to escape the string delimiter.';
 var s4 = "It's even easier to use the other delimiter.";
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>${  }  来进行取值</p>
 
@@ -218,10 +326,13 @@ var s4 = "It's even easier to use the other delimiter.";
 
 <p>Dart 使用 utf-16 编码，32位的编码表示如下：笑的表情符号（😆）是\u{1f600}。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Runes input = new Runes(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>Runes input = new Runes(
       '\u2665  \u{1f605}  \u{1f60e}  \u{1f47b}  \u{1f596}  \u{1f44d}');
 print(new String.fromCharCodes(input));
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>Symbols</li>
@@ -252,7 +363,39 @@ print(new String.fromCharCodes(input));
   </li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">void</span> <span class="nf">foo</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// A top-level function</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre></td><td class="rouge-code"><pre><span class="n">void</span> <span class="nf">foo</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// A top-level function</span>
 
 <span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
   <span class="kd">static</span> <span class="n">void</span> <span class="nf">bar</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// A static method</span>
@@ -284,15 +427,17 @@ print(new String.fromCharCodes(input));
   <span class="c1">// so they're unequal.</span>
   <span class="nf">assert</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">baz</span> <span class="o">!=</span> <span class="n">w</span><span class="o">.</span><span class="n">baz</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>返回值，无返回值 等价 返回值为 null</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>foo() {}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>foo() {}
 assert(foo() == null);
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="操作符">操作符</h4>
 
@@ -323,7 +468,17 @@ assert(foo() == null);
   </li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">querySelector</span><span class="p">(</span><span class="err">'#</span><span class="n">confirm</span><span class="err">'</span><span class="p">)</span> <span class="c1">// Get an object.</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="nf">querySelector</span><span class="p">(</span><span class="err">'#</span><span class="n">confirm</span><span class="err">'</span><span class="p">)</span> <span class="c1">// Get an object.</span>
   <span class="o">..</span><span class="n">text</span> <span class="o">=</span> <span class="err">'</span><span class="kt">Confirm</span><span class="err">'</span> <span class="c1">// Use its members.</span>
   <span class="o">..</span><span class="n">classes</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="err">'</span><span class="n">important</span><span class="err">'</span><span class="p">)</span>
   <span class="o">..</span><span class="n">onClick</span><span class="o">.</span><span class="nf">listen</span><span class="p">((</span><span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">window</span><span class="o">.</span><span class="nf">alert</span><span class="p">(</span><span class="err">'</span><span class="kt">Confirmed</span><span class="o">!</span><span class="err">'</span><span class="p">));</span>
@@ -333,7 +488,7 @@ assert(foo() == null);
 <span class="n">button</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="err">'</span><span class="kt">Confirm</span><span class="err">'</span><span class="p">;</span>
 <span class="n">button</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="err">'</span><span class="n">important</span><span class="err">'</span><span class="p">);</span>
 <span class="n">button</span><span class="o">.</span><span class="n">onClick</span><span class="o">.</span><span class="nf">listen</span><span class="p">((</span><span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">window</span><span class="o">.</span><span class="nf">alert</span><span class="p">(</span><span class="err">'</span><span class="kt">Confirmed</span><span class="o">!</span><span class="err">'</span><span class="p">));</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>其他符号()[]?.</li>
@@ -393,7 +548,30 @@ assert(foo() == null);
   </li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mixin</span> <span class="kt">Musical</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="rouge-code"><pre><span class="n">mixin</span> <span class="kt">Musical</span> <span class="p">{</span>
   <span class="n">bool</span> <span class="n">canPlayPiano</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
   <span class="n">bool</span> <span class="n">canCompose</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
   <span class="n">bool</span> <span class="n">canConduct</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
@@ -416,7 +594,7 @@ assert(foo() == null);
     <span class="n">canConduct</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>类变量和方法</li>
@@ -465,7 +643,16 @@ assert(foo() == null);
 
 <p>如下，直接调用  WannabeFunction(“Hi”,”there,”,”gang”);</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class WannabeFunction {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>class WannabeFunction {
   call(String a, String b, String c) =&gt; '$a $b $c!';
 }
 
@@ -474,7 +661,7 @@ main() {
   var out = wf("Hi","there,","gang");
   print('$out');
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="分离">分离</h4>
 
@@ -494,9 +681,13 @@ main() {
 
 <h4 id="documentation-comments">Documentation comments</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// A domesticated South American camelid (Lama glama).
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>/// A domesticated South American camelid (Lama glama).
 ///
 /// Andean cultures have used llamas as meat and pack
 /// animals since pre-Hispanic times.
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 :ET

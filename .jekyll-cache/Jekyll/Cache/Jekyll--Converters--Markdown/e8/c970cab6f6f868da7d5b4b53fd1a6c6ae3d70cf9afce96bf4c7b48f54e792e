@@ -1,4 +1,4 @@
-I"�<blockquote>
+I"�<blockquote>
   <p>从年初转到 SWift 开发，已经差不多一个年头了，正好也是年底，作个总结，也算是应景。</p>
 </blockquote>
 
@@ -22,7 +22,37 @@
 
 <p>写了几个，最后发现不容易区分博客提到了没有，不如多写一些吧</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AEXML // xml 解析
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre></td><td class="rouge-code"><pre>AEXML // xml 解析
 
 Kingfisher // 图片缓存库
 
@@ -52,7 +82,7 @@ Then // 代码闭包，语法糖
 
 ManualLayout // 手动布局 frame 等扩展
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="一些好的项目">一些好的项目</h3>
 

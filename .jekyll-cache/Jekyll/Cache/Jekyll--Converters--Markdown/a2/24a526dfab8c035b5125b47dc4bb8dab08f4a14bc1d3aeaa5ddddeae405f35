@@ -1,4 +1,4 @@
-I"-�<h2 id="提醒">提醒</h2>
+I"B<h2 id="提醒">提醒</h2>
 
 <p>文章篇幅较长，可以通览，使用时候直接搜索查看。</p>
 
@@ -70,9 +70,11 @@
 
 <h4 id="注释">注释</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> /* */的功能在Swift中更加强大，支持嵌套注释，
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre> /* */的功能在Swift中更加强大，支持嵌套注释，
  比如/* xxx /* yyy被嵌套的注释 */ zzz */
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="初始化以及类型绑定">初始化以及类型绑定</h4>
 
@@ -85,14 +87,21 @@
   </li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var a: Int = 5，定义时直接指定其类型，则在编译阶段就可确定类型
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>var a: Int = 5，定义时直接指定其类型，则在编译阶段就可确定类型
 
 var a = 5，虽然没有直接指定其类型，但是可以通过右边表达式的类型推断出左边的类型，这也是在编译阶段就可确定类型的情况
 
 var a = b &gt; c ? "string" : 3.23
 如果b和c是用户输入的两个整型数值，则编译阶段完全无法判断a最终的类型，这种无法推断的情况就只能在程序运行的时候根据具体情况进行绑定了
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h2 id="数据类型和语法">数据类型和语法</h2>
 
@@ -102,7 +111,15 @@ var a = b &gt; c ? "string" : 3.23
   <li>一些无视操作系统的整型精度</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Byte == UInt8 // 单字节
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>Byte == UInt8 // 单字节
 
 SignedByte == Int8 // 带符号单字节
 
@@ -110,43 +127,58 @@ ShortFixed == Int16 // 短整型
 
 Fixed == Int32 // 长整型
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>数值转换
  Swift要求类型绝对安全，窄化转换和自然转换都必须进行显示的强类型转换才行，否则就会报错！</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var x: Byte = 10
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>var x: Byte = 10
 var y: Byte = 20
 
 var z: Int32 = x + y // Bad！
 var z: Int32 = Int32(x) + Int32(y) // Good!
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>实质上所有基本类型都属于类（class），这里的类型转换其实是调用该类的构造函数构造出该类的一个新的对象；！同样，窄化转换以及浮点转整型都是截断型转换，会损失精度，使用的时候需要注意！</li>
   <li>Swift最牛逼的一个地方就是可以检查运行时的数据溢出，当然，编译时的溢出检查就更不用说了，比如var a: Int8 = 250，var a: Int8 = 8 + 125等都会直接在编译阶段报错；</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var aa: Int8 = 8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>var aa: Int8 = 8
 var bb: Int8 = 127
 var cc: Int8
 
 cc = aa + bb  //error
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>获取类型的极值：可以通过Int32.min、UInt8.max的方式获取每种类型的最大值和最小值，注意！浮点类型没有max和min属性，因为浮点数可以表示任意大小的数，只不过太大或太小的值精度非常非常低而已；</li>
   <li>各个进制表示，小写字母</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>二进制：0b打头
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>二进制：0b打头
 
 八进制：0o打头
 
 十六进制：0x打头
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>浮点数不带任何后缀，初始化时想要赋给Float就不能使用类型推断，比如var output: CGFloat = 3.14</li>
@@ -177,14 +209,21 @@ cc = aa + bb  //error
   </li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>单字节编码（主要是ASCII字符集和ASCII扩展字符集），比如"\x26" == "&amp;"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>单字节编码（主要是ASCII字符集和ASCII扩展字符集），比如"\x26" == "&amp;"
 
 双字节编码（主要是象形文字，希腊文、中文、日文、韩文等），比如"\u03bb" == "λ”
 
 四字节编码（主要是一些表情符号），比如"\U0001f603" == 笑脸符号
 
 ！其中x、u、U的大小写不要弄错，x后面必须有两位，u后面必须有4位，U后面必须有8位，全部都是16进制数，不能忽略前导0！！！
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>
@@ -215,22 +254,31 @@ cc = aa + bb  //error
   </li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let strValue = "abcd上下左右"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>let strValue = "abcd上下左右"
 
 for c in strValue.unicodeScalars
 {
     print("\(c.value) ")
 } // 97 98 99 100 19978 19979 24038 21491
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>查看前后缀：使用String的hasSuffix和hasSuffix成员函数查看字符串是否存在参数中指定的前缀或后缀：</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let folder = "Swift.docx"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>let folder = "Swift.docx"
 folder.hasSuffix(".docx")
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="基本数据类型之-元组">基本数据类型之 元组</h4>
 
@@ -240,9 +288,11 @@ folder.hasSuffix(".docx")
   <li>第一种在使用可选变量的时候需要加!，虽然麻烦但是到哪儿都可以知道该变量是一个可选类型的，第二种方法虽然简单，但是代码一长可能就很难判断该变量是一个可选类型的，当然如果出现拆包异常就会知道了，但是测试代码的人员刚开始理解代码的时候可能会遇到一些困难；</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var x: Int! = 5
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>var x: Int! = 5
 var x: Int? = 5
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="数组">数组</h4>
 
@@ -264,7 +314,21 @@ var x: Int? = 5
   </li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 其实使用Cocoa的NSMutableArray来实现的，元素类型为抽象类型NSObject
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>// 其实使用Cocoa的NSMutableArray来实现的，元素类型为抽象类型NSObject
 var arr = ["abc", 123, 234.323]
 arr = ["df"] // 可以改变数组本身
 println(arr)
@@ -278,28 +342,36 @@ println(arr)
 
  // 由于类型无法推导，所以还是使用NSMutableArray来实现
 var arr_empty = []
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>创建固定长度的数组以及规定默认的初始化值：有时需要使用类似C语言那样限制长度的传统数组，这是就需要使用数组类型的构造函数，并制定相关的参数达到上述目的</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 这里必须同时指定数组长度和默认初始化值，少一个都不行！
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>// 这里必须同时指定数组长度和默认初始化值，少一个都不行！
 var arr = [Int](count: 4, repeatedValue: 2)
 println(arr.count) // 4
 println(arr) // [2, 2, 2, 2]
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>访问数组元素：和C语言一样，通过arrayname[index]的方式访问，其中let定义的常量数组的值不可修改，而var定义的变量数组可以；</li>
   <li>区间赋值：</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>支持闭区间和半开半闭区间两种：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>支持闭区间和半开半闭区间两种：
 
 arr[min...max] = [item1, item2, ...]
 arr[min..&lt;max] = [item1, item2, ...]
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="字典">字典</h4>
 <ul>
@@ -308,13 +380,19 @@ arr[min..&lt;max] = [item1, item2, ...]
   <li>字典的访问和修改，Swift将Dictionary的键值中的值的类型都会自动隐式地提升成可选类型，即虽然定义的时候是[Type: Type]，但是底层是[Type: Type?]，因此在使用字典中的值的时候一定要加上拆包符号才行，比如dic[5]! + 2，否则就会报错，这就是为什么不存在的键值访问时返回nil了：</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>
 var dic = [1: 2, 3: 5]
 dic[10] = 17 // 对于不在字典中的键值直接添加
 println(dic[10]) // Optional(17)
 
 let a = dic[5] + 2//不允许 dic[5] 要解包
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>修改键值：除了直接赋值，另一种是.updateValue(newValue, forKey:)的方式，修改指定键对应的值同时返回旧的值，如果旧值不存在则返回nil，同样也是返回可选类型</li>
@@ -334,17 +412,31 @@ let a = dic[5] + 2//不允许 dic[5] 要解包
   <li>Swift的引用传参——输入输出参数：</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>虽然只有类对象是引用类型的，但是也可以实现值类型数据的引用传参，在C++中引用传参的目的就是输入输出参数，因此Swift中可以用inout将变量设为输入输出参数，这样就实现了引用传参，注意，用inout修饰不用设为var，因为inout的目的就是要在函数中修改参数值：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>虽然只有类对象是引用类型的，但是也可以实现值类型数据的引用传参，在C++中引用传参的目的就是输入输出参数，因此Swift中可以用inout将变量设为输入输出参数，这样就实现了引用传参，注意，用inout修饰不用设为var，因为inout的目的就是要在函数中修改参数值：
 
 // 也可以加外部参数名，一般规则就是修饰符都写在外部参数名之前
 func test(a: Int, inout name s: String)
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>输入输出参数  虽然只有类对象是引用类型的，但是也可以实现值类型数据的引用传参，在C++中引用传参的目的就是输入输出参数，因此Swift中可以用inout将变量设为输入输出参数，这样就实现了引用传参，注意，用inout修饰不用设为var，因为inout的目的就是要在函数中修改参数值：</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 也可以加外部参数名，一般规则就是修饰符都写在外部参数名之前
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>// 也可以加外部参数名，一般规则就是修饰符都写在外部参数名之前
 func test(a: Int, inout name s: String)
 {
     s = "haha"
@@ -354,13 +446,22 @@ func test(a: Int, inout name s: String)
 var s: String = "xxxx"
 test(23, name: &amp;s) // &amp;和C++的取引用概念不同，这里仅仅是为了和inout关键字呼应，进表示引用传参的意思
 println(s) // haha
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>函数类型</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 函数类型为(Int, Int) -&gt; Int
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>// 函数类型为(Int, Int) -&gt; Int
 func add(a: Int, b: Int) -&gt; Int
 {
     return a + b
@@ -369,7 +470,7 @@ func add(a: Int, b: Int) -&gt; Int
 var fun: (Int, Int) -&gt; Int = add
 println(fun(1, 2)) // 3
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <ul>
   <li>将函数类型作为返回值类型</li>
   <li>将函数类型作为参数 实现一个函数在内部调用多种类型相同但功能不同的外部函数，而不用通过繁杂的if语句再通过函数名调用这些外部函数了，可以方便的增强多态的能力</li>
@@ -389,15 +490,33 @@ println(fun(1, 2)) // 3
 println(isEqual(1, 2)) // false
 println(isEqual(“haha”, “haha”)) // true</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>
 - 函数重载 Swift的函数重载依据不在只有C++的函数签名那么简单了，有多了函数返回值类型，即函数返回值类型也可以作为重载依据，因此Swift重载内容包括了参数类型、参数个数和返回值类型这三项，**重载时函数名必须相同，但函数类型必须不同**，使用的时候一定要注意调用形式，避免歧义；
 
 
 #### 闭包
 - Swift中闭包的概念非常广泛，但是我们这里主要讲解闭包表达式：
 
-</code></pre></div></div>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1) 闭包按照表面意思就是指一段封闭的代码包，而Swift中的闭包则包括之前讲过的函数、方法、内嵌函数，当然最重要的就是闭包表达式了；
+</pre></td></tr></tbody></table></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre>1) 闭包按照表面意思就是指一段封闭的代码包，而Swift中的闭包则包括之前讲过的函数、方法、内嵌函数，当然最重要的就是闭包表达式了；
 
 2) 闭包表达式：
 
@@ -408,7 +527,7 @@ println(isEqual(“haha”, “haha”)) // true</p>
      iii) 用以实现类似C++的匿名函数的功能（Lambda函数）；
 
 3) 要支持闭包的两个前提条件：支持函数类型（闭包的返回值就是函数类型）可以将函数作为参数和返回值进行传递，还有一个就是必须支持函数嵌套（因为闭包表达式就是一种抽象的函数，可以在任意地方使用，因此必须包括函数内部）； ```
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>闭包表达式形式和函数很像，但是没有一个名字，也就说是匿名的！由于是匿名的，用户就很难通过”函数名“调用的方式来调用闭包了！</li>
@@ -418,7 +537,34 @@ println(isEqual(“haha”, “haha”)) // true</p>
   <li>闭包的简单应用（最为内嵌函数的应用）：前面其实也都是闭包的应用，记住！包整个闭包表达式看成一个函数名就行了！该函数的参数、内容、返回值都在{}中定义</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func cal(opr: String) -&gt; (Int, Int) -&gt; Int
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="rouge-code"><pre>func cal(opr: String) -&gt; (Int, Int) -&gt; Int
 { // Swift可以根据上下文捕获的信息推断出闭包的参数类型等各种信息
   // 这里可以通过cal的返回值类型推断出闭包的所有信息
 
@@ -445,13 +591,46 @@ println(isEqual(“haha”, “haha”)) // true</p>
     default: return { a, b in 0 }
     }
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li><strong>闭包的内存包含自己的数据区！——存放外界捕获值</strong></li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1) 传统语言如C语言等函数的代码段只有操作语句，而函数中使用的数据都有栈区或堆区统一管理，函数代码段本身没有数据区；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre></td><td class="rouge-code"><pre>1) 传统语言如C语言等函数的代码段只有操作语句，而函数中使用的数据都有栈区或堆区统一管理，函数代码段本身没有数据区；
 
 2) 但是Swift的闭包彻底颠覆了函数的内存模型，闭包在Swift中成为了一种资源，该资源中可以包含自己的数据，就跟Win32的窗口资源类似，不仅有代码，也有数据！
 
@@ -484,20 +663,27 @@ println(incrementBySix()) // 12
 println(incrementBySix()) // 18
 
 println(incrementByTen()) // 40，闭包就当一个变量或常量之类的数据使用，其中数据区的内容可以一直保存
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li><strong>闭包是引用类型数据！</strong></li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>i) 闭包的返回值前面提到过是函数类型，而这个函数类型的数据类似于Win32中HWND等资源指针（在Swift中叫引用）；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>i) 闭包的返回值前面提到过是函数类型，而这个函数类型的数据类似于Win32中HWND等资源指针（在Swift中叫引用）；
 
 ii) 如果将该引用赋来赋去，则这些引用访问的都是同一片闭包内存空间，比如接着上面的代码往下写：
 
 let incrementByTen2 = incrementByTen
 println(incrementByTen2()) // 50
 只有通过闭包表达式才能创建一片新的闭包内存
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="枚举">枚举</h4>
 <ul>
@@ -507,7 +693,34 @@ println(incrementByTen2()) // 50
 
 <h4 id="结构体和类">结构体和类</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Swift的类和结构体的异同：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="rouge-code"><pre>1. Swift的类和结构体的异同：
 
     1) Swift非常重视结构体的作用，并提供了结构体非常强大的面向对象支持；
 
@@ -534,7 +747,7 @@ println(incrementByTen2()) // 50
          iii) 支持析构；
 
          iv) 支持ARC引用计数（只有类是引用类型的，结构体是值类型的，因此无法引用，也就提不上引用计数管理了）；
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>可以在类中添加结构体成员，也可以在结构体中添加类成员，这是随意的；</li>
@@ -557,7 +770,20 @@ println(incrementByTen2()) // 50
   <li>索引属性——添加下标访问方式：subscript(索引参数列表) -&gt; 返回值类型 { set和get的可读可写访问 或 直接return的只读访问 }</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre>
     subscript(index: Int) -&gt; Int { // 普通的一维数组访问，这里设定为只读
         return grid[index]
     }
@@ -570,7 +796,7 @@ println(incrementByTen2()) // 50
             grid[row * cols + col] = newValue
         }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="方法-方法就是枚举结构体类中定义的函数但是它跟函数在命名方面有很大的不同">方法 方法就是枚举、结构体、类中定义的“函数”，但是它跟函数在命名方面有很大的不同；</h4>
 <ul>
@@ -579,7 +805,33 @@ println(incrementByTen2()) // 50
   <li>不仅可以对存储属性修改，还可以修改self的值（注意，结构体和枚举都是值类型的）</li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">Test</span><span class="p">:</span> <span class="kt">String</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre><span class="kd">enum</span> <span class="kt">Test</span><span class="p">:</span> <span class="kt">String</span>
 <span class="p">{</span>
     <span class="k">case</span> <span class="n">a</span> <span class="o">=</span> <span class="s">"a"</span>
     <span class="k">case</span> <span class="n">b</span> <span class="o">=</span> <span class="s">"b"</span>
@@ -605,7 +857,7 @@ println(incrementByTen2()) // 50
 <span class="nf">println</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">rawValue</span><span class="p">)</span> <span class="c1">// c</span>
 <span class="n">test</span><span class="o">.</span><span class="nf">next</span><span class="p">()</span>
 <span class="nf">println</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">rawValue</span><span class="p">)</span> <span class="c1">// a</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>静态方法</li>
@@ -620,7 +872,16 @@ println(incrementByTen2()) // 50
   <li>构造器可以对let定义的常量属性初始化，并且如果常量属性同时在直接初始化语句中初始化过也在构造器中初始化过也<strong>不会发生冲突</strong>而导致编译出错！原因见上一条</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Test
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>class Test
 {
     var a: Int = 9 // 构造器中没初始化过就会执行此句
     let b: Int = 10 // 构造器初始化过了这句就会被忽略
@@ -629,7 +890,7 @@ println(incrementByTen2()) // 50
         self.b = b // 先在构造器中初始化
     }
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li><strong>默认构造器</strong></li>
@@ -637,7 +898,47 @@ println(incrementByTen2()) // 50
 
 <p>1) 默认构造器就是指用户不定义任何构造器时Swift会为我们隐式提供的构造器； 2) 对于类，默认构造器只有一个无参的空init，而对于结构体，还多了一个这样的构造器，请看如下： 还有就是可选类型的初始化一定要注意了，类和结构体有一定区别：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="kt">A</span> <span class="p">{</span>
     <span class="c1">// 只有一个空的无参构造器，因此无法通过用户传参构造</span>
     <span class="c1">// 所以必须直接初始化，否则永远也不能初始化而导致编译错误！</span>
     <span class="k">var</span> <span class="nv">a</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span>
@@ -677,14 +978,22 @@ println(incrementByTen2()) // 50
 <span class="c1">// var cc2 = C_Struct() // Bad! 但是结构体必须初始化可选类型</span>
 <span class="k">var</span> <span class="nv">cc2</span> <span class="o">=</span> <span class="kt">C_Struct</span><span class="p">(</span><span class="nv">a</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span> <span class="c1">// OK!</span>
 <span class="k">var</span> <span class="nv">cc3</span> <span class="o">=</span> <span class="kt">C_Struct</span><span class="p">(</span><span class="nv">a</span><span class="p">:</span> <span class="mi">13</span><span class="p">)</span> <span class="c1">// OK!</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>构造器重载 函数类型、外部参数名不同都能重载</li>
   <li>构造器代理：一个构造器中调用另一个构造器。便利构造器和继承重写构造器</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1) 和Java和C++一样，为了不重复写代码会在一个构造器中调用另一个构造器；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>    1) 和Java和C++一样，为了不重复写代码会在一个构造器中调用另一个构造器；
 
     2) Swift也支持这个特性，这就是代理构造器，即在一个构造器中调用另一个构造器的代码，但不过调用构造器的语句必须是第一句并且仅且能调用最多一句！否则会报错！并且调用的时候一定要加self.；
 
@@ -692,7 +1001,7 @@ println(incrementByTen2()) // 50
 
     4) 由于类具有继承特性（结构体没有），和C++一样，对于子类需要先调用父类构造器来初始化父类的部分，然后在执行自己的初始化语句，因此对于这类的代理就称为纵向代理（也称为向上代理），这样的构造器就是指定构造器，而对于上述的代理构造仅仅就是一个类内部之间的构造器相互代理，因此称为横向代理，构造器称为便利构造器；
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>如果用户自定义了任何一个构造器，则默认构造器就不存在了</li>
@@ -700,46 +1009,66 @@ println(incrementByTen2()) // 50
 
 <h5 id="析构">析构</h5>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1) 同样也不属于方法，由于无参无返回值（和C++的情况一样），因此不能重载，因此有且仅有一个，名字限制为deinit，没有参数列表，因此不需要参数的括号；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>    1) 同样也不属于方法，由于无参无返回值（和C++的情况一样），因此不能重载，因此有且仅有一个，名字限制为deinit，没有参数列表，因此不需要参数的括号；
 
     2) 也是用于清理工作，虽然Swift的ARC内存管理机制（引用计数）和Java效果一样，可以使程序员完全不用关心对象没有及时析构的问题，但是Swift仍然提供了析构器，仍然用于完成对象的清理工作，虽然实例资源不需要程序员管，但是如关闭文件等操作还是需要程序员来执行的，因此关闭文件等操作可以写在析构器代码中，因此Swift还是非常贴心周到的；
 
     3) 如果用户不写析构器则Swift会自动定义一个空的默认析构器；
 
     4) 析构器调用时机和C++的析构函数一样，都是在对象被销毁之前调用；
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="可选链和引用计数">可选链和引用计数</h4>
 <ul>
   <li>可选链 就是为了防止由于属性、变量为nil时抛出异常</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if let s = a_Class?.b_Class?.c_Class?.retD()?.s {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>if let s = a_Class?.b_Class?.c_Class?.retD()?.s {
     println("访问到了最内层的s = \(s)") // 进入了最内层
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li><strong>引用计数原理</strong></li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>和C++以及OC一样，所有的值类型的数据（结构体、基本类型、集合）都是保存在栈上，其添加和销毁都是由编译器自动产生相关的代码（汇编语言中实现过），而只有类的对象时保存在堆中，由于采用了自动化就不用像C++那样由人手动管理这部分内存的开辟和释放，其背后是采用ARC机制在运行时自动管理堆中的内存；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>和C++以及OC一样，所有的值类型的数据（结构体、基本类型、集合）都是保存在栈上，其添加和销毁都是由编译器自动产生相关的代码（汇编语言中实现过），而只有类的对象时保存在堆中，由于采用了自动化就不用像C++那样由人手动管理这部分内存的开辟和释放，其背后是采用ARC机制在运行时自动管理堆中的内存；
 
 RC：Reference Counter，即引用计数器，Swift会为每个创建的对象分配一个引用计数器，用于动态实时监控当前有多少引用指向该对象
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>强引用、弱引用以及无主引用</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1) 引用分为三类：强引用、弱引用以及无主引用，其中强弱引用的概念和Shell中的强弱引用概念类似，其实只有强引用才能改变RC的值，后面两种不能改变RC的值但而只能通过引用访问对象的内容；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>    1) 引用分为三类：强引用、弱引用以及无主引用，其中强弱引用的概念和Shell中的强弱引用概念类似，其实只有强引用才能改变RC的值，后面两种不能改变RC的值但而只能通过引用访问对象的内容；
 
     2) 其中强引用就是上述以及之前经常碰见过的普通的引用，而弱引用需要用weak关键词修饰，而无主引用需要用unowned关键词来修饰；
 
     解决循环引用的方法就是只给循环引用的一方（不是两方，只是一方）套上弱引用（或者接下来要将的无主引用），最后在释放时先释放被弱引用（或无主引用）指向的那个对象再释放另一个对象即可（顺序不能错！）
 
     本类中需要持有自己可以使用unowned
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="类的继承">类的继承</h4>
 <p><a href="https://blog.csdn.net/Lirx_Tech/article/details/41483195">详情链接</a></p>
@@ -749,12 +1078,17 @@ RC：Reference Counter，即引用计数器，Swift会为每个创建的对象�
   <li>继承链条</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   i) 大致顺序是：分两遍，第一遍是从子类到父类，第二遍再从父类到子类；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>   i) 大致顺序是：分两遍，第一遍是从子类到父类，第二遍再从父类到子类；
 
    ii) 第一遍的从子类到父类是指先调用子类构造器，其中子类构造器中调用了父类的构造器，而父类的构造器又调用了爷类的构造器，从而一层一层往上知道最顶层的构造器调用完；
 
    iii) 到达顶层后，再原路返回执行第二遍检查，而这个第二遍检查的内容就是直接初始化语句了，一直从顶层一层一层往下检查到底层的子类，方式和之前讲过的一，就是忽略已经被构造器初始化过的属性只对那些没有被构造器初始化过属性执行直接初始化语句：
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="swift要求并建议的构造器代理规则">Swift要求并建议的构造器代理规则</h5>
 
@@ -767,24 +1101,35 @@ RC：Reference Counter，即引用计数器，Swift会为每个创建的对象�
   </li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>i) 横向代理规则一：便利构造器只能调用同一类中的其它构造器（指定构造器和便利构造器都行），但是不能调用父类构造器（否则就变成纵向代理而不是横向代理了）
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>i) 横向代理规则一：便利构造器只能调用同一类中的其它构造器（指定构造器和便利构造器都行），但是不能调用父类构造器（否则就变成纵向代理而不是横向代理了）
 ii) 横向代理规则二：仅有一句
 iii) 向上代理规则一：子类的每个指定构造器必须调用直接父类的指定构造器（必须是父类的指定构造器不能是便利构造器
 iv) 向上代理规则三：在向上代理之前不得访问父类中的属性，因为在Swift的继承就是通过向上代理实现的，在调用父类构造器之前父类的内容在内存中还不存在因此是无法访问父类中的属性的，
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>子类从父类那里自动获取构造器： 如果子类不定义任何构造器则会从父类那里获取构造器（即子类的默认构造器和父类的构造器一样），但是构造器不能继承，因此只能说是获取；</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>获取的规则：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>获取的规则：
 
          i) 如果子类不写任何构造器则将获取父类的所有指定构造器；
 
          ii) 如果子类写了哪怕一个构造器则子类不会获得父类的任何一个构造器；
 
          iii) 如果获得了一个父类的指定构造器，则父类中所有调用它的便利构造器以及间接调用它的便利构造器都将被子类获得
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="重载属性">重载属性</h5>
 <ul>
@@ -799,7 +1144,16 @@ iv) 向上代理规则三：在向上代理之前不得访问父类中的属性�
 
 <h5 id="继承限制">继承限制：</h5>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1) 和Java一样使用关键字final来限制继承；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>    1) 和Java一样使用关键字final来限制继承；
 
     2) 如果用final修饰类成员（静态/非静态）则该成员不可被重写；
 
@@ -808,7 +1162,7 @@ iv) 向上代理规则三：在向上代理之前不得访问父类中的属性�
     4) 不能同时用final修饰类和成员，因为两者逻辑上是冲突的，因为不能继承的类何以重写它的成员！
 
     5) 在开发商业软件的时候非常有必要使用final进行限制；
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="多态">多态</h4>
 <ul>
@@ -816,21 +1170,31 @@ iv) 向上代理规则三：在向上代理之前不得访问父类中的属性�
   <li>多态类型转换：和普通的类型转换不一样，普通的类型转换是指一般意义上的强制类型转换，但是强制类型转换不能发生在类型之间，如果使用”类名(转换对象)”则会触发相应类的构造器而不能达到转换类型的效果，因此Swift的类型转换只能发生在可以转换的两个对象之间，对于不能转换的两个对象会在编译阶段或是运行阶段报错；</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1) 即is和as两个操作符的运用；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>    1) 即is和as两个操作符的运用；
 
     2) 还是强调那句，这两个操作符的使用必须严格遵守之前讲过的规则：必须要让一个父类的引用指向一个其子类的实例，然后再对该引用用is判断是否属于某个具体的子类或用as将其转换成某个具体的子类类型；
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="两种不确定类型any和anyobject">两种不确定类型——Any和AnyObject：</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    1) 注意Swift的不确定类型和Java的Object类不一样，它并不是所有类的基类，可以说它们并不是类，而只是一种不确定类型（类似C语言的void类型）；
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>    1) 注意Swift的不确定类型和Java的Object类不一样，它并不是所有类的基类，可以说它们并不是类，而只是一种不确定类型（类似C语言的void类型）；
 
     2) AnyObject可以接受任何类类型数据，而Any可以接受任意类型的数据（包括AnyObject和基本类型），由于基本类型不是类类型，因此可见这两种不确定类型并不是类类型；
 
     3) 虽然不是类类型，但是可以使用is和as操作符，比如0 is Int或0 as Double，其实这里的，其实这里的is和as都使用Any进行重载；
 
     4) 整个数组整体转换（前提是数组中所有元素类型必须一样）：形式是AnyOrAnyObjectArray as [SpecificType]，这样就可以返回一个转换好的[SpecificType]数组了，但是不能使用可选符号?进行保护！
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="协议-类结构体和枚举">协议 类、结构体和枚举</h4>
 <p><a href="https://blog.csdn.net/Lirx_Tech/article/details/41724185">参考资料</a></p>
@@ -854,12 +1218,17 @@ iv) 向上代理规则三：在向上代理之前不得访问父类中的属性�
   <li>和任何一种语言的泛型一样，都是动态推导类型的，只有当实际传参的时候才会根据参数类型生成相应版本的代码（即运行时动态加载函数代码），因此执行效率较低，但是程序灵活性非常强；</li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">f</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">,</span> <span class="kt">K</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">a</span><span class="p">:</span> <span class="kt">T</span><span class="p">,</span> <span class="nv">b</span><span class="p">:</span> <span class="kt">K</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">K</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="kd">func</span> <span class="n">f</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">,</span> <span class="kt">K</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">a</span><span class="p">:</span> <span class="kt">T</span><span class="p">,</span> <span class="nv">b</span><span class="p">:</span> <span class="kt">K</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">K</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">b</span>
 <span class="p">}</span>
 
 <span class="nf">println</span><span class="p">(</span><span class="nf">f</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s">"haha"</span><span class="p">))</span> <span class="c1">// haha</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>
@@ -870,7 +1239,27 @@ iv) 向上代理规则三：在向上代理之前不得访问父类中的属性�
   </li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Stack</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre><span class="kd">struct</span> <span class="kt">Stack</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">items</span> <span class="o">=</span> <span class="p">[</span><span class="kt">T</span><span class="p">]()</span>
 
     <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">push</span><span class="p">(</span><span class="nv">item</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="p">{</span>
@@ -890,7 +1279,7 @@ iv) 向上代理规则三：在向上代理之前不得访问父类中的属性�
         <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="泛型约束要求那个类型占位符所代表的泛型遵守某些规矩比如必须要遵守某些协议或者必须由什么类继承而来等">泛型约束：要求那个类型占位符所代表的泛型遵守某些规矩，比如必须要遵守某些协议，或者必须由什么类继承而来等</h5>
 

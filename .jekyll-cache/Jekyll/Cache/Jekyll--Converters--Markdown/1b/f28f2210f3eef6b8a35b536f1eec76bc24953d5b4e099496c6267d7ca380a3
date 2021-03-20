@@ -1,4 +1,4 @@
-I"�<blockquote>
+I"�<blockquote>
   <p>Sourcery is a code generator for Swift language, built on top of Apple’s own SourceKit. It extends the language abstractions to allow you to generate boilerplate code automatically.</p>
 </blockquote>
 
@@ -36,8 +36,9 @@
 
 <p>安装官方 github 提供的安装方式，先安装工具</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install sourcery
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>brew install sourcery
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>安装直接需要这一步，下面就是调试Demo，是时候看一看 sourcery 的魅力了。</p>
 
@@ -53,35 +54,60 @@
 
 <p><strong>注意本文中的脚本加了一些”“，用以防止跟 jekyll 博客脚本冲突，具体例如：</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sc">'{'</span><span class="p">{</span><span class="sc">'，'</span><span class="p">{</span><span class="sc">'%'</span><span class="err">，</span><span class="sc">'%'</span><span class="p">}</span><span class="sc">'，'</span><span class="p">}</span><span class="sc">'}'</span>   <span class="n">都可视为没有</span><span class="err">'，</span><span class="n">文中使用了全局查找替换的方式修改</span>
-</code></pre></div></div>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="sc">'{'</span><span class="p">{</span><span class="sc">'，'</span><span class="p">{</span><span class="sc">'%'</span><span class="err">，</span><span class="sc">'%'</span><span class="p">}</span><span class="sc">'，'</span><span class="p">}</span><span class="sc">'}'</span>   <span class="n">都可视为没有</span><span class="err">'，</span><span class="n">文中使用了全局查找替换的方式修改</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>在同一级目录创建一个后缀名为 .stencil 的文件，然后在其中编写脚本代码，脚本语法在文章开头部分已经提过。值得注意的是，如果你将文件命名为 AutoEquatable.stencil，那么将生成一个名字为 AutoEquatable.generated.swift 的文件用于存放 Person 的分类脚本。所以通常可以直接命名为 Model.stencil</p>
 
 <p>在其中写下如下脚本，大概可以看出意思是, 循环遍历所有的属性，生成了 guard value == value else { return false } 的代码</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span><span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="sc">'{'</span><span class="p">{</span><span class="err">'</span> <span class="n">type</span><span class="o">.</span><span class="n">name</span> <span class="sc">'}'</span><span class="p">}</span><span class="err">'</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="sc">'{'</span><span class="p">{</span><span class="err">'</span> <span class="n">type</span><span class="o">.</span><span class="n">name</span> <span class="sc">'}'</span><span class="p">}</span><span class="err">'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span><span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="sc">'{'</span><span class="p">{</span><span class="err">'</span> <span class="n">type</span><span class="o">.</span><span class="n">name</span> <span class="sc">'}'</span><span class="p">}</span><span class="err">'</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="sc">'{'</span><span class="p">{</span><span class="err">'</span> <span class="n">type</span><span class="o">.</span><span class="n">name</span> <span class="sc">'}'</span><span class="p">}</span><span class="err">'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
     <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="k">for</span> <span class="k">var</span> <span class="nv">in</span> <span class="n">type</span><span class="o">.</span><span class="n">variables</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
     <span class="k">guard</span> <span class="n">lhs</span><span class="o">.</span><span class="sc">'{'</span><span class="p">{</span><span class="err">'</span> <span class="kd">var</span><span class="o">.</span><span class="n">name</span> <span class="sc">'}'</span><span class="p">}</span><span class="err">'</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="sc">'{'</span><span class="p">{</span><span class="err">'</span> <span class="kd">var</span><span class="o">.</span><span class="n">name</span> <span class="sc">'}'</span><span class="p">}</span><span class="err">'</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span> <span class="p">}</span>
     <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="n">endfor</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
 
     <span class="k">return</span> <span class="kc">true</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="运行脚本">运行脚本</h5>
 
 <p>在终端运行如下代码, <strong>最后一个 –watch 参数不是必须的</strong>， 如果使用这个参数，代码会在保存时候实时生成脚本</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sourcery --sources AutoEquatable.playground/Sources \
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>sourcery --sources AutoEquatable.playground/Sources \
 --output AutoEquatable.playground/Sources \
 --templates . \
 --watch
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>最后的结果是这样的， 最上边还贴心的给出注释 <strong>// DO NOT EDIT</strong>，通过脚本生成，不要编辑</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Generated using Sourcery 0.15.0 — https://github.com/krzysztofzablocki/Sourcery
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre>// Generated using Sourcery 0.15.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 
@@ -94,7 +120,7 @@ extension Person: Equatable {
   }
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>Demo比较简单，如果碰到问题可以回顾一下这个博客，里边有详细的步骤。<a href="https://www.raywenderlich.com/501-sourcery-tutorial-generating-swift-code-for-ios">Sourcery Tutorial: Generating Swift code for iOS</a></p>
 
@@ -108,7 +134,31 @@ extension Person: Equatable {
 
 <p>文中的模板代码如下：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">ObjectMapper</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="rouge-code"><pre><span class="kd">import</span> <span class="kt">ObjectMapper</span>
 
 <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="k">for</span> <span class="n">type</span> <span class="k">in</span> <span class="n">types</span><span class="o">.</span><span class="n">implementing</span><span class="o">.</span><span class="kt">AutoMappable</span><span class="o">|</span><span class="kd">struct</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
 <span class="c1">// MARK: '{'{' type.name '}'}' Mappable</span>
@@ -132,7 +182,7 @@ extension Person: Equatable {
 <span class="p">}</span>
 <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="n">endfor</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>而且可以看到，除了普通参数生成，作者还特意标注了 isArray， isDictionary 的取值方法。注意如果多个数组需要不同的样式，用这种方式就不能行得通了。</p>
 
@@ -140,7 +190,26 @@ extension Person: Equatable {
 
 <p>如下的模型：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">AutoMappable</span> <span class="p">{}</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">AutoMappable</span> <span class="p">{}</span>
 
 <span class="c1">//sourcery: mappable</span>
 <span class="kd">struct</span> <span class="kt">Person</span> <span class="p">{</span>
@@ -159,13 +228,37 @@ extension Person: Equatable {
     <span class="p">}</span>
 <span class="p">}</span>
 <span class="kd">extension</span> <span class="kt">Person</span><span class="p">:</span> <span class="kt">AutoMappable</span> <span class="p">{}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>可以看到，我在 firstName， lastName 等参数上边写了注释。使用注释来判断需要修改的参数名字，这也同样是文章开头那篇博客里使用的的。但是尴尬的是博客里面缺少太多的示例代码。</p>
 
 <p>不过 github 上的千万级开发者一定有人分享了这个，我通过 github 搜索，在 <a href="https://github.com/aichiko0225/LJInstalment">aichiko0225/LJInstalment</a> 这个工程里面找到了示例，对照着例子就可以进行如下代码的修改。<strong>ps：除了找例子，还有一个好的方式就是去读语法规则的代码</strong>。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">ObjectMapper</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="rouge-code"><pre><span class="kd">import</span> <span class="kt">ObjectMapper</span>
 
 <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="k">for</span> <span class="n">type</span> <span class="k">in</span> <span class="n">types</span><span class="o">.</span><span class="n">implementing</span><span class="o">.</span><span class="kt">AutoMappable</span><span class="o">|</span><span class="kd">struct</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
 <span class="c1">// MARK: '{'{' type.name '}'}' Mappable</span>
@@ -189,11 +282,45 @@ extension Person: Equatable {
 <span class="p">}</span>
 <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="n">endfor</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>更多</strong>，更多的用法就要看一看语法规则，除了协议，注释，还有很多其他有趣的用法。先发一个上边库中的例子，涉及 <strong>类，变量，方法</strong> 的编程：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+</pre></td><td class="rouge-code"><pre>
 <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="k">for</span> <span class="n">type</span> <span class="k">in</span> <span class="n">types</span><span class="o">.</span><span class="n">based</span><span class="o">.</span><span class="kt">AutoMockable</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span><span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="k">if</span> <span class="n">type</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="err">'</span><span class="kd">protocol</span><span class="sc">' '</span><span class="o">%</span><span class="sc">'}'</span>
 <span class="c1">// ...</span>
 
@@ -227,7 +354,7 @@ extension Person: Equatable {
 <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="n">endif</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span><span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="n">endif</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
 <span class="sc">'{'</span><span class="o">%</span><span class="err">'</span> <span class="n">endfor</span> <span class="sc">'%'</span><span class="p">}</span><span class="err">'</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>我还找到了其他的 repo <a href="https://github.com/vburojevic/ios-sourcery/blob/7ab181dc1e420f4160367bd1650863d188a9889e/Templates/AutoJSONDeserializable.stencil#L9">ios-sourcery</a></p>
 
@@ -252,13 +379,15 @@ extension Person: Equatable {
 
 <p><strong>强烈建议使用文件夹区分 model，和模板扩展</strong></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sourcery --sources ./LJInstalment --templates ./LJInstalment/Templates/AutoCodable.stencil --output ./LJInstalment/Sources/AutoGenerated
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>sourcery --sources ./LJInstalment --templates ./LJInstalment/Templates/AutoCodable.stencil --output ./LJInstalment/Sources/AutoGenerated
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>开发这一块代码的时候， <strong>也可以同时使用 终端的命令</strong> ， 可以在写模型和脚本的时候随时更新。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sourcery --sources SingleView --templates SingleView --output SingleView -- watch
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>sourcery --sources SingleView --templates SingleView --output SingleView -- watch
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>注意本文中的脚本加了一些”“，用以防止更 jekyll 脚本冲突，具体例如：’{‘{‘，’{‘%’，’%’}’，’}’}’，</strong></p>
 

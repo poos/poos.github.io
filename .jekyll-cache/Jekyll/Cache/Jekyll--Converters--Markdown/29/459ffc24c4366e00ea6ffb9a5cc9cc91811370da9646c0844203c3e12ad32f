@@ -1,4 +1,4 @@
-I"V�<blockquote>
+I"��<blockquote>
   <p>HuaRongDao</p>
 </blockquote>
 
@@ -12,7 +12,41 @@
 
 <p>通过制定通用的搜索协议，可以将搜索的算法规范化：某个状态（包含父节点），状态权重，搜索器</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//某个状态</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+</pre></td><td class="rouge-code"><pre><span class="c1">//某个状态</span>
 <span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
 
@@ -46,13 +80,23 @@
 
     <span class="kd">func</span> <span class="nf">pathWithState</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="多叉树">多叉树</h3>
 
 <p>搜索算法通常以一种 <strong>多叉树</strong> 的形式存在，树的每一个节点如下：<strong>父</strong> 节点，<strong>孩子们</strong> 节点，当前的 <strong>值</strong>， <strong>唯一标识</strong>（用于查询当前节点是否被查询过）</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
 
     <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
@@ -62,11 +106,20 @@
     <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="权重">权重</h3>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXAStarState</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">SXAStarState</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">fromValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
 
     <span class="k">var</span> <span class="nv">toValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
@@ -75,7 +128,7 @@
 
     <span class="kd">func</span> <span class="nf">toTargetStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>A* 算法的必备要素，根据不同的规则大概可以分为几个值：<strong>到开始的权重</strong>，<strong>到成功状态的权重</strong>，<strong>总权重</strong>。需要传入开始点，结束点和当前点</p>
 
@@ -85,7 +138,40 @@
 
 <p>如下添加了属性 pathStates，historyIdentifier，succcesState 和 方法 getChild()</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">HuaSearch</span><span class="p">:</span> <span class="kt">SXSeacher</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="kt">HuaSearch</span><span class="p">:</span> <span class="kt">SXSeacher</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">startState</span><span class="p">:</span> <span class="kt">SXNodeState</span>
 
     <span class="k">var</span> <span class="nv">targetState</span><span class="p">:</span> <span class="kt">SXNodeState</span>
@@ -118,7 +204,7 @@
     <span class="p">}</span>
 
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="关于比特位">关于比特位</h3>
 
@@ -128,7 +214,78 @@
 
 <p>那么关于二进制位的运算就要了解一下了：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Int64</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+</pre></td><td class="rouge-code"><pre><span class="kd">extension</span> <span class="kt">Int64</span> <span class="p">{</span>
     <span class="c1">// 取空格位置</span>
     <span class="kd">func</span> <span class="nf">space1Index</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int64</span> <span class="p">{</span>
         <span class="k">return</span> <span class="k">self</span> <span class="o">&amp;</span> <span class="mb">0b11111</span>
@@ -199,7 +356,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="优化">优化</h3>
 
@@ -209,7 +366,16 @@
   <li><strong>master： 采用字符串作为标识记录和存储节点</strong></li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
 
     <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
@@ -218,13 +384,22 @@
 
     <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li><strong>Preview： 使用[Int]记录数据，使用 Int64 记录状态，区分重复</strong></li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
 
     <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
@@ -233,20 +408,27 @@
 
     <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li><strong>Ultimate： 只使用了 Int64 记录当前状态，并且作为唯一标识</strong></li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">SXNodeState</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">parentState</span><span class="p">:</span> <span class="kt">SXNodeState</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
 
     <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">Int64</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span>
 
     <span class="kd">func</span> <span class="nf">childeStates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">SXNodeState</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="关于-ultimate">关于 Ultimate</h4>
 
@@ -254,7 +436,33 @@
 
 <p>例如如下布局的表示为：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>卒卒张赵
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre>卒卒张赵
 关关张赵
 曹曹马马
 曹曹黄黄
@@ -280,7 +488,7 @@
 
 let identifier: Int64 = 0b11111010010110100000010100000101111111111001010011
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="关于效率">关于效率</h4>
 

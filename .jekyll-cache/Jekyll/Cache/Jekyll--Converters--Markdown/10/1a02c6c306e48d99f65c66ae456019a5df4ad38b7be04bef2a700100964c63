@@ -1,4 +1,4 @@
-I"}<h3 id="简洁">简洁</h3>
+I"\<h3 id="简洁">简洁</h3>
 
 <p>Textview 具有很多特性，所以它在很多地方可以非常巧妙的使用：</p>
 
@@ -43,12 +43,30 @@
 
 <p>同样也可以使用 Html 进行加载</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;html&gt;&lt;p&gt;p1&lt;/p&gt;&lt;ul&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;br&gt;&lt;p&gt;p.&lt;/p&gt;&lt;html&gt;
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>&lt;html&gt;&lt;p&gt;p1&lt;/p&gt;&lt;ul&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;br&gt;&lt;p&gt;p.&lt;/p&gt;&lt;html&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>虽然 Textview 不能直接加载 Html，但是 AttributeSting 支持从 Html data 初始化，这就间接支持了 Html 加载。上图其实就是用html加载的：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let tv = UITextView(frame: .init(x: 0, y: 0, width: 100, height: 300))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre>let tv = UITextView(frame: .init(x: 0, y: 0, width: 100, height: 300))
 self.view.addSubview(tv)
 
 let htmlS = "&lt;html&gt;&lt;p&gt;p1&lt;/p&gt;&lt;ul&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;li&gt;li&lt;/li&gt;&lt;br&gt;&lt;p&gt;p.&lt;/p&gt;&lt;html&gt;";
@@ -65,12 +83,24 @@ do {
 } catch let error as NSError {
     print("error: \(error)");
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="事件响应">事件响应</h3>
 
 <p>通过设置 dataDetectorTypes 可以支持许多类型的响应：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef NS_OPTIONS(NSUInteger, UIDataDetectorTypes) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre>typedef NS_OPTIONS(NSUInteger, UIDataDetectorTypes) {
     UIDataDetectorTypePhoneNumber                                        = 1 &lt;&lt; 0, // Phone number detection
     UIDataDetectorTypeLink                                               = 1 &lt;&lt; 1, // URL detection
     UIDataDetectorTypeAddress API_AVAILABLE(ios(4.0))                 = 1 &lt;&lt; 2, // Street address detection
@@ -82,7 +112,7 @@ do {
     UIDataDetectorTypeNone          = 0,               // Disable detection
     UIDataDetectorTypeAll           = NSUIntegerMax    // Enable all types, including types that may be added later
 } API_UNAVAILABLE(tvos);
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>自动适配确实很好，但是 link 有时候在一些旧设备上会造成反应慢等问题。</p>
 
@@ -90,7 +120,22 @@ do {
 
 <p>事实上可以拿到 tap 的位置的 url 信息，进一步做其他操作：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapTextview(_:)))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre>    let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapTextview(_:)))
     textView.addGestureRecognizer(tapRecognizer)
 
 
@@ -105,7 +150,7 @@ do {
 
         //Do some
     }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="总结">总结</h3>
 

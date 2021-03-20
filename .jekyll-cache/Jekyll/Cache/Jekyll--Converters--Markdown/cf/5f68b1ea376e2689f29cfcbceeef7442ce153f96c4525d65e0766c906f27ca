@@ -1,4 +1,4 @@
-I"�)<h3 id="相关链接">相关链接</h3>
+I"l+<h3 id="相关链接">相关链接</h3>
 
 <h4 id="httpsswiftorg"><a href="https://swift.org/">https://swift.org/</a></h4>
 <h5 id="swift-中枚举高级用法及实践"><a href="https://swift.gg/2015/11/20/advanced-practical-enum-examples/">Swift 中枚举高级用法及实践</a></h5>
@@ -60,7 +60,31 @@
 
 <p>CView定义了当前页面的所有元素，背景色或view，前景view，焦点，可选按钮等…</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">CView</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="rouge-code"><pre><span class="kd">enum</span> <span class="kt">CView</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">back</span>
     <span class="k">case</span> <span class="n">black</span>
     <span class="k">case</span> <span class="nf">eye</span><span class="p">(</span><span class="nv">position</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span>
@@ -84,13 +108,51 @@
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>利用枚举定义关卡，利用方法返回关卡的背景音乐，同时返回需要添加的view，和 view 对应的事件（使用元组的方式）</strong>：</p>
 
 <p>如果说第一个枚举只是当前场景的所有view列举的话，第二个就是枚举场景并且提供场景转换…</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">Level</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+</pre></td><td class="rouge-code"><pre><span class="kd">enum</span> <span class="kt">Level</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">welocme</span>
     <span class="k">case</span> <span class="n">start</span>
     <span class="k">case</span> <span class="n">choose</span>
@@ -128,7 +190,7 @@
 
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>可以看到通过这个几个枚举的创建，一个个页面的选择和选择之后的结果都十分明显的确定了。很明显在调试应用的时候能够避免很多的错误。</p>
 

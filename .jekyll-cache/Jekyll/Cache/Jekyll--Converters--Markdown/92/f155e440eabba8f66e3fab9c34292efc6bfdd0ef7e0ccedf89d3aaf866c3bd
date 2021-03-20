@@ -1,4 +1,4 @@
-I"�1<p>12.25 补充一下：</p>
+I":3<p>12.25 补充一下：</p>
 
 <p>在找学习资料时候找了以为非常优秀的大神的文章：https://blog.dianqk.org , 将作者的博客几乎爬了一遍，受益良多。</p>
 
@@ -18,7 +18,15 @@
 
 <p>ps： <a href="http://reactivex.io/documentation/operators.html">reactivex.io</a>
 可以看到系列包含很多语言的</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RxJava
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>RxJava
 C
 RxJSc
 Rx.NETC
@@ -26,7 +34,7 @@ RxScala
 RxClojure
 RxSwift
 Others
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="核心">核心</h4>
 <p>Observable - 产生事件
@@ -35,7 +43,33 @@ Operator - 创建变化组合事件
 Disposable - 管理绑定（订阅）的生命周期
 Schedulers - 线程队列调配</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre>
 <span class="c1">// Observable&lt;String&gt;</span>
 <span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="n">usernameOutlet</span><span class="o">.</span><span class="n">rx</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">orEmpty</span><span class="o">.</span><span class="nf">asObservable</span><span class="p">()</span>
 
@@ -61,7 +95,7 @@ Schedulers - 线程队列调配</p>
 <span class="n">disposable</span><span class="o">.</span><span class="nf">dispose</span><span class="p">()</span>
 <span class="n">下面几节会详细介绍这几个组件的功能和用法</span><span class="err">。</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="操作符">操作符</h4>
 

@@ -1,10 +1,45 @@
-I"'<h3 id="背景">背景</h3>
+I"�<h3 id="背景">背景</h3>
 
 <p>在自动化测试中，脚本可以使用每个 UI 控件的唯一 ID 去检查显示的内容，或者去进行功能切换。本文就作一个简单的介绍：</p>
 
 <h3 id="apple-inc-document">Apple Inc Document</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Foundation
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+</pre></td><td class="rouge-code"><pre>import Foundation
 import UIKit
 import _SwiftUIKitOverlayShims
 
@@ -39,7 +74,7 @@ extension UIBarItem : UIAccessibilityIdentification {
 extension UIImage : UIAccessibilityIdentification {
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>看到几乎所有的 UI 控件都可以支持设置 accessibilityIdentifier，也就是说，通过设置它，自动化测试可以检查大部分的文字，布局等显示问题～</p>
 
@@ -47,7 +82,27 @@ extension UIImage : UIAccessibilityIdentification {
 
 <p>其实使用的话，最简单的就是在 UITests Target 里面使用，通过查找 Identifier 来拿到 XCUIElementQuery ，进行验证～</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class testSUITests: XCTestCase {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre>class testSUITests: XCTestCase {
 
     override func test() {
         let navigationBar = XCUIApplication().navigationBars["identifier"]
@@ -67,7 +122,7 @@ extension UIImage : UIAccessibilityIdentification {
 
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>https://blog.novoda.com/ui-testing-part-2/</p>
 
@@ -79,7 +134,15 @@ extension UIImage : UIAccessibilityIdentification {
 
 <p>Appium因其在Android和iOS上的灵活性和可用性而广受欢迎，并且可在本机，混合和Web应用程序上运行。对于iOS测试，它使用JSONWireProtocol通过Selenium WebDriver与iOS应用程序进行交互。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>driver.findElement(By.id("com.example.app:id/radio0")).click();
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>driver.findElement(By.id("com.example.app:id/radio0")).click();
 driver.findElement(By.id("com.example.app:id/radio1")).click();
 driver.findElement(By.id("com.example.app:id/radio2")).click();
 driver.findElement(By.id("com.example.app:id/editText1")).click();
@@ -87,7 +150,7 @@ driver.findElement(By.id("com.example.app:id/editText1")).sendKeys("Simple Test"
 driver.findElement(By.name("Answer")).click();
 // or alternatively with
 driver.findElement(By.id("com.example.app:id/button1")).click();
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ol>
   <li>XCTest / XCUITest</li>
@@ -100,7 +163,17 @@ driver.findElement(By.id("com.example.app:id/button1")).click();
 Detox是用于移动应用程序的灰盒端到端测试和自动化框架。像Appium和Calabash一样，最大的优势之一是它在Android和iOS上都支持跨平台。唯一的问题是Detox尚不支持在真正的iOS设备上运行。</li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>it('should have bitbar question element visible', async () =&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>it('should have bitbar question element visible', async () =&gt; {
 await waitFor(element(by.id('question_screen'))).toBeVisible().withTimeout(6000);
 await device.takeScreenshot('app-open');
 await expect(element(by.id('question_screen'))).toBeVisible();
@@ -110,14 +183,22 @@ it('should have text input field visible', async () =&gt; {
 await waitFor(element(by.id('text_input_field'))).toBeVisible().withTimeout(6000);
 await expect(element(by.id('text_input_field'))).toBeVisible();
 });
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ol>
   <li>Calabash
 Calabash是另一个出色的跨平台框架，可与Android和iOS应用完美配合。与其他框架的主要区别之一是Calabash测试是用Cucumber编写的。这意味着该测试就像规范一样编写，即使对于非技术人员来说也很容易阅读，但是仍然可以由自动化系统执行。</li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Feature: Answer the Question feature
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>Feature: Answer the Question feature
 Scenario: As a valid user I want to answer app question
 I wait for text "What is the best way to test application on hundred devices?"
 Then I press Radio button 0
@@ -125,14 +206,29 @@ Then I press Radio button 1
 Then I press Radio button 2
 Then I enter text "Simple Test" into field with id "editText1"
 Then I press view with id "Button1"
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ol>
   <li>EarlGrey
 在某种程度上，EarlGrey是“ iOS浓缩咖啡”。它也是由Google开发和开源的。Google使用此测试框架来测试许多iOS本机应用程序，包括Google Calendar，YouTube等。随着代号的发展，在Espresso和EarlGrey之间可以发现很多相似之处。例如，EarlGrey测试将在尝试与UI交互之前自动等待事件（动画，网络请求等）。</li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)testBasicSelectionAndAction {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre>- (void)testBasicSelectionAndAction {
 [[EarlGrey selectElementWithMatcher::grey_accessibilityID(@"ClickHere")]
 performAction:grey_tap()];
 // Example of long press with EarlGrey matchers
@@ -147,7 +243,7 @@ grey_allOf(grey_accessibilityID(@"Box"), grey_sufficientlyVisible(), nil);
 [[EarlGrey selectElementWithMatcher:visibleSendButtonMatcher]
 performAction:grey_tap()];
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>https://bitbar.com/blog/top-5-ios-testing-frameworks-with-examples/</p>
 

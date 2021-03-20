@@ -1,4 +1,4 @@
-I"�E<p><strong><a href="https://github.com/poos/BlogDemo">本文所有代码 Demo 地址</a></strong></p>
+I"L<p><strong><a href="https://github.com/poos/BlogDemo">本文所有代码 Demo 地址</a></strong></p>
 
 <p>“接受其它函数作为参数的函数有时被称为 <strong>高阶函数</strong> 。本章中，我们将在一些来自 Swift 标准库中作用于数组的高阶函数中漫游。伴随这个过程，我们将介绍 Swift 的 <strong>泛型</strong> ，以及展示如何将复杂计算运用于数组。”</p>
 
@@ -11,7 +11,16 @@
 <p>Swift 标准库已经实现了 map 函数 (基于 SequenceType 协议被定义，需要了解一下生成器和序列的知识)
 如果 <strong>自己实现一个 map 函数</strong> 大概是如下代码</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="kd">extension</span> <span class="kt">Array</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="n">map2</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="p">(</span><span class="kt">Element</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">T</span><span class="p">]</span> <span class="p">{</span>
         <span class="k">var</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="kt">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="k">self</span> <span class="p">{</span>
@@ -20,11 +29,19 @@
         <span class="k">return</span> <span class="n">result</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>代码里边的 T 即是一个 <strong>泛型</strong> ，在调用时候给出确定的类型即可。调用示例如下：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">exampleFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s">"README.md"</span><span class="p">,</span> <span class="s">"HelloWorld.swift"</span><span class="p">,</span> <span class="s">"FlappyBird.swift"</span><span class="p">]</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">exampleFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s">"README.md"</span><span class="p">,</span> <span class="s">"HelloWorld.swift"</span><span class="p">,</span> <span class="s">"FlappyBird.swift"</span><span class="p">]</span>
 
 
 <span class="k">let</span> <span class="nv">map3</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="n">map2</span> <span class="p">{</span> <span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="k">in</span>
@@ -32,24 +49,31 @@
 <span class="p">}</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">map3</span><span class="p">)</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>为什么用 3 ，因为有更加简便的书写方式，Swift 可以用 “$0” 等价为闭包中的第一个元素，“$1”…这算一种语法糖。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">map2</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="n">map2</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">count</span> <span class="p">}</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">map2</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="n">map2</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">count</span> <span class="p">}</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">map2</span><span class="p">)</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="使用-map-函数">使用 map 函数</h4>
 
 <p>调用系统的 map 函数跟上边自己实现的是差不多的</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">map</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">count</span> <span class="p">}</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">map</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">count</span> <span class="p">}</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">map</span><span class="p">)</span>
 <span class="c1">//[9, 16, 16]</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="使用-flatmap-函数">使用 flatMap 函数</h4>
 
@@ -75,7 +99,30 @@ flatMap 还能把数组中存有数组的数组 一同打开变成一个新的�
 
 <p><strong>注意：例子3使用了两个高阶函数链式调用，这会使整个表达式的复杂的上升（O(n*n)）。</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="rouge-code"><pre>
 <span class="k">let</span> <span class="nv">exampleFiles2</span> <span class="o">=</span> <span class="p">[</span><span class="n">exampleFiles</span><span class="p">,</span> <span class="p">[</span><span class="s">""</span><span class="p">],</span> <span class="n">exampleFiles</span><span class="p">]</span>
 
 <span class="k">let</span> <span class="nv">flatMap1</span> <span class="o">=</span> <span class="n">exampleFiles2</span><span class="o">.</span><span class="n">flatMap</span> <span class="p">{</span> <span class="nv">$0</span> <span class="p">}</span>
@@ -98,13 +145,27 @@ flatMap 还能把数组中存有数组的数组 一同打开变成一个新的�
 <span class="p">}</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">flatMap4</span><span class="p">)</span>
 <span class="c1">//[("README.md", "README.md"), ("README.md", "README.md"), ("README.md", "README.md"), ("HelloWorld.swift", "HelloWorld.swift"), ("HelloWorld.swift", "HelloWorld.swift"), ("HelloWorld.swift", "HelloWorld.swift"), ("FlappyBird.swift", "FlappyBird.swift"), ("FlappyBird.swift", "FlappyBird.swift"), ("FlappyBird.swift", "FlappyBird.swift")]</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="关于时间复杂度">关于时间复杂度</h4>
 
 <p>我们可以利用自己的 map 函数，验证组合函数的情况下，数组的遍历实际执行了几次</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="kd">extension</span> <span class="kt">Array</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="n">map2</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="p">(</span><span class="kt">Element</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">T</span><span class="p">]</span> <span class="p">{</span>
         <span class="k">var</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="kt">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="k">self</span> <span class="p">{</span>
@@ -118,16 +179,19 @@ flatMap 还能把数组中存有数组的数组 一同打开变成一个新的�
 
 <span class="k">let</span> <span class="nv">map4</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="n">map2</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">count</span> <span class="p">}</span><span class="o">.</span><span class="nf">map2</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="p">{</span> <span class="nv">$0</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">})</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">map4</span><span class="p">)</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="fliter">fliter</h3>
 
 <p>筛选函数</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">filter</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="nf">filter</span><span class="p">({</span> <span class="nv">$0</span><span class="o">.</span><span class="nf">hasSuffix</span><span class="p">(</span><span class="s">".swift"</span><span class="p">)</span> <span class="p">})</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">filter</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="nf">filter</span><span class="p">({</span> <span class="nv">$0</span><span class="o">.</span><span class="nf">hasSuffix</span><span class="p">(</span><span class="s">".swift"</span><span class="p">)</span> <span class="p">})</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">filter</span><span class="p">)</span>
 <span class="c1">//["HelloWorld.swift", "FlappyBird.swift"]</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="reduce">reduce</h3>
 
@@ -142,7 +206,26 @@ flatMap 还能把数组中存有数组的数组 一同打开变成一个新的�
 
 <p><strong>result[key, default: 0] += 1，这个语法糖在碰到 key 的情况下将 Int 型的 Value 加 1</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre>
 <span class="k">var</span> <span class="nv">reduceR</span> <span class="o">=</span> <span class="n">exampleFiles</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="s">""</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="k">in</span>
     <span class="k">if</span> <span class="n">total</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
         <span class="k">return</span> <span class="n">item</span>
@@ -161,18 +244,23 @@ flatMap 还能把数组中存有数组的数组 一同打开变成一个新的�
 <span class="nf">print</span><span class="p">(</span><span class="n">reduceInto</span><span class="p">)</span>
 <span class="c1">//[".md": 1, ".swift": 2]</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="关于时间复杂度-1">关于时间复杂度</h4>
 
 <p>map - flatMap - 例子2，因为链接高阶函数导致复杂度提升的问题，我们可以用 reduce 和 map 函数组合 <strong>修改转换</strong> 实现。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">reduceInto2</span> <span class="o">=</span> <span class="n">exampleFiles2</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="nv">into</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]())</span> <span class="p">{</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="k">in</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">reduceInto2</span> <span class="o">=</span> <span class="n">exampleFiles2</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="nv">into</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]())</span> <span class="p">{</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="k">in</span>
     <span class="k">return</span> <span class="n">result</span> <span class="o">+=</span> <span class="n">item</span><span class="o">.</span><span class="nf">map</span><span class="p">({</span> <span class="nv">$0</span><span class="o">.</span><span class="n">count</span> <span class="p">})</span>
 <span class="p">}</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">reduceInto2</span><span class="p">)</span>
 <span class="c1">//[9, 16, 16, 0, 9, 16, 16]</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h2 id="总结">总结</h2>
 

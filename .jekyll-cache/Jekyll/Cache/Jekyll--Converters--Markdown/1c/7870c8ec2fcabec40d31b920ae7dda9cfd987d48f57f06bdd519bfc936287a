@@ -1,4 +1,4 @@
-I"cR<p>问题：</p>
+I"dX<p>问题：</p>
 
 <ol>
   <li>UIView 优化：图片优化？层优化？圆角优化？背景和透明度优化？</li>
@@ -27,7 +27,15 @@
   <li>当 table 滑动卡顿时候，我最先检测了 <strong>各个 UI 控件</strong> 在 模拟器的层显示, 通过对这些检测优化了一些性能</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Color Blended Layers
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>Color Blended Layers
 
 Color Copied Images
 
@@ -35,7 +43,7 @@ Color Misaligned Images
 
 Color Offscreen-Rendered
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li><strong>减少视图层级</strong></li>
@@ -92,7 +100,25 @@ Color Offscreen-Rendered
 
 <p><strong>组件提供通用 init 方法，然后使用方分类实现 convenience init（传入 model / type）</strong></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">ButtonNode</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="rouge-code"><pre><span class="kd">extension</span> <span class="kt">ButtonNode</span> <span class="p">{</span>
     <span class="kd">enum</span> <span class="kt">NodeType</span> <span class="p">{</span>
         <span class="k">case</span> <span class="n">vote</span>
         <span class="k">case</span> <span class="n">comment</span>
@@ -110,7 +136,7 @@ Color Offscreen-Rendered
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="自定义组件的参数">自定义组件的参数</h5>
 
@@ -158,7 +184,21 @@ Color Offscreen-Rendered
 <p>在 swift 下可以使用函数式方便的组合处理
 <a href="https://poos.github.io/2018/11/05/SwiftFunctional/">Swift 函数式编程（1）  《函数式 Swift》书籍学习，函数式编程介绍，实现，应用； NSMutableAttributeString 封装函数式  </a></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 组合函数</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="c1">// 组合函数</span>
 <span class="k">let</span> <span class="nv">titleOne</span> <span class="o">=</span> <span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="nf">systemFont</span><span class="p">(</span><span class="nv">ofSize</span><span class="p">:</span> <span class="mi">13</span><span class="p">))</span> <span class="o">&gt;&gt;&gt;</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
 
 <span class="k">let</span> <span class="nv">titleTwo</span> <span class="o">=</span> <span class="n">titleOne</span> <span class="o">&gt;&gt;&gt;</span> <span class="nf">color</span><span class="p">(</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
@@ -172,7 +212,7 @@ Color Offscreen-Rendered
 
 <span class="n">label</span><span class="o">.</span><span class="n">attributedText</span> <span class="o">=</span> <span class="nf">titleOne</span><span class="p">(</span><span class="n">attS</span><span class="p">)</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="table-事件处理">table 事件处理</h3>
 
@@ -225,24 +265,37 @@ Color Offscreen-Rendered
   <li>UI 状态在加载前中后有不同的显示，定义一个加载状态枚举，这样在 vc 中根据状态进行处理</li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">FollowTabViewModelLoadState</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="kd">enum</span> <span class="kt">FollowTabViewModelLoadState</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">begin</span>
     <span class="k">case</span> <span class="n">noNet</span>
     <span class="k">case</span> <span class="n">normal</span>
     <span class="k">case</span> <span class="n">noMore</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>除此之外会 <strong>定义加载类型的枚举</strong>, 这样 根据这两个状态就可以准确的显示 UI 了</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">FollowTabViewModelLoadType</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kd">enum</span> <span class="kt">FollowTabViewModelLoadType</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">suggestUser</span>
     <span class="k">case</span> <span class="n">feed</span>
     <span class="k">case</span> <span class="n">feedPullDown</span>
     <span class="k">case</span> <span class="n">feedPullUp</span>
     <span class="k">case</span> <span class="n">feedSuggestUser</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>可以使用一个单独的中间层类来 输入类型， 输出 UI</strong> , 也是为了方便测试</p>
 
@@ -252,7 +305,17 @@ Color Offscreen-Rendered
 
 <p>像创建数据模型一样，对各个 section 创建类型，通过 section 区分当前组的数据类型</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">SectionData</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="kd">struct</span> <span class="kt">SectionData</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">FollowingSectionType</span>
 
     <span class="k">var</span> <span class="nv">suggestUsers</span> <span class="o">=</span> <span class="p">[</span><span class="kt">SuggestModel</span><span class="p">]()</span>
@@ -262,7 +325,7 @@ Color Offscreen-Rendered
         <span class="k">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">type</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>通过这种方式，可以保证数据的准确，可测试</p>
 
@@ -270,7 +333,52 @@ Color Offscreen-Rendered
 
 <p>数据更新同步碰到的问题比较多，实现的方案也比较多，简单列了几种</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>项目中点赞数，评论数，关注关系同步的设计
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+</pre></td><td class="rouge-code"><pre>项目中点赞数，评论数，关注关系同步的设计
 
 排除 多设备登录同一账号的同步问题
 
@@ -315,18 +423,25 @@ Color Offscreen-Rendered
 注意关注存在批量关注的问题处理
 
 在 VM 中处理好 Model 数据，最后才给 view
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>可以看出 A 和 B 是两种比较成熟的方案, 另外一种方案是 <strong>重数据库设计方案</strong> 介邵如下：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>对应于这些需要实时显示的关系
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>对应于这些需要实时显示的关系
 
 1. 创建关注表，用户表，点赞表，评论表
 
 2. 在所有拿到数据的地方进行本地数据的更新
 
 3. 在所有展示的 VM 进行查询，一次性查询出所有，然后互相匹配（复杂度O(n)），计算出最终的结果
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>这样就通过增大开销的方式，最大限度的保证数据的正确性。缺点也是需要刷新Table</p>
 

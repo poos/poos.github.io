@@ -1,4 +1,4 @@
-I"�0<p><strong><a href="https://github.com/poos/BlogDemo">本文所有 工具 和 代码 地址</a></strong></p>
+I"24<p><strong><a href="https://github.com/poos/BlogDemo">本文所有 工具 和 代码 地址</a></strong></p>
 
 <h3 id="app-中的-web-和-safari-中的-web-调试">App 中的 web 和 Safari 中的 web 调试</h3>
 
@@ -73,7 +73,18 @@
   </li>
 </ol>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">app</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="kd">open</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIApplicationOpenURLOptionsKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre><span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">app</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="kd">open</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIApplicationOpenURLOptionsKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
         <span class="k">let</span> <span class="nv">appName</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="kt">UIApplicationOpenURLOptionsKey</span><span class="o">.</span><span class="n">sourceApplication</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">String</span>
         <span class="k">if</span> <span class="n">appName</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="s">"tencent.xin"</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span> <span class="kt">WXApi</span><span class="o">.</span><span class="nf">handleOpen</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
@@ -84,7 +95,7 @@
         <span class="p">}</span>
         <span class="k">return</span> <span class="kc">true</span>
     <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="如何调试">如何调试</h4>
 
@@ -99,9 +110,11 @@
   </li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//使用 iframe 和 widow 跳转都可以
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>//使用 iframe 和 widow 跳转都可以
 location.href = "scheme://xxxx"
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="charles-https-抓包">Charles https 抓包</h3>
 
@@ -127,8 +140,9 @@ location.href = "scheme://xxxx"
 
 <p>完成之后 就可以调试了；同样可以调试其他 API 的请求。推荐去 Charles 的 Recording Setting -&gt; Include 设置过滤：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://*.xxx.com
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>https://*.xxx.com
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><img src="https://img.yzcdn.cn/public_files/2018/04/18/1450c9728e75cbbe6f6532370cc36ecf.png" alt="img" /></p>
 
@@ -144,7 +158,20 @@ location.href = "scheme://xxxx"
 
 <p>我在 <a href="https://stackoverflow.com/questions/28101582/how-to-programmatically-add-a-proxy-to-an-nsurlsession/37466532">stackoverflow</a> 找到了如下的代码：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">proxyHost</span> <span class="o">=</span> <span class="s">"192.168.1.226"</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">proxyHost</span> <span class="o">=</span> <span class="s">"192.168.1.226"</span>
 <span class="k">let</span> <span class="nv">proxyPort</span> <span class="o">=</span> <span class="mi">8888</span>
 <span class="k">let</span> <span class="nv">configuration</span> <span class="o">=</span> <span class="kt">URLSessionConfiguration</span><span class="o">.</span><span class="k">default</span>
 <span class="n">configuration</span><span class="o">.</span><span class="n">connectionProxyDictionary</span> <span class="o">=</span> <span class="p">[</span>
@@ -157,7 +184,7 @@ kCFNetworkProxiesHTTPSEnable: true,
 kCFNetworkProxiesHTTPSProxy: proxyHost,
 kCFNetworkProxiesHTTPSPort: proxyPort
 */</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>将 URLSessionConfiguration配置在你封装的网络框架中即可</strong></p>
 
@@ -167,7 +194,15 @@ kCFNetworkProxiesHTTPSPort: proxyPort
 
 <p>将上边的代码替换到下边即可, 原理是直接找了 key 对应的字符串的值，而进行设置</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">proxyHost</span> <span class="o">=</span> <span class="s">"192.168.1.226"</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">proxyHost</span> <span class="o">=</span> <span class="s">"192.168.1.226"</span>
 <span class="k">let</span> <span class="nv">proxyPort</span> <span class="o">=</span> <span class="mi">8888</span>
 <span class="k">let</span> <span class="nv">configuration</span> <span class="o">=</span> <span class="kt">URLSessionConfiguration</span><span class="o">.</span><span class="k">default</span>
 <span class="n">configuration</span><span class="o">.</span><span class="n">connectionProxyDictionary</span> <span class="o">=</span> <span class="p">[</span>
@@ -175,7 +210,7 @@ kCFNetworkProxiesHTTPSPort: proxyPort
     <span class="s">"HTTPSProxy"</span><span class="p">:</span> <span class="n">proxyHost</span><span class="err">，</span>
     <span class="s">"HTTPSPort"</span><span class="p">:</span> <span class="n">proxyPort</span>
 <span class="p">]</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>过程是曲折坎坷的，收获也是不错的，终于 <strong>能单独在我们的 app 中设置代理</strong> ，也不用去设置中心来回修改了。</p>
 
 <p><strong>不过记得要把这段代码添加 DEBUG 宏判断里面去</strong> 或者 <strong>设置专门的 config</strong>，以防止在正式环境出现错误</p>

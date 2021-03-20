@@ -1,4 +1,4 @@
-I"G<h3 id="容器">容器</h3>
+I"X<h3 id="容器">容器</h3>
 
 <p><strong>是使用WKWebView还是UIWebView</strong></p>
 
@@ -22,7 +22,16 @@
 
 <p>介绍各种通讯方式，最后作者提出建议的通讯方式为</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>聊了这么多这个方式，如果换做我们项目，我会选择啥？
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>聊了这么多这个方式，如果换做我们项目，我会选择啥？
 
 iOS：MessageHandler注入/Prompt弹框拦截(JSToNative) + evaluatingJavaScript
 (NativeToJS)
@@ -31,7 +40,7 @@ iOS：MessageHandler注入/Prompt弹框拦截(JSToNative) + evaluatingJavaScript
 
 安卓: 拦截弹窗(JSToNative)+loadUrl(NativeToJS)
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>注意 js 注入 要在页面销毁时候 移除，否则会造成内存泄露。</p>
 
@@ -64,7 +73,38 @@ iOS：MessageHandler注入/Prompt弹框拦截(JSToNative) + evaluatingJavaScript
   </li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Common 组件：我们的示例代码就是 Common 组件的一些基础操作
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+</pre></td><td class="rouge-code"><pre>Common 组件：我们的示例代码就是 Common 组件的一些基础操作
   复制剪切板
   获取设备信息
   打客户端Log，上报日志
@@ -95,7 +135,7 @@ Push组件：可以让前端有能力写本地Push闹铃到App 或者上报远�
   本地 Push 设置
   远程 Push 获取 Token
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>基本上是比较全面了，想象力灰常大。</p>
 
@@ -107,9 +147,11 @@ Push组件：可以让前端有能力写本地Push闹铃到App 或者上报远�
 
 <p>我们使用了的 scheme 模式，类似推送消息的跳转。然后在保底时候提示软件需要更新。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xx/jump/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>xx/jump/
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>理由：</p>
 
@@ -124,7 +166,27 @@ Push组件：可以让前端有能力写本地Push闹铃到App 或者上报远�
 
 <h4 id="添加通用的方法">添加通用的方法</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 刷新
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre>// 刷新
 // 虽然有 系统方法，但是wk 时候不好用
 func reload()
 
@@ -144,7 +206,7 @@ func update()
 
 // 仅允许白名单的网址添加 cookie
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="总结">总结</h3>
 

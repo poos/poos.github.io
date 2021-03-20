@@ -1,4 +1,4 @@
-I"�<<h3 id="设计模式">设计模式</h3>
+I"_?<h3 id="设计模式">设计模式</h3>
 
 <p>先来理解一下移动端，前端流行的设计模式：MVC，MVP，MVVM</p>
 
@@ -28,7 +28,25 @@
 
 <p>例子中采用的是 RxSwift + MVVM 的 input-output 设计。实际上，不一定要使用 Reactive 框架，通过输入输出的约束，也可以方便测试。只不过需要处理的事件可能会多一倍（因为有些地方是需要双向绑定的）。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ButtonViewModelInputs</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ButtonViewModelInputs</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">taps</span><span class="p">:</span> <span class="kt">PublishSubject</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span><span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
 <span class="p">}</span>
 
@@ -46,7 +64,7 @@
 
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>可以看出，通过以上的方法，规范了输入输入，就使得复杂页面可以测试，可以拆分事件。</p>
 
@@ -56,7 +74,54 @@
 
 <p>可以看出这个同样是基于 RxSwift + MVVM 的，但是这个模式同样适用于非 Rx 的模式。通过事件，处理事件，产生最终的页面状态（不使用 rx 就需要在最后一步自己读取 VM / P 的状态进行加载）。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="kd">class</span> <span class="kt">TextReactor</span><span class="p">:</span> <span class="kt">Reactor</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+</pre></td><td class="rouge-code"><pre><span class="kd">final</span> <span class="kd">class</span> <span class="kt">TextReactor</span><span class="p">:</span> <span class="kt">Reactor</span> <span class="p">{</span>
 
     <span class="kd">enum</span> <span class="kt">Action</span> <span class="p">{</span>
         <span class="k">case</span> <span class="n">request</span>
@@ -103,7 +168,7 @@
             <span class="p">}</span>
             <span class="k">return</span> <span class="n">state</span>
         <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="设计模式之外">设计模式之外</h3>
 
@@ -181,8 +246,9 @@
 
 <p>在 github 上更受欢迎的前两个已经在前文中提到过，第三种模拟一个反馈循环系统：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>事件 -&gt; 系统状态 -&gt; 请求 -&gt; 状态变化（更新 ui 等
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>事件 -&gt; 系统状态 -&gt; 请求 -&gt; 状态变化（更新 ui 等
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>这个号称 RxSwift 最简单的架构，但是简单就意味着局限性，我在一步步绑定的过程中完成了整个操作。但是要进行一些高级操作（flatMapFirst）时候碰到了问题（有人有好的方式也可以分享下）。不过我更愿意使用相对开放 MVVM 架构。通过协议约定输入输出，黑盒维护和测试是很方便的。</p>
 
 <h3 id="总结">总结</h3>

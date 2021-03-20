@@ -1,4 +1,4 @@
-I"�h<p>整理了一些资料用来分享给小伙伴们。分享内容大概4部分。</p>
+I"�m<p>整理了一些资料用来分享给小伙伴们。分享内容大概4部分。</p>
 
 <ul>
   <li>
@@ -287,7 +287,30 @@
 
 <p>dart提供的库 <strong>dart-convert</strong> 可以实现将 json 转换为对象。样例的代码如下：</p>
 
-<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
     <span class="kt">String</span> <span class="n">name</span><span class="o">;</span>
     <span class="kt">String</span> <span class="n">avatar</span><span class="o">;</span>
@@ -310,7 +333,7 @@
         <span class="s">"avatar"</span><span class="o">:</span> <span class="n">avatar</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">avatar</span><span class="o">,</span>
     <span class="o">};</span>
 <span class="o">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>同样有很多方案提供实时转换，但是我还是用了应用来转换。</strong> macOS 有一款应用 <strong>Paste JSON as Code • quicktype.app</strong> 可以轻松转换json 到各个常用语言的模型。</p>
 
@@ -336,9 +359,11 @@
 Future 表示稍后获得的一个数据，所有异步的操作的返回值都用 Future 来表示。但是 Future 只能表示一次异步获得的数据。
 而 Stream 表示多次异步获得的数据。</p>
 
-<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">Future</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>  <span class="n">Future</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
   <span class="n">Stream</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="获得-stream">获得 Stream</h3>
 
@@ -352,22 +377,41 @@ Stream 有3个工厂构造函数：fromFuture、fromIterable 和 periodic，分�
 
 <p>下边示例一个集合转换为 steam 并进行后续操作的例子。</p>
 
-<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">//获得 Stream</span>
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>  <span class="c1">//获得 Stream</span>
   <span class="kd">var</span> <span class="n">data</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">];</span>
   <span class="kd">var</span> <span class="n">stream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stream</span><span class="o">.</span><span class="na">fromIterable</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="订阅-stream">订阅 Stream</h3>
 
 <p><strong>数据流的接受点</strong></p>
 
-<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//订阅</span>
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="c1">//订阅</span>
 <span class="n">stream</span><span class="o">.</span><span class="na">listen</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="n">e</span><span class="o">));</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="订阅和高级订阅ondataonerror和ondone">订阅和高级订阅（onData、onError和onDone）</h4>
 
-<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">//订阅 Stream</span>
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>  <span class="c1">//订阅 Stream</span>
   <span class="n">stream</span><span class="o">.</span><span class="na">listen</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="n">e</span><span class="o">),</span> <span class="nl">onDone:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="s">'Done'</span><span class="o">));</span>
   <span class="c1">//1 2 3 4 Done</span>
 
@@ -381,18 +425,24 @@ Stream 有3个工厂构造函数：fromFuture、fromIterable 和 periodic，分�
   <span class="o">});</span>
   <span class="n">sub</span><span class="o">.</span><span class="na">onDone</span><span class="o">(()</span> <span class="o">=&gt;</span> <span class="n">print</span><span class="o">(</span><span class="s">'done'</span><span class="o">));</span>
   <span class="c1">//1 2</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>区别在于高级订阅返回一个 <strong>StreamSubscription</strong> 的对象，这个对象有 <strong>onData，onDone，onError</strong> 方法。</p>
 
 <h4 id="单订阅模式-和-多订阅模式">单订阅模式 和 多订阅模式 </h4>
 
-<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">//多订阅（broadcast）</span>
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>  <span class="c1">//多订阅（broadcast）</span>
   <span class="kd">var</span> <span class="n">bs</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="na">asBroadcastStream</span><span class="o">();</span>
   <span class="k">assert</span><span class="o">(</span><span class="n">bs</span><span class="o">.</span><span class="na">isBroadcast</span> <span class="o">==</span> <span class="kc">true</span><span class="o">);</span>
   <span class="n">bs</span><span class="o">.</span><span class="na">first</span><span class="o">.</span><span class="na">then</span><span class="o">(</span><span class="n">print</span><span class="o">);</span>
   <span class="n">bs</span><span class="o">.</span><span class="na">last</span><span class="o">.</span><span class="na">then</span><span class="o">(</span><span class="n">print</span><span class="o">);</span>
   <span class="c1">//1 4</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>上边的 stream 只支持 一个数据流接受，接受完毕就监听不到数据流了。 可以使用 <strong>asBroadcastStream()</strong>方法返回一个同样类型（T）的 stream，这样就可以多次订阅了。</p>
 
 <h4 id="stream-的集合特性">Stream 的集合特性</h4>
@@ -401,7 +451,21 @@ Stream 有3个工厂构造函数：fromFuture、fromIterable 和 periodic，分�
 
 <p>除了既有方法，如果需要自定制，Stream 还提供一些数据转换协议。继承 StreamEventTransformer 并且实现必有方法即可使用。</p>
 
-<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>
   <span class="c1">//常见集合方法</span>
   <span class="c1">//stream.first.then(print);</span>
   <span class="c1">//stream.firstWhere((e) =&gt; e &gt; 3, orElse: () =&gt; 0).then(print);</span>
@@ -415,7 +479,7 @@ Stream 有3个工厂构造函数：fromFuture、fromIterable 和 periodic，分�
 <span class="kd">class</span> <span class="nc">MyTransformer</span> <span class="kd">extends</span> <span class="n">StreamEventTransformer</span> <span class="o">{</span>
 <span class="o">...</span>
 <span class="o">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="最后">最后</h3>
 

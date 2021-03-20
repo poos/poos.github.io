@@ -1,8 +1,30 @@
-I"9(<h3 id="pubspecyaml">pubspec.yaml</h3>
+I"=2<h3 id="pubspecyaml">pubspec.yaml</h3>
 
 <p>用于存放三方包的地方，可以在 <a href="https://pub.dartlang.org/flutter/packages">flutter/packages</a> 查询需要的插件；常用的插件如下：udid，cacheImage，上下拉，网络请求，bloc 设计模式（下边会单独说一下）， user_agent 获取，本地存储，分享，toasts，网络连接检查等</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dependencies:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="rouge-code"><pre>dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -24,7 +46,7 @@
   # url_launcher: ^4.0.3
   # event_bus: ^1.0.1
   # flutter_redux: ^0.5.2
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="基于-bloc-的列表设计">基于 bloc 的列表设计</h3>
 
@@ -37,14 +59,32 @@
 <p>用于将用户交互从 Page Widget 拆分出来，类似于 MVP 的设计模式。例如我们有一个列表页面，有上下拉操作，再加上网络请求失败成功等，如果所有的逻辑写在一个页面，那么就会很不清晰，互相耦合不易测试。那我们就以这个例子展示一下 bloc 设计模式下的代码：</p>
 
 <h4 id="首先我们总结一下页面的用户操作">首先我们总结一下页面的用户操作</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// enmu
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>// enmu
 enum ListPageEvent { initData, nextPage, refreshData }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <h4 id="总结一下页面的状态">总结一下页面的状态</h4>
 
 <p>使用一个抽象类进行约束</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//state
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre>//state
 abstract class PagePostState {
 }
 
@@ -59,22 +99,50 @@ class PagePostError extends PagePostState {
 class PagePostLoaded extends PagePostState {
 //needed set data, show normal view
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>通常的上边的代码是不用动的，如果需要使用就新创建一个类，然后 继承 PagePostLoaded 即可使用，同时又能够实现 PagePostLoaded 的通用性</p>
 
 <p>本例子中我使用了类似下边的方式，真实项目中内容更多，还有 tips，refreshEnd 等：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class HomePagePostLoaded extends PagePostLoaded {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>class HomePagePostLoaded extends PagePostLoaded {
   final List&lt;NewsData&gt; list;
   final int page;
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <h4 id="创建-bloc-类并且在这个类将-event-处理-为-state">创建 bloc 类，并且在这个类将 event 处理 为 state</h4>
 
 <p>真实情况下并不像下边列的那么简单。例如成功之后的某次网络请求失败，应当返回 Loaded 并且附加 error tips。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ThoughtListPageBloc extends Bloc&lt;ListPageEvent, PagePostState&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="rouge-code"><pre>class ThoughtListPageBloc extends Bloc&lt;ListPageEvent, PagePostState&gt; {
   @override
   get initialState =&gt; PagePostUninit();
 
@@ -98,13 +166,42 @@ class PagePostLoaded extends PagePostState {
   }
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="根据-state-响应不同的页面">根据 state ，响应不同的页面</h4>
 
 <p>当然真实请求同样不如写的这么简单，通常需要在 loadedWidget(state) 中处理上下拉的显示。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class HomePageWidget {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre></td><td class="rouge-code"><pre>class HomePageWidget {
 
 // ...
 
@@ -133,7 +230,7 @@ class PagePostLoaded extends PagePostState {
       ),
     );
   }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="关于-flutter_bloc-提供的其他工具类">关于 flutter_bloc 提供的其他工具类</h4>
 
@@ -141,33 +238,68 @@ class PagePostLoaded extends PagePostState {
   <li>这个函数用于根据状态展示相应的 Widge，本例中主要用到了这个</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocBuilder(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>BlocBuilder(
   bloc: BlocA(),
   builder: (context, state) {
     // return widget here based on BlocA's state
   }
 )
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>BlocProvider ，自定义一个 bloc 和 child，以便可以向子树内的多个小部件提供单个bloc实例</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocProvider(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>BlocProvider(
   bloc: BlocA(),
   child: ChildA(),
 );
 
 //...
 BlocProvider.of&lt;BlocA&gt;(context)
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>BlocProviderTree 是一个 Flutter 小部件，可将多个 BlocProvider 小部件合并为一个小部件</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocProvider&lt;BlocA&gt;(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre></td><td class="rouge-code"><pre>BlocProvider&lt;BlocA&gt;(
    bloc: BlocA(),
    child: BlocProvider&lt;BlocB&gt;(
      bloc: BlocB(),
@@ -188,13 +320,38 @@ BlocProviderTree(
   child: ChildA(),
 )
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>BlocListener是一个Flutter小部件，它接受a Bloc和a BlocWidgetListener并调用listener响应bloc中的状态变化。用于每个状态更改需要发生一次的功能。</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BlocListener(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="rouge-code"><pre>BlocListener(
   bloc: _bloc,
   listener: (context, state) {
     if (state is Success) {
@@ -219,16 +376,18 @@ BlocProviderTree(
     },
   }
 )
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <h3 id="dart-model">dart model</h3>
 
 <p>模型解析通常可以用使用三方插件，或者代码生成器生成，我也查看了一些三方库，或者代码转换脚本，蓦然回首发现很久之前下载的 <strong>Paste JSON as Code · quicktvoe</strong> 竟然支持 dart 语言。</p>
 
 <p>借助 Dio 和 模型类 用起来还是方便的。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    var response = await Dio.get(url: _Api, params: params);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>    var response = await Dio.get(url: _Api, params: params);
     final thoughtList = modelFromJson(response.toString());
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="其他">其他</h3>
 
@@ -238,7 +397,16 @@ BlocProviderTree(
 
 <p>page 就是一种特殊的 Widget 了</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lib
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>lib
 |
 |- api
 |- bloc
@@ -247,13 +415,51 @@ BlocProviderTree(
 |- model
 |- page
 |- main.dart
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="config">config</h4>
 
 <p>项目的 config 包含的类很多，引用的三方库也很多：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+</pre></td><td class="rouge-code"><pre>
 class AppColor {
   static const Color c_999999 = Color(0xff999999);
 }
@@ -291,7 +497,7 @@ class AppAlert {
 class AppShare {
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="写在最后">写在最后</h3>
 

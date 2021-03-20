@@ -2,6 +2,13 @@
 
 >
 
+最近新增了一些博客～
+
+> 2021-03-20 ：博客版本升级到 1.8 今天把博客的样式更新一些，同步一下开源大神 huxpro 博客的搜索功能，感谢。
+
+
+
+
 ## [我的博客在这里 &rarr;](https://poos.github.io)
 
 ![img](https://poos.github.io/img/readme-home.png)

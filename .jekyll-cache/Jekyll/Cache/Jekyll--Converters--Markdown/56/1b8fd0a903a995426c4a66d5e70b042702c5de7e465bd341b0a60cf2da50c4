@@ -1,4 +1,4 @@
-I"��<blockquote>
+I"ܬ<blockquote>
   <p>当一个类包含了太多的太杂的内容，它就变得复杂了，把其中的内容抽出来，用协议管理约束，项目才会更清晰。</p>
 </blockquote>
 
@@ -25,7 +25,22 @@
 
 <p>这里实例调用分享的几个地方</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//可能是 VC</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="c1">//可能是 VC</span>
 <span class="c1">//可能是 View</span>
 <span class="c1">//可能是 WebView</span>
 <span class="c1">//可以是 任何类</span>
@@ -40,10 +55,20 @@
         <span class="nf">shareMoment</span><span class="p">()</span><span class="c1">//调用协议方法</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>这里是协议分发管理的 protocol类, 在这里实现分享的方法</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 定义统一的协议</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="c1">// 定义统一的协议</span>
 <span class="kd">extension</span> <span class="kt">A</span><span class="p">:</span> <span class="kt">ShareProtocol</span><span class="p">,</span> <span class="kt">ShareProtocol2</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="nf">share</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">//...</span>
@@ -53,7 +78,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="总结">总结</h4>
 
@@ -100,11 +125,15 @@
 
 <blockquote>
 
-  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func present() {
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>func present() {
 let model = ShareModel()
 ...
     AppShareViewControl.present(model) }
-</code></pre></div>  </div>
+</pre></td></tr></tbody></table></code></pre></div>  </div>
 </blockquote>
 
 <blockquote>
@@ -127,7 +156,24 @@ let model = ShareModel()
 <p>view 的一些动画，大部分简单的动画就不再介绍。</p>
 
 <p><strong>设置按顺序弹出动画,layout位移动画</strong></p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre>
 
     <span class="kd">static</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">buttonsAnimation</span><span class="p">(</span><span class="nv">buttons</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIView</span><span class="p">])</span> <span class="p">{</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">button</span><span class="p">)</span> <span class="k">in</span> <span class="n">buttons</span><span class="o">.</span><span class="nf">enumerated</span><span class="p">()</span> <span class="p">{</span>
@@ -144,12 +190,34 @@ let model = ShareModel()
                            <span class="p">})</span>
     <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h2 id="manager">Manager</h2>
 
 <h4 id="调用系统分享">调用系统分享</h4>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - 系统</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="rouge-code"><pre>    <span class="c1">// MARK: - 系统</span>
     <span class="c1">//系统分享传入[String, UIImage, URL]</span>
     <span class="c1">//注意:系统分享qq会调用URL 对应的web更新数据,若没有对应web页（非 H5页）会显示异常</span>
     <span class="kd">func</span> <span class="nf">shareSystem</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">content</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">link</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
@@ -171,10 +239,79 @@ let model = ShareModel()
         <span class="k">let</span> <span class="nv">activity</span> <span class="o">=</span> <span class="kt">UIActivityViewController</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">activityItems</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="nv">applicationActivities</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
         <span class="kt">UIViewController</span><span class="o">.</span><span class="nf">currentViewController</span><span class="p">()</span><span class="o">.</span><span class="nf">presentVC</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="调用微信分享建议优化使用-model">调用微信分享(建议优化使用 model)</h4>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+</pre></td><td class="rouge-code"><pre>
     <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">share</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">content</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="o">!</span><span class="kt">WXApi</span><span class="o">.</span><span class="nf">isWXAppInstalled</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">let</span> <span class="nv">popview</span> <span class="o">=</span> <span class="kt">PopupView</span><span class="p">()</span>
@@ -243,10 +380,50 @@ let model = ShareModel()
         <span class="kt">WXApi</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="n">send</span><span class="p">)</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="压缩图片等方法">压缩图片等方法</h4>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - 通用</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+</pre></td><td class="rouge-code"><pre>    <span class="c1">// MARK: - 通用</span>
     <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">imageCompressSize</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="n">size</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span> <span class="p">{</span>
         <span class="k">guard</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="n">length</span> <span class="o">||</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="n">length</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="n">image</span> <span class="p">}</span>
         <span class="k">let</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span>
@@ -286,11 +463,56 @@ let model = ShareModel()
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">data</span>
     <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="分享回调">分享回调</h4>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - SDK回调</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+</pre></td><td class="rouge-code"><pre>    <span class="c1">// MARK: - SDK回调</span>
     <span class="kd">extension</span> <span class="kt">AppDelegate</span><span class="p">:</span> <span class="kt">WXApiDelegate</span> <span class="p">{</span>
 
     <span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span><span class="p">,</span> <span class="nv">obsoleted</span><span class="p">:</span> <span class="mf">9.0</span><span class="p">)</span>
@@ -335,5 +557,5 @@ let model = ShareModel()
             <span class="n">popview</span><span class="o">.</span><span class="nf">popupType</span><span class="p">(</span><span class="o">.</span><span class="n">failed</span><span class="p">,</span> <span class="o">.</span><span class="n">shareFailed</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 :ET

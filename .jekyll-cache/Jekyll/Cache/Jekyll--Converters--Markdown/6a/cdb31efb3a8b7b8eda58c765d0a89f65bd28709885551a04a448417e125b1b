@@ -1,4 +1,4 @@
-I"�'<h2 id="swift打点方案">Swift打点方案</h2>
+I".<h2 id="swift打点方案">Swift打点方案</h2>
 
 <p>首先介绍一下打点的业务需求：点可能是展示、控制、服务器返回结果</p>
 
@@ -19,7 +19,15 @@
 <p>在OC可以使用Aspects动态的Get到在某个函数或者方法执行前后点，所以可以方便的使用这个运行时特性做一些打点操作</p>
 
 <p>使用这个特性，你可以生成一个类似与下边的表，甚至通过服务端配置可以<strong>随时调整打点</strong>：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ViewController,click,buttonAction,trackName,trackkeys
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>ViewController,click,buttonAction,trackName,trackkeys
 ViewController,click,buttonActionNext:,trackName,trackkeys
 TableViewController,tableSelect,tableView:didSelectRowAtIndexPath:,,
 ViewController,lifeCycle,viewDidLoad,,
@@ -27,7 +35,7 @@ TableViewController,lifeCycle,viewDidLoad,,
 ViewController,lifeCycle,viewWillLayoutSubviews,,
 ViewController,other,buttonActionNext2:,,
 ,,,,
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>那么在Swift下是否好用呢</strong>，我尝试写了一个demo在<a href="https://github.com/poos/SwiftEFarm"><strong>干货 poos/AspectOrientedProgramming</strong></a>。完全是不侵入业务的，甚至 <strong>直接移除</strong> TrackManager 这个文件夹原项目仍然可以很好运行。</p>
 
@@ -45,14 +53,21 @@ ViewController,other,buttonActionNext2:,,
 <p><strong>然而…</strong>：将它运行到Swift项目中，你就会发现问题：我的大部分函数和方法不是 <strong>@objc</strong> 的，大部分的swift方法并不支持OC的运行时，而且 <strong>在Swift4.0之后不能简单的@objc标志类的动态性</strong> ，这意味着你需要将所有的相关方法使用 <strong>@objc</strong> 暴露出来。</p>
 
 <p><strong>方案一优劣简介</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- oc下的动态埋点方案，使用csv文件标志要打的的类和方法，动态hook方法打点
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>- oc下的动态埋点方案，使用csv文件标志要打的的类和方法，动态hook方法打点
 动态埋点，运行时，在方法执行前后插入打点方法
 - oc下可解决部分打点，其他打点可以通过扩展类，传入上下文，造专属的打点方法
 
 
 然而
 - 4.0之后不能简单的@objc标志类（Swift下致命缺陷）
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="方案二重写所有常用的模块赋予组件值并且打点">方案二：重写所有常用的模块，赋予组件值并且打点</h4>
 
@@ -61,13 +76,19 @@ ViewController,other,buttonActionNext2:,,
 <p>这个就没有去写demo了。不过可以用脚分析一下优劣</p>
 
 <p><strong>方案二优劣简介</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>不论oc和swift都可以使用，组件还可以做其他事情，例如数据即控件
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>不论oc和swift都可以使用，组件还可以做其他事情，例如数据即控件
 
 打点会繁而具体，大量冗余数据打点
 现有工程改造困难
 基础组件拖开发进度
 其他点可能需要处理
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <h4 id="方案三手动打点">方案三：手动打点</h4>
 
 <p>既然前两条路都堵死了，那么只能手动去打点了，不过手动打点仍然还是有很多地方优化：</p>
@@ -85,10 +106,13 @@ ViewController,other,buttonActionNext2:,,
 </ol>
 
 <p><strong>方案三优劣简介</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>相当准确，点点命中要害
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>相当准确，点点命中要害
 
 但是每个地方都要写
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="手动打点的优化">手动打点的优化</h3>
 
@@ -96,22 +120,66 @@ ViewController,other,buttonActionNext2:,,
   <li>标记版本号来对应打点代码，日期对应本地的类名</li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>base v12    select v22      page v54    180707
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>base v12    select v22      page v54    180707
+</pre></td></tr></tbody></table></code></pre></div></div>
 <ol>
   <li>制定大量枚举/使用plist或者csv来做键值映射，方便管理</li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page字典对应页面的enum
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>page字典对应页面的enum
 event 的 enum
 key 的 enum
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ol>
   <li>使用链式编程</li>
 </ol>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">EventManage</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="kt">EventManage</span> <span class="p">{</span>
     <span class="c1">//事件名</span>
     <span class="kd">enum</span> <span class="kt">EventId</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
         <span class="k">case</span> <span class="n">tapAction</span>
@@ -151,13 +219,15 @@ key 的 enum
     <span class="p">}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>使用了上边的框架之后，在打点时候就可以方便的打点了</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EventManage.share.event(.click).page(.home).push()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>EventManage.share.event(.click).page(.home).push()
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ol>
   <li>特殊打点创建单独的类管理</li>
@@ -183,11 +253,15 @@ key 的 enum
 
 <h3 id="参考资料">参考资料：</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github项目：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>github项目：
 
 AOPTrack
 SwiftAspects
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="推荐一下自己写的最新测demo">推荐一下自己写的最新测Demo</h4>
 

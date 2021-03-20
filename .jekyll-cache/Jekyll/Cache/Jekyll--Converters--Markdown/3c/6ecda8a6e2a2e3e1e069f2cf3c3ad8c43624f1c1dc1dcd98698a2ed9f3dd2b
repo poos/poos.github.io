@@ -1,4 +1,4 @@
-I"<p><img src="https://docs.fastlane.tools/img/fastlane_text.png" alt="img" /></p>
+I"�<p><img src="https://docs.fastlane.tools/img/fastlane_text.png" alt="img" /></p>
 
 <p>写在文章前的话：有问题就去查文档和issues，错不了的</p>
 
@@ -33,19 +33,50 @@
   <li>注册新的设备</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>desc "register device"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>desc "register device"
 lane :new_devices do
     register_devices(devices_file: "./devices.txt")
     match(type: "develop", force_for_new_devices: true)
 end
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>提交测试、提交审核，这些脚本也可以在分支条件被触发时候调用</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :beta do
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="rouge-code"><pre>lane :beta do
     build
     upload_to_testflight(ipa: './build/Zhima_iOS.ipa',
                          changelog: '增加评论功能',
@@ -70,7 +101,7 @@ lane :release_from_beta do
                         submit_for_review: true,
                         automatic_release: false)
 end
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="在开发者电脑上一些有用的脚本">在开发者电脑上一些有用的脚本</h3>
 
@@ -78,18 +109,80 @@ end
   <li>同步证书</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :setup do
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>lane :setup do
     match(type: 'development', readonly: true)
     match(type: 'appstore', readonly: true)
     match(type: 'adhoc', readonly: true)
 end
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>设置项目的 version number、build number</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :set_version do
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+</pre></td><td class="rouge-code"><pre>lane :set_version do
     if UI.interactive?
         changelog = UI.input "Please enter the new version number: "
     end
@@ -146,13 +239,21 @@ def updateProjectBuildNumber
                            build_number:"#{build}"
                            )
 end
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>用模拟器测试、打包ipa</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lane :tests do
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>lane :tests do
     run_tests(scheme: "Project", devices: ["iPhone 8"])
 end
 
@@ -160,18 +261,23 @@ lane :build do
     build_app(scheme: 'Project',
               output_directory: './build')
 end
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>运行 swiftlint</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    desc "run swiftlint"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>    desc "run swiftlint"
     lane :lint do
         swiftlint( strict: true )
     end
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>暂时这些功能吧…</p>
 :ET

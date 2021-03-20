@@ -1,4 +1,4 @@
-I"!<blockquote>
+I"�<blockquote>
   <p>从年初转到 SWift 开发，已经差不多一个年头了，正好也是年底，作个总结，也算是应景。</p>
 </blockquote>
 
@@ -32,10 +32,13 @@
 
 <p>其中提到了 Swift 4.1 之后就可以使用带有条件语句 (也就是 where 从句，Element 和 Value 满足 DictionaryValue) 的 extension。使用协议的这个特性，代码能够更加的优雅。我在之前的 <strong>分享设计</strong> 博客一文中曾希望使用此种方式，无奈项目基于 4.0，现在已经使用 4.2，可以使用这个特性了。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Array</span><span class="p">:</span> <span class="kt">DictionaryValue</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt">DictionaryValue</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="kd">extension</span> <span class="kt">Array</span><span class="p">:</span> <span class="kt">DictionaryValue</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt">DictionaryValue</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span> <span class="p">{</span> <span class="k">return</span> <span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">value</span> <span class="p">}</span> <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>关于解析还有一个选择，可以使用 <strong><a href="https://poos.github.io/tags/">Sourcery + ObjectMapper</a></strong> 的方式。另外元编程也为其他编程提供了支持。</p>
 
 <h4 id="reacnative">Reacnative</h4>
@@ -64,7 +67,24 @@
 
 <p>ps: 配置好电脑之后，设置好 ssh， <strong>用一个文档 clone 所有库，装新机简直不要太爽</strong></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/Desktop/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre>cd ~/Desktop/
 
 git clone --depth 1 git@gitee.com:poos/DailyNote.git
 
@@ -81,7 +101,7 @@ git clone --depth 1 git@gitee.com:poos/BasePrj.git
 
 git clone --depth 1 git@github.com:poos/SwiftEFarm.git
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="sh-命令">sh 命令</h4>
 

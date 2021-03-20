@@ -1,4 +1,4 @@
-I"�!<h2 id="在github新开了博客poosgithubio这是我的第一篇博客"> 🎉 🎉 🎉在github新开了博客<a href="https://poos.github.io/" title="poos.github.io">poos.github.io</a>，这是我的第一篇博客。</h2>
+I"�#<h2 id="在github新开了博客poosgithubio这是我的第一篇博客"> 🎉 🎉 🎉在github新开了博客<a href="https://poos.github.io/" title="poos.github.io">poos.github.io</a>，这是我的第一篇博客。</h2>
 
 <h2 id="推陈">推陈</h2>
 
@@ -68,7 +68,35 @@
 <p>b. 16年底的在我的首个SwiftDemo上的实践 <a href="https://gitee.com/poos/SwiftEFarm">poos/SwiftEFarm</a></p>
 
 <p>c. 一个准备干大事的项目怎么设计</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c. 一个准备干大事的项目怎么设计
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td><td class="rouge-code"><pre>c. 一个准备干大事的项目怎么设计
 
 1. fastlane
 
@@ -96,7 +124,7 @@ b. Theme/Navigator/弹窗统一管理/Review控制/通知统一管理 设计/通
 
 continue...
 ---
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>至此也刚刚好总结10条，也算是见证了我成长的过程吧。喜欢的话去 <strong><a href="https://github.com/poos">github/poos</a></strong> Star 一下。</p>
 
@@ -106,7 +134,38 @@ continue...
 
 <p>大概计划一下这个博客，以后会写一些有质量的文章。可能是下边的某些方面，也可能不限于下边，计划尽量多总结–每周写一篇–，每篇在千字以上吧，重要的是有货。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//笔记截图-工作中和探究中接触到的方面，需要把笔记整理成博客分享给大家。
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+</pre></td><td class="rouge-code"><pre>//笔记截图-工作中和探究中接触到的方面，需要把笔记整理成博客分享给大家。
 
 *****计划整理 new
 
@@ -137,7 +196,7 @@ revealapp 界面测试工具
 
 flutter 新的移动端语言
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="已经完成的">已经完成的</h3>
 

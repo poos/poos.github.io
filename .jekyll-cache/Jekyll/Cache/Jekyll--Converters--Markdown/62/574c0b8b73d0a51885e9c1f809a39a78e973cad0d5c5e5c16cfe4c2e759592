@@ -1,4 +1,4 @@
-I",<h3 id="背景及相关链接">背景及相关链接</h3>
+I"�"<h3 id="背景及相关链接">背景及相关链接</h3>
 
 <p>为了 iOS/Android 体验统一化和快速迭代，我们在做某问答产品时候，嵌入了 Html-JS 模块。那么问答产品的核心体验就是写问答和浏览问答，那么本文就是为了探讨和分享 Html 嵌入的可行性。如果有一些疑问🤔️，不妨看一下，到文末再发表评论。</p>
 
@@ -10,7 +10,19 @@
 
 <p>那第一步就是和 Web 一起调试好显示，先在工程中使用 WebView 加载，启动起来～</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Resource
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre>Resource
 ├── a-some.html
 ├── a-some-1.html
 ├── css
@@ -22,7 +34,7 @@
 └── js
     ├── some.js
     └── some-1.js
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>作为 Resource 文件直接放入工程中，然后在网页中使用 Bundle 里面的文件就好了。</p>
 
@@ -30,7 +42,15 @@
 
 <p>将文件 Copy 到固定的位置然后 load 使用，像下边一样。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cache
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>Cache
 ├── Readme
 ├── img
 │   ├── some.png
@@ -38,7 +58,7 @@
 └── other
     ├── some.css
     └── some-1.css
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <blockquote>
   <p>如果发现资源更新了，但是没有展现在 UI 上，那么很可能是引用了旧的资源，推荐将资源文件纳入统一的 manager 进行管理。</p>
@@ -87,27 +107,37 @@
 
 <p>因为已经比较深度的使用了 Html，那么也不介意更进一步，<strong>使用 js 对 html 的 [img] 进行链接提取加工</strong>，这样就在客户端最大限度共用了部分逻辑，相应的减少了总代码量，减少了错误的可能性。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function(url, localUri ,index) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>function(url, localUri ,index) {
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>那么当下载完成就去调用更新即可，Html 模块也可以定制更多功能，例如在加载图片时候使用占位图片等～</p>
 
 <h3 id="其他-ui-更新">其他 UI 更新</h3>
 
 <p>一套 Html 库可能包含了作者（头像，title）、Tag /话题、问题、回答、评论赞数等内容，因为框架的 Resource 在本地，数据从 api 获取，那么就需要大量的数据交互，这些通常都是使用 js 函数进行交互的。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>updateData(json, id) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>updateData(json, id) {
 }
 updateImage(url, localPath, index) {
 }
 updateState(state) {
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>甚至可能给 <strong>可信的</strong> 网站传输用户信息：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>updateCredentials(json) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>updateCredentials(json) {
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="交互">交互</h3>
 
@@ -115,7 +145,21 @@ updateState(state) {
 
 <p><strong>使用 navigationAction url进行管理</strong></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -&gt; Void) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -&gt; Void) {
     guard navigationAction.isClientHandle else {
         decisionHandler(.success)
         return
@@ -129,7 +173,7 @@ updateState(state) {
     }
     decisionHandler(.cancel)
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <blockquote>
   <p>利用 action 可以组合出很多有趣的行为，例如： Web 控制 App Navigate Item (Share 等) 显示，同时传输（分享）数据.</p>
@@ -141,12 +185,17 @@ updateState(state) {
 
 <p><a href="https://github.com/nnhubbard/ZSSRichTextEditor">ZSSRichTextEditor</a> blob/master/ZSSRichTextEditor/Source/ZSSRichTextEditor.js</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zss_editor.setBold = function() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>zss_editor.setBold = function() {
     document.execCommand('bold', false, null);
     zss_editor.enabledEditingItems();
 }
 ...
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>当然使用起来免不了一步步的定制 css，定制数据交互，缩减功能等。</p>
 

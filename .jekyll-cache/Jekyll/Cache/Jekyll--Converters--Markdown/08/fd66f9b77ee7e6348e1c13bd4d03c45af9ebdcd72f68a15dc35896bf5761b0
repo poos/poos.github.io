@@ -1,4 +1,4 @@
-I"��<p>使用 Texture 有几大好处：</p>
+I"-�<p>使用 Texture 有几大好处：</p>
 
 <ol>
   <li>
@@ -57,15 +57,34 @@
 
 <p>普通</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableNode</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableNode</span><span class="p">:</span> <span class="kt">ASTableNode</span><span class="p">,</span> <span class="n">nodeForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ASCellNode</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="kd">func</span> <span class="nf">tableNode</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableNode</span><span class="p">:</span> <span class="kt">ASTableNode</span><span class="p">,</span> <span class="n">nodeForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ASCellNode</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">model</span> <span class="o">=</span> <span class="kt">Models</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
     <span class="k">return</span> <span class="kt">NewFriendsView</span><span class="o">.</span><span class="nf">followCell</span><span class="p">(</span><span class="nv">model</span><span class="p">:</span> <span class="n">model</span><span class="p">)</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>使用Block</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableNode</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableNode</span><span class="p">:</span> <span class="kt">ASTableNode</span><span class="p">,</span> <span class="n">nodeBlockForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ASCellNodeBlock</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="kd">func</span> <span class="nf">tableNode</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableNode</span><span class="p">:</span> <span class="kt">ASTableNode</span><span class="p">,</span> <span class="n">nodeBlockForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ASCellNodeBlock</span> <span class="p">{</span>
 
     <span class="kd">func</span> <span class="nf">returnCellNode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">ASCellNode</span> <span class="p">{</span>
         <span class="k">let</span> <span class="nv">model</span> <span class="o">=</span> <span class="kt">Models</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
@@ -80,7 +99,7 @@
 
     <span class="k">return</span> <span class="n">cellNodeBlock</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="ascellnode-使用">ASCellNode 使用</h3>
 
@@ -90,11 +109,15 @@
   <li>使用</li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span><span class="kd">init</span> <span class="err">–</span> <span class="kt">Thread</span> <span class="n">safe</span> <span class="n">initialization</span><span class="o">.</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="o">-</span><span class="kd">init</span> <span class="err">–</span> <span class="kt">Thread</span> <span class="n">safe</span> <span class="n">initialization</span><span class="o">.</span>
 <span class="o">-</span><span class="nv">layoutSpecThatFits</span><span class="p">:</span> <span class="err">–</span> <span class="kt">Return</span> <span class="n">a</span> <span class="n">layout</span> <span class="n">spec</span> <span class="n">that</span> <span class="n">defines</span> <span class="n">the</span> <span class="n">layout</span> <span class="n">of</span> <span class="n">your</span> <span class="n">cell</span><span class="o">.</span>
 <span class="o">-</span><span class="n">didLoad</span> <span class="err">–</span> <span class="kt">Called</span> <span class="n">on</span> <span class="n">the</span> <span class="n">main</span> <span class="n">thread</span><span class="o">.</span> <span class="kt">Good</span> <span class="n">place</span> <span class="n">to</span> <span class="n">add</span> <span class="n">gesture</span> <span class="n">recognizers</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span>
 <span class="o">-</span><span class="n">layout</span> <span class="err">–</span> <span class="kt">Also</span> <span class="n">called</span> <span class="n">on</span> <span class="n">the</span> <span class="n">main</span> <span class="n">thread</span><span class="o">.</span> <span class="kt">Layout</span> <span class="k">is</span> <span class="n">complete</span> <span class="n">after</span> <span class="n">the</span> <span class="n">call</span> <span class="n">to</span> <span class="k">super</span> <span class="n">which</span> <span class="n">means</span> <span class="n">you</span> <span class="n">can</span> <span class="k">do</span> <span class="n">any</span> <span class="n">extra</span> <span class="n">tweaking</span> <span class="n">you</span> <span class="n">need</span> <span class="n">to</span> <span class="k">do</span><span class="o">.</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>主要生命周期是上边四个函数，值得注意的是 -layoutSpecThatFits: 会返回布局方案。Texture 使用 FlexBox 布局，先简单提一句，下边会详细介绍。</p>
 
@@ -121,7 +144,17 @@
 </ul>
 
 <p>大概有一下布局样式，具体可以查看文档：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ASWrapperLayoutSpec
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>ASWrapperLayoutSpec
 ASStackLayoutSpec
 ASInsetLayoutSpec
 ASOverlayLayoutSpec
@@ -131,7 +164,7 @@ ASRatioLayoutSpec
 ASRelativeLayoutSpec
 ASAbsoluteLayoutSpec
 ASCornerLayoutSpec
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>提一下常用的：</p>
 
@@ -150,11 +183,15 @@ ASCornerLayoutSpec
 <p>提一下 ASNetworkImageNode ，可以从网络下载图片的 image node。下一个目录会详细介绍</p>
 
 <p><strong>自定义 node</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let node = ASDisplayNode { () -&gt; UIView in
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>let node = ASDisplayNode { () -&gt; UIView in
 	let view = SomeView()
 	return view
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>ASScollNode</strong></p>
 
@@ -163,7 +200,30 @@ ASCornerLayoutSpec
   <p>var scollContent: ASStackLayoutSpec</p>
 </blockquote>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="rouge-code"><pre>
 <span class="c1">// init 时候的一些参数示例</span>
 
     <span class="k">let</span> <span class="nv">scoll</span> <span class="o">=</span> <span class="kt">ASScrollNode</span><span class="p">()</span><span class="o">.</span><span class="n">then</span> <span class="p">{</span> <span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">in</span>
@@ -186,7 +246,7 @@ ASCornerLayoutSpec
     <span class="p">}</span>
 
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>布局的细微调整，Element Properties 和 API Sizing</li>
@@ -227,7 +287,54 @@ ASCornerLayoutSpec
 
 <p>示例例一个对接 Kingfisher 的代码</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">Kingfisher</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+</pre></td><td class="rouge-code"><pre><span class="kd">import</span> <span class="kt">Kingfisher</span>
 
 <span class="kd">extension</span> <span class="kt">ASNetworkImageNode</span> <span class="p">{</span>
     <span class="kd">static</span> <span class="kd">func</span> <span class="nf">imageNode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">ASNetworkImageNode</span> <span class="p">{</span>
@@ -274,7 +381,7 @@ ASCornerLayoutSpec
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <ul>
   <li>图片 reload 闪烁</li>
@@ -282,7 +389,60 @@ ASCornerLayoutSpec
 
 <p>原理是 使用两个 node（ASNetworkImageNode 和 ASImageNode），无缓存即使用 ASNetworkImageNod 加载网络图片，有缓存即使用 ASImageNode 直接显示。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">AsyncDisplayKit</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+</pre></td><td class="rouge-code"><pre><span class="kd">import</span> <span class="kt">AsyncDisplayKit</span>
 
 <span class="c1">// MARK: - ASNetworkImageNode 以解决reload闪烁问题</span>
 <span class="kd">class</span> <span class="kt">NetworkImageNode</span><span class="p">:</span> <span class="kt">ASDisplayNode</span> <span class="p">{</span>
@@ -335,7 +495,7 @@ ASCornerLayoutSpec
         <span class="n">imageNode</span><span class="o">.</span><span class="nf">addTarget</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span> <span class="nv">forControlEvents</span><span class="p">:</span> <span class="n">controlEvents</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h2 id="总结">总结</h2>
 

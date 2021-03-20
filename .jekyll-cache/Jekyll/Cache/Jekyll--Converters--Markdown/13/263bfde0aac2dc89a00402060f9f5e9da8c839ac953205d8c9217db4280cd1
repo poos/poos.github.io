@@ -1,4 +1,4 @@
-I"4<h3 id="背景简介">背景/简介</h3>
+I"�<h3 id="背景简介">背景/简介</h3>
 
 <p>Blogger 有幸进入某外企，也接触到一些新的工程使用方式，不妨记录和分享一下，让大家也多提提意见～</p>
 
@@ -41,7 +41,24 @@
 <p>这部分主要是通过是否勾选 target 引用来区分。相同的类名在不同的 target 勾选使用即可～</p>
 
 <p>到最后，文件夹可能会复杂的像这样：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Project
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre>Project
 ├── Base
 │   ├── Assets
 │   │   ├── icon
@@ -58,7 +75,7 @@
 ├── Target1
 │   ├── Assets
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>正常情况下，Base 里面是勾选了所有 target 的，然后下边是针对单个 targer 的。</p>
 

@@ -1,6 +1,7 @@
 ---
 layout:     post
 title:      "test"
+hide-in-nav: true
 subtitle:   Frame, UIViewAutoresizing, NSLayoutAnchor, Flexbox, SwiftUI, FlutterUI, VFL
 date:       2019-09-13
 author:     poos

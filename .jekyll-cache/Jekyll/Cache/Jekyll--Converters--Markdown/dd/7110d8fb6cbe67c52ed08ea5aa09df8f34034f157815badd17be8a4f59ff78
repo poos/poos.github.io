@@ -1,4 +1,4 @@
-I"�B<p><strong><a href="https://github.com/poos/testIpa">本文所有 资源 地址</a></strong></p>
+I"�I<p><strong><a href="https://github.com/poos/testIpa">本文所有 资源 地址</a></strong></p>
 
 <p><strong>目前可以在局域网和 github 访问下载 ipa，可以从日常 build 导出ipa（未加密，应只在公司网使用）</strong></p>
 
@@ -36,17 +36,63 @@
   <li><strong>在局域网网页发布：使用 xxx.loacl:4000/ 网址；个人借用了博客 jekyll 新建了个发布静态网页</strong></li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll serve -w --host=0.0.0.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>jekyll serve -w --host=0.0.0.0
 
 http://xx.local:4000/test/app
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h2 id="原理和分析">原理和分析</h2>
 
 <p>iOS 的 ipa 可以通过链接（ex：itms-services://?action=download-manifest&amp;url=https://xxx/xx.plist）去请求 itunes 安装app（没有静态网页直接请求这个链接，或者生成二维码在相机扫码即可下载 ipa）。</p>
 
 <p>plist 文件格式如下： 有两个对象一个存储 ipa 和图片，另一个对象存储 app identifier 和 版本信息，plist 代码稍后在下边列出。</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="p">?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">"1.0"</span> <span class="n">encoding</span><span class="o">=</span><span class="s">"UTF-8"</span><span class="p">?</span><span class="o">&gt;</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+</pre></td><td class="rouge-code"><pre><span class="o">&lt;</span><span class="p">?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">"1.0"</span> <span class="n">encoding</span><span class="o">=</span><span class="s">"UTF-8"</span><span class="p">?</span><span class="o">&gt;</span>
 <span class="o">&lt;!</span><span class="kt">DOCTYPE</span> <span class="n">plist</span> <span class="kt">PUBLIC</span> <span class="s">"-//Apple//DTD PLIST 1.0//EN"</span> <span class="s">"http://www.apple.com/DTDs/PropertyList-1.0.dtd"</span><span class="o">&gt;</span>
 <span class="o">&lt;</span><span class="n">plist</span> <span class="n">version</span><span class="o">=</span><span class="s">"1.0"</span><span class="o">&gt;</span>
 <span class="o">&lt;</span><span class="n">dict</span><span class="o">&gt;</span>
@@ -89,7 +135,7 @@ http://xx.local:4000/test/app
 	<span class="o">&lt;/</span><span class="n">array</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">dict</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">plist</span><span class="o">&gt;</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h2 id="过程">过程</h2>
 
@@ -165,7 +211,19 @@ http://xx.local:4000/test/app
 <p>因为是在 XCode 包中添加的，如果升级 Xcode 可能失效，<strong>重新安装一下即可</strong></p>
 
 <p><a href="https://github.com/poos/testIpa">PackageApplication</a></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 下载
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre># 下载
 链接如上
 
 添加PackageApplication
@@ -177,7 +235,7 @@ sudo cp ./PackageApplication /Applications/Xcode.app/Contents/Developer/Platform
 sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer/
 
 sudo chmod +x /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/PackageApplication
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><a href="https://blog.csdn.net/skylin19840101/article/details/54406080">iOS自动构建以及打包命令(xcodebuild,xcrun)</a></p>
 
@@ -189,8 +247,9 @@ sudo chmod +x /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.plat
 
 <p><strong>打包命令</strong></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xcrun -sdk iphoneos PackageApplication -v ~/xx/xx.app -o ~/xx/xx.ipa
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>xcrun -sdk iphoneos PackageApplication -v ~/xx/xx.app -o ~/xx/xx.ipa
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="mainfest-生成">mainfest 生成</h3>
 
@@ -202,8 +261,9 @@ sudo chmod +x /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.plat
 
 <p>只需要在手机 safari 中 访问如下链接即可</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>itms-services://?action=download-manifest&amp;url=https://xxx/xx.plist
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>itms-services://?action=download-manifest&amp;url=https://xxx/xx.plist
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>1. 直接生成二维码，相机扫码访问</strong></p>
 
@@ -213,24 +273,35 @@ sudo chmod +x /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.plat
 
 <p>上代码</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 发布
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>// 发布
 jekyll serve -w --host=0.0.0.0
 
 // 端口占用
 ps -ax|grep -i "jekyll"|grep -v grep|awk '{print "kill -9 " $1}'|sh
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>另外</p>
 
 <p>在 mac 中设置电脑的 name.local 即可使用 name.local:端口//xxx 访问，这样就不用去查IP了</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>偏好设置 -&gt; 共享 -&gt; ”电脑名下边的 local 地址”
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>偏好设置 -&gt; 共享 -&gt; ”电脑名下边的 local 地址”
 ex:
 
 http:shown.local:4000/test
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p><a href="https://www.jianshu.com/p/650b96306013">如何让jekyll服务可以在局域网中访问</a></p>
 
 <h4 id="jekyll-静态博客-的其他使用">jekyll 静态博客 的其他使用</h4>
@@ -239,16 +310,18 @@ http:shown.local:4000/test
 
 <p>我在 nav 的 遍历博客中添加了博客 title 的判断，如果是 ‘test’ 就不会出现在博客目录中</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if page.title != 'test'
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>if page.title != 'test'
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>现在我有两个页面，一个测试 scheme 码的测试页面，一个是 ipa 的下载页面</p>
 
 <p><strong>静态 json 文件</strong></p>
 
 <p>注意一下访问地址</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://raw.githubusercontent.com/poos/poos.github.io/master/test/xx.json
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>https://raw.githubusercontent.com/poos/poos.github.io/master/test/xx.json
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="别忘了在博客中屏蔽-ipa">别忘了在博客中屏蔽 .ipa</h5>
 
@@ -258,7 +331,33 @@ http:shown.local:4000/test
 
 <p>第一步要找到一个 .gitignore_global 的配置文件,在~/ 目录下使用ls -all就能找这个文件,然后vi .gitignore_global打开它,把下面的代码添加进去,然后wq退项目.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Xcode
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre># Xcode
 #
 build/
 *.pbxuser
@@ -284,7 +383,7 @@ DerivedData
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 # Pods/
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="结语">结语</h3>
 

@@ -1,4 +1,4 @@
-I"<h3 id="相关链接">相关链接</h3>
+I"=!<h3 id="相关链接">相关链接</h3>
 
 <p>Apple document:</p>
 
@@ -32,42 +32,140 @@
 
 <p>Project -&gt; Capabilities -&gt; Associated Domains</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>links::example.com
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>links::example.com
 webcredentials:example.com
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="server">Server</h5>
 
 <p>配置 apple-app-site-association</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>{
    "webcredentials": {
        "apps": [    "AppPrefix.com.example.DemoApp",
                     "AppPrefix.com.example.DemoAdminApp" ]
     }
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <h4 id="keychain-sharing">Keychain Sharing</h4>
 
 <p>这个是当一个 Apple 账号发布了多个应用程序， 那么创建一个组，可以让这多个应用共享用户信息。在设置中填入要共享的应用的 Bundle Identifier 即可。</p>
 
 <p>Project -&gt; Capabilities -&gt; Keychain Sharing</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.example.DemoApp
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>com.example.DemoApp
 com.example.DemoAdminApp
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="其他类型的输入框">其他类型的输入框</h3>
 
 <p>当一个输入框被设置了 content type，那么就知道了这个输入框的类型，iOS 就可以提供相应的快速键入选项。</p>
 
 <p>API:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// The textContentType property is to provide the keyboard with extra information about the semantic intent of the text document.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>// The textContentType property is to provide the keyboard with extra information about the semantic intent of the text document.
 @available(iOS 10.0, *)
 optional var textContentType: UITextContentType! { get set } // default is nil
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>Content:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension UITextContentType {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+</pre></td><td class="rouge-code"><pre>extension UITextContentType {
 
 
     @available(iOS 10.0, *)
@@ -152,7 +250,7 @@ optional var textContentType: UITextContentType! { get set } // default is nil
     public static let oneTimeCode: UITextContentType
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <blockquote>
   <p>FYI: TWO-FACTOR AUTHENTICATION (2FA)</p>

@@ -1,6 +1,7 @@
-I"�1<hr />
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>18年9月更新，因为苹果AppStore的bug导致显示的大小于Itunes Connect显示大小不一致，9月底已经修复。
-</code></pre></div></div>
+I"�<<hr />
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>18年9月更新，因为苹果AppStore的bug导致显示的大小于Itunes Connect显示大小不一致，9月底已经修复。
+</pre></td></tr></tbody></table></code></pre></div></div>
 <hr />
 
 <p>本文主要介绍项目瘦身，代码精简方面的优化，列了一些步骤可以对照修改。</p>
@@ -39,19 +40,26 @@
 <p>https://linux.cn/article-6127-1.html</p>
 
 <p>https://github.com/adrianlopezroche/fdupes</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isntall from  http://macappstore.org/fdupes/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>isntall from  http://macappstore.org/fdupes/
     cd xx
     fdupes -Sr ./
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="13-大图转换格式">1.3 大图转换格式</h4>
 
 <p>对于超过10KB的大图，不管是webp格式还是jpg格式都比png小很多，png转换webp的工具可以采用：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 安装
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre># 安装
 brew install webp
 # 转换 webp
 cwebp -q 75 bts-home-nocity@3x.png -o bts-home-nocity@3x.webp
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="14-图片简单压缩">1.4 图片简单压缩。</h3>
 <p>正常压缩图片即可。满足使用。</p>
@@ -89,7 +97,17 @@ cwebp -q 75 bts-home-nocity@3x.png -o bts-home-nocity@3x.webp
 
 <p>https://www.jianshu.com/p/721ca80fdcc7</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//安装PMD
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>//安装PMD
 
 $ cd $HOME
 $ curl -OL https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.4.0/pmd-bin-6.4.0.zip
@@ -99,9 +117,23 @@ $ unzip pmd-bin-6.4.0.zip
 $ alias pmd="$HOME/pmd-bin-6.4.0/bin/run.sh pmd"
 $ pmd -d /usr/src -R java-basic -f text
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//安装Jre，修改环境变量
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>//安装Jre，修改环境变量
 //No Java runtime present, requesting install.
 //安装完还提示这个错误，可以
 
@@ -115,30 +147,50 @@ export PATH=${JAVA_HOME}/bin:$PATH
 
 java -version
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>开始检查</p>
 
 <p>pmd文档链接如下</p>
 
 <p>https://pmd.github.io/pmd-6.4.0/pmd_userdocs_cpd.html#options</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>
  cd pmd-bin-6.4.0/bin/
 
  ./run.sh cpd --minimum-tokens 100 --files /Users/bieshixuan/iOS/ZhiMa_iOS --language swift --format xml
 // 可以导command K清除之后保存
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>—–ka</p>
 <h4 id="pmd-cpd-files命令报错可以手动替换上边的内容">pmd cpd –files…命令报错，可以手动替换上边的内容</h4>
 <p>安装好 PMD 后, 就可以在 Xcode 中添加 Run Script 脚本了:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Running CPD
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre># Running CPD
 //如果错误，可以注释这一行，手动替换
 pmd cpd --files ${EXECUTABLE_NAME} --minimum-tokens 50 --language swift --encoding UTF-8 --format net.sourceforge.pmd.cpd.XMLRenderer &gt; cpd-output.xml --failOnViolation true
 # Running script
 php ./cpd_script.php -cpd-xml cpd-output.xml
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>需要的 cpd_script.php 文件如下, 需要放到工程根目录</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;?php
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>&lt;?php
 foreach (simplexml_load_file('cpd-output.xml')-&gt;duplication as $duplication) {
     $files = $duplication-&gt;xpath('file');
     foreach ($files as $file) {
@@ -148,30 +200,40 @@ foreach (simplexml_load_file('cpd-output.xml')-&gt;duplication as $duplication) 
     }
 }
 ?&gt;
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>还有更多静态代码分析工具查看http://hao.jobbole.com/static_code_analysis_tool_list_opensource/</p>
 
 <h4 id="oc下可以检查没有使用的import">OC下可以检查没有使用的import</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OC下发现没有使用的import
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>OC下发现没有使用的import
 
 https://github.com/dblock/fui
-</code></pre></div></div>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>有一个现成的工具，就是fui，非常好用，以前可以直接添加插件使用，但是现在大家都知道，xcode不能使用第三方的插件了：gem install fui。但是就这一句都经常会出现问题，比如
+</pre></td></tr></tbody></table></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>有一个现成的工具，就是fui，非常好用，以前可以直接添加插件使用，但是现在大家都知道，xcode不能使用第三方的插件了：gem install fui。但是就这一句都经常会出现问题，比如
 
 sudo gem install -n /usr/local/bin fui
 运行完成后会直接在终端展示出很多没用的代码，有的是import了但是没有使用的，也有目录下有但是工程中没有添加到也没有用到的，最好还是全局搜索一下再删除。
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="33-文件之间相似度">3.3 文件之间相似度</h4>
 <p>如果很相似可以权衡是否合并继承</p>
 
 <p>https://github.com/startry/SameCodeFinder</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//越小相似度越高
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>//越小相似度越高
 python SameCodeFinder.py ProjectPath .swift --detail
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="34-检查代码其他方面">3.4 检查代码其他方面</h4>
 
@@ -199,7 +261,15 @@ python SameCodeFinder.py ProjectPath .swift --detail
 <h2 id="4-xcode设置和bitcode">4. Xcode设置和bitcode</h2>
 
 <h3 id="41-xcode使用新版xcode可以跳过">4.1 Xcode（使用新版xcode可以跳过）</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Build Settings-&gt;Optimization Level
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>Build Settings-&gt;Optimization Level
 有几个编译优化选项，release版应该选择Fastest, Smalllest，这个选项会开启那些不增加代码大小的全部优化，并让可执行文件尽可能小。
 2.去除符号信息
 Strip Linked Product / Deployment Postprocessing / Symbols Hidden by Default
@@ -207,7 +277,7 @@ Strip Linked Product / Deployment Postprocessing / Symbols Hidden by Default
 Symbols Hidden by Default会把所有符号都定义成”private extern”，详细信息见官方文档。
 
 这些选项目前都是Xcode里release的默认选项，但旧版XCode生成的项目可能不是，可以检查一下。其他优化还可以参考官方文档—CodeFootprint.pdf
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="42-bitcode-可以减小打包的大小">4.2 bitcode 可以减小打包的大小</h3>
 <p>默认Xcode是true的，如果因为第三方库的原因改为了false，可以向库支持者寻求帮助，而且开启之后可以线上现在dSYM文件不用本地保存了</p>
@@ -237,7 +307,27 @@ Symbols Hidden by Default会把所有符号都定义成”private extern”，�
 <hr />
 <h4 id="通过遍历本地的图片名查找在文件中是否使用了图片名">通过遍历本地的图片名，查找在文件中是否使用了图片名</h4>
 <h5 id="shell命令-不能查找assets中的json名字">shell命令, 不能查找assets中的json名字</h5>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>通过终端 执行 shell 命令
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre>通过终端 执行 shell 命令
 
 a. 第一步建立.sh 文件  如 unusedImage.sh
 
@@ -257,15 +347,17 @@ b. 进入你要查找的工程目录下执行 这段 shell 脚本
 
 sh unusedImage.sh   
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h5 id="搜索文件搜索某个字符串在子文件夹是否使用了">搜索文件，搜索某个字符串在子文件夹是否使用了</h5>
 <p>搜索文件的方式可以使用grep,ack都是不错的工具，但是有一种更快，更好的搜索文件内容的方式:The Silver Searcher，The Silver Searcher使用起来更方便，更快，更简单,项目地址：https://github.com/ggreer/the_silver_searcher。 直接安装The Silver Searcher的命令:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install the_silver_searcher
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>brew install the_silver_searcher
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>使用ag命令就可以进行文本搜索:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ag "image" './'
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>ag "image" './'
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>这个命令的意思是搜索到该目录下以及其子目录下的所有含有”image”的文件。
 使用这个命令就需要在python中执行bash命令。</p>
 
@@ -273,12 +365,17 @@ sh unusedImage.sh
 
 <p>github项目：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ImageOptim
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>ImageOptim
 LSUnusedResources
 SameCodeFinder
 SMCheckProject
 XcodeProjectArrangementTool
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>博客：</p>
 
 <p><a href="https://www.jianshu.com/p/38cf9c170141">iOS Color Misaligned Images优化 - 简书</a></p>

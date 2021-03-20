@@ -1,4 +1,4 @@
-I"�<h3 id="背景">背景</h3>
+I"� <h3 id="背景">背景</h3>
 
 <p>通常情况先在银行，仓库等具有严格权限控制的应用需要这个层级。</p>
 
@@ -28,7 +28,17 @@
 <p>默认的话可以使用服务队返回的 json～</p>
 
 <p>default.json</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>{
   "changeAccountID": {
     "available": true
   },
@@ -38,13 +48,64 @@
     "description": "firstAllowed"
   }
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="基础-code">基础 Code</h4>
 
 <p>下图是一个基本的三层控制，也是参考学习了一些现有产品的设计，但是经过个人的加工理解，形成新的易于使用清晰明了的设计：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+</pre></td><td class="rouge-code"><pre>
 struct Feature {
     enum State {
         case unknow
@@ -95,16 +156,27 @@ class FeatureManager {
 
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>经过上面的设计之后，使用上去直接去调用 FeatureManager 即可：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FeatureManager.default.check(.user, feature: .changeAccountID).allow()
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>FeatureManager.default.check(.user, feature: .changeAccountID).allow()
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>当然这只是基础调用，你可以封装 convenience 的使用方式</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public func FeatureAllowed(_ name: Feature.Name) -&gt; Bool
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>public func FeatureAllowed(_ name: Feature.Name) -&gt; Bool
 
 extension Feature {
   public func featureAllowed(_ name: Feature.Name) -&gt; Bool
@@ -114,7 +186,7 @@ extension RouterManager {
   public func routerWithFeatureCheck(_ router: Router, mode: CheckMode = .user)
 }
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>通过封装可以实现更简短的代码量。</p>
 
@@ -136,7 +208,100 @@ extension RouterManager {
 
 <p>使用枚举，逐级检查；使用函数回调，处理完每一级别的 dependency，然后 completion。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Feature {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+</pre></td><td class="rouge-code"><pre>struct Feature {
   ...
 
 
@@ -229,7 +394,7 @@ class FeatureManager {
 }
 
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="其他">其他</h3>
 

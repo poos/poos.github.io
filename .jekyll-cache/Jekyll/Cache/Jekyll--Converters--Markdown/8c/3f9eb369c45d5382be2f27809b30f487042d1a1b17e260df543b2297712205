@@ -1,4 +1,4 @@
-I"|X<p>处理界面专场动画已经有很多库，究其根本就是继承专场动画的协议，然后实现动画的实现即可。</p>
+I"eZ<p>处理界面专场动画已经有很多库，究其根本就是继承专场动画的协议，然后实现动画的实现即可。</p>
 
 <h3 id="一个优秀的框架-transitiontreasury">一个优秀的框架： <a href="https://transitiontreasury.com/">transitiontreasury</a></h3>
 
@@ -24,7 +24,117 @@
 
 <p>继承 UINavigationController 然后重写 push 和 pop 的方法。在代理中使用自己的动画。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+</pre></td><td class="rouge-code"><pre>
 <span class="kd">class</span> <span class="kt">NavigationViewController</span><span class="p">:</span> <span class="kt">UINavigationController</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">navigationAnimatedTransitioning</span> <span class="o">=</span> <span class="kt">NavigationAnimatedTransitioning</span><span class="p">()</span>
 
@@ -134,7 +244,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>可以看到 实现的方式是 用了 截图 + Window 动画的方式，这是因为需要处理 tabbar 的情况，而 tabbar 在不同的 iOS 版本还是有不同的实现方法，所有为了统一就直接使用 window 实现动画。</p>
 

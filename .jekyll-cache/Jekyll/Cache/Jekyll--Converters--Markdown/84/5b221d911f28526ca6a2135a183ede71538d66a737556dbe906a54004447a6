@@ -1,4 +1,4 @@
-I"�<h3 id="背景">背景</h3>
+I"�<h3 id="背景">背景</h3>
 
 <p>接触到一些新的项目，大佬的一些写法还是比较有趣的～ 其中就有对 UITextfiled 的封装，确实封装了很多的功能。用起来也避免了很多 delegate 的写法，可以达到简洁代码的作用。</p>
 
@@ -27,7 +27,54 @@
 
 <p>可玩的点还是非常多的：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public enum ErrorMode {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+</pre></td><td class="rouge-code"><pre>public enum ErrorMode {
     case always
     case whenEndEditing
 }
@@ -74,7 +121,7 @@ public class CustomTF: UIView {
 extension GDTextField : UITextFieldDelegate {
   //...
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="分享一些正则">分享一些正则</h3>
 
@@ -84,12 +131,17 @@ extension GDTextField : UITextFieldDelegate {
 
 <p>精心写了一下几个正则，有不明白可以留言交流一下：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>count:"^.{2}$"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>count:"^.{2}$"
 countRange: "^.{0,38}$"
 email: "^\w*@\w*\.\w{2,3}$"
 password: "^[a-zA-Z]\w{5,17}""
 amount: "^\$?(0|([1-9]\d*)|([1-9]\d{0,2}(,\d{3})*))(.\d{1,2})?$"
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="总结">总结</h3>
 

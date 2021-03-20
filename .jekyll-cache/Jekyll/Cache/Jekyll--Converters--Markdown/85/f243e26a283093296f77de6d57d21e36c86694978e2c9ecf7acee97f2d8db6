@@ -1,4 +1,4 @@
-I"6<h2 id="tips">tips</h2>
+I"�<h2 id="tips">tips</h2>
 
 <p>关于 Flutter 的总结。</p>
 
@@ -28,9 +28,11 @@
 
 <p>基本设置如下即可。</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PUB_HOSTED_URL</span><span class="o">=</span>https://pub.flutter-io.cn
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nb">export </span><span class="nv">PUB_HOSTED_URL</span><span class="o">=</span>https://pub.flutter-io.cn
 <span class="nb">export </span><span class="nv">FLUTTER_STORAGE_BASE_URL</span><span class="o">=</span>https://storage.flutter-io.cn
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>如不能解决，<a href="https://flutter-io.cn/">flutter-io.cn/</a> 最底部也明显提出解决办法。</p>
 
@@ -46,9 +48,11 @@
 
 <p>如果你使用了三方的 页面管理方案，例如 flutter_boost。有可能不需要上述的官方文档中提到的注册一步。即省略如下相关：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//...</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>    <span class="c1">//...</span>
     <span class="kt">GeneratedPluginRegistrant</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">flutterEngine</span><span class="p">);</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="2-verbose-2enginecc">2. VERBOSE-2:engine.cc……</h3>
 
@@ -73,11 +77,15 @@
 
 <p><strong>MissingPluginException while adding to existing iOS application</strong></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>...
 iPhone Developer: xxx (MQF8D9PK85): ambiguous (matches "iPhone Developer: xxx (MQF8D9PK85)
 iPhone Developer: xxx (MQF8D9PK85): ambiguous (matches "iPhone Developer: xxx (MQF8D9PK85)
 MissingPluginException while adding to existing iOS application 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>这是因为在 keychain 中有多个开发者证书，所以产生了冲突。</p>
 
@@ -86,9 +94,11 @@ MissingPluginException while adding to existing iOS application
 <h3 id="5-热启动热加载-与-dart代码调试">5. 热启动/热加载 与 Dart代码调试</h3>
 
 <p>命令如下</p>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>xx/flutter_module 
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nb">cd </span>xx/flutter_module 
 flutter attach
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>然后重新导入即可连接设备，热更新运行。</p>
 
 <p>发生错误：

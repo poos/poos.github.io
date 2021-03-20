@@ -1,4 +1,4 @@
-I"	<hr />
+I",<hr />
 <p><strong>19.7.5更新</strong></p>
 
 <p>新版本可能需要 重新运行脚本更新项目环境依赖。’./Scripts/bootstrap.sh‘</p>
@@ -37,7 +37,32 @@
 
 <h4 id="安装简介">安装简介</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>如果你电脑上没有安装Homebrew，使用下面的命令安装：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="rouge-code"><pre>如果你电脑上没有安装Homebrew，使用下面的命令安装：
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
@@ -62,17 +87,42 @@ cd ./WebDriverAgent/
 //执行脚本
 ./Scripts/bootstrap.sh
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>有些国产的iPhone机器通过手机的IP和端口还不能访问，此时需要将手机的端口转发到Mac上。
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>有些国产的iPhone机器通过手机的IP和端口还不能访问，此时需要将手机的端口转发到Mac上。
 
 $ brew install libimobiledevice
 
 iproxy 8100 8100
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="开始使用webdriveragent">开始使用WebDriverAgent</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 解锁keychain，以便可以正常的签名应用，
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre># 解锁keychain，以便可以正常的签名应用，
 PASSWORD="******"
 security unlock-keychain -p $PASSWORD ~/Library/Keychains/login.keychain
 
@@ -92,13 +142,32 @@ ps -ax|grep -i "iproxy"|grep -v grep|awk '{print "kill -9 " $1}'|sh
 
 # 打开safari
 open -a Safari http://localhost:8100/inspector
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <hr />
 
 <h5 id="通过atxautomatorx进行界面测试">通过ATX(AutomatorX)进行界面测试</h5>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ATX安装和使用
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre>ATX安装和使用
 
 ATX(AutomatorX的简称）的安装比较简单，主要有两个命令。
 
@@ -117,7 +186,7 @@ print d.status()
 ＃命令行执行
 python test.py
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <hr />
 

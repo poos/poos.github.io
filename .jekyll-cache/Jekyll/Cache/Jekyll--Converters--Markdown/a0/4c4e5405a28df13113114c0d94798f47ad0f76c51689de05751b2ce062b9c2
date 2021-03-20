@@ -1,4 +1,4 @@
-I"�<h3 id="组件化方案">组件化方案</h3>
+I"}<h3 id="组件化方案">组件化方案</h3>
 
 <p>因为 Router 在本质上也是将一个个 feature 隔离提供，所以也算是组件化方案里的一环了。</p>
 
@@ -26,7 +26,21 @@
 <h4 id="利用-protocol-和-enum-定义基本属性">利用 Protocol 和 Enum 定义基本属性</h4>
 
 <p>例如跳转可以使用这样的方式：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum NavigationType {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>enum NavigationType {
   case push(from: UIViewController, to: UIViewController, animated: Bool)
   case present(from: UIViewController, to: UIViewController, animated: Bool, completion: (()-&gt;Void)?)
   case custom(from: UIViewController, to: UIViewController)
@@ -40,30 +54,83 @@ enum ActionType {
 }
 
 enum xxxxType {}
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>在跳转添加 delegate 等</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol RouterLifeCycle {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>protocol RouterLifeCycle {
   func prepare(_)
   func willRouter(_) -&gt; Bool
   func didRouter(_)
   func didError(_, ErrorClosure)
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>从 notification 拿来的 Deeplink 信息</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Deeplink {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>struct Deeplink {
   var destinationKey: String
   var type: String
   var userInfo: [AnyHashable : Any]
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="routermanager">RouterManager</h4>
 
 <p>应当实现 Router 并且实现生命周期方法。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class RouterDB {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+</pre></td><td class="rouge-code"><pre>class RouterDB {
   var map: [AnyHashable : Any]
 
   ...
@@ -105,7 +172,7 @@ struct Router {
 
   func action(_ action: ActionType) { ... }
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="使用">使用</h4>
 
@@ -113,15 +180,55 @@ struct Router {
 
 <p>简单的 router：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static let AppRouter = Router.default
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>static let AppRouter = Router.default
 
 AppRouter.navigate(.push(from: VC1, to: VC2))
 AppRouter.action(.sheet(...))
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>有生命周期的 router：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class A {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+</pre></td><td class="rouge-code"><pre>class A {
    lazy var router = Router(delegate: self)
 
 
@@ -157,7 +264,7 @@ extension A: RouterLifeCycle {
   func didRouter(_)
   func didError(_, ErrorClosure)
 }
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>当然，如果使用了 RX，也可以将 delegate 的各个函数封装使用，会更方便</strong></p>
 

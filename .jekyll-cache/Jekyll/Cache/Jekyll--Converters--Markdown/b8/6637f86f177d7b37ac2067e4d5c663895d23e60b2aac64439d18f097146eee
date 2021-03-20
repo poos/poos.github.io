@@ -1,4 +1,4 @@
-I"�<h2 id="tips">tips</h2>
+I"��<h2 id="tips">tips</h2>
 
 <p>全3篇，如下，这是第二篇。</p>
 
@@ -20,13 +20,19 @@
 
 <p>借助函数式我们可以各种神奇的写法：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">f1</span> <span class="o">=</span> <span class="kt">MyClass</span><span class="o">.</span><span class="n">method</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="k">let</span> <span class="nv">f1</span> <span class="o">=</span> <span class="kt">MyClass</span><span class="o">.</span><span class="n">method</span>
 
 <span class="k">let</span> <span class="nv">f2</span><span class="p">:</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">=</span> <span class="kt">MyClass</span><span class="o">.</span><span class="n">method</span>
 
 <span class="k">let</span> <span class="nv">f3</span><span class="p">:</span> <span class="p">(</span><span class="kt">MyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">=</span> <span class="kt">MyClass</span> <span class="o">.</span> <span class="n">method</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="单例">单例</h4>
 
@@ -34,12 +40,17 @@
 
 <p>现在这个写法已经被公认为 swift 中的单例写法了。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">MyManager</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="kt">MyManager</span> <span class="p">{</span>
     <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">MyManager</span><span class="p">()</span>
     <span class="kd">private</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{}</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>同时，在初始化类变量的时候，Apple 将会把这个初始化包装在一次 swift_once_block_invoke中，以保证它的唯一性。 <strong>不仅如此，对于所有的全局变量，Apple 都会在底层使用这个类似 dispatch_once 的方式来确保只以 lazy 的方式初始化-次</strong> 。</p>
 
@@ -47,16 +58,30 @@
 
 <p>使用项目默认提供的宏参数，方式如下：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#if os (macOS)</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="cp">#if os (macOS)</span>
     <span class="kd">typealias</span> <span class="kt">Color</span> <span class="o">=</span> <span class="kt">NSColor</span>
 <span class="cp">#else</span>
     <span class="kd">typealias</span> <span class="kt">Color</span> <span class="o">=</span> <span class="kt">UIColor</span>
 <span class="cp">#endif</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>如果对自定义的符号进行条件编译，使用下边的方式：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//ex</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="c1">//ex</span>
 <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">someButtonPressed</span><span class="p">(</span><span class="nv">sender</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
 <span class="cp">#if FREE_VERSION</span>
 <span class="c1">//弹出购买提示，导航至商店等</span>
@@ -65,7 +90,7 @@
 <span class="cp">#endif</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="编译标记">编译标记</h4>
 
@@ -132,13 +157,19 @@
   <li>其他使用</li>
 </ul>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">autoreleasepool</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="n">autoreleasepool</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="kt">NSData</span><span class="o">.</span><span class="nf">dataWithContentsOfFile</span><span class="p">(</span>
         <span class="n">path</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
 
     <span class="kt">NSThread</span><span class="o">.</span> <span class="nf">sleepForTimeInterval</span><span class="p">(</span><span class="mf">0.5</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="值类型和引用类型">值类型和引用类型</h4>
 
@@ -217,11 +248,15 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <p>swift 并不支持，但是可以自己定义一个 <strong>() -&gt; void</strong> 闭包来实现。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">local</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="p">()</span><span class="o">-&gt;</span><span class="p">())</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="kd">func</span> <span class="nf">local</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="p">()</span><span class="o">-&gt;</span><span class="p">())</span> <span class="p">{</span>
     <span class="nf">closure</span><span class="p">()</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="判等">判等</h4>
 
@@ -231,10 +266,13 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <p>Equatable 提供哈希计算，以判断是否相等。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Hashable</span> <span class="p">:</span> <span class="kt">Equatable</span> <span class="p">{}</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">Hashable</span> <span class="p">:</span> <span class="kt">Equatable</span> <span class="p">{}</span>
     <span class="k">var</span> <span class="nv">hashValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="类簇">类簇</h4>
 
@@ -244,7 +282,41 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <p>但是 Swift 中的情况有所不同。因为 Swift 拥有真正的初始化方法，在初始化的时候我们只能得到当前类的实例，并且要完成所有的配置。也就是说对于一个公共类来说，是不可能在初始化方法 中返回其子类的信息的。对于 Swift 中的类簇构建，一种有效的方法是使用工厂方法来进行。例如，下面的代码通过 Drinking 的工厂方法将可乐和啤酒两个私有类进行了类簇化:</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+</pre></td><td class="rouge-code"><pre>
 <span class="kd">class</span> <span class="kt">Drinking</span> <span class="p">{</span>
     <span class="kd">typealias</span> <span class="kt">LiquidColor</span> <span class="o">=</span> <span class="kt">UIColor</span>
     <span class="k">var</span> <span class="nv">color</span><span class="p">:</span> <span class="kt">LiquidColor</span> <span class="p">{</span>
@@ -278,7 +350,7 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 <span class="k">let</span> <span class="nv">beer</span> <span class="o">=</span> <span class="kt">Drinking</span><span class="o">.</span><span class="nf">drinking</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"Beer"</span><span class="p">)</span>
 <span class="n">beer</span><span class="o">.</span><span class="n">color</span> <span class="c1">// Yellow</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <h4 id="调用-c-动态库">调用 C 动态库</h4>
 
 <p>因为 Objective-C 是 C 的超集，因此在以前我们可以无缝地访问 C 的内容，只需要指定依赖并且 导入头文件就可以了。但是骄傲的 Swift 的目的之一就是甩开 C 的历史包袱，所以现在在 Swift 中 直接使用 C 代码或者 C 的库是不可能的。</p>
@@ -287,7 +359,17 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <h4 id="输出格式化">输出格式化</h4>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"</span><span class="se">\(</span><span class="n">object</span><span class="se">)</span><span class="s">"</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="s">"</span><span class="se">\(</span><span class="n">object</span><span class="se">)</span><span class="s">"</span>
 
 <span class="kd">extension</span> <span class="kt">Double</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="nf">format</span><span class="p">(</span><span class="n">_</span> <span class="nv">f</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
@@ -297,7 +379,7 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <span class="k">let</span> <span class="nv">f</span> <span class="o">=</span> <span class="s">".2"</span>
 <span class="nf">print</span><span class="p">(</span><span class="s">"double:</span><span class="se">\(</span><span class="n">b</span><span class="o">.</span><span class="nf">format</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <h4 id="options">Options</h4>
 
 <p>我们谈的是 Options，不是 Optional，或者说是 Objective-C 中的 NS_OPTIONS。</p>
@@ -311,42 +393,62 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
   </tbody>
 </table>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">UIView</span><span class="o">.</span><span class="nf">animate</span><span class="p">(</span><span class="nv">withDuration</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="kt">UIView</span><span class="o">.</span><span class="nf">animate</span><span class="p">(</span><span class="nv">withDuration</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
     <span class="nv">delay</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="n">curveEaseIn</span><span class="p">,</span> <span class="o">.</span><span class="n">allowUserInteraction</span><span class="p">],</span>
     <span class="nv">animations</span><span class="p">:</span> <span class="p">{},</span>
     <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>自己实现也是可以的：</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">YourOption</span><span class="p">:</span> <span class="kt">OptionSet</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kd">struct</span> <span class="kt">YourOption</span><span class="p">:</span> <span class="kt">OptionSet</span> <span class="p">{</span>
     <span class="n">et</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="kt">UInt</span>
     <span class="kd">static</span> <span class="k">let</span> <span class="nv">none</span> <span class="o">=</span> <span class="kt">YourOption</span><span class="p">(</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
     <span class="kd">static</span> <span class="k">let</span> <span class="nv">option1</span> <span class="o">=</span> <span class="kt">Your0pti</span> <span class="nf">on</span><span class="p">(</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
     <span class="kd">static</span> <span class="k">let</span> <span class="nv">option2</span> <span class="o">=</span> <span class="kt">Your0pti</span> <span class="nf">on</span><span class="p">(</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="err">«</span> <span class="mi">1</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="o">..</span> <span class="o">.</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="数组enumerate">数组enumerate</h4>
 
 <p>同时枚举 下标和值。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">arr</span><span class="o">.</span><span class="nf">enumerated</span><span class="p">()</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="p">(</span><span class="o">&lt;</span><span class="err">#</span><span class="p">(</span><span class="nv">offset</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">element</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span><span class="err">#</span><span class="o">&gt;</span><span class="p">)</span> <span class="k">in</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="n">arr</span><span class="o">.</span><span class="nf">enumerated</span><span class="p">()</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="p">(</span><span class="o">&lt;</span><span class="err">#</span><span class="p">(</span><span class="nv">offset</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">element</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span><span class="err">#</span><span class="o">&gt;</span><span class="p">)</span> <span class="k">in</span>
     <span class="o">&lt;</span><span class="err">#</span><span class="n">code</span><span class="err">#</span><span class="o">&gt;</span>
 <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="类型编码-encode">类型编码 @encode</h4>
 <p>Swift 使用了自己的 Metatype 来处理类型，并且在运行时保留了这些类型的信息，所以 Swift 并 没有必要保留这个关键字。我们现在不能获取任意类型的类型编码了，但是在 Cocoa 中我们还是 可以通过 NSValue 的 objcType 属性来获取对应值的类型指针:</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">NSValue</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span><span class="p">,</span> <span class="kt">NSSecureCoding</span><span class="p">,</span> <span class="kt">NSCoding</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="kt">NSValue</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span><span class="p">,</span> <span class="kt">NSSecureCoding</span><span class="p">,</span> <span class="kt">NSCoding</span> <span class="p">{</span>
 
 <span class="k">var</span> <span class="nv">objCType</span><span class="p">:</span> <span class="kt">UnsafePointer</span><span class="o">&lt;</span><span class="kt">Int8</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="c代码调用和-asmname">C代码调用和 @asmname</h4>
 
@@ -368,16 +470,22 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <p>想要在 Swift 中使用 weak delegate，我们就需要将 protocol 限制在 class 内。一种做法是将 protocol 声明为 Objective-C 的，这可以通过在 protocol 前面加上 @objc 关键字来达到， Objective-C 的 protocol 都只有类能实现，因此使用 weak 来修饰就合理了:</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">protocol</span> <span class="kt">MyClassDelegate</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="kd">@objc</span> <span class="kd">protocol</span> <span class="kt">MyClassDelegate</span> <span class="p">{</span>
 <span class="kd">func</span> <span class="nf">method</span><span class="p">()</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>另一种可能更好的办法是在 protocol 声明的名字后面加上 class ，这可以为编译器显式地指明这 个 protocol 只能由 class 来实现。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">MyClassDelegate</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="kd">protocol</span> <span class="kt">MyClassDelegate</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
 <span class="kd">func</span> <span class="nf">method</span><span class="p">()</span>
 <span class="p">}</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>相比起添加 @objc ，后一种方法更能表现出问题的实质，同时也避免了过多的不必要的 Objective-C 兼容，可以说是一种更好的解决方式。</p>
 
@@ -388,18 +496,59 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <p>在 Swift 中这样的方法依旧有效，只不过在写法上可能有些不同。两个对应的运行时的 get 和 set Associated Object 的 API 是这样的:</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">objc_</span> <span class="n">getAssoci</span> <span class="nf">ated0bject</span><span class="p">(</span><span class="nv">object</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="o">!</span><span class="p">,</span> 
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kd">func</span> <span class="n">objc_</span> <span class="n">getAssoci</span> <span class="nf">ated0bject</span><span class="p">(</span><span class="nv">object</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="o">!</span><span class="p">,</span> 
                                    <span class="nv">key</span><span class="p">:</span> <span class="kt">Uns</span> <span class="n">afePointer</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span>
                                 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span>
 <span class="kd">func</span> <span class="n">objc_</span> <span class="nf">setAssociated0bject</span><span class="p">(</span><span class="nv">object</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="o">!</span><span class="p">,</span>
                                   <span class="nv">key</span><span class="p">:</span> <span class="kt">UnsafePointer</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span> <span class="p">,</span>
                                 <span class="nv">value</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="o">!</span><span class="p">,</span>
                                <span class="nv">policy</span><span class="p">:</span> <span class="n">objc_</span> <span class="kt">AssociationPolicy</span><span class="p">)</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>这两个 API 所接受的参数也都 Swift 化了，并且因为 Swift 的安全性，在类型检查上严格了不少， 因此我们有必要也进行一些调整。在 Swift 中向某个 extension 里使用 Associated Object 的方式 将对象进行关联的写法是:</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">ObjectiveC</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+</pre></td><td class="rouge-code"><pre><span class="kd">import</span> <span class="kt">ObjectiveC</span>
 
 
 <span class="c1">// MyClass. swift</span>
@@ -433,7 +582,7 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 <span class="n">a</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">"Swifter. tips"</span>
 <span class="nf">printTitle</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="lock">Lock</h4>
 
@@ -444,10 +593,13 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 <p>OC 中使用 @sunchronized(obj){ //do something } 为一个变量自动加锁和解锁。</p>
 
 <p>swift 如下，当然如果你不喜欢这种方式，也可以利用函数式封装一个闭包。</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">objc_sync_enter</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="nf">objc_sync_enter</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 <span class="c1">// do something </span>
 <span class="nf">objc_sync_exit</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <h4 id="toll-free-bridging-和-unmanaged">Toll-Free Bridging 和 Unmanaged</h4>
 
@@ -457,24 +609,38 @@ Int ， Bool 这些，甚至连 String ， Array 以及 Dictionary 都是值类�
 
 <p>因为在 Objective-C 中 ARC 负责的只是 NSObject 的自动引用计数，因此对于 CF 对象无法进行内存管理。我们在把对象在 NS 和 CF 之间进行转换时，需要向编译器说明是否需要转移内存的管理权。对于不涉及到内存管理转换的情况，在 Objective-C 中我们就直接在转换的时候加上 __bridge 来进行说明，表示内存管理权不变。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">NSURL</span> <span class="o">*</span><span class="n">fileURL</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="s">@"SomeURL"</span><span class="p">];</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kt">NSURL</span> <span class="o">*</span><span class="n">fileURL</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSURL</span> <span class="kt">URLWithString</span><span class="p">:</span><span class="s">@"SomeURL"</span><span class="p">];</span>
 <span class="kt">SystemSoundID</span> <span class="n">theSoundID</span><span class="p">;</span>
 <span class="c1">//OSStatus AudioServicesCreateSystemSoundID(CFURLRef inFileURL,</span>
 <span class="c1">//  SystemSoundID * outSystemSoundID) ;</span>
 <span class="kt">OSStatus</span> <span class="n">error</span> <span class="o">=</span> <span class="kt">AudioServicesCreateSystemSoundID</span><span class="p">(</span>
     <span class="p">(</span><span class="n">__bridge</span> <span class="kt">CFURLRef</span><span class="p">)</span> <span class="n">fileURL</span><span class="p">,</span>
     <span class="o">&amp;</span><span class="n">theSoundID</span><span class="p">);</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>而在 Swift 中，这样的转换可以直接省掉了，上面的代码可以写为下面的形式，简单了许多:</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">AudioToolbox</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kd">import</span> <span class="kt">AudioToolbox</span>
 
 <span class="k">let</span> <span class="nv">fileURL</span> <span class="o">=</span> <span class="kt">NSURL</span> <span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"SomeURL"</span><span class="p">)</span>
 <span class="k">var</span> <span class="nv">theSoundID</span><span class="p">:</span> <span class="kt">SystemSoundID</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="c1">//AudioServicesCreateSyst emSoundID(inF ileURL: CFURL,</span>
 <span class="c1">//  _ outSystemSoundID: UnsafeMutablePointer&lt;SystemSoundID&gt;) -&gt; OSStatus</span>
 <span class="kt">AudioServicesCreateSystemSoundID</span><span class="p">(</span><span class="n">fileURL</span><span class="o">!</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">theSoundID</span><span class="p">)</span>
-</code></pre></div></div>
+</pre></td></tr></tbody></table></code></pre></div></div>
 <p>细心的读者可能会发现在 Objective-C 中类型的名字是 CFURLRef ，而到了 Swift 里成了
 CFURL 。 CFURLRef 在 Swift 中是被 typealias 到 CFURL 上的，其实不仅是 URL，其他的各类 CF 类 型都进行了类似的处理。这主要是为了减少 API 的迷惑：现在这些 CF 类型的行为更接近于 ARC管理下的对象，因此去掉 Ref 更能表现出这一特性。</p>
 
