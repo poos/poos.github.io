@@ -7,7 +7,11 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 优化
+- Code
+- Improve
+- Summary
+- RxSwift
+- Texture
 ---
 
 问题：

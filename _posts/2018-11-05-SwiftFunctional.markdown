@@ -7,7 +7,9 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog:    true
 tags:
-- 语法
+- Code
+- Book
+- Functional Programming
 ---
 
 **[本文所有代码 Demo 地址](https://github.com/poos/BlogDemo)**

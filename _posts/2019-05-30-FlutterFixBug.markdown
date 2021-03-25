@@ -8,7 +8,8 @@ header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
 - Flutter
-- 总结
+- Summary
+- Easter eggs
 ---
 
 ## tips
@@ -20,7 +21,7 @@ tags:
 - 介绍和技术分享会
 - dart 语法简介
 - widget 和 layout
-- 设计模式
+- Design模式
 - 嵌入原生项目
 
 ## 坑点

@@ -7,7 +7,9 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 动画
+- Code
+- Repo
+- Summary
 ---
 
 处理界面专场动画已经有很多库，究其根本就是继承专场动画的协议，然后实现动画的实现即可。

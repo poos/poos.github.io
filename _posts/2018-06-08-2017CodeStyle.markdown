@@ -1,13 +1,14 @@
 ---
 layout:     post
-title:      2017总结-iOS编码规范
+title:      2017总结-iOS OC - 编码规范
 subtitle:   2017系列
 date:       2018-06-08
 author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 优化
+- Linter
+- Objective-C
 ---
 
 #### 补充的

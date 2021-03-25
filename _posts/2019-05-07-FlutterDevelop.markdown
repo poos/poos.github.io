@@ -8,7 +8,8 @@ header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
 - Flutter
-- 总结
+- Summary
+- Design
 ---
 
 

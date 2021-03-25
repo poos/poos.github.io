@@ -7,7 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 工具
+- Debug
+- Tool
 ---
 
 **[本文所有 资源 地址](https://github.com/poos/testIpa)**

@@ -7,7 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 设计
+- Design
+- Summary
 ---
 
 > 当一个类包含了太多的太杂的内容，它就变得复杂了，把其中的内容抽出来，用协议管理约束，项目才会更清晰。

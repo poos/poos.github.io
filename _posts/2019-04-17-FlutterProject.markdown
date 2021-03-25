@@ -8,6 +8,9 @@ header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
 - Flutter
+- Code
+- Design
+- Summary
 ---
 
 ### pubspec.yaml

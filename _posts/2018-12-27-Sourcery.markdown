@@ -8,6 +8,7 @@ header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
 - Code
+- Script
 ---
 
 > Sourcery is a code generator for Swift language, built on top of Apple's own SourceKit. It extends the language abstractions to allow you to generate boilerplate code automatically.

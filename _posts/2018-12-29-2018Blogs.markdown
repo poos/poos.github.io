@@ -7,9 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 总结
-- 工具
-- Debug
+- Summary
+- Note
 ---
 
 >  从年初转到 SWift 开发，已经差不多一个年头了，正好也是年底，作个总结，也算是应景。

@@ -8,6 +8,8 @@ header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
 - Code
+- Objective-C
+- Easter eggs
 ---
 
 在iOS 11 以下可以通过添加space的方式实现，但是iOS 11 之后引入了safe area这个方式仍然受限于safe area。

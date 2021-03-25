@@ -7,7 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 算法
+- Algorithm
+- Code
 ---
 
 > 在了解到 leetcode 这个网站之后，也是去刷了几个算法题。网站功能强大，可以在线编写测试提交，更强大的是有最佳算法的排行，还有很多答案和解释，每一个问题都能找到很好的解题思路和更加优秀的答案。

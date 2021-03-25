@@ -7,7 +7,9 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 优化
+- Improve
+- Code
+- Texture
 ---
 
 使用 Texture 有几大好处：

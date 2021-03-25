@@ -2,7 +2,7 @@
     "name": "ShownBie",
     "title": "Shown’Blog",
     "author": "Shown <bieshixuan@163.com>",
-    "version": "1.8",
+    "version": "1.8.0",
     "homepage": "http://poos.github.io",
     "repository": {
         "type": "git",
@@ -14,7 +14,8 @@
         "grunt-banner": "~0.2.3",
         "grunt-contrib-less": "^2.0.0",
         "grunt-contrib-uglify": "^4.0.1",
-        "grunt-contrib-watch": "^1.1.0"
+        "grunt-contrib-watch": "^1.1.0",
+        "lodash": ">=4.17.19"
     },
     "scripts": {
         "start": "bundle exec jekyll serve -w -l --host 0.0.0.0",

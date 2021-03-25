@@ -7,7 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 架构
+- Design
+- Knowledge
 ---
 
 今天 ant_design 因为在圣诞节当天的一个彩蛋被刷屏了，2个多小时一个 issues 被评论超过了 1000 次。[关于 Ant Design 圣诞彩蛋及其修复方式](https://github.com/ant-design/ant-design/issues/13848)，这是一个动态的 UI 更新组件。就这这个问题我们就讨论一些，界面/功能 动态更新的相关问题。

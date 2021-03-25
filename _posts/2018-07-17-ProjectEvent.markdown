@@ -7,7 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 设计
+- Design
+- Summary
 ---
 
 ## Swift打点方案

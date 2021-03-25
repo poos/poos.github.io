@@ -7,8 +7,9 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 总结
-- 测试
+- Summary
+- Knowledge
+- Easter eggs
 ---
 
 

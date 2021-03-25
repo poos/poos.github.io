@@ -7,7 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- 工具
+- Debug
+- Tool
 ---
 
 ---
