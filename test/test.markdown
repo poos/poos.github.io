@@ -6,10 +6,6 @@ hide-in-nav: true
 
 
 <h5>测试itunes安装app</h5>
-
-<img herf="itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/poos/testIpa/local/manifest.plist"
-     class="corner-icon" src="https://raw.githubusercontent.com/poos/testIpa/master/icon512.png"/>
-</img>
 <h5 style="text-align:center">
   <a href="itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/poos/testIpa/local/manifest.plist">点击安装 App 测试版</a>
 </h5>
@@ -24,7 +20,6 @@ hide-in-nav: true
 
 <h5>测试安装app</h5>
 
-<img class="corner-icon" src="http://192.168.3.8:4000/test/qr_code.png"/></img>
 <h5 style="text-align:center">
   <a href="http://192.168.3.8:4000/test/app-release.apk">Android安装 App </a>
 </h5>
@@ -63,7 +58,6 @@ hide-in-nav: true
 
 <h5>download</h5>
 
-<img class="corner-icon" src="http://192.168.3.8:4000/test/qr_code.png"/></img>
 
 <h5 style="text-align:center">
   <a href="http://10.80.56.29:4000/test/aaa.zip">aaa 下载 </a>
