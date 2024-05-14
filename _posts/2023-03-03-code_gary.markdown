@@ -1,0 +1,151 @@
+---
+layout:     post
+title:      iOS黑(灰)白化实现方案
+subtitle:   一个简单的首页黑屏技术方案的研究
+date:       2023-03-03
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
+- Summary
+- Code
+---
+
+
+## 需求
+
+一般情况下是遇到国事，需要灰屏显示。那么技术上如何实现呢：
+
+根据业务不一样，大致产品会有两种需求：
+
+需求1：全部设置为黑白色
+需求2：某个界面（首页）设置为黑白色
+
+## 技术方案
+
+全黑的情况一般是全局处理，而不是针对每个ui组件处理了。根本上有两种处理方向：
+
+- 从下至上的 window 层，设置色彩过滤器
+
+> 咱们就是个黑白显示容器
+
+- 从上至下的 view 层色彩过滤片覆盖
+
+> 咱们搞个过滤眼睛
+
+
+### 设置window黑色
+
+通过给 window 的 layer 层进行颜色过滤设置即可。这个方案没有什么技术限制，直接设置即可。一个缺点是，基于全局 window 设置，如果是首页黑屏的情况，有页面动画会看起来不那么友好。
+```
+- (void)setLayerGrayFilter {
+    //获取RGBA颜色数值
+    static id filter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        CGFloat r,g,b,a;
+        [[UIColor whiteColor] getRed:&r green:&g blue:&b alpha:&a];
+        //创建滤镜
+        NSString *classStr = [self stringFromSecCharsMethod0];
+        id cls = NSClassFromString(classStr);
+        if (!cls) {return;}
+        NSString *selStr = [self stringFromSecCharsMethod1];
+        filter = [cls filterWithName:selStr];
+        if (!filter) {return;}
+        //设置滤镜参数
+        [filter setValue:@[@(r),@(g),@(b),@(a)] forKey:[self stringFromSecCharsMethod2]];
+        [filter setValue:@(0) forKey:[self stringFromSecCharsMethod3]];
+        [filter setValue:@(1) forKey:[self stringFromSecCharsMethod4]];
+    });
+    //设置
+    self.layer.filters = [NSArray arrayWithObject:filter];
+}
+
+```
+
+### 添加一个滤镜
+如果能够添加一个滤镜，并且能够随着 present，push 的动画出现消失，呢么可以实现更友好的体验。
+
+先声明一个不响应点击的 view。
+```
+@interface MB_GrayFilterView : UIView
+
+@end
+
+@implementation MB_GrayFilterView
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    return nil;
+}
+
+@end
+```
+初始化
+```
+// @available(iOS 13.0, *)
+GrayFilterView *overlay = [[GrayFilterView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+overlay.userInteractionEnabled = NO;
+overlay.translatesAutoresizingMaskIntoConstraints = false;
+overlay.backgroundColor = [UIColor blackColor];
+overlay.layer.compositingFilter = [self stringFromSecCharsMethod5];
+```
+加入 widow
+```
+[[[UIApplication sharedApplication].delegate window] addSubview:nav_overView];
+[[[UIApplication sharedApplication].delegate window] bringSubviewToFront:nav_overView];
+```
+处理滑动
+```
+-(void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    BOOL currentIsPush = navigationController.viewControllers.count > navVCCount;
+    id<UIViewControllerTransitionCoordinator> coor = viewController.transitionCoordinator;
+    if (coor != nil) {
+        [coor animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+            CGFloat x = [UIScreen mainScreen].bounds.size.width * (!currentIsPush) - [UIScreen mainScreen].bounds.size.width;
+            gary_overView.frame = CGRectMake(x, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+            
+        }];
+    }
+}
+```
+
+同样的 present 参考 [ios present转场动画 ios 自定义转场动画](https://blog.51cto.com/u_16099241/7253723)。
+
+## 其他
+
+### 一个本地混淆
+本地混淆使用的系统方法，异或，先异或一次，使用时候再异或一次：
+```
+//NSString *method = @"";
+//NSData *data = [method dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+//char *bs = malloc(sizeof(char) * data.length);
+//memcpy(bs, data.bytes, data.length);
+//static unsigned char chars[sizeof(bs)] = {0};
+//for (int i = 0 ; i< data.length; i++) {
+//    char c = bs[i] ^ 0x55;
+//    chars[i] = c;
+//    printf("0x%2x,",c);
+//}
+//printf("\n%s,",chars);
+
+// CAFilter
+- (NSString *)stringFromSecCharsMethod0 {
+    unsigned char selByte[] = {0x16,0x14,0x13,0x3c,0x39,0x21,0x30,0x27,};
+    return [self stringFromSecChars:selByte length:8];
+}
+
+// 使用mutable string来进行拼接，如果直接使用 stringWithCString会导致获取到 char[] 的上下文string，导致获取到的太长，或乱码。
+- (NSString *)stringFromSecChars:(unsigned char [])charsByet length:(int)length {
+    NSMutableString * muStr = [[NSMutableString alloc] init];
+    for (int i = 0; i< length; i++) {
+          char b = charsByet[i] ^ 0x55;\
+        [muStr appendFormat:@"%c", b];
+    }
+    return muStr;
+}
+```
+
+其他参考：
+[Core Image Filter Reference](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CISaturationBlendMode)

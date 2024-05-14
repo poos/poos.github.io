@@ -1,0 +1,125 @@
+---
+layout:     post
+title:      从代码管理的角度看看Jira工具
+subtitle:   咱们就是说，jira有啥好用的
+date:       2021-11-30
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
+- Summary
+---
+
+
+
+站在开发的角度，在条件不足的情况下往往会有一些下面的问题：
+> ？？这个代码当时提交的背景是什么
+> 接手了任务的四期，但是却不知道一二三期做了什么？？
+> 接手了一个复杂的发布流程，小心翼翼的对发布修改？
+
+其实上面的问题归到底就是**代码和任务没有关联起来**，很显然，如果关联起来，在交流交接的时候就会省下很多时间。
+确切的说，通过一个commitid能够找到对应的项目，通过一个项目能够找到关联的代码。（当然，项目之前本身具有关联性，例如前端关联后段的任务；二期期关联一期的任务。）
+
+那么，站在这个角度，看看一些现有的工作套件吧：
+
+## Jira
+
+一哥非Jira莫属了，有这样评价Jira的:
+
+```
+ 2.1项目管理的四个核心要素可以总结为SPPT，即Strategy项目战略目标、People优秀人才、Process规则流程以及Tools工具方法。
+
+  2.2在多年IT/互联网行业的工作中，我接触使用过很多管理工具，如：IBM Lotus Notes 、Bugzilla 、Butterfly、Trac、JIRA 、Microsoft Project 、Redmine、禅道等。除了JIRA，其余几种工具共同的缺点就是提供给用户的基本都是标准化的规范、模板和流程，无法很好地做到针对不同组织或团队进行随需应变的自适应、自定义。
+
+       我认为JIRA最好之处在于可以因你而变，依据不同团队、运作规则、制度流程实现随需定制，譬如：可定制个性化页面导航、Logo、页脚标识、页面视觉效果、文案术语表达、状态、自定义字段、工作流、过滤器、分析统计报表等。
+
+   2.3 对JIRA来说，项目执行管理 、敏捷开发管理、体系流程管理 、产品Bug跟踪、提案跟踪、需求管理、客户服务等领域就是它最擅长的。
+
+  2.4JIRA没有立场，非IT/互联网行业的非技术项目，也一样易用。
+```
+
+讲个公道话，Jira经历了超长时间（近20年）的沉淀，从2003年就已经有了第一版，沉淀出了当前你看到的这个优秀的产品。就像我们五千年的文化底蕴...
+
+
+回归一下主题。关于代码这块，Jira可以跟众多小伙伴一起合作，gitlab，perforce，svn。相关配置和代码平台的插件安装之后，当你提交就可以在任务面板看到代码提交。
+
+**一个经典的是，通过commit特定的id就能关联到Jira**，当然借助代码平台工具插件可以轻松转化为链接，网页点击一下就可以到pd面板。
+
+另外一边，CI方面，作为一哥，Jira当然也是被各个CI平台支持，jenkins，teamcity 等，通过插件，可以链接到其他平台。
+
+> ps, 常见的CI平台还有这些 jenkins，teamcity， travis ci， circle ci，bamboo，gitlab ci， AWS Code Pipeline， Azure Pipelines
+
+> 如果要了解  这是一个简单的例子：[Jenkins的一个任务面板](https://blog.csdn.net/liqing0013/article/details/80694893)
+
+
+
+### Jira的详情页面
+
+盘一下其他好用的地方。
+
+***个人感觉最好用的是它的详情页面，很实用。***
+
+[链接感受一下](https://issues.jenkins.io/browse/JENKINS-64347)
+
+内容，附件，链接（各种链接），评论，观感体验非常好。**尽量的把数据平铺了**，给使用者最大的方便。
+
+除了上面的基础部分，通过插件，还能在这个页面显示更多的信息。例如log工时插件，可以在 Header 部分看到和修改，一个面板可以看到所有想看到的内容，完美了。
+
+
+**看板**：除了这个还有常见的看板，感觉跟邮箱差不多。列表简单，一览无余。
+
+
+
+## PingCode
+
+国内的替代方案PingCode
+
+个人使用不多，暂简单评价（从网上拿的数据）：
+
+
+1、支持私有部署（公有云版本25人以下免费）
+2、是以Jira为竞品打造的研发管理工具，Jira核心能力基本具备，除此以外也有其他特色
+3、非常适合敏捷开发，比如说支持Scrum和Kanban开发方式
+4、提供各种可是化报表，基本上包含了PMP中所提到的各种报表
+5、和Jira一样产品体系覆盖研发管理全流程
+6、支持应用市场，通过插件的形式与Jenkins、GitHub等几十款研发工具打通
+7、提供从Jira迁移数据服务
+
+因为是免费的，所以上去体验了一把。习惯了jira，wiki的内容试的页面，还是会不习惯。有很多图表，层级之类的东西，占用了空间，所以个人还是觉得Jira更胜一筹（个人喜欢类似邮箱网站的这种，超大的详情面板）。
+
+好处是是国内的，用起来还是很方便的，访问也快🤣。
+
+## 其他的
+
+其他的还有一些类似的，能达到文章开头的需求的。例如码云，自身有代码仓库的优势。了解不多。
+
+## 回应开头
+
+作为一个操刀代码的人，如果有了足够的帮助信息，显然能更好挥刀。有了这套系统，你可以通过你的页面，了解到项目的背景，前后台的方案，甚至是后端的代码提交，it的环境配置。效率倍倍倍增。
+
+那么，所有的所有，要做的事情就是一个：**你的 commit 提交要规范化**（或者分支规范化，就灵活性来说，个人更喜欢根据commit来区分）。
+
+---
+水了篇文章，基于我们目前的情况，简单分析一下吧：
+一、commit 总归是要规范化起来的
+二+、gitlab + dmpt，还是希望能联动起来。
+二-、临时方案可以使用CI job记录commit的信息到数据表或者着其他地方，方便查找。
+
+
+
+
+
+
+## 一些链接
+
+[https://github.com/jenkinsci/pingcode-plugin](https://github.com/jenkinsci/pingcode-plugin)
+
+[https://github.com/sunjingyun/git-commit-sync-to-pingcode](https://github.com/sunjingyun/git-commit-sync-to-pingcode)
+
+[TC vs Jenkins](http://www.360doc.com/content/20/0715/10/70209069_924334076.shtml)
+
+[Ping Code文档：App上架：Git](https://blog.csdn.net/weixin_34055910/article/details/91427232)
+
+[Ping Code文档：PingCode vs Jira](https://pingcode.com/compare/jira)
+
+[atlassian.com](https://support.atlassian.com)

@@ -7,8 +7,8 @@ author:     poos
 header-img: img/post-bg-2015.jpg
 catalog: true
 tags:
-- Summary
-- RE
+- Test
+- CICD
 ---
 
 ### 背景

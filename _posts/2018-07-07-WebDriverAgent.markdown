@@ -12,6 +12,17 @@ tags:
 ---
 
 ---
+**22.2.10更新**
+
+[appium/WebDriverAgent](https://github.com/appium/WebDriverAgent)
+
+FB 的已经停止维护。测试 WebDriverAgent-3.14.0.zip 可用。
+
+**end**
+
+---
+
+---
 **19.7.5更新**
 
 新版本可能需要 重新运行脚本更新项目环境依赖。’./Scripts/bootstrap.sh‘
@@ -100,7 +111,7 @@ security unlock-keychain -p $PASSWORD ~/Library/Keychains/login.keychain
 UDID=$(idevice_id -l | head -n1)
 
 # 运行测试
-xcodebuild -project ~/WebDriverAgent-master/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=e6a545a6a7490d06e3f5eb32e6f3a6d843ac2d08" test
+xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=e6a545a6a32e6f3a6d843ac2d087490d06e3f5eb" test
 
 xcodebuild -project ~/WebDriverAgent-master/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=278c6390c9e6b372fd4b4bdd737022e2c6ff9dcd" test
 

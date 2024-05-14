@@ -133,3 +133,6 @@ log 在 iOS 设备的 `Settings > Privacy > Analytics > Analytics Data >` 名字
 ### 最后
 
 文章主要是将了一些坑点，具体的文档大概介绍了一下。对初次配置的小伙伴应该帮助比较大，看一下这些奇技淫巧可以省很多时间。
+
+
+> last， 通过苹果给到的debug方法，可以在部分场景调试，https://www.soinside.com/question/aW9XZRXg6CLUQkBro4oTcL 。

@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "draft"
+title:      
 hide-in-nav: true
 subtitle:   Note - 从安装包瘦身 到 Project Setting, App Thinning, Executable file, 静态库, Assets.car
 date:       2021-05-10

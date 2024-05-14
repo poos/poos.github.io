@@ -1,8 +1,8 @@
 ---
 layout:     post
-title:      Note - 记录一些 Swift 相关的知识
+title:      
 hide-in-nav: true
-subtitle:   只有问题，没有答案
+subtitle:   Note - 记录一些 Swift 相关的知识 只有问题，没有答案
 date:       2021-07-10
 author:     poos
 header-img: img/post-bg-2015.jpg

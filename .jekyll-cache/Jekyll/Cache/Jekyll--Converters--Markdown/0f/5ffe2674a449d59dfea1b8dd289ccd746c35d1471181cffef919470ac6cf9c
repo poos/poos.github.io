@@ -1,4 +1,4 @@
-I""g<h2 id="demo">Demo</h2>
+I"Rg<h2 id="demo">Demo</h2>
 
 <p><strong><a href="https://github.com/poos/BlogDemo">本文所有代码 Demo 地址</a></strong></p>
 
@@ -187,16 +187,16 @@
 
 <span class="kn">import</span> <span class="s">'package:flutter/services.dart'</span><span class="o">;</span>
 
-<span class="kd">class</span> <span class="nc">Package</span> <span class="o">{</span>
+<span class="kd">class</span> <span class="nc">Package</span> <span class="p">{</span>
   <span class="kd">static</span> <span class="kd">const</span> <span class="n">MethodChannel</span> <span class="n">_channel</span> <span class="o">=</span>
-      <span class="kd">const</span> <span class="n">MethodChannel</span><span class="o">(</span><span class="s">'package'</span><span class="o">);</span>
+      <span class="kd">const</span> <span class="n">MethodChannel</span><span class="p">(</span><span class="s">'package'</span><span class="p">);</span>
 
-  <span class="kd">static</span> <span class="n">Future</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="kd">get</span> <span class="n">platformVersion</span> <span class="n">async</span> <span class="o">{</span>
+  <span class="kd">static</span> <span class="n">Future</span><span class="p">&lt;</span><span class="kt">String</span><span class="p">&gt;</span> <span class="kd">get</span> <span class="n">platformVersion</span> <span class="kd">async</span> <span class="p">{</span>
     <span class="c1">//调用方法并且等待返回</span>
-    <span class="kd">final</span> <span class="kt">String</span> <span class="n">version</span> <span class="o">=</span> <span class="n">await</span> <span class="n">_channel</span><span class="o">.</span><span class="na">invokeMethod</span><span class="o">(</span><span class="s">'getPlatformVersion'</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">version</span><span class="o">;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+    <span class="kd">final</span> <span class="kt">String</span> <span class="n">version</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_channel</span><span class="o">.</span><span class="na">invokeMethod</span><span class="p">(</span><span class="s">'getPlatformVersion'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">version</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
@@ -226,22 +226,22 @@
 <span class="ss">#import</span> <span class="s">"LoginPlugin.h"</span>
 
 <span class="nd">@implementation</span> <span class="n">LoginPlugin</span>
-<span class="o">+</span> <span class="o">(</span><span class="kt">void</span><span class="o">)</span><span class="nl">registerWithRegistrar:</span><span class="o">(</span><span class="n">NSObject</span><span class="o">&lt;</span><span class="n">FlutterPluginRegistrar</span><span class="o">&gt;*)</span><span class="n">registrar</span> <span class="o">{</span>
-  <span class="n">FlutterMethodChannel</span><span class="o">*</span> <span class="n">channel</span> <span class="o">=</span> <span class="o">[</span><span class="n">FlutterMethodChannel</span>
+<span class="o">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">registerWithRegistrar:</span><span class="p">(</span><span class="n">NSObject</span><span class="p">&lt;</span><span class="n">FlutterPluginRegistrar</span><span class="p">&gt;</span><span class="o">*</span><span class="p">)</span><span class="n">registrar</span> <span class="p">{</span>
+  <span class="n">FlutterMethodChannel</span><span class="o">*</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="n">FlutterMethodChannel</span>
       <span class="nl">methodChannelWithName:</span><span class="err">@</span><span class="s">"login"</span>
-            <span class="nl">binaryMessenger:</span><span class="o">[</span><span class="n">registrar</span> <span class="n">messenger</span><span class="o">]];</span>
-  <span class="n">LoginPlugin</span><span class="o">*</span> <span class="n">instance</span> <span class="o">=</span> <span class="o">[[</span><span class="n">LoginPlugin</span> <span class="n">alloc</span><span class="o">]</span> <span class="n">init</span><span class="o">];</span>
-  <span class="o">[</span><span class="n">registrar</span> <span class="nl">addMethodCallDelegate:</span><span class="n">instance</span> <span class="nl">channel:</span><span class="n">channel</span><span class="o">];</span>
-<span class="o">}</span>
+            <span class="nl">binaryMessenger:</span><span class="p">[</span><span class="n">registrar</span> <span class="n">messenger</span><span class="p">]];</span>
+  <span class="n">LoginPlugin</span><span class="o">*</span> <span class="n">instance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">LoginPlugin</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">registrar</span> <span class="nl">addMethodCallDelegate:</span><span class="n">instance</span> <span class="nl">channel:</span><span class="n">channel</span><span class="p">];</span>
+<span class="p">}</span>
 
-<span class="o">-</span> <span class="o">(</span><span class="kt">void</span><span class="o">)</span><span class="nl">handleMethodCall:</span><span class="o">(</span><span class="n">FlutterMethodCall</span><span class="o">*)</span><span class="n">call</span> <span class="nl">result:</span><span class="o">(</span><span class="n">FlutterResult</span><span class="o">)</span><span class="n">result</span> <span class="o">{</span>
-    <span class="k">if</span> <span class="o">([</span><span class="err">@</span><span class="s">"getPlatformVersion"</span> <span class="nl">isEqualToString:</span><span class="n">call</span><span class="o">.</span><span class="na">method</span><span class="o">])</span> <span class="o">{</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">handleMethodCall:</span><span class="p">(</span><span class="n">FlutterMethodCall</span><span class="o">*</span><span class="p">)</span><span class="n">call</span> <span class="nl">result:</span><span class="p">(</span><span class="n">FlutterResult</span><span class="p">)</span><span class="n">result</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">([</span><span class="err">@</span><span class="s">"getPlatformVersion"</span> <span class="nl">isEqualToString:</span><span class="n">call</span><span class="o">.</span><span class="na">method</span><span class="p">])</span> <span class="p">{</span>
         <span class="c1">//调用你需要调用的原生方法</span>
         <span class="c1">//resulut 返回你需要返回的信息</span>
-    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-    <span class="n">result</span><span class="o">(</span><span class="n">FlutterMethodNotImplemented</span><span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">result</span><span class="p">(</span><span class="n">FlutterMethodNotImplemented</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 <span class="nd">@end</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
@@ -266,10 +266,10 @@ dependencies:
 4
 5
 </pre></td><td class="rouge-code"><pre><span class="c1">//some file</span>
-<span class="kt">void</span> <span class="nf">_onPressed</span><span class="p">(</span><span class="o">)</span> <span class="n">async</span> <span class="o">{</span>
-    <span class="kd">var</span> <span class="n">batter</span> <span class="o">=</span> <span class="n">await</span> <span class="n">Login</span><span class="o">.</span><span class="na">getBatteryLevel</span><span class="o">;</span>
-    <span class="n">print</span><span class="o">(</span><span class="n">batter</span><span class="o">);</span>
-  <span class="o">}</span>
+<span class="kt">void</span> <span class="nf">_onPressed</span><span class="p">()</span> <span class="kd">async</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="n">batter</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Login</span><span class="o">.</span><span class="na">getBatteryLevel</span><span class="p">;</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">batter</span><span class="p">);</span>
+  <span class="p">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <h3 id="现有原生项目嵌入-flutter">现有原生项目嵌入 Flutter</h3>
@@ -398,20 +398,20 @@ flutter_application_path <span class="o">=</span> <span class="s1">'path/to/my_f
 
 <span class="c1">// void main() =&gt; runApp(MyApp());</span>
 
-<span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">runApp</span><span class="o">(</span><span class="n">_widgetForRoute</span><span class="o">(</span><span class="n">window</span><span class="o">.</span><span class="na">defaultRouteName</span><span class="o">));</span>
+<span class="kt">void</span> <span class="nf">main</span><span class="p">()</span> <span class="o">=</span><span class="p">&gt;</span> <span class="n">runApp</span><span class="p">(</span><span class="n">_widgetForRoute</span><span class="p">(</span><span class="n">window</span><span class="o">.</span><span class="na">defaultRouteName</span><span class="p">));</span>
 
-<span class="n">Widget</span> <span class="nf">_widgetForRoute</span><span class="p">(</span><span class="kt">String</span> <span class="n">route</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">switch</span> <span class="o">(</span><span class="n">route</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">Widget</span> <span class="nf">_widgetForRoute</span><span class="p">(</span><span class="kt">String</span> <span class="n">route</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">route</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">case</span> <span class="s">'route1'</span><span class="o">:</span>
-      <span class="k">return</span> <span class="n">MyApp</span><span class="o">();</span>
+      <span class="k">return</span> <span class="n">MyApp</span><span class="p">();</span>
     <span class="k">case</span> <span class="s">'route2'</span><span class="o">:</span>
-      <span class="k">return</span> <span class="n">Container</span><span class="o">(</span><span class="nl">color:</span> <span class="n">Colors</span><span class="o">.</span><span class="na">red</span><span class="o">,</span> <span class="nl">width:</span> <span class="mi">100</span><span class="o">,</span> <span class="nl">height:</span> <span class="mi">100</span><span class="o">,);</span>
+      <span class="k">return</span> <span class="n">Container</span><span class="p">(</span><span class="nl">color:</span> <span class="n">Colors</span><span class="o">.</span><span class="na">red</span><span class="p">,</span> <span class="nl">width:</span> <span class="mi">100</span><span class="p">,</span> <span class="nl">height:</span> <span class="mi">100</span><span class="p">,);</span>
     <span class="k">default</span><span class="o">:</span>
-      <span class="k">return</span> <span class="n">Center</span><span class="o">(</span>
-        <span class="nl">child:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'Unknown route: </span><span class="si">$route</span><span class="s">'</span><span class="o">,</span> <span class="nl">textDirection:</span> <span class="n">TextDirection</span><span class="o">.</span><span class="na">ltr</span><span class="o">),</span>
-      <span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+      <span class="k">return</span> <span class="n">Center</span><span class="p">(</span>
+        <span class="nl">child:</span> <span class="n">Text</span><span class="p">(</span><span class="s">'Unknown route: </span><span class="si">$route</span><span class="s">'</span><span class="p">,</span> <span class="nl">textDirection:</span> <span class="n">TextDirection</span><span class="o">.</span><span class="na">ltr</span><span class="p">),</span>
+      <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <p><strong>原生调用如下：</strong></p>

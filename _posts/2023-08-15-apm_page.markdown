@@ -1,0 +1,95 @@
+---
+layout:     post
+title:      iOS全栈页面，无侵入页面开屏监控
+subtitle:   
+date:       2023-08-15
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
+- APM
+---
+
+## 分析
+
+iOS页面无侵入页面分段监控
+
+页面分段需要哪些数据：
+
+- 分段时长
+- 网络信息 （辅助）
+- 错误信息 （辅助）
+
+## 调研
+
+1、现状和调研
+1.1、火山相关功能
+Native页面体验：
+页面启动： loadView/viewDidLoad/viewWillAppear/viewDidAppear/totalTime
+流畅性和丢帧：fps上报/滑动丢帧
+异常统计和追踪：慢页面，卡顿，崩溃
+Flutter页面体验：
+页面测速：FP/FCP/FMP
+流畅性与丢帧：fps上报/滑动丢帧
+异常统计和追踪：慢页面
+FP与FCP这两个指标之间的主要区别是：
+
+首次视觉改变时间（FP）	First Paint，当浏览器开始绘制内容到屏幕上的时候，只要在视觉上开始发生变化，无论是什么内容触发的视觉变化，在这一刻，这个时间点，叫做FP。
+首次内容绘制时间（FCP）
+First Contentful Paint，为首次有内容渲染的时间点。
+首次有效绘制时间（FMP）
+First Meaningful Paint，为首次有效绘制时间，用户启动页面加载与页面呈现首屏之间的时间。
+完全可交互时间（TTI）
+Time to interactive，记录从页面加载开始，到页面处于完全可交互状态所花费的时间。
+
+H5页面加载:
+真实用户性能指标：FMP
+页面技术性能指标：DNS查询/TCP连接/首字节网络请求/网络传输/DOM解析/资源加载
+慢加载列表：慢页面
+多维分析：性能指标/系统/网络/机型/地域分析
+
+## 技术方案点
+
+- 口径统一
+- 容器性页面分段埋点，数据可采集，对接
+- 异常数据关联页面
+
+> 网络请求异常，bridge异常，CPU使用异常，内存占用异常，IO异常，卡顿，白屏异常，js异常，dart异常
+
+
+### 口径
+native/web/rn/flutter：
+- page_view_prepare	从起点时刻 至 容器准备完成
+- page_runtime_init	从容器准备开始 至 容器准备完成
+- page_load	从容器准备完成 至 新页面加载（画布load）完成
+- page_frist_layout	从页面加载 到 新页面第一次（定义为页面骨架）绘制耗时，即FCP
+- page_second_layout 从骨架绘制完成 至 页面视图大部分完成的时间， 即（FMP-FCP）
+- page_interactive_prepare 从页面绘制完成 至 主线程空闲，可接受用户操作， 即（TTI-FMP）
+
+关于TTI方案例如：
+1、八宫格方案
+2、通过检测视图树数量激增平稳方案
+
+### 附属字段统计
+- page_network 从第一个网络开始时刻 至 主最后一个网络结束时刻的时长
+
+关于网络方案例如：
+1、网络请求时候带上页面信息，强绑定到页面上
+2、apm模块无嵌入监听从click到finish的网络请求，通过策略筛查
+
+- success	页面是否成功进入TTI阶段	
+1、10秒超时，可配置
+2、框架上报，需要上报失败。
+
+
+### native 如何统计页面分段
+
+- 从路由开始创建track对象
+- 通过VC关联track对象和传递对象
+- 跨平台数据由平台统计完成，由通用的bridge层接口完成数据整合
+
+### 异常数据关联
+
+因为有统一的异常pageid，可以通过pageid标记数据，将数据打包关联到某一个页面中。有可能实现服务端触发，远程拉数据的操作
+
+

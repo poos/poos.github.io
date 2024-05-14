@@ -90,7 +90,7 @@ Color Offscreen-Rendered
 [Texture(ASDK)自定义 Node 和 优化 Tab 框架 、自定义 ASDisplayNode ；拆分复杂的 Node 为简单的 Node 组件 等 ](https://poos.github.io/2018/08/18/Texture1/)
 
 
-上边两篇文章是实践中总结的 Texture 使用和优化。最终效果大家可以在 芝麻问答 app 中查看。
+上边两篇文章是实践中总结的 Texture 使用和优化。最终效果大家可以在 App app 中查看。
 
 #### 关于定义组件
 
@@ -184,7 +184,7 @@ label.attributedText = titleOne(attS)
 
 ### table 事件处理
 
-在我们的产品 芝麻问答 中的实践和研究（有兴趣可以下载查看一下 **芝麻问答的 关注页Feed流** ），确立了原则用以保证代码质量：
+在我们的产品 App 中的实践和研究（有兴趣可以下载查看一下 **App的 关注页Feed流** ），确立了原则用以保证代码质量：
 
 **1. 内部事件内部消化** ，我们的产品cell 中有很多事件，例如点赞，关注，评论，分享，跳转个人页，跳转问题页，跳转回答页等。
 

@@ -121,7 +121,7 @@ extension UILayoutPriority {
 
 直接上图吧，看一下它的魅力：
 
-![img](https://poos.github.io/img/storyboard_1.png)Status
+![img](https://poos.github.io/img/storyboard_1.png)
 
 #### Table-Cell
 

@@ -1,0 +1,84 @@
+---
+layout:     post
+title:      卡顿、内存、wakeup监控 - 1
+subtitle:   拿来主义的卡顿监控
+date:       2023-10-25
+author:     poos
+header-img: img/post-bg-2015.jpg
+catalog: true
+tags:
+- Summary
+- APM
+- Lag
+---
+
+
+# 卡顿监控
+卡顿监控是除了 crash 之外，最影响用户体验的异常。
+
+
+## 分析卡顿：
+
+一般类型分为：
+1、短时间卡顿，容忍度高
+2、长时间卡顿，容忍度低
+3、卡死，容忍度极低 <= 崩溃
+
+根因分为：
+1、主线程卡顿/卡死
+2、子线程卡顿
+3、资源匮乏卡顿
+4、假卡，window 或者 view 异常覆盖
+
+
+## 数据采集
+
+### 卡顿采集
+
+- [self check]获取卡顿类型 (runloop，cpu，线程等各个类型的卡顿flag)
+- 如果没有卡顿，重置各种状态，包括控制退火算法的m_nIntervalTime
+- 如果是主线程卡顿，会先检测子线程数量是否过多，按照微信团队的经验，线程数超出64个时会导致主线程卡顿，如果卡顿是由于线程多造成的，那么就没必 要通过获取主线程堆栈去找卡顿原因了(线程过多时 CPU 在切换线程上下文时，还会更新寄 存器，更新寄存器时需要寻址，而寻址的过程还会有较大的 CPU 消耗)
+- 否则，不是因为线程过多造成的卡顿，则更新最近最耗时的堆栈（50ms），并回到主线程写入文件记录
+- 如果不是因为主线程卡顿(当单核 CPU 使用率超过 80%，就判定 CPU 占用过高。CPU 使用率过高，可能导 致 App 卡顿。) 记录日志文件
+- 如果发生卡死会在下个启动完成issue上报
+
+[Matrix-iOS 卡顿](https://www.jianshu.com/p/4d145e0cc26b)
+
+
+## 堆栈解析
+
+针对卡顿的堆栈解析和crash不太一样，其他线程有点像崩溃堆栈，因为是最后时候判定后的一个抓堆栈。主线程因为有10次的聚合，会有点类似于系统的 weakup 堆栈。
+
+```
+Power Source:    0 samples on Battery, 0 samples on AC, 12 samples Unknown
+  9   ??? (libsystem_pthread.dylib + 49588) [0x1875121b4]
+    9   ??? (libdispatch.dylib + 71892) [0x1872e28d4]
+      9   ??? (libdispatch.dylib + 69680) [0x1872e2030]
+        9   ??? (libdispatch.dylib + 19584) [0x1872d5c80]
+          9   ??? (libdispatch.dylib + 395220) [0x1873317d4]
+            9   ??? (libdispatch.dylib + 391736) [0x187330a38]
+              9   ??? (SomeApp + 67813596) [0x1048240dc]
+                9   ??? (SomeApp + 67818244) [0x104825304]
+                  9   ??? (SomeApp + 67788976) [0x10481e0b0]
+                    9   ??? (SomeApp + 67789152) [0x10481e160]
+                      9   ??? (libdyld.dylib + 18240) [0x187345740]
+                        9   ??? (<C08F675C-016C-30B8-A87D-E35AEF8F6B20> + 53588) [0x10ea51154]
+                          5   ??? (<C08F675C-016C-30B8-A87D-E35AEF8F6B20> + 105924) [0x10ea5ddc4]
+                          2   ??? (<C08F675C-016C-30B8-A87D-E35AEF8F6B20> + 105868) [0x10ea5dd8c]
+                          1   ??? (<C08F675C-016C-30B8-A87D-E35AEF8F6B20> + 105900) [0x10ea5ddac]
+                          1   ??? (<C08F675C-016C-30B8-A87D-E35AEF8F6B20> + 105884) [0x10ea5dd9c]
+```
+
+整个堆栈解析可以类似于 crash ips 文件进行堆栈解析改造支持。也可以从 matrix 提供了的脚本进行改造支持 `matrix/matrix-iOS/Script`。
+
+
+## 总结
+
+相对比较完美的卡顿检测方案，唯一的不足是定时抓取堆栈，当然可以进行灰度采集；另外，matrix的解决方案其实可以借鉴，全家桶式的性能监控，可以以最小的性能覆盖尽量多的数据采集（将来可合并cpu异常，白屏等堆栈抓取）。
+
+
+参考
+
+[Matrix-iOS 卡顿](https://www.jianshu.com/p/4d145e0cc26b)
+[tencent/matrix](https://github.com/Tencent/matrix)
+
